@@ -55,6 +55,18 @@ table {
 a{
   text-decoration: none;
 }
+
+section, header{
+  @media (min-width: 1800px){
+    width: 1780px;
+  }
+  @media (min-width: 1200px) and (max-width: 1799px){
+    width: 1140px;
+  }
+  @media (max-width: 575px) {
+    width: 340px;
+  }
+}
 button{
     border:none;
     &:hover{
