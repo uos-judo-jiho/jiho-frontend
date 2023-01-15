@@ -52,21 +52,21 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
     <Container id="sidebar" ref={outside} className={isOpen ? "open" : ""}>
       <NavWrapper>
         <MenuList>
-          <Link to={"/about"}>
-            <MenuItem>About 지호</MenuItem>
-          </Link>
-          <Link to={"/news"}>
-            <MenuItem>지호지</MenuItem>
-          </Link>
+          <MenuItem>
+            <Link to={"/about"}>About 지호</Link>
+          </MenuItem>
+          <MenuItem>
+            <Link to={"/news"}>지호지</Link>
+          </MenuItem>
           <MenuItem>
             <MenuList>
               지호운동
-              <Link to={"/trainingLog"}>
-                <MenuItem>훈련일지</MenuItem>
-              </Link>
-              <Link to={""}>
-                <MenuItem>대회 & 교류전</MenuItem>
-              </Link>
+              <MenuItem>
+                <Link to={"/trainingLog"}>훈련일지</Link>
+              </MenuItem>
+              <MenuItem>
+                <Link to={""}>대회 & 교류전</Link>
+              </MenuItem>
             </MenuList>
           </MenuItem>
         </MenuList>

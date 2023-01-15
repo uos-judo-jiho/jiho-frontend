@@ -1,8 +1,6 @@
-import React from "react";
 import styled from "styled-components";
-import Col from "../../layouts/Col";
-import Line from "../../layouts/Line";
-import SheetWrapper from "../../layouts/SheetWrapper";
+import Line from "../../../layouts/Line";
+import SheetWrapper from "../../../layouts/SheetWrapper";
 
 const ContainerWrapper = styled.div`
   display: flex;

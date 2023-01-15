@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-scroll";
 import styled from "styled-components";
-import Col from "../../layouts/Col";
+import Col from "../../../layouts/Col";
 
 type HomeCardProps = {
   icon: string;

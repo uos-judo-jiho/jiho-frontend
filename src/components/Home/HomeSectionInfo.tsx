@@ -5,7 +5,7 @@ function HomeSectionInfo() {
   return (
     <>
       <HomeSectionBG bgImageSrc={BGImage} id="sectionInfo">
-        <></>
+        <div></div>
       </HomeSectionBG>
     </>
   );

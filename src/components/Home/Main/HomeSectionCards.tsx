@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import SheetWrapper from "../../layouts/SheetWrapper";
+import SheetWrapper from "../../../layouts/SheetWrapper";
+
 import HomeCard from "./HomeCard";
 
 const Container = styled.div`
