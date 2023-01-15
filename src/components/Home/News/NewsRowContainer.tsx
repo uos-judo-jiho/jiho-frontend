@@ -1,15 +1,29 @@
 import React from "react";
 import styled from "styled-components";
+import Col from "../../../layouts/Col";
+import Row from "../../../layouts/Row";
 import NewsCard from "./NewsCard";
 
-const Title = styled.h3``;
+type NewsRowContainerProps = {
+  title: string;
+  children: React.ReactNode;
+  isRow?: boolean;
+};
 
-function NewsRowContainer() {
+const Title = styled.h3`
+  font-size: ${(props) => props.theme.subTitleFontSize};
+`;
+
+function NewsRowContainer({
+  title,
+  isRow = true,
+  children,
+}: NewsRowContainerProps) {
   return (
-    <div>
-      <Title>회장단</Title>
-      <NewsCard />
-    </div>
+    <Col>
+      <Title>{title}</Title>
+      {isRow ? <Row>{children}</Row> : <Col>{children}</Col>}
+    </Col>
   );
 }
 

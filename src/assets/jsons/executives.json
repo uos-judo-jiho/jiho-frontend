@@ -1,0 +1,28 @@
+{
+  "executives": [
+    {
+      "id": "2022-1-1",
+      "imgSrc": "demo.jpg",
+      "title": "2022년 상반기 회장",
+      "subTitle": "김석균"
+    },
+    {
+      "id": "2022-2-1",
+      "imgSrc": "demo.jpg",
+      "title": "2022년 상반기 회장",
+      "subTitle": "김영민"
+    },
+    {
+      "id": "2022-2-2",
+      "imgSrc": "demo.jpg",
+      "title": "2022년 상반기 회장",
+      "subTitle": "우승우"
+    },
+    {
+      "id": "2022-2-3",
+      "imgSrc": "demo.jpg",
+      "title": "2022년 상반기 회장",
+      "subTitle": "이은솔"
+    }
+  ]
+}

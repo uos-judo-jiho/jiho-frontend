@@ -1,0 +1,16 @@
+{
+  "graduates": [
+    {
+      "id": 1,
+      "imgSrc": "demo.jpg",
+      "title": "경영학과15",
+      "subTitle": "31기 김지훈"
+    },
+    {
+      "id": 2,
+      "imgSrc": "demo.jpg",
+      "title": "경영학과15",
+      "subTitle": "31기 이승도"
+    }
+  ]
+}
