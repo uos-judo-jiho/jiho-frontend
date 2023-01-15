@@ -7,5 +7,9 @@ declare module "styled-components" {
     textColor: string;
     bgColor: string;
     accentColor: string;
+    titleFontSize: string;
+    subTitleFontSize: string;
+    descriptionFontSize: string;
+    tinyFontSize: string;
   }
 }
