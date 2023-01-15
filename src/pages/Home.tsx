@@ -11,6 +11,7 @@ function Home() {
   return (
     <>
       <Navbar />
+
       <HomeSectionMain />
       <HomeSectionCards />
       <HomeSectionInfo />

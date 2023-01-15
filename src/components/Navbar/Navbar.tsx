@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Row from "../../layouts/Row";
 import { ReactComponent as Logo } from "../../assets/svgs/logo.svg";
 import { ReactComponent as Menu } from "../../assets/svgs/menu.svg";
+import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+import SideBar from "../SideBar/SideBar";
 
 const Header = styled.header`
   margin: 0 auto;
@@ -20,23 +22,37 @@ const StyledLogo = styled(Logo)`
 const StyledMenu = styled(Menu)`
   margin-top: 20px;
   cursor: pointer;
+  &:hover {
+    opacity: 0.6;
+  }
+`;
+const StyledClose = styled(Close)`
+  margin-top: 20px;
+
+  cursor: pointer;
+  &:hover {
+    opacity: 0.6;
+  }
 `;
 const NavDropDown = styled.nav``;
 
 function Navbar() {
-  const [clicked, setClicked] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   function handleClick() {
-    setClicked((prev) => !prev);
+    setIsOpen((prev) => !prev);
   }
+
   return (
     <Header>
+      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
       <Container>
         <Row justifyContent="space-between">
           <Link to={"/"}>
             <StyledLogo />
           </Link>
           <NavDropDown onClick={handleClick}>
-            <StyledMenu />
+            {isOpen ? <StyledClose /> : <StyledMenu />}
           </NavDropDown>
         </Row>
       </Container>

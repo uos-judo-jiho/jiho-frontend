@@ -1,6 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-import SheetWrapper from "../../layouts/SheetWrapper";
 import { ReactComponent as InstargramIcon } from "../../assets/svgs/icons8-instargram-500.svg";
 import { ReactComponent as YoutubeIcon } from "../../assets/svgs/icons8-youtube-500.svg";
 import Row from "../../layouts/Row";
