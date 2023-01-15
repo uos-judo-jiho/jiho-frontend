@@ -2,12 +2,14 @@ import React from "react";
 import styled from "styled-components";
 import Col from "../../layouts/Col";
 import Line from "../../layouts/Line";
+import SheetWrapper from "../../layouts/SheetWrapper";
+
 const ContainerWrapper = styled.div`
   display: flex;
   width: 508px;
   min-height: 480px;
   height: auto;
-  margin: 60px 60px 60px auto;
+  margin: 0 0 60px auto;
 `;
 
 const Container = styled.div`
@@ -38,13 +40,15 @@ const Title = styled.h1`
 
 function HomeTitle() {
   return (
-    <ContainerWrapper>
-      <Container>
-        <SubTitle>서울시립대학교 유도부</SubTitle>
-        <Title>지호</Title>
-        <Line />
-      </Container>
-    </ContainerWrapper>
+    <SheetWrapper>
+      <ContainerWrapper>
+        <Container>
+          <SubTitle>서울시립대학교 유도부</SubTitle>
+          <Title>지호</Title>
+          <Line />
+        </Container>
+      </ContainerWrapper>
+    </SheetWrapper>
   );
 }
 

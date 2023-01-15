@@ -3,19 +3,29 @@ import styled from "styled-components";
 import BGImage from "../../assets/images/demo.jpg";
 
 type HomeSectionBGProps = {
+  bgImageSrc: string;
   children: React.ReactNode;
+  id: string;
 };
 
-const Container = styled.section`
-  background-image: url(${BGImage});
+type ContainerProps = {
+  bgImageSrc: string;
+};
+
+const Container = styled.section<ContainerProps>`
+  background-image: url(${(props) => props.bgImageSrc});
   background-repeat: no-repeat;
   background-size: cover;
   width: 100vw;
   height: 100vh;
 `;
 
-function HomeSectionBG({ children }: HomeSectionBGProps) {
-  return <Container>{children}</Container>;
+function HomeSectionBG({ bgImageSrc, children, id }: HomeSectionBGProps) {
+  return (
+    <Container bgImageSrc={bgImageSrc} id={id}>
+      {children}
+    </Container>
+  );
 }
 
 export default HomeSectionBG;

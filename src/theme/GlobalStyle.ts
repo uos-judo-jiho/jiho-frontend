@@ -1,4 +1,4 @@
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`  
     
@@ -56,7 +56,7 @@ a{
   text-decoration: none;
 }
 
-section, header{
+header, footer{
   @media (min-width: 1800px){
     width: 1780px;
   }

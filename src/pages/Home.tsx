@@ -1,3 +1,4 @@
+import HomeSectionCards from "../components/Home/HomeSectionCards";
 import HomeSectionExercise from "../components/Home/HomeSectionExercise";
 import HomeSectionInfo from "../components/Home/HomeSectionInfo";
 import HomeSectionMain from "../components/Home/HomeSectionMain";
@@ -9,6 +10,7 @@ function Home() {
     <>
       <Navbar />
       <HomeSectionMain />
+      <HomeSectionCards />
       <HomeSectionInfo />
       <HomeSectionNews />
       <HomeSectionExercise />

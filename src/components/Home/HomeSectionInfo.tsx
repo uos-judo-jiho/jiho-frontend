@@ -1,10 +1,10 @@
 import React from "react";
 import HomeSectionBG from "./HomeSectionBG";
-
+import BGImage from "../../assets/images/demo1.jpg";
 function HomeSectionInfo() {
   return (
     <>
-      <HomeSectionBG>
+      <HomeSectionBG bgImageSrc={BGImage} id="sectionInfo">
         <></>
       </HomeSectionBG>
     </>
