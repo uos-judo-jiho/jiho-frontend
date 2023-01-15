@@ -65,7 +65,7 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
                 <Link to={"/trainingLog"}>훈련일지</Link>
               </MenuItem>
               <MenuItem>
-                <Link to={""}>대회 & 교류전</Link>
+                <Link to={"/video"}>영상</Link>
               </MenuItem>
             </MenuList>
           </MenuItem>
