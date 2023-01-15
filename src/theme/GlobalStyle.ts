@@ -67,7 +67,7 @@ header, footer{
     width: 340px;
   }
 }
-button{
+button,a{
     border:none;
     &:hover{
         cursor: pointer; 

@@ -1,3 +1,4 @@
+import Footer from "../components/Footer/footer";
 import HomeSectionCards from "../components/Home/HomeSectionCards";
 import HomeSectionExercise from "../components/Home/HomeSectionExercise";
 import HomeSectionInfo from "../components/Home/HomeSectionInfo";
@@ -14,6 +15,7 @@ function Home() {
       <HomeSectionInfo />
       <HomeSectionNews />
       <HomeSectionExercise />
+      <Footer />
     </>
   );
 }
