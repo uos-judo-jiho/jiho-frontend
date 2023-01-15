@@ -5,6 +5,7 @@ import HomeSectionInfo from "../components/Home/HomeSectionInfo";
 import HomeSectionMain from "../components/Home/HomeSectionMain";
 import HomeSectionNews from "../components/Home/HomeSectionNews";
 import Navbar from "../components/Navbar/Navbar";
+import StickyButton from "../components/StickyButton";
 
 function Home() {
   return (
@@ -16,6 +17,7 @@ function Home() {
       <HomeSectionNews />
       <HomeSectionExercise />
       <Footer />
+      <StickyButton />
     </>
   );
 }

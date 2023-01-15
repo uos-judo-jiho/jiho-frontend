@@ -10,6 +10,7 @@ const ContainerWrapper = styled.div`
   min-height: 480px;
   height: auto;
   margin: 0 0 60px auto;
+  padding-top: 60px;
 `;
 
 const Container = styled.div`
