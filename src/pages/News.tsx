@@ -1,7 +1,8 @@
 import React from "react";
+import DefaultLayout from "../layouts/DefaultLayout";
 
 function News() {
-  return <div>News</div>;
+  return <DefaultLayout>News</DefaultLayout>;
 }
 
 export default News;

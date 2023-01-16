@@ -1,7 +1,8 @@
 import React from "react";
+import DefaultLayout from "../layouts/DefaultLayout";
 
 function About() {
-  return <div>About</div>;
+  return <DefaultLayout>About</DefaultLayout>;
 }
 
 export default About;

@@ -1,23 +1,21 @@
-import Footer from "../components/Footer/footer";
-import HomeSectionExercise from "../components/Home/HomeSectionExercise";
+import HomeSectionExercise from "../components/Home/Exercise/HomeSectionExercise";
 import HomeSectionInfo from "../components/Home/HomeSectionInfo";
-import HomeSectionNews from "../components/Home/News/HomeSectionNews";
 import HomeSectionCards from "../components/Home/Main/HomeSectionCards";
 import HomeSectionMain from "../components/Home/Main/HomeSectionMain";
-import Navbar from "../components/Navbar/Navbar";
+import HomeSectionNews from "../components/Home/News/HomeSectionNews";
 import StickyButton from "../components/StickyButton";
+import DefaultLayout from "../layouts/DefaultLayout";
 
 function Home() {
   return (
     <>
-      <Navbar />
-
-      <HomeSectionMain />
-      <HomeSectionCards />
-      <HomeSectionInfo />
-      <HomeSectionNews />
-      <HomeSectionExercise />
-      <Footer />
+      <DefaultLayout>
+        <HomeSectionMain />
+        <HomeSectionCards />
+        <HomeSectionInfo />
+        <HomeSectionNews />
+        <HomeSectionExercise />
+      </DefaultLayout>
       <StickyButton />
     </>
   );

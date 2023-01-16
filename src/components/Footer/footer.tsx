@@ -35,7 +35,7 @@ const DescriptionItem = styled.li`
   font-size: ${(props) => props.theme.tinyFontSize};
 `;
 
-function footer() {
+function Footer() {
   return (
     <FooterWrapper>
       <Row justifyContent="space-between">
@@ -76,4 +76,4 @@ function footer() {
   );
 }
 
-export default footer;
+export default Footer;

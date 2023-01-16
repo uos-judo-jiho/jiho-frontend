@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-scroll";
 import styled from "styled-components";
 import Col from "../../../layouts/Col";
+import OutlineButton from "../../OutlineButton";
 
 type HomeCardProps = {
   icon: string;
@@ -29,13 +30,8 @@ const CardDescription = styled.p`
   line-height: 1.2em;
   height: 3.6em;
 `;
-const MoreBtn = styled.button`
+const MoreBtnWrapper = styled.div`
   margin: 20px 0 0;
-  padding: 10px 30px;
-  border: 1px solid ${(props) => props.theme.primaryColor};
-  &:hover {
-    color: ${(props) => props.theme.primaryColor};
-  }
 `;
 
 function HomeCard({ icon, title, description, scrollTo }: HomeCardProps) {
@@ -46,7 +42,9 @@ function HomeCard({ icon, title, description, scrollTo }: HomeCardProps) {
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
         <Link to={scrollTo} spy={true} smooth={true}>
-          <MoreBtn>더 알아보기</MoreBtn>
+          <MoreBtnWrapper>
+            <OutlineButton text={"더 알아보기"} />
+          </MoreBtnWrapper>
         </Link>
       </Col>
     </Container>

@@ -8,6 +8,7 @@ type SheetWrapperProps = {
 const Container = styled.div`
   position: relative;
   margin: 0 auto;
+  padding-top: 100px;
 
   @media (min-width: 1800px) {
     width: 1780px;

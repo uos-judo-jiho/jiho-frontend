@@ -1,0 +1,25 @@
+{
+  "homeCards": [
+    {
+      "id": "about",
+      "icon": "",
+      "title": "ABOUT 지호",
+      "description": "Club running for those who love to exercise, explore and travel internationally.",
+      "scrollTo": "sectionInfo"
+    },
+    {
+      "id": "news",
+      "icon": "",
+      "title": "지호지",
+      "description": "Club running for those who love to exercise, explore and travel internationally.",
+      "scrollTo": "sectionNews"
+    },
+    {
+      "id": "exercise",
+      "icon": "",
+      "title": "지호운동",
+      "description": "Club running for those who love to exercise, explore and travel internationally.",
+      "scrollTo": "sectionExercise"
+    }
+  ]
+}
