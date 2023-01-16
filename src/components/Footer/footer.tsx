@@ -52,7 +52,7 @@ function Footer() {
           <DescriptionList>
             <DescriptionItem>정규 운동</DescriptionItem>
             <DescriptionItem>
-              시간 : 매주 월, 수, 금 18:00-20:00{" "}
+              시간 : 매주 월, 수, 금 18:00-20:00
             </DescriptionItem>
             <DescriptionItem>
               장소 : 서울시립대 건설공학관 지하 1층

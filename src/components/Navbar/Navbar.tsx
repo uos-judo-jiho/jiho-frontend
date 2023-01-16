@@ -2,21 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Row from "../../layouts/Row";
-import { ReactComponent as Logo } from "../../assets/svgs/logo.svg";
+
 import { ReactComponent as Menu } from "../../assets/svgs/menu.svg";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import SideBar from "../SideBar/SideBar";
+import Logo from "../Logo";
 
 const Header = styled.header`
   margin: 0 auto;
 `;
 const Container = styled.div`
   min-height: 80px;
-`;
-const StyledLogo = styled(Logo)`
-  width: 120px;
-  height: 120px;
-  margin: 10px 0 0 20px;
 `;
 
 const StyledMenu = styled(Menu)`
@@ -49,7 +45,7 @@ function Navbar() {
       <Container>
         <Row justifyContent="space-between">
           <Link to={"/"}>
-            <StyledLogo />
+            <Logo />
           </Link>
           <NavDropDown onClick={handleClick}>
             {isOpen ? <StyledClose /> : <StyledMenu />}
