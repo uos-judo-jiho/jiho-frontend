@@ -52,14 +52,28 @@ function Footer() {
           <DescriptionList>
             <DescriptionItem>정규 운동</DescriptionItem>
             <DescriptionItem>
-              시간 : 매주 월, 수, 금 18:00-20:00
+              시간 | 매주 월, 수, 금 18:00-20:00
             </DescriptionItem>
             <DescriptionItem>
-              장소 : 서울시립대 건설공학관 지하 1층
+              장소 | 서울시립대 건설공학관 지하 1층
+            </DescriptionItem>
+          </DescriptionList>
+          <DescriptionList>
+            <DescriptionItem>Connect Us</DescriptionItem>
+            <DescriptionItem>
+              인스타그램 |
+              <a href="https://www.instagram.com/uos_judo/"> @uos_judo</a>
+            </DescriptionItem>
+            <DescriptionItem>
+              이메일 |
+              <a href="mailto: uosjudojiho@gmail.com"> uosjudojiho@gmail.com</a>
+            </DescriptionItem>
+            <DescriptionItem>
+              연락처 |<a href="tel: 010-2222-3333">010-2222-3333</a>
             </DescriptionItem>
           </DescriptionList>
         </Row>
-        <Row alignItems="center" justifyContent="center">
+        {/* <Row alignItems="center" justifyContent="center">
           <SNSLink href="https://www.instagram.com/uos_judo/" target="_blank">
             <IconWrapper>
               <StyledInstargramIcon />
@@ -70,7 +84,7 @@ function Footer() {
               <StyledYoutubeIcon />
             </IconWrapper>
           </SNSLink>
-        </Row>
+        </Row> */}
       </Row>
     </FooterWrapper>
   );

@@ -34,22 +34,24 @@ function HomeSectionInfo() {
             <DescriptionItem>SINCE 1985</DescriptionItem>
             <DescriptionItem>정규운동</DescriptionItem>
             <DescriptionItem>
-              시간 : 매주 월, 수, 금 18:00-20:00
+              시간 | 매주 월, 수, 금 18:00-20:00
             </DescriptionItem>
             <DescriptionItem>
-              장소 : 서울시립대 건설공학관 지하 1층 02504 Seoul, Korea 동대문구
+              장소 | 서울시립대 건설공학관 지하 1층 02504 Seoul, Korea 동대문구
               서울시립대로 163
             </DescriptionItem>
-            <DescriptionItem>Connect</DescriptionItem>
+            <DescriptionItem>Connect Us</DescriptionItem>
             <DescriptionItem>
-              <a href="https://www.instagram.com/uos_judo/" target="_blank">
-                @uos_judo
-              </a>
+              인스타그램 |
+              <a href="https://www.instagram.com/uos_judo/"> @uos_judo</a>
             </DescriptionItem>
             <DescriptionItem>
-              <a href="mailto: uosjudojiho@gmail.com">uosjudojiho@gmail.com</a>
+              이메일 |
+              <a href="mailto: uosjudojiho@gmail.com"> uosjudojiho@gmail.com</a>
             </DescriptionItem>
-            <DescriptionItem>010-1234-5678</DescriptionItem>
+            <DescriptionItem>
+              연락처 | <a href="tel: 010-2222-3333">010-2222-3333</a>
+            </DescriptionItem>
           </DescriptionContainer>
         </SheetWrapper>
       </HomeSectionBG>
