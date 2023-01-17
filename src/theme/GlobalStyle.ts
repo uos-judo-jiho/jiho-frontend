@@ -33,6 +33,7 @@ footer, header, hgroup, main, menu, nav, section {
 }
 body {
   line-height: 1;
+  overflow-x:hidden;
 }
 menu, ol, ul {
   list-style: none;
@@ -51,6 +52,8 @@ table {
 }
 *{
   box-sizing: border-box;
+  padding:0;
+  margin:0;
 }
 a{
   text-decoration: none;
@@ -68,7 +71,9 @@ header, footer{
     width: 340px;
   }
 }
+
 button,a{
+
     border:none;
     &:hover{
         cursor: pointer; 
