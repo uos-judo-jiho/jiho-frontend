@@ -6,19 +6,25 @@ type ThumbnailCardProps = {
   handleClickCard: Function;
 };
 
-const ImgWrapper = styled.button`
+const ImgWrapper = styled.div`
   position: relative;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const HoveredContainer = styled.div`
   position: absolute;
   display: none;
+
   width: 100%;
   height: 100%;
   font-size: ${(props) => props.theme.subTitleFontSize};
   color: ${(props) => props.theme.bgColor};
   ${ImgWrapper}:hover & {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 `;
 

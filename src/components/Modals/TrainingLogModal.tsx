@@ -57,7 +57,7 @@ const ModalArticle = styled.article`
 
 const StyledClose = styled(Close)``;
 
-const ClooseBtn = styled.button`
+const CloseBtn = styled.button`
   position: relative;
   float: right;
   top: 8px;
@@ -82,9 +82,9 @@ function TrainingLogModal({ open, close, info }: TrainingLogModalProps) {
     <Container className={open ? "openModal" : ""}>
       {open ? (
         <ModalArticle>
-          <ClooseBtn onClick={close}>
+          <CloseBtn onClick={close}>
             <StyledClose />
-          </ClooseBtn>
+          </CloseBtn>
           <Main>
             <Row>
               <Thumnail src={info.toString()} />
