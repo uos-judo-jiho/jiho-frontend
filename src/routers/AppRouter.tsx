@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "../pages/About";
 import Home from "../pages/Home";
 import News from "../pages/News";
+import NewsDetail from "../pages/News/NewsDetail";
 import TrainingLog from "../pages/TrainingLog";
 import Video from "../pages/Video";
 
@@ -10,11 +11,12 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />}></Route>
-        <Route path="/about" element={<About />}></Route>
-        <Route path="/trainingLog" element={<TrainingLog />}></Route>
-        <Route path="/video" element={<Video />}></Route>
+        <Route path="/news/:id" element={<NewsDetail />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/trainingLog" element={<TrainingLog />} />
+        <Route path="/video" element={<Video />} />
       </Routes>
     </BrowserRouter>
   );

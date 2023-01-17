@@ -1,8 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Col from "../../../layouts/Col";
 
 type NewsCardProps = {
+  id: string;
   imgSrc: string;
   title: string;
   subTitle: string;
@@ -25,13 +27,15 @@ const Subtitle = styled.p`
   font-size: ${(props) => props.theme.descriptionFontSize};
 `;
 
-function NewsCard({ imgSrc, title, subTitle }: NewsCardProps) {
+function NewsCard({ id, imgSrc, title, subTitle }: NewsCardProps) {
   return (
     <Container>
       <Col>
-        <ImgContainer src={imgSrc} />
-        <Title>{title}</Title>
-        <Subtitle>{subTitle}</Subtitle>
+        <Link to={"/news/" + id}>
+          <ImgContainer src={imgSrc} />
+          <Title>{title}</Title>
+          <Subtitle>{subTitle}</Subtitle>
+        </Link>
       </Col>
     </Container>
   );

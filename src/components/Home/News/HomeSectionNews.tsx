@@ -28,6 +28,7 @@ function HomeSectionNews() {
                   imgSrc={ImgSrc}
                   title={executive.title}
                   subTitle={executive.subTitle}
+                  id={executive.id}
                 />
               );
             })}
@@ -40,6 +41,7 @@ function HomeSectionNews() {
                   imgSrc={ImgSrc}
                   title={graduate.title}
                   subTitle={graduate.subTitle}
+                  id={graduate.id}
                 />
               );
             })}
@@ -54,6 +56,7 @@ function HomeSectionNews() {
                   imgSrc={ImgSrc}
                   title={freshman.title}
                   subTitle={freshman.subTitle}
+                  id={freshman.id}
                 />
               );
             })}
@@ -66,6 +69,7 @@ function HomeSectionNews() {
                   imgSrc={ImgSrc}
                   title={graduate.title}
                   subTitle={graduate.subTitle}
+                  id={graduate.id}
                 />
               );
             })}
@@ -78,6 +82,7 @@ function HomeSectionNews() {
                   imgSrc={ImgSrc}
                   title={graduate.title}
                   subTitle={graduate.subTitle}
+                  id={graduate.id}
                 />
               );
             })}
@@ -92,6 +97,7 @@ function HomeSectionNews() {
                   imgSrc={ImgSrc}
                   title={graduate.title}
                   subTitle={graduate.subTitle}
+                  id={graduate.id}
                 />
               );
             })}
@@ -104,6 +110,7 @@ function HomeSectionNews() {
                   imgSrc={ImgSrc}
                   title={graduate.title}
                   subTitle={graduate.subTitle}
+                  id={graduate.id}
                 />
               );
             })}
