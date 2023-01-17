@@ -16,7 +16,6 @@ const UpperButton = styled.button`
 `;
 
 const StyledUpperArrow = styled(UpperArrow)`
-  margin-left: -6px;
   width: inherit;
   height: inherit;
 `;
