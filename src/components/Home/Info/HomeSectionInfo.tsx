@@ -8,9 +8,9 @@ import HomeInfo from "./HomeInfo";
 function HomeSectionInfo() {
   return (
     <>
-      <HomeSectionBG bgImageSrc={BGImage} id="sectionInfo">
+      <HomeSectionBG bgImageSrc={""} id="sectionInfo">
         <SheetWrapper>
-          <Row>
+          <Row justifyContent="space-between">
             <HomeInfo />
             <HomeAwards />
           </Row>
