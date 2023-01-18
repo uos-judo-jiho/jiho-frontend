@@ -1,4 +1,4 @@
-import BGImage from "../../../assets/images/demo1.jpg";
+import BGImage from "../../../assets/images/demo4.jpg";
 import Row from "../../../layouts/Row";
 import SheetWrapper from "../../../layouts/SheetWrapper";
 import HomeSectionBG from "../HomeSectionBG";
@@ -8,7 +8,7 @@ import HomeInfo from "./HomeInfo";
 function HomeSectionInfo() {
   return (
     <>
-      <HomeSectionBG bgImageSrc={""} id="sectionInfo">
+      <HomeSectionBG bgImageSrc={BGImage} id="sectionInfo">
         <SheetWrapper>
           <Row justifyContent="space-between">
             <HomeInfo />

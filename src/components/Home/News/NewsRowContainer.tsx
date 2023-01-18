@@ -10,6 +10,10 @@ type NewsRowContainerProps = {
   isRow?: boolean;
 };
 
+const Container = styled.div`
+  margin: 10px 0;
+`;
+
 const Title = styled.h3`
   font-size: ${(props) => props.theme.subTitleFontSize};
 `;
@@ -20,10 +24,12 @@ function NewsRowContainer({
   children,
 }: NewsRowContainerProps) {
   return (
-    <Col>
-      <Title>{title}</Title>
-      {isRow ? <Row>{children}</Row> : <Col>{children}</Col>}
-    </Col>
+    <Container>
+      <Col>
+        <Title>{title}</Title>
+        {isRow ? <Row>{children}</Row> : <Col>{children}</Col>}
+      </Col>
+    </Container>
   );
 }
 

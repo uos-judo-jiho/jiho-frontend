@@ -9,6 +9,11 @@ const AwardsItem = styled.li`
   font-size: ${(props) => props.theme.descriptionFontSize};
 `;
 
+const SubTitle = styled.h3`
+  font-size: ${(props) => props.theme.subTitleFontSize};
+  margin-bottom: 12px;
+`;
+
 type TAwards = {
   title: string;
   gold: number;
@@ -54,11 +59,16 @@ function HomeAwards() {
   }
 
   return (
-    <ul>
-      {awards.map((award) => {
-        return <AwardsItem key={award.title}>{formatAwards(award)}</AwardsItem>;
-      })}
-    </ul>
+    <Col>
+      <SubTitle>수상 이력</SubTitle>
+      <ul>
+        {awards.map((award) => {
+          return (
+            <AwardsItem key={award.title}>{formatAwards(award)}</AwardsItem>
+          );
+        })}
+      </ul>
+    </Col>
   );
 }
 

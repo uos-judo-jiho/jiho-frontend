@@ -10,7 +10,7 @@ type ExerciseThumbnailProps = {
 };
 
 const Stack = styled.div`
-  width: 800px;
+  width: 600px;
   height: auto;
   position: relative;
 `;
