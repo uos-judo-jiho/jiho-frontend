@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-type TrainingLogCardContainerProps = {
+type PhotoCardContainerProps = {
   children: React.ReactNode;
 };
 
@@ -12,8 +12,8 @@ const GridContainer = styled.ul`
   margin-bottom: 30px;
 `;
 
-function TrainingLogCardContainer({ children }: TrainingLogCardContainerProps) {
+function PhotoCardContainer({ children }: PhotoCardContainerProps) {
   return <GridContainer>{children}</GridContainer>;
 }
 
-export default TrainingLogCardContainer;
+export default PhotoCardContainer;

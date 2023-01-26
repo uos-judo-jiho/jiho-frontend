@@ -5,6 +5,7 @@ import Row from "../../layouts/Row";
 
 import { ReactComponent as Menu } from "../../assets/svgs/menu.svg";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+
 import SideBar from "../SideBar/SideBar";
 import Logo from "../Logo";
 
@@ -44,12 +45,12 @@ function Navbar() {
       <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
       <Container>
         <Row justifyContent="space-between">
+          <NavDropDown onClick={handleClick}>
+            <StyledMenu />
+          </NavDropDown>
           <Link to={"/"}>
             <Logo />
           </Link>
-          <NavDropDown onClick={handleClick}>
-            {isOpen ? <StyledClose /> : <StyledMenu />}
-          </NavDropDown>
         </Row>
       </Container>
     </Header>

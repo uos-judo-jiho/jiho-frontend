@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import ThumbnailCard from "../components/TrainingLog/ThumbnailCard";
-import TrainingLogCardContainer from "../components/TrainingLog/TrainingLogCardContainer";
+import { useState } from "react";
+import ThumbnailCard from "../components/Photo/ThumbnailCard";
 import DefaultLayout from "../layouts/DefaultLayout";
 
 import BGImage from "../assets/images/demo.jpg";
+import PhotoModal from "../components/Modals/PhotoModal";
+import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
-import TrainingLogModal from "../components/Modals/TrainingLogModal";
 import Title from "../layouts/Title";
 
-function TrainingLog() {
+function Photo() {
   const [modalOpen, setModalOpen] = useState(false);
   function openModal() {
     setModalOpen(true);
@@ -24,7 +24,7 @@ function TrainingLog() {
     <DefaultLayout>
       <SheetWrapper>
         <Title title={"훈련일지"} />
-        <TrainingLogCardContainer>
+        <PhotoCardContainer>
           <ThumbnailCard
             imgSrc={BGImage}
             handleClickCard={handleClickCard}
@@ -37,8 +37,8 @@ function TrainingLog() {
             imgSrc={BGImage}
             handleClickCard={handleClickCard}
           ></ThumbnailCard>
-        </TrainingLogCardContainer>
-        <TrainingLogCardContainer>
+        </PhotoCardContainer>
+        <PhotoCardContainer>
           <ThumbnailCard
             imgSrc={BGImage}
             handleClickCard={handleClickCard}
@@ -51,11 +51,11 @@ function TrainingLog() {
             imgSrc={BGImage}
             handleClickCard={handleClickCard}
           ></ThumbnailCard>
-        </TrainingLogCardContainer>
-        <TrainingLogModal open={modalOpen} close={closeModal} info={BGImage} />
+        </PhotoCardContainer>
+        <PhotoModal open={modalOpen} close={closeModal} info={BGImage} />
       </SheetWrapper>
     </DefaultLayout>
   );
 }
 
-export default TrainingLog;
+export default Photo;

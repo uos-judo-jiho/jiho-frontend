@@ -4,7 +4,7 @@ import About from "../pages/About";
 import Home from "../pages/Home";
 import News from "../pages/News";
 import NewsDetail from "../pages/News/NewsDetail";
-import TrainingLog from "../pages/TrainingLog";
+import Photo from "../pages/Photo";
 import Video from "../pages/Video";
 
 function AppRouter() {
@@ -15,7 +15,7 @@ function AppRouter() {
         <Route path="/news" element={<News />}></Route>
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/about" element={<About />} />
-        <Route path="/trainingLog" element={<TrainingLog />} />
+        <Route path="/photo" element={<Photo />} />
         <Route path="/video" element={<Video />} />
       </Routes>
     </BrowserRouter>

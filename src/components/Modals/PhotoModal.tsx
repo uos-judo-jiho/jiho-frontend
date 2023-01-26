@@ -2,7 +2,7 @@ import styled, { keyframes } from "styled-components";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import Row from "../../layouts/Row";
 
-type TrainingLogModalProps = {
+type PhotoModalProps = {
   open: boolean;
   close: React.MouseEventHandler<HTMLButtonElement>;
   info: Object;
@@ -77,7 +77,7 @@ const Thumnail = styled.img`
 
 const DescriptionSection = styled.section``;
 
-function TrainingLogModal({ open, close, info }: TrainingLogModalProps) {
+function PhotoModal({ open, close, info }: PhotoModalProps) {
   return (
     <Container className={open ? "openModal" : ""}>
       {open ? (
@@ -135,4 +135,4 @@ function TrainingLogModal({ open, close, info }: TrainingLogModalProps) {
   );
 }
 
-export default TrainingLogModal;
+export default PhotoModal;

@@ -38,7 +38,7 @@ function ExerciseThumbnail({ imgSrc, dateTime }: ExerciseThumbnailProps) {
     <Stack>
       <ThumbnailTitle>2022.10.10</ThumbnailTitle>
       <BtnWrapper>
-        <Link to={"/trainingLog"}>
+        <Link to={"/Photo"}>
           <OutlineButton text={"자세히보기"} />
         </Link>
       </BtnWrapper>
