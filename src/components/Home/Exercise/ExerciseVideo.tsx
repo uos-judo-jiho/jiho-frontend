@@ -18,15 +18,16 @@ function ExerciseVideo() {
     <Container>
       <VideoWrapper>
         <YouTube
+          // TODO videoID 바꾸기
           videoId="-4mtPGtQGBQ"
           opts={{
             width: "480",
             height: "270",
 
             playerVars: {
-              autoplay: 1, //자동재생 O
-              rel: 0, //관련 동영상 표시하지 않음 (근데 별로 쓸모 없는듯..)
-              modestbranding: 1, // 컨트롤 바에 youtube 로고를 표시하지 않음
+              autoplay: 0, // 자동재생 않함 0 | 자동재생 1
+              rel: 0, // 관련 동영상 표시하지 않음 0 | 표시 1
+              modestbranding: 0, // 컨트롤 바에 youtube 로고를 표시 0 | 표시하지 않음 1
             },
           }}
           onEnd={(e) => {
