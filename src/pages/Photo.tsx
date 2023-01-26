@@ -3,6 +3,7 @@ import ThumbnailCard from "../components/Photo/ThumbnailCard";
 import DefaultLayout from "../layouts/DefaultLayout";
 
 import BGImage from "../assets/images/demo.jpg";
+import BGImage1 from "../assets/images/demo1.jpg";
 import PhotoModal from "../components/Modals/PhotoModal";
 import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
@@ -52,7 +53,11 @@ function Photo() {
             handleClickCard={handleClickCard}
           ></ThumbnailCard>
         </PhotoCardContainer>
-        <PhotoModal open={modalOpen} close={closeModal} info={BGImage} />
+        <PhotoModal
+          open={modalOpen}
+          close={closeModal}
+          info={[BGImage, BGImage1]}
+        />
       </SheetWrapper>
     </DefaultLayout>
   );

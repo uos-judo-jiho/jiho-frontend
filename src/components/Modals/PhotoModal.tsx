@@ -1,11 +1,12 @@
 import styled, { keyframes } from "styled-components";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+import ImgSlider from "../../layouts/ImgSlider";
 import Row from "../../layouts/Row";
 
 type PhotoModalProps = {
   open: boolean;
   close: React.MouseEventHandler<HTMLButtonElement>;
-  info: Object;
+  info: Object[];
 };
 
 const ModalArticleAnimation = keyframes`
@@ -87,7 +88,7 @@ function PhotoModal({ open, close, info }: PhotoModalProps) {
           </CloseBtn>
           <Main>
             <Row>
-              <Thumnail src={info.toString()} />
+              <ImgSlider datas={info} />
               <DescriptionSection>
                 🥋지호 훈련일지 🥋 2022. 12. 02. 금 정종원 김찬우 이선재 김영민
                 이은솔 한지선 오승훈 김성우 금일은 이번 학기 마지막 정규
