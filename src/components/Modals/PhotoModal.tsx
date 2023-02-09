@@ -2,6 +2,7 @@ import styled, { keyframes } from "styled-components";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ImgSlider from "../../layouts/ImgSlider";
 import Row from "../../layouts/Row";
+import ModalDescriptionSection from "./ModalDescriptionSection";
 
 type PhotoModalProps = {
   open: boolean;
@@ -70,13 +71,9 @@ const Main = styled.main`
   padding: 16px;
 `;
 
-const Thumnail = styled.img`
-  width: 30vw;
-  height: 30vw;
-  object-fit: cover;
-`;
-
 const DescriptionSection = styled.section``;
+
+const DescriptionTitle = styled.h3``;
 
 function PhotoModal({ open, close, info }: PhotoModalProps) {
   return (
@@ -89,18 +86,28 @@ function PhotoModal({ open, close, info }: PhotoModalProps) {
           <Main>
             <Row>
               <ImgSlider datas={info} />
-              <DescriptionSection>
-                🥋지호 훈련일지 🥋 2022. 12. 02. 금 정종원 김찬우 이선재 김영민
-                이은솔 한지선 오승훈 김성우 금일은 이번 학기 마지막 정규
-                운동으로 8분이 참여해주셨습니다. 훈련은 몸풀기 후 구르기,
-                익히기, 굳히기, 자유대련 순으로 진행하여 행복유도로 마무리
-                했습니다. 추운 날씨에 운동하면 부상을 입기 쉬우니 몸을 잘
-                풀어줘야 한다고 강조하셔서 오늘은 더 열심히 몸풀기를 하였습니다.
-                스트레칭을 하다가 승훈 선배가 발가락이 다치기 쉽다고 해서
-                발가락까지 꼼꼼하게 잘 풀어주었습니다. 이후 구르기를 했는데
-                저한테는 아직도 어려운 동작이 많아서 따로 연습할 필요성을
-                느꼈습니다. 오늘은 특히 구르기가 안되서 옆 도랑에 빠질 뻔
-                했습니다. 구르기 후 익히기를 2-30분 정도 진행했습니다. 처음
+              <ModalDescriptionSection
+                title={"🥋지호 훈련일지 🥋"}
+                dateTime={"2022. 12. 02. 금"}
+                subTitle={[
+                  "정종원",
+                  "김찬우",
+                  "이선재",
+                  "김영민",
+                  "이은솔",
+                  "한지선",
+                  "오승훈",
+                  "김성우",
+                ]}
+                description={`금일은 이번 학기 마지막 정규 운동으로 8분이 참여해주셨습니다.
+                훈련은 몸풀기 후 구르기, 익히기, 굳히기, 자유대련 순으로
+                진행하여 행복유도로 마무리 했습니다. 추운 날씨에 운동하면 부상을
+                입기 쉬우니 몸을 잘 풀어줘야 한다고 강조하셔서 오늘은 더 열심히
+                몸풀기를 하였습니다. 스트레칭을 하다가 승훈 선배가 발가락이
+                다치기 쉽다고 해서 발가락까지 꼼꼼하게 잘 풀어주었습니다. 이후
+                구르기를 했는데 저한테는 아직도 어려운 동작이 많아서 따로 연습할
+                필요성을 느꼈습니다. 오늘은 특히 구르기가 안되서 옆 도랑에 빠질
+                뻔 했습니다. 구르기 후 익히기를 2-30분 정도 진행했습니다. 처음
                 들어왔을 때는 밭다리만 배워서 익히기 때 밭다리만 연습했는데
                 지금은 발목받치기, 양팔엎어치기까지 배워서 뭘 연습할지 고민하게
                 됩니다. 밭다리후리기는 이제 몸에 좀 익은 것 같은데
@@ -126,8 +133,8 @@ function PhotoModal({ open, close, info }: PhotoModalProps) {
                 좋겠습니다. 내일 오전에는 눈이 온다고 합니다.❄️ 요즘 너무 추운
                 날씨인데 따뜻하게 입고 감기 걸리지 않게 조심하세요.😁 내년
                 봄에도 건강한 모습으로 즐겁게 운동하면 좋겠습니다. 다들 고생
-                많으셨습니다!!
-              </DescriptionSection>
+                많으셨습니다!!`}
+              ></ModalDescriptionSection>
             </Row>
           </Main>
         </ModalArticle>
