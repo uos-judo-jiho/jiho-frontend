@@ -46,7 +46,10 @@ function HomeInfo() {
         </DescriptionItem>
         <DescriptionItem>
           인스타그램 |
-          <a href="https://www.instagram.com/uos_judo/"> @uos_judo</a>
+          <a href="https://www.instagram.com/uos_judo/" target="_blank">
+            {" "}
+            @uos_judo
+          </a>
         </DescriptionItem>
         <DescriptionItem>
           이메일 |

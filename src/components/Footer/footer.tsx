@@ -62,14 +62,17 @@ function Footer() {
             <DescriptionItem>Connect Us</DescriptionItem>
             <DescriptionItem>
               인스타그램 |
-              <a href="https://www.instagram.com/uos_judo/"> @uos_judo</a>
+              <a href="https://www.instagram.com/uos_judo/" target="_blank">
+                {" "}
+                @uos_judo
+              </a>
             </DescriptionItem>
             <DescriptionItem>
               이메일 |
               <a href="mailto: uosjudojiho@gmail.com"> uosjudojiho@gmail.com</a>
             </DescriptionItem>
             <DescriptionItem>
-              연락처 |<a href="tel: 010-2222-3333">010-2222-3333</a>
+              연락처 | <a href="tel: 010-2222-3333">010-2222-3333</a>
             </DescriptionItem>
           </DescriptionList>
         </Row>

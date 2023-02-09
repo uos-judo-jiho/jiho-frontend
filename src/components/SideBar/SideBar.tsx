@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import { ReactComponent as PlusSvg } from "../../assets/svgs/plus.svg";
 import Row from "../../layouts/Row";
+import SlideSubMenu from "./SlideSubMenu";
 
 type SideBarProps = {
   isOpen: boolean;
@@ -48,7 +49,6 @@ const ToggleMenuList = styled.ul`
   }
 `;
 const MenuItem = styled.li`
-  height: 24px;
   margin: 0 8px;
 `;
 
@@ -107,15 +107,12 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
               지호지
               <StyledPlus onClick={() => handleClickMenu("newsToggleMenu")} />
             </Row>
-
-            <ToggleMenuList
-              id="newsToggleMenu"
-              className={selected[0] ? "selected" : ""}
-            >
-              <MenuItem>
-                <Link to={"/news"}>2022 지호지</Link>
-              </MenuItem>
-            </ToggleMenuList>
+            {/* TODO classify itemsInfo Object  */}
+            <SlideSubMenu
+              selected={selected[0]}
+              menuId={"newsToggleMenu"}
+              itemsInfo={[{ href: "/news", title: "2022 지호지" }]}
+            />
           </MenuItem>
           <MenuItem>
             <Row justifyContent="space-between" alignItems="center">
@@ -124,17 +121,14 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
                 onClick={() => handleClickMenu("trainingToggleMenu")}
               />
             </Row>
-            <ToggleMenuList
-              id="trainingToggleMenu"
-              className={selected[1] ? "selected" : ""}
-            >
-              <MenuItem>
-                <Link to={"/trainingLog"}>훈련일지</Link>
-              </MenuItem>
-              <MenuItem>
-                <Link to={"/video"}>영상</Link>
-              </MenuItem>
-            </ToggleMenuList>
+            <SlideSubMenu
+              selected={selected[1]}
+              menuId={"newsToggleMenu"}
+              itemsInfo={[
+                { href: "/trainingLog", title: "훈련일지" },
+                { href: "/video", title: "영상" },
+              ]}
+            />
           </MenuItem>
         </MenuList>
       </NavWrapper>
