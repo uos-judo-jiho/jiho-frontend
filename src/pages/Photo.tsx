@@ -10,9 +10,12 @@ import SheetWrapper from "../layouts/SheetWrapper";
 import Title from "../layouts/Title";
 
 import TrainingLogDatas from "../assets/jsons/trainingLog.json";
+import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState(false);
+  const escKey = useKeyEscClose(closeModal);
+
   function openModal() {
     setModalOpen(true);
   }
