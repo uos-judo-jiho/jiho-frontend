@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import Line from "../../layouts/Line";
+import { formatStringArray } from "../../utils/Utils";
 
 type ModalDescriptionSectionProps = {
   title: string;
@@ -8,15 +10,32 @@ type ModalDescriptionSectionProps = {
   description: string;
 };
 
-const DescriptionSection = styled.section``;
+const DescriptionSection = styled.section`
+  height: inherit;
+  width: inherit;
+  padding: 16px;
+`;
 
-const DescriptionTitle = styled.h3``;
+const DescriptionTitle = styled.h3`
+  width: 100%;
+`;
 
-const DateTime = styled.div``;
+const DateTime = styled.div`
+  width: 100%;
+`;
 
-const SubTitle = styled.div``;
+const SubTitle = styled.div`
+  width: 100%;
+`;
 
-const Description = styled.div``;
+const Description = styled.div`
+  width: 100%;
+  max-height: calc(100vh - 32px);
+  text-align: justify;
+  line-height: normal;
+  overflow-y: auto;
+  overflow-x: hidden;
+`;
 
 function ModalDescriptionSection({
   title,
@@ -28,7 +47,8 @@ function ModalDescriptionSection({
     <DescriptionSection>
       <DescriptionTitle>{title}</DescriptionTitle>
       <DateTime>{dateTime}</DateTime>
-      <SubTitle>{subTitle}</SubTitle>
+      <SubTitle>{formatStringArray(subTitle)}</SubTitle>
+      <Line margin={"12px 0px"} borderWidth={"1px"} />
       <Description>{description}</Description>
     </DescriptionSection>
   );

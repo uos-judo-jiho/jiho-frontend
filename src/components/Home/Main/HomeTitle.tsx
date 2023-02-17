@@ -44,7 +44,7 @@ function HomeTitle() {
         <Container>
           <SubTitle>서울시립대학교 유도부</SubTitle>
           <Title>지호</Title>
-          <Line />
+          <Line width={"352px"} margin={"26px auto 0 0"} borderWidth={"8px"} />
         </Container>
       </ContainerWrapper>
     </SheetWrapper>
