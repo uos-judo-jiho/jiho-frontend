@@ -71,15 +71,17 @@ const ModalArticle = styled.article`
 const StyledClose = styled(Close)``;
 
 const CloseBtn = styled.button`
-  position: relative;
+  position: fixed;
   float: right;
-  top: 8px;
-  right: 8px;
+  top: 12%;
+  right: 12%;
   background-color: transparent;
 `;
 
 const Main = styled.main`
   padding: 16px;
+  width: 100%;
+  height: 100%;
 `;
 
 const DescriptionSection = styled.section``;

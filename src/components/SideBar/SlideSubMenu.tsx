@@ -60,7 +60,7 @@ function SlideSubMenu({ selected, itemsInfo, menuId }: SlideSubMenuProps) {
     >
       {itemsInfo.map((itemInfo) => {
         return (
-          <MenuItem>
+          <MenuItem key={itemInfo.title}>
             <Link to={itemInfo.href}>{itemInfo.title}</Link>
           </MenuItem>
         );

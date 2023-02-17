@@ -14,7 +14,7 @@ import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [photoIdx, setPhotoIdx] = useState(-1);
+  const [photoIdx, setPhotoIdx] = useState(0);
   const escKey = useKeyEscClose(closeModal);
 
   function openModal() {
@@ -44,6 +44,7 @@ function Photo() {
             return (
               <ThumbnailCard
                 // TODO imgSrc Api 적용
+                key={trainingLog.id}
                 imgSrc={BGImage}
                 dateTime={trainingLog.dateTime}
                 handleClickCard={handleClickCard}

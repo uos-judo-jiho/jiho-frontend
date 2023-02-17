@@ -41,6 +41,11 @@ const Slider = styled.section`
   align-items: center;
 `;
 
+const ImgSliderWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
 const ArrowCss = css`
   position: absolute;
   z-index: 10;
@@ -71,9 +76,18 @@ const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
 const CircleWrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   position: absolute;
-  bottom: 5%;
-  z-index: 10;
+  bottom: 12px;
+  right: 0;
+  left: 0;
+  &:before {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    padding-bottom: -40px; /* Adjusts for spacing */
+  }
 `;
 
 const CurrentCircle = styled.div`
@@ -83,9 +97,9 @@ const CurrentCircle = styled.div`
   background-color: ${(props) => props.theme.greyColor};
   opacity: 0.3;
 
-  &:not(:last-child) {
-    margin: 0 10px;
-  }
+  /* &:not(:last-child) { */
+  margin: 0 10px;
+  /* } */
   &.active {
     background-color: ${(props) => props.theme.bgColor};
     width: 12px;
@@ -112,30 +126,39 @@ function ImgSlider({ datas }: ImgSliderProps) {
 
   return (
     <Slider>
-      <StyledBackArrow onClick={prevSlider} current={current} length={length} />
+      <ImgSliderWrapper>
+        <StyledBackArrow
+          onClick={prevSlider}
+          current={current}
+          length={length}
+        />
 
-      <StyledForwardArrow
-        onClick={nextSlider}
-        current={current}
-        length={length}
-      />
-      <CircleWrapper>
+        <StyledForwardArrow
+          onClick={nextSlider}
+          current={current}
+          length={length}
+        />
+
         {datas.map((slider, index) => {
           return (
-            <CurrentCircle className={index === current ? "active" : ""} />
+            <Thumbnail
+              src={slider.toString()}
+              key={"thumbnail" + index}
+              className={index === current ? "active" : ""}
+            />
           );
         })}
-      </CircleWrapper>
-
-      {datas.map((slider, index) => {
-        return (
-          <Thumbnail
-            src={slider.toString()}
-            key={index}
-            className={index === current ? "active" : ""}
-          />
-        );
-      })}
+        <CircleWrapper>
+          {datas.map((slider, index) => {
+            return (
+              <CurrentCircle
+                key={"circle" + index}
+                className={index === current ? "active" : ""}
+              />
+            );
+          })}
+        </CircleWrapper>
+      </ImgSliderWrapper>
     </Slider>
   );
 }

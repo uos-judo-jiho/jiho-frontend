@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import Line from "../../layouts/Line";
 import { formatStringArray } from "../../utils/Utils";
@@ -28,9 +27,10 @@ const SubTitle = styled.div`
   width: 100%;
 `;
 
-const Description = styled.div`
+const Description = styled.p`
   width: 100%;
-  max-height: calc(100vh - 32px);
+  max-height: 70vh;
+  padding-bottom: 10vh;
   text-align: justify;
   line-height: normal;
   overflow-y: auto;
@@ -49,7 +49,16 @@ function ModalDescriptionSection({
       <DateTime>{dateTime}</DateTime>
       <SubTitle>{formatStringArray(subTitle)}</SubTitle>
       <Line margin={"12px 0px"} borderWidth={"1px"} />
-      <Description>{description}</Description>
+      <Description>
+        {description.split("\n").map((line) => {
+          return (
+            <>
+              {line}
+              <br />
+            </>
+          );
+        })}
+      </Description>
     </DescriptionSection>
   );
 }
