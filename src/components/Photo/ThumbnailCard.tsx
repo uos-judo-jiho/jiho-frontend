@@ -4,7 +4,8 @@ import styled from "styled-components";
 type ThumbnailCardProps = {
   imgSrc: string;
   dateTime: string;
-  handleClickCard: Function;
+  index: number;
+  handleClickCard: (index: number) => void;
 };
 
 const ImgWrapper = styled.div`
@@ -48,11 +49,13 @@ const Thumbnail = styled.img`
 function ThumbnailCard({
   imgSrc,
   dateTime,
+  index,
   handleClickCard,
 }: ThumbnailCardProps) {
   function handleClick() {
-    handleClickCard();
+    handleClickCard(index);
   }
+
   return (
     <ImgWrapper onClick={handleClick}>
       <Thumbnail src={imgSrc} />

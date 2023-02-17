@@ -14,6 +14,7 @@ import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [photoIdx, setPhotoIdx] = useState(-1);
   const escKey = useKeyEscClose(closeModal);
 
   function openModal() {
@@ -22,9 +23,11 @@ function Photo() {
   function closeModal() {
     setModalOpen(false);
   }
-  function handleClickCard() {
-    if (!modalOpen) openModal();
-    console.log(modalOpen);
+  function handleClickCard(index: number) {
+    if (!modalOpen) {
+      openModal();
+      setPhotoIdx(index);
+    }
   }
 
   return (
@@ -37,13 +40,14 @@ function Photo() {
         */}
 
         <PhotoCardContainer>
-          {TrainingLogDatas.trainingLogs.map((trainingLog) => {
+          {TrainingLogDatas.trainingLogs.map((trainingLog, index) => {
             return (
               <ThumbnailCard
                 // TODO imgSrc Api 적용
                 imgSrc={BGImage}
                 dateTime={trainingLog.dateTime}
                 handleClickCard={handleClickCard}
+                index={index}
               />
             );
           })}
@@ -52,7 +56,13 @@ function Photo() {
         <PhotoModal
           open={modalOpen}
           close={closeModal}
-          info={[BGImage, BGImage1]}
+          info={{
+            imgSrcs: TrainingLogDatas.trainingLogs[photoIdx].imgSrcs,
+            dateTime: TrainingLogDatas.trainingLogs[photoIdx].dateTime,
+            title: TrainingLogDatas.trainingLogs[photoIdx].title,
+            subTitle: TrainingLogDatas.trainingLogs[photoIdx].subTitle,
+            description: TrainingLogDatas.trainingLogs[photoIdx].description,
+          }}
         />
       </SheetWrapper>
     </DefaultLayout>

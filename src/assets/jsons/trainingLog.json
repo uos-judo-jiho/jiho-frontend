@@ -1,12 +1,122 @@
 {
   "trainingLogs": [
-    { "id": 1, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.01" },
-    { "id": 2, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.02" },
-    { "id": 3, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.03" },
-    { "id": 4, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.04" },
-    { "id": 5, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.05" },
-    { "id": 6, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.06" },
-    { "id": 7, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.07" },
-    { "id": 8, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.08" }
+    {
+      "id": 1,
+      "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "dateTime": "2022.10.01",
+      "title": "🥋지호 훈련일지 🥋",
+      "subTitle": [
+        "정종원",
+        "김찬우",
+        "이선재",
+        "김영민",
+        "이은솔",
+        "한지선",
+        "오승훈",
+        "김성우"
+      ],
+      "description": "긴 글"
+    },
+    {
+      "id": 2,
+      "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "dateTime": "2022.10.02",
+      "title": "🥋지호 훈련일지 🥋",
+      "subTitle": [
+        "정종원",
+        "김찬우",
+        "이선재",
+        "김영민",
+        "이은솔",
+        "한지선",
+        "오승훈",
+        "김성우"
+      ],
+      "description": ""
+    },
+    {
+      "id": 3,
+      "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "dateTime": "2022.10.03",
+      "title": "🥋지호 훈련일지 🥋",
+      "subTitle": [
+        "정종원",
+        "김찬우",
+        "이선재",
+        "김영민",
+        "이은솔",
+        "한지선",
+        "오승훈",
+        "김성우"
+      ],
+      "description": ""
+    },
+    {
+      "id": 4,
+      "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "dateTime": "2022.10.04",
+      "title": "🥋지호 훈련일지 🥋",
+      "subTitle": [
+        "정종원",
+        "김찬우",
+        "이선재",
+        "김영민",
+        "이은솔",
+        "한지선",
+        "오승훈",
+        "김성우"
+      ],
+      "description": ""
+    },
+    {
+      "id": 5,
+      "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "dateTime": "2022.10.05",
+      "title": "🥋지호 훈련일지 🥋",
+      "subTitle": [
+        "정종원",
+        "김찬우",
+        "이선재",
+        "김영민",
+        "이은솔",
+        "한지선",
+        "오승훈",
+        "김성우"
+      ],
+      "description": ""
+    },
+    {
+      "id": 6,
+      "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "dateTime": "2022.10.06",
+      "title": "🥋지호 훈련일지 🥋",
+      "subTitle": [
+        "정종원",
+        "김찬우",
+        "이선재",
+        "김영민",
+        "이은솔",
+        "한지선",
+        "오승훈",
+        "김성우"
+      ],
+      "description": ""
+    },
+    {
+      "id": 7,
+      "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "dateTime": "2022.10.07",
+      "title": "🥋지호 훈련일지 🥋",
+      "subTitle": ["", ""],
+      "description": ""
+    },
+    {
+      "id": 8,
+      "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "dateTime": "2022.10.08",
+      "title": "🥋지호 훈련일지 🥋",
+      "subTitle": ["", ""],
+      "description": ""
+    }
   ]
 }
