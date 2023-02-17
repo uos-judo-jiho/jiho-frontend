@@ -16,7 +16,10 @@ const Container = styled.div`
   @media (min-width: 1200px) and (max-width: 1799px) {
     width: 1140px;
   }
-  @media (max-width: 575px) {
+  @media (min-width: 860px) and (max-width: 1199px) {
+    width: 800px;
+  }
+  @media (max-width: 859px) {
     width: 340px;
   }
 `;

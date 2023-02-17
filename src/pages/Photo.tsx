@@ -9,6 +9,8 @@ import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
 import Title from "../layouts/Title";
 
+import TrainingLogDatas from "../assets/jsons/trainingLog.json";
+
 function Photo() {
   const [modalOpen, setModalOpen] = useState(false);
   function openModal() {
@@ -21,38 +23,29 @@ function Photo() {
     if (!modalOpen) openModal();
     console.log(modalOpen);
   }
+
   return (
     <DefaultLayout>
       <SheetWrapper>
         <Title title={"훈련일지"} />
+        {/* 
+        TODO mapping PhotoCardContainer와 ThumbnailCard 
+        TODO mapping ThumbnailCard imgSrc, dateTime 
+        */}
+
         <PhotoCardContainer>
-          <ThumbnailCard
-            imgSrc={BGImage}
-            handleClickCard={handleClickCard}
-          ></ThumbnailCard>
-          <ThumbnailCard
-            imgSrc={BGImage}
-            handleClickCard={handleClickCard}
-          ></ThumbnailCard>
-          <ThumbnailCard
-            imgSrc={BGImage}
-            handleClickCard={handleClickCard}
-          ></ThumbnailCard>
+          {TrainingLogDatas.trainingLogs.map((trainingLog) => {
+            return (
+              <ThumbnailCard
+                // TODO imgSrc Api 적용
+                imgSrc={BGImage}
+                dateTime={trainingLog.dateTime}
+                handleClickCard={handleClickCard}
+              />
+            );
+          })}
         </PhotoCardContainer>
-        <PhotoCardContainer>
-          <ThumbnailCard
-            imgSrc={BGImage}
-            handleClickCard={handleClickCard}
-          ></ThumbnailCard>
-          <ThumbnailCard
-            imgSrc={BGImage}
-            handleClickCard={handleClickCard}
-          ></ThumbnailCard>
-          <ThumbnailCard
-            imgSrc={BGImage}
-            handleClickCard={handleClickCard}
-          ></ThumbnailCard>
-        </PhotoCardContainer>
+
         <PhotoModal
           open={modalOpen}
           close={closeModal}

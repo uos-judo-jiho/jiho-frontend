@@ -3,20 +3,26 @@ import styled from "styled-components";
 
 type ThumbnailCardProps = {
   imgSrc: string;
+  dateTime: string;
   handleClickCard: Function;
 };
 
 const ImgWrapper = styled.div`
+  width: 100%;
   position: relative;
   &:hover {
     cursor: pointer;
+  }
+  &:after {
+    display: block;
+    content: "";
+    padding-bottom: 100%;
   }
 `;
 
 const HoveredContainer = styled.div`
   position: absolute;
   display: none;
-
   width: 100%;
   height: 100%;
   font-size: ${(props) => props.theme.subTitleFontSize};
@@ -39,14 +45,18 @@ const Thumbnail = styled.img`
     filter: brightness(50%);
   }
 `;
-function ThumbnailCard({ imgSrc, handleClickCard }: ThumbnailCardProps) {
+function ThumbnailCard({
+  imgSrc,
+  dateTime,
+  handleClickCard,
+}: ThumbnailCardProps) {
   function handleClick() {
     handleClickCard();
   }
   return (
     <ImgWrapper onClick={handleClick}>
       <Thumbnail src={imgSrc} />
-      <HoveredContainer>2022.10.10</HoveredContainer>
+      <HoveredContainer>{dateTime}</HoveredContainer>
     </ImgWrapper>
   );
 }

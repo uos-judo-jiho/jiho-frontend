@@ -25,6 +25,7 @@ function HomeSectionNews() {
               return (
                 <NewsCard
                   key={executive.id}
+                  // TODO imgSrc Api 적용
                   imgSrc={ImgSrc}
                   title={executive.title}
                   subTitle={executive.subTitle}

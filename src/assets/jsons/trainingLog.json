@@ -1,0 +1,12 @@
+{
+  "trainingLogs": [
+    { "id": 1, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.01" },
+    { "id": 2, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.02" },
+    { "id": 3, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.03" },
+    { "id": 4, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.04" },
+    { "id": 5, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.05" },
+    { "id": 6, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.06" },
+    { "id": 7, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.07" },
+    { "id": 8, "imgSrcs": ["demo.jpg", "demo1.jpg"], "dateTime": "2022.10.08" }
+  ]
+}
