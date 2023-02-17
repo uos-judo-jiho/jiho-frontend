@@ -72,7 +72,7 @@ const StyledClose = styled(Close)``;
 
 const CloseBtn = styled.button`
   position: fixed;
-  float: right;
+  z-index: 999;
   top: 12%;
   right: 12%;
   background-color: transparent;

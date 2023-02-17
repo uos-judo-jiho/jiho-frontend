@@ -12,29 +12,41 @@ type ModalDescriptionSectionProps = {
 const DescriptionSection = styled.section`
   height: inherit;
   width: inherit;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   padding: 16px;
 `;
 
-const DescriptionTitle = styled.h3`
+const DescriptionHeader = styled.header`
   width: 100%;
+  line-height: normal;
 `;
 
-const DateTime = styled.div`
-  width: 100%;
-`;
+const DescriptionTitle = styled.h3``;
 
-const SubTitle = styled.div`
-  width: 100%;
-`;
+const DateTime = styled.div``;
 
-const Description = styled.p`
+const SubTitle = styled.div``;
+
+const DescriptionWrapper = styled.div`
   width: 100%;
   max-height: 70vh;
-  padding-bottom: 10vh;
+  margin-bottom: 10px;
+
   text-align: justify;
   line-height: normal;
   overflow-y: auto;
   overflow-x: hidden;
+`;
+
+const Description = styled.p`
+  text-indent: 0.4em;
+`;
+
+const ModalFooter = styled.footer`
+  position: absolute;
+  bottom: 0;
 `;
 
 function ModalDescriptionSection({
@@ -45,20 +57,24 @@ function ModalDescriptionSection({
 }: ModalDescriptionSectionProps) {
   return (
     <DescriptionSection>
-      <DescriptionTitle>{title}</DescriptionTitle>
-      <DateTime>{dateTime}</DateTime>
-      <SubTitle>{formatStringArray(subTitle)}</SubTitle>
-      <Line margin={"12px 0px"} borderWidth={"1px"} />
-      <Description>
+      <DescriptionHeader>
+        <DescriptionTitle>{title}</DescriptionTitle>
+        <DateTime>{dateTime}</DateTime>
+        <SubTitle>{formatStringArray(subTitle)}</SubTitle>
+      </DescriptionHeader>
+      <Line margin={"10px 0px"} borderWidth={"1px"} />
+      <DescriptionWrapper>
         {description.split("\n").map((line) => {
           return (
-            <>
+            <Description>
               {line}
               <br />
-            </>
+            </Description>
           );
         })}
-      </Description>
+      </DescriptionWrapper>
+      {/* TODO 좋아요 버튼 만들기 */}
+      <ModalFooter>좋아요 버튼 1</ModalFooter>
     </DescriptionSection>
   );
 }

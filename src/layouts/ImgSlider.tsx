@@ -81,13 +81,6 @@ const CircleWrapper = styled.div`
   bottom: 12px;
   right: 0;
   left: 0;
-  &:before {
-    content: "";
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-    padding-bottom: -40px; /* Adjusts for spacing */
-  }
 `;
 
 const CurrentCircle = styled.div`
