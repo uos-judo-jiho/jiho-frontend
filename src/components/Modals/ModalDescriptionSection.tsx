@@ -18,7 +18,7 @@ const DescriptionSection = styled.section`
   padding: 16px;
 `;
 
-const DescriptionHeader = styled.header`
+const DescriptionHeader = styled.div`
   width: 100%;
   line-height: normal;
 `;
@@ -31,9 +31,7 @@ const SubTitle = styled.div``;
 
 const DescriptionWrapper = styled.div`
   width: 100%;
-  max-height: 70vh;
-  margin-bottom: 10px;
-
+  margin-bottom: 20px;
   text-align: justify;
   line-height: normal;
   overflow-y: auto;
@@ -44,9 +42,11 @@ const Description = styled.p`
   text-indent: 0.4em;
 `;
 
-const ModalFooter = styled.footer`
+const ModalFooter = styled.div`
   position: absolute;
   bottom: 0;
+  left: 16px;
+  right: 16px;
 `;
 
 function ModalDescriptionSection({
@@ -73,8 +73,12 @@ function ModalDescriptionSection({
           );
         })}
       </DescriptionWrapper>
+
       {/* TODO 좋아요 버튼 만들기 */}
-      <ModalFooter>좋아요 버튼 1</ModalFooter>
+      <ModalFooter>
+        <Line margin={"10px 0px"} borderWidth={"1px"} />
+        좋아요 버튼 1
+      </ModalFooter>
     </DescriptionSection>
   );
 }

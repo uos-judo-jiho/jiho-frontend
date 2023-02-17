@@ -8,7 +8,7 @@ type LineProps = {
   borderColor?: string;
 };
 
-const Container = styled.div<LineProps>`
+const Container = styled.hr<LineProps>`
   width: ${(props) => props.width};
   transform-origin: right center;
   margin: ${(props) => props.margin};
