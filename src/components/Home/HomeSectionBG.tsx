@@ -19,6 +19,24 @@ const Container = styled.section<ContainerProps>`
   background-position: center;
   width: 100vw;
   height: 100vh;
+
+  /* gradient img */
+  position: relative;
+
+  &::before {
+    content: "";
+    background: radial-gradient(
+      circle at 10% 20%,
+      rgba(0, 0, 0, 0) 0%,
+      #121212 90.2%
+    );
+
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
 `;
 
 function HomeSectionBG({ bgImageSrc, children, id }: HomeSectionBGProps) {
