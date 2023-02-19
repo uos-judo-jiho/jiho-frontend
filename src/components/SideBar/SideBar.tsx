@@ -40,6 +40,8 @@ const MenuList = styled.ul`
   font-size: ${(props) => props.theme.descriptionFontSize};
 `;
 
+const MenuToggle = styled.a``;
+
 const MenuItemTitle = styled.span`
   line-height: 200%;
 `;
@@ -103,27 +105,35 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
             </Link>
           </MenuItem>
           <MenuItem>
-            <Row justifyContent="space-between" alignItems="center">
-              <MenuItemTitle>지호지</MenuItemTitle>
-              <StyledPlus onClick={() => handleClickMenu("newsToggleMenu")} />
-            </Row>
+            <MenuToggle
+              href="#"
+              onClick={() => handleClickMenu(MENUID.newsToggleMenu)}
+            >
+              <Row justifyContent="space-between" alignItems="center">
+                <MenuItemTitle>지호지</MenuItemTitle>
+                <StyledPlus />
+              </Row>
+            </MenuToggle>
             {/* TODO classify itemsInfo Object  */}
             <SlideSubMenu
               selected={selected[0]}
-              menuId={"newsToggleMenu"}
+              menuId={MENUID.newsToggleMenu}
               itemsInfo={[{ href: "/news", title: "2022 지호지" }]}
             />
           </MenuItem>
           <MenuItem>
-            <Row justifyContent="space-between" alignItems="center">
-              <MenuItemTitle>지호운동</MenuItemTitle>
-              <StyledPlus
-                onClick={() => handleClickMenu("trainingToggleMenu")}
-              />
-            </Row>
+            <MenuToggle
+              href="#"
+              onClick={() => handleClickMenu(MENUID.trainingToggleMenu)}
+            >
+              <Row justifyContent="space-between" alignItems="center">
+                <MenuItemTitle>지호운동</MenuItemTitle>
+                <StyledPlus />
+              </Row>
+            </MenuToggle>
             <SlideSubMenu
               selected={selected[1]}
-              menuId={"newsToggleMenu"}
+              menuId={MENUID.newsToggleMenu}
               itemsInfo={[
                 { href: "/photo", title: "훈련일지" },
                 { href: "/video", title: "영상" },

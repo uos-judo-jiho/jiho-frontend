@@ -17,13 +17,11 @@ const slideDown = (count: number) => keyframes`
       height: 0;
     }
     to {
-        /* 32px 은 theme.descriptionFontSize 의 2배*/
       height: ${count * 2}rem;
     }
 `;
 const slideUp = (count: number) => keyframes`
     from {
-        /* 32px 은 theme.descriptionFontSize 의 2배*/
         height: ${count * 2}rem;
     }
     to {
