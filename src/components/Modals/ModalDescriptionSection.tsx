@@ -1,6 +1,10 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Line from "../../layouts/Line";
+import Row from "../../layouts/Row";
 import { formatStringArray } from "../../utils/Utils";
+import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
+import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
+import { useState } from "react";
 
 type ModalDescriptionSectionProps = {
   title: string;
@@ -15,7 +19,7 @@ const DescriptionSection = styled.section`
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: 1em;
 `;
 
 const DescriptionHeader = styled.div`
@@ -31,7 +35,6 @@ const SubTitle = styled.div``;
 
 const DescriptionWrapper = styled.div`
   width: 100%;
-  margin-bottom: 20px;
   text-align: justify;
   line-height: normal;
   overflow-y: auto;
@@ -45,8 +48,36 @@ const Description = styled.p`
 const ModalFooter = styled.div`
   position: absolute;
   bottom: 0;
-  left: 16px;
-  right: 16px;
+  left: 1em;
+  right: 1em;
+`;
+
+const HeartButton = styled.button`
+  text-align: center;
+  background: none;
+`;
+
+const HeartStyle = css`
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: -7px;
+  background-color: transparent;
+`;
+
+const StyledHeartLine = styled(HeartLine)`
+  ${HeartStyle}
+
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+const StyledHeartFill = styled(HeartFill)`
+  ${HeartStyle}
+`;
+
+const HeartCountSpan = styled.span`
+  font-size: 0.75em;
+  margin-left: 0.5em;
 `;
 
 function ModalDescriptionSection({
@@ -55,6 +86,17 @@ function ModalDescriptionSection({
   subTitle,
   description,
 }: ModalDescriptionSectionProps) {
+  const [clickedHeart, setClickedHeart] = useState(false);
+  const [heartCount, setHeartCount] = useState(0);
+
+  function handleHeart() {
+    if (!clickedHeart) {
+      setHeartCount((prev) => prev + 1);
+    } else {
+      setHeartCount((prev) => prev - 1);
+    }
+    setClickedHeart((prev) => !prev);
+  }
   return (
     <DescriptionSection>
       <DescriptionHeader>
@@ -62,22 +104,26 @@ function ModalDescriptionSection({
         <DateTime>{dateTime}</DateTime>
         <SubTitle>{formatStringArray(subTitle)}</SubTitle>
       </DescriptionHeader>
-      <Line margin={"10px 0px"} borderWidth={"1px"} />
+      <Line margin={"10px 0"} borderWidth={"1px"} />
       <DescriptionWrapper>
-        {description.split("\n").map((line) => {
+        {description.split("\n").map((line, index) => {
           return (
-            <Description>
+            <Description key={"description-p-tag" + index}>
               {line}
               <br />
             </Description>
           );
         })}
       </DescriptionWrapper>
-
+      <Line margin={"10px 0"} borderWidth={"1px"} />
       {/* TODO 좋아요 버튼 만들기 */}
       <ModalFooter>
-        <Line margin={"10px 0px"} borderWidth={"1px"} />
-        좋아요 버튼 1
+        <Row alignItems="center">
+          <HeartButton onClick={handleHeart}>
+            {clickedHeart ? <StyledHeartFill /> : <StyledHeartLine />}
+            <HeartCountSpan>{heartCount}</HeartCountSpan>
+          </HeartButton>
+        </Row>
       </ModalFooter>
     </DescriptionSection>
   );
