@@ -13,6 +13,7 @@ type PhotoModalProps = {
 type InfoType = {
   imgSrcs: string[];
   title: string;
+  author: string;
   dateTime: string;
   subTitle: string[];
   description: string;
@@ -79,14 +80,10 @@ const CloseBtn = styled.button`
 `;
 
 const Main = styled.main`
-  padding: 16px;
+  padding: 1rem;
   width: 100%;
   height: 100%;
 `;
-
-const DescriptionSection = styled.section``;
-
-const DescriptionTitle = styled.h3``;
 
 function PhotoModal({ open, close, info }: PhotoModalProps) {
   return (
@@ -101,6 +98,7 @@ function PhotoModal({ open, close, info }: PhotoModalProps) {
               <ImgSlider datas={info.imgSrcs} />
               <ModalDescriptionSection
                 title={info.title}
+                author={info.author}
                 dateTime={info.dateTime}
                 subTitle={info.subTitle}
                 description={info.description}

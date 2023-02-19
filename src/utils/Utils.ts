@@ -5,8 +5,7 @@ import { ReactNode } from "react";
  * 예시] 매개변수 : ["a", "b", "c"]
  * 반환값 : "a b c "
  */
-export function formatStringArray(stringArray: string[]): string[] {
-  var resultStringArray = [];
-  resultStringArray = stringArray.map((item) => item + " ");
+export function formatStringArray(stringArray: string[]): string {
+  var resultStringArray = stringArray.join(" ");
   return resultStringArray;
 }

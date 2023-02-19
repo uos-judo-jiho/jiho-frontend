@@ -9,6 +9,7 @@ import { useState } from "react";
 type ModalDescriptionSectionProps = {
   title: string;
   dateTime: string;
+  author: string;
   subTitle: string[];
   description: string;
 };
@@ -25,15 +26,20 @@ const DescriptionSection = styled.section`
 const DescriptionHeader = styled.div`
   width: 100%;
   line-height: normal;
+  flex: 0;
+`;
+const DescriptionHeaderTable = styled.table`
+  width: 100%;
 `;
 
-const DescriptionTitle = styled.h3``;
-
-const DateTime = styled.div``;
-
-const SubTitle = styled.div``;
+const DescriptionHeaderTableTd = styled.td`
+  width: 5rem;
+`;
 
 const DescriptionWrapper = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   text-align: justify;
   line-height: normal;
@@ -46,10 +52,11 @@ const Description = styled.p`
 `;
 
 const ModalFooter = styled.div`
-  position: absolute;
+  flex: 0;
+  /* position: absolute;
   bottom: 0;
   left: 1em;
-  right: 1em;
+  right: 1em; */
 `;
 
 const HeartButton = styled.button`
@@ -83,6 +90,7 @@ const HeartCountSpan = styled.span`
 function ModalDescriptionSection({
   title,
   dateTime,
+  author,
   subTitle,
   description,
 }: ModalDescriptionSectionProps) {
@@ -100,9 +108,20 @@ function ModalDescriptionSection({
   return (
     <DescriptionSection>
       <DescriptionHeader>
-        <DescriptionTitle>{title}</DescriptionTitle>
-        <DateTime>{dateTime}</DateTime>
-        <SubTitle>{formatStringArray(subTitle)}</SubTitle>
+        <DescriptionHeaderTable>
+          <tr>
+            <DescriptionHeaderTableTd>작성자</DescriptionHeaderTableTd>
+            <td>{author}</td>
+          </tr>
+          <tr>
+            <DescriptionHeaderTableTd>운동 날짜</DescriptionHeaderTableTd>
+            <td>{dateTime}</td>
+          </tr>
+          <tr>
+            <DescriptionHeaderTableTd>참여 인원</DescriptionHeaderTableTd>
+            <td>{formatStringArray(subTitle)}</td>
+          </tr>
+        </DescriptionHeaderTable>
       </DescriptionHeader>
       <Line margin={"10px 0"} borderWidth={"1px"} />
       <DescriptionWrapper>
@@ -115,9 +134,9 @@ function ModalDescriptionSection({
           );
         })}
       </DescriptionWrapper>
-      <Line margin={"10px 0"} borderWidth={"1px"} />
-      {/* TODO 좋아요 버튼 만들기 */}
+      {/* TODO 좋아요 버튼 state 관리 */}
       <ModalFooter>
+        <Line margin={"10px 0"} borderWidth={"1px"} />
         <Row alignItems="center">
           <HeartButton onClick={handleHeart}>
             {clickedHeart ? <StyledHeartFill /> : <StyledHeartLine />}

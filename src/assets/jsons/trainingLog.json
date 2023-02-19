@@ -3,6 +3,7 @@
     {
       "id": 1,
       "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "author": "이은솔",
       "dateTime": "2022.10.01",
       "title": "🥋지호 훈련일지 🥋",
       "subTitle": [
@@ -21,6 +22,7 @@
     {
       "id": 2,
       "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "author": "",
       "dateTime": "2022.10.02",
       "title": "🥋지호 훈련일지 🥋",
       "subTitle": [
@@ -39,6 +41,7 @@
     {
       "id": 3,
       "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "author": "",
       "dateTime": "2022.10.03",
       "title": "🥋지호 훈련일지 🥋",
       "subTitle": [
@@ -56,6 +59,7 @@
     {
       "id": 4,
       "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "author": "",
       "dateTime": "2022.10.04",
       "title": "🥋지호 훈련일지 🥋",
       "subTitle": [
@@ -73,6 +77,7 @@
     {
       "id": 5,
       "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "author": "",
       "dateTime": "2022.10.05",
       "title": "🥋지호 훈련일지 🥋",
       "subTitle": [
@@ -90,6 +95,7 @@
     {
       "id": 6,
       "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "author": "",
       "dateTime": "2022.10.06",
       "title": "🥋지호 훈련일지 🥋",
       "subTitle": [
@@ -107,6 +113,7 @@
     {
       "id": 7,
       "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "author": "",
       "dateTime": "2022.10.07",
       "title": "🥋지호 훈련일지 🥋",
       "subTitle": ["", ""],
@@ -115,6 +122,7 @@
     {
       "id": 8,
       "imgSrcs": ["demo.jpg", "demo1.jpg"],
+      "author": "",
       "dateTime": "2022.10.08",
       "title": "🥋지호 훈련일지 🥋",
       "subTitle": ["", ""],

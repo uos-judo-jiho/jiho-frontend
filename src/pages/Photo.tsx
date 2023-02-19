@@ -60,6 +60,7 @@ function Photo() {
           info={{
             imgSrcs: TrainingLogDatas.trainingLogs[photoIdx].imgSrcs,
             dateTime: TrainingLogDatas.trainingLogs[photoIdx].dateTime,
+            author: TrainingLogDatas.trainingLogs[photoIdx].author,
             title: TrainingLogDatas.trainingLogs[photoIdx].title,
             subTitle: TrainingLogDatas.trainingLogs[photoIdx].subTitle,
             description: TrainingLogDatas.trainingLogs[photoIdx].description,

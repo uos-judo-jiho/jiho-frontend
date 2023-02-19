@@ -14,20 +14,20 @@ type SlideSubMenuProps = {
 
 const slideDown = (count: number) => keyframes`
     from {
-      height: 0px;
+      height: 0;
     }
     to {
         /* 32px 은 theme.descriptionFontSize 의 2배*/
-      height: ${count * 32}px;
+      height: ${count * 2}rem;
     }
 `;
 const slideUp = (count: number) => keyframes`
     from {
         /* 32px 은 theme.descriptionFontSize 의 2배*/
-        height: ${count * 32}px;
+        height: ${count * 2}rem;
     }
     to {
-      height: 0px;
+      height: 0;
       display: none;
     }
 `;
@@ -46,7 +46,7 @@ const ToggleMenuList = styled.ul<{ count: number }>`
 `;
 
 const MenuItem = styled.li`
-  margin: 0 8px;
+  margin: 0 0.5rem;
   line-height: 200%;
 `;
 
