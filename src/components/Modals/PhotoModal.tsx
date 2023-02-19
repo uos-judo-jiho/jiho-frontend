@@ -86,6 +86,7 @@ function PhotoModal({ open, close, info }: PhotoModalProps) {
             <Row>
               <ImgSlider datas={info.imgSrcs} />
               <ModalDescriptionSection
+                id={info.id}
                 title={info.title}
                 author={info.author}
                 dateTime={info.dateTime}

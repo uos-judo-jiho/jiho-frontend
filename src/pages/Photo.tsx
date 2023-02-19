@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ThumbnailCard from "../components/Photo/ThumbnailCard";
 import DefaultLayout from "../layouts/DefaultLayout";
 
@@ -11,11 +11,21 @@ import Title from "../layouts/Title";
 
 import TrainingLogDatas from "../assets/jsons/trainingLog.json";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
+import { TrainingLogInfoTpye } from "../types/trainingLogInfoType";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState(false);
   const [photoIdx, setPhotoIdx] = useState(0);
   const escKey = useKeyEscClose(closeModal);
+
+  const [trainingLogArray, setTrainingLogArray] = useState<
+    TrainingLogInfoTpye[]
+  >([]);
+
+  useEffect(() => {
+    const trainingLogDatas = TrainingLogDatas;
+    setTrainingLogArray(trainingLogDatas.trainingLogs.slice(0).reverse());
+  }, []);
 
   function openModal() {
     setModalOpen(true);
@@ -30,6 +40,10 @@ function Photo() {
     }
   }
 
+  if (trainingLogArray.length === 0) {
+    return <></>;
+  }
+
   return (
     <DefaultLayout>
       <SheetWrapper>
@@ -40,11 +54,11 @@ function Photo() {
         */}
 
         <PhotoCardContainer>
-          {TrainingLogDatas.trainingLogs.map((trainingLog, index) => {
+          {trainingLogArray.map((trainingLog, index) => {
             return (
               <ThumbnailCard
                 // TODO imgSrc Api 적용
-                key={trainingLog.id}
+                key={"trainingLog" + trainingLog.id}
                 imgSrc={BGImage}
                 dateTime={trainingLog.dateTime}
                 handleClickCard={handleClickCard}
@@ -53,19 +67,23 @@ function Photo() {
             );
           })}
         </PhotoCardContainer>
-
-        <PhotoModal
-          open={modalOpen}
-          close={closeModal}
-          info={{
-            imgSrcs: TrainingLogDatas.trainingLogs[photoIdx].imgSrcs,
-            dateTime: TrainingLogDatas.trainingLogs[photoIdx].dateTime,
-            author: TrainingLogDatas.trainingLogs[photoIdx].author,
-            title: TrainingLogDatas.trainingLogs[photoIdx].title,
-            subTitle: TrainingLogDatas.trainingLogs[photoIdx].subTitle,
-            description: TrainingLogDatas.trainingLogs[photoIdx].description,
-          }}
-        />
+        {trainingLogArray ? (
+          <PhotoModal
+            open={modalOpen}
+            close={closeModal}
+            info={{
+              id: trainingLogArray[photoIdx].id,
+              imgSrcs: trainingLogArray[photoIdx].imgSrcs,
+              dateTime: trainingLogArray[photoIdx].dateTime,
+              author: trainingLogArray[photoIdx].author,
+              title: trainingLogArray[photoIdx].title,
+              subTitle: trainingLogArray[photoIdx].subTitle,
+              description: trainingLogArray[photoIdx].description,
+            }}
+          />
+        ) : (
+          <></>
+        )}
       </SheetWrapper>
     </DefaultLayout>
   );
