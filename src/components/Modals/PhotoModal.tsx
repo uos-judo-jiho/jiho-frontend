@@ -2,25 +2,14 @@ import styled, { keyframes } from "styled-components";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ImgSlider from "../../layouts/ImgSlider";
 import Row from "../../layouts/Row";
+import { TrainingLogInfoTpye } from "../../types/trainingLogInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
 
 type PhotoModalProps = {
   open: boolean;
   close: React.MouseEventHandler<HTMLButtonElement>;
-  info: InfoType;
+  info: TrainingLogInfoTpye;
 };
-
-type InfoType = {
-  imgSrcs: string[];
-  title: string;
-  author: string;
-  dateTime: string;
-  subTitle: string[];
-  description: string;
-};
-/* info object
-  
-*/
 
 const ModalArticleAnimation = keyframes`
     from {
@@ -102,6 +91,7 @@ function PhotoModal({ open, close, info }: PhotoModalProps) {
                 dateTime={info.dateTime}
                 subTitle={info.subTitle}
                 description={info.description}
+                imgSrcs={[]}
               ></ModalDescriptionSection>
             </Row>
           </Main>

@@ -5,14 +5,7 @@ import { formatStringArray } from "../../utils/Utils";
 import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
 import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
 import { useState } from "react";
-
-type ModalDescriptionSectionProps = {
-  title: string;
-  dateTime: string;
-  author: string;
-  subTitle: string[];
-  description: string;
-};
+import { TrainingLogInfoTpye } from "../../types/trainingLogInfoType";
 
 const DescriptionSection = styled.section`
   height: inherit;
@@ -32,8 +25,12 @@ const DescriptionHeaderTable = styled.table`
   width: 100%;
 `;
 
-const DescriptionHeaderTableTd = styled.td`
+const DescriptionHeaderTableTdTitle = styled.td`
   width: 5rem;
+`;
+
+const DescriptionHeaderTdContent = styled.td`
+  word-break: keep-all;
 `;
 
 const DescriptionWrapper = styled.div`
@@ -93,7 +90,7 @@ function ModalDescriptionSection({
   author,
   subTitle,
   description,
-}: ModalDescriptionSectionProps) {
+}: TrainingLogInfoTpye) {
   const [clickedHeart, setClickedHeart] = useState(false);
   const [heartCount, setHeartCount] = useState(0);
 
@@ -110,16 +107,24 @@ function ModalDescriptionSection({
       <DescriptionHeader>
         <DescriptionHeaderTable>
           <tr>
-            <DescriptionHeaderTableTd>작성자</DescriptionHeaderTableTd>
-            <td>{author}</td>
+            <DescriptionHeaderTableTdTitle>
+              작성자
+            </DescriptionHeaderTableTdTitle>
+            <DescriptionHeaderTdContent>{author}</DescriptionHeaderTdContent>
           </tr>
           <tr>
-            <DescriptionHeaderTableTd>운동 날짜</DescriptionHeaderTableTd>
-            <td>{dateTime}</td>
+            <DescriptionHeaderTableTdTitle>
+              운동 날짜
+            </DescriptionHeaderTableTdTitle>
+            <DescriptionHeaderTdContent>{dateTime}</DescriptionHeaderTdContent>
           </tr>
           <tr>
-            <DescriptionHeaderTableTd>참여 인원</DescriptionHeaderTableTd>
-            <td>{formatStringArray(subTitle)}</td>
+            <DescriptionHeaderTableTdTitle>
+              참여 인원
+            </DescriptionHeaderTableTdTitle>
+            <DescriptionHeaderTdContent>
+              {formatStringArray(subTitle)}
+            </DescriptionHeaderTdContent>
           </tr>
         </DescriptionHeaderTable>
       </DescriptionHeader>

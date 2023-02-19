@@ -4,19 +4,14 @@ import styled from "styled-components";
 
 import { ReactComponent as PlusSvg } from "../../assets/svgs/plus.svg";
 import Row from "../../layouts/Row";
+import MENUID from "../../types/menuIdType";
+
 import SlideSubMenu from "./SlideSubMenu";
 
 type SideBarProps = {
   isOpen: boolean;
   setIsOpen: Function;
 };
-
-const MENUID = {
-  newsToggleMenu: "newsToggleMenu",
-  trainingToggleMenu: "trainingToggleMenu",
-};
-
-type MENUID = typeof MENUID[keyof typeof MENUID];
 
 const Container = styled.div`
   z-index: 1;
