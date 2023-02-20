@@ -131,15 +131,15 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
               menuId={MENUID.newsToggleMenu}
               itemsInfo={[
                 { href: "/photo", title: "훈련일지" },
-                { href: "/video", title: "영상" },
+                // { href: "/video", title: "영상" },
               ]}
             />
           </MenuItem>
-          <MenuItem>
+          {/* <MenuItem>
             <Link to="/">
               <MenuItemTitle>Connect Us</MenuItemTitle>
             </Link>
-          </MenuItem>
+          </MenuItem> */}
         </MenuList>
       </NavWrapper>
     </Container>

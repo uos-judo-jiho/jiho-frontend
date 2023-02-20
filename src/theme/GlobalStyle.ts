@@ -61,15 +61,22 @@ a{
 }
 
 header, footer{
-  @media (min-width: 1800px){
+  @media (min-width: 1800px) {
     width: 1780px;
   }
-  @media (min-width: 1200px) and (max-width: 1799px){
+  @media (min-width: 1200px) and (max-width: 1799px) {
     width: 1140px;
   }
-  @media (max-width: 575px) {
+  @media (min-width: 860px) and (max-width: 1199px) {
+    width: 800px;
+  }
+  @media (max-width: 859px) {
+    width: 540px;
+  }
+  @media (max-width: 539px) {
     width: 340px;
   }
+  
 }
 
 button,a{

@@ -65,10 +65,11 @@ function Footer() {
                 {FooterInfo.connetUs.email.href}
               </a>
             </DescriptionItem>
-            <DescriptionItem>
+            {/* TODO 연락처 추가하면 주석 해제 */}
+            {/* <DescriptionItem>
               {FooterInfo.connetUs.tel.title}
               <a href="tel: 010-2222-3333">{FooterInfo.connetUs.tel.href}</a>
-            </DescriptionItem>
+            </DescriptionItem> */}
           </DescriptionList>
         </Row>
         {/* <Row alignItems="center" justifyContent="center">

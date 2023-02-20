@@ -7,14 +7,15 @@ import HomeCard from "./HomeCard";
 import HomeCardsJson from "../../../assets/jsons/homeCards.json";
 
 const Container = styled.div`
-  /* background-color: ${(props) => props.theme.accentColor}; */
+  background-color: ${(props) => props.theme.bgColor};
 `;
 const RepeatContainer = styled.div`
   min-height: 320px;
   display: grid;
   grid-template-columns: repeat(3, calc(33.3333% - 20px));
   grid-gap: 30px;
-  margin: -140px auto 60px 0;
+  margin: -30vh auto 0 0;
+  padding-bottom: 60px;
 `;
 
 const RepeatedCard = styled.div`
