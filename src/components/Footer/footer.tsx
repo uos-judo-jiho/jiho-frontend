@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as InstargramIcon } from "../../assets/svgs/icons8-instargram-500.svg";
 import { ReactComponent as YoutubeIcon } from "../../assets/svgs/icons8-youtube-500.svg";
+import FooterInfo from "../../assets/jsons/footerData.json";
 import Row from "../../layouts/Row";
 
 const FooterWrapper = styled.footer`
@@ -41,38 +42,32 @@ function Footer() {
       <Row justifyContent="space-between">
         <Row>
           <DescriptionList>
-            <DescriptionItem>
-              서울시립대학교 유도 동아리 지호 志豪
-            </DescriptionItem>
-            <DescriptionItem>
-              University of Seoul Judo Team 志豪
-            </DescriptionItem>
-            <DescriptionItem>Since 1985</DescriptionItem>
+            <DescriptionItem>{FooterInfo.title.krTitle}</DescriptionItem>
+            <DescriptionItem>{FooterInfo.title.enTitle}</DescriptionItem>
+            <DescriptionItem>{FooterInfo.title.since}</DescriptionItem>
           </DescriptionList>
           <DescriptionList>
-            <DescriptionItem>정규 운동</DescriptionItem>
-            <DescriptionItem>
-              시간 | 매주 월, 수, 금 18:00-20:00
-            </DescriptionItem>
-            <DescriptionItem>
-              장소 | 서울시립대 건설공학관 지하 1층
-            </DescriptionItem>
+            <DescriptionItem>{FooterInfo.exercise.title}</DescriptionItem>
+            <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
+            <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
           </DescriptionList>
           <DescriptionList>
-            <DescriptionItem>Connect Us</DescriptionItem>
+            <DescriptionItem>{FooterInfo.connetUs.title}</DescriptionItem>
             <DescriptionItem>
-              인스타그램 |
+              {FooterInfo.connetUs.instagram.title}
               <a href="https://www.instagram.com/uos_judo/" target="_blank">
-                {" "}
-                @uos_judo
+                {FooterInfo.connetUs.instagram.href}
               </a>
             </DescriptionItem>
             <DescriptionItem>
-              이메일 |
-              <a href="mailto: uosjudojiho@gmail.com"> uosjudojiho@gmail.com</a>
+              {FooterInfo.connetUs.email.title}
+              <a href="mailto: uosjudojiho@gmail.com">
+                {FooterInfo.connetUs.email.href}
+              </a>
             </DescriptionItem>
             <DescriptionItem>
-              연락처 | <a href="tel: 010-2222-3333">010-2222-3333</a>
+              {FooterInfo.connetUs.tel.title}
+              <a href="tel: 010-2222-3333">{FooterInfo.connetUs.tel.href}</a>
             </DescriptionItem>
           </DescriptionList>
         </Row>

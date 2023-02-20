@@ -3,7 +3,6 @@ import HomeSectionInfo from "../components/Home/Info/HomeSectionInfo";
 import HomeSectionCards from "../components/Home/Main/HomeSectionCards";
 import HomeSectionMain from "../components/Home/Main/HomeSectionMain";
 import HomeSectionNews from "../components/Home/News/HomeSectionNews";
-import StickyButton from "../components/StickyButton";
 import DefaultLayout from "../layouts/DefaultLayout";
 
 function Home() {
@@ -16,7 +15,6 @@ function Home() {
         <HomeSectionNews />
         <HomeSectionExercise />
       </DefaultLayout>
-      <StickyButton />
     </>
   );
 }

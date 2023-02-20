@@ -13,7 +13,7 @@ const darkHeaderColor: string = "#424242";
 const titleFontSize: string = "36px";
 const subTitleFontSize: string = "30px";
 const descriptionFontSize: string = "16px";
-const tinyFontSize: string = "12px";
+const tinyFontSize: string = "14px";
 
 export const darkTheme: DefaultTheme = {
   primaryColor: darkGreyColor,

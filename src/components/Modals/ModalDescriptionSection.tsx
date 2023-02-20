@@ -106,26 +106,30 @@ function ModalDescriptionSection({
     <DescriptionSection>
       <DescriptionHeader>
         <DescriptionHeaderTable>
-          <tr>
-            <DescriptionHeaderTableTdTitle>
-              작성자
-            </DescriptionHeaderTableTdTitle>
-            <DescriptionHeaderTdContent>{author}</DescriptionHeaderTdContent>
-          </tr>
-          <tr>
-            <DescriptionHeaderTableTdTitle>
-              운동 날짜
-            </DescriptionHeaderTableTdTitle>
-            <DescriptionHeaderTdContent>{dateTime}</DescriptionHeaderTdContent>
-          </tr>
-          <tr>
-            <DescriptionHeaderTableTdTitle>
-              참여 인원
-            </DescriptionHeaderTableTdTitle>
-            <DescriptionHeaderTdContent>
-              {formatStringArray(subTitle)}
-            </DescriptionHeaderTdContent>
-          </tr>
+          <tbody>
+            <tr>
+              <DescriptionHeaderTableTdTitle>
+                작성자
+              </DescriptionHeaderTableTdTitle>
+              <DescriptionHeaderTdContent>{author}</DescriptionHeaderTdContent>
+            </tr>
+            <tr>
+              <DescriptionHeaderTableTdTitle>
+                운동 날짜
+              </DescriptionHeaderTableTdTitle>
+              <DescriptionHeaderTdContent>
+                {dateTime}
+              </DescriptionHeaderTdContent>
+            </tr>
+            <tr>
+              <DescriptionHeaderTableTdTitle>
+                참여 인원
+              </DescriptionHeaderTableTdTitle>
+              <DescriptionHeaderTdContent>
+                {formatStringArray(subTitle)}
+              </DescriptionHeaderTdContent>
+            </tr>
+          </tbody>
         </DescriptionHeaderTable>
       </DescriptionHeader>
       <Line margin={"10px 0"} borderWidth={"1px"} />

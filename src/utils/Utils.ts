@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 /** string array에 띄어쓰기를 포함하여 string으로 반환
  *
  * 예시] 매개변수 : ["a", "b", "c"]

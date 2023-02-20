@@ -1,15 +1,9 @@
-import React, { useState } from "react";
-import styled, { css, keyframes } from "styled-components";
-import { ReactComponent as BackArrow } from "../assets/svgs/arrow_back_ios.svg";
-import { ReactComponent as ForwardArrow } from "../assets/svgs/arrow_forward_ios.svg";
+import { useState } from "react";
+import styled, { keyframes } from "styled-components";
+import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 type ImgSliderProps = {
-  datas: Object[];
-};
-
-type ArrowProps = {
-  current: number;
-  length: number;
+  datas: string[]; // imgSrcs: string[]
 };
 
 const SliderAnimation = keyframes`
@@ -46,31 +40,15 @@ const ImgSliderWrapper = styled.div`
   width: 100%;
 `;
 
-const ArrowCss = css`
+const ArrowWrapper = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #e8e8e8;
+  opacity: 0.9;
   position: absolute;
-  z-index: 10;
-  user-select: none;
-
-  cursor: pointer;
-  opacity: 0.6;
-
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const StyledBackArrow = styled(BackArrow)<ArrowProps>`
-  display: ${(props) => (props.current === 0 ? "none" : "flex")};
   top: 50%;
-  left: 12px;
-  ${ArrowCss}
-`;
-
-const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
-  display: ${(props) => (props.current < props.length - 1 ? "flex" : "none")};
-  top: 50%;
-  right: 12px;
-  ${ArrowCss}
+  left: 8px;
 `;
 
 const CircleWrapper = styled.div`
@@ -84,19 +62,18 @@ const CircleWrapper = styled.div`
 `;
 
 const CurrentCircle = styled.div`
-  width: 10px;
-  height: 10px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background-color: ${(props) => props.theme.greyColor};
   opacity: 0.3;
 
-  /* &:not(:last-child) { */
-  margin: 0 10px;
-  /* } */
+  margin: 0 4px;
+
   &.active {
     background-color: ${(props) => props.theme.bgColor};
-    width: 12px;
-    height: 12px;
+    width: 5px;
+    height: 5px;
     opacity: 1;
   }
 `;
@@ -104,7 +81,7 @@ const CurrentCircle = styled.div`
 function ImgSlider({ datas }: ImgSliderProps) {
   const [current, setCurrent] = useState<number>(0);
   const length = datas.length;
-  console.log(length, current);
+
   function nextSlider() {
     setCurrent(current + 1);
   }
@@ -135,7 +112,8 @@ function ImgSlider({ datas }: ImgSliderProps) {
         {datas.map((slider, index) => {
           return (
             <Thumbnail
-              src={slider.toString()}
+              // TODO dev Api
+              src={require("../assets/images/trainingLog/" + slider)}
               key={"thumbnail" + index}
               className={index === current ? "active" : ""}
             />

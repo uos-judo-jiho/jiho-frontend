@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
 import ImgSlider from "../../layouts/ImgSlider";
 import Row from "../../layouts/Row";
 import { TrainingLogInfoTpye } from "../../types/trainingLogInfoType";
@@ -8,7 +10,8 @@ import ModalDescriptionSection from "./ModalDescriptionSection";
 type PhotoModalProps = {
   open: boolean;
   close: React.MouseEventHandler<HTMLButtonElement>;
-  info: TrainingLogInfoTpye;
+  infos: TrainingLogInfoTpye[];
+  index: number;
 };
 
 const ModalArticleAnimation = keyframes`
@@ -74,31 +77,60 @@ const Main = styled.main`
   height: 100%;
 `;
 
-function PhotoModal({ open, close, info }: PhotoModalProps) {
+function PhotoModal({ open, close, infos, index }: PhotoModalProps) {
+  const [current, setCurrent] = useState<number>(index);
+  const [info, setInfo] = useState<TrainingLogInfoTpye>(infos[index]);
+  const length = infos.length;
+
+  useEffect(() => {
+    setInfo(infos[current]);
+  }, [current]);
+
+  function nextSlider() {
+    setCurrent(current + 1);
+  }
+
+  function prevSlider() {
+    setCurrent(current - 1);
+  }
   return (
-    <Container className={open ? "openModal" : ""}>
-      {open ? (
-        <ModalArticle>
-          <CloseBtn onClick={close}>
-            <StyledClose />
-          </CloseBtn>
-          <Main>
-            <Row>
-              <ImgSlider datas={info.imgSrcs} />
-              <ModalDescriptionSection
-                id={info.id}
-                title={info.title}
-                author={info.author}
-                dateTime={info.dateTime}
-                subTitle={info.subTitle}
-                description={info.description}
-                imgSrcs={[]}
-              ></ModalDescriptionSection>
-            </Row>
-          </Main>
-        </ModalArticle>
-      ) : null}
-    </Container>
+    <>
+      <Container className={open ? "openModal" : ""}>
+        {open && info ? (
+          <ModalArticle>
+            <StyledBackArrow
+              onClick={prevSlider}
+              current={current}
+              length={length}
+            />
+            <StyledForwardArrow
+              onClick={nextSlider}
+              current={current}
+              length={length}
+            />
+            <CloseBtn onClick={close}>
+              <StyledClose />
+            </CloseBtn>
+            <Main>
+              <Row>
+                <ImgSlider datas={info.imgSrcs} />
+                <ModalDescriptionSection
+                  id={info.id}
+                  title={info.title}
+                  author={info.author}
+                  dateTime={info.dateTime}
+                  subTitle={info.subTitle}
+                  description={info.description}
+                  imgSrcs={[]}
+                ></ModalDescriptionSection>
+              </Row>
+            </Main>
+          </ModalArticle>
+        ) : (
+          <></>
+        )}
+      </Container>
+    </>
   );
 }
 

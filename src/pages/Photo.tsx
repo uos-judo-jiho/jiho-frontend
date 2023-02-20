@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import ThumbnailCard from "../components/Photo/ThumbnailCard";
 import DefaultLayout from "../layouts/DefaultLayout";
 
-import BGImage from "../assets/images/demo.jpg";
-import BGImage1 from "../assets/images/demo1.jpg";
 import PhotoModal from "../components/Modals/PhotoModal";
 import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
@@ -40,26 +38,21 @@ function Photo() {
     }
   }
 
-  if (trainingLogArray.length === 0) {
-    return <></>;
+  if (!Array.isArray(trainingLogArray) || trainingLogArray.length <= 0) {
+    return null;
   }
 
   return (
     <DefaultLayout>
       <SheetWrapper>
         <Title title={"훈련일지"} />
-        {/* 
-        TODO mapping PhotoCardContainer와 ThumbnailCard 
-        TODO mapping ThumbnailCard imgSrc, dateTime 
-        */}
-
         <PhotoCardContainer>
           {trainingLogArray.map((trainingLog, index) => {
             return (
               <ThumbnailCard
                 // TODO imgSrc Api 적용
                 key={"trainingLog" + trainingLog.id}
-                imgSrc={BGImage}
+                imgSrc={trainingLog.imgSrcs[0]}
                 dateTime={trainingLog.dateTime}
                 handleClickCard={handleClickCard}
                 index={index}
@@ -67,19 +60,12 @@ function Photo() {
             );
           })}
         </PhotoCardContainer>
-        {trainingLogArray ? (
+        {modalOpen ? (
           <PhotoModal
             open={modalOpen}
             close={closeModal}
-            info={{
-              id: trainingLogArray[photoIdx].id,
-              imgSrcs: trainingLogArray[photoIdx].imgSrcs,
-              dateTime: trainingLogArray[photoIdx].dateTime,
-              author: trainingLogArray[photoIdx].author,
-              title: trainingLogArray[photoIdx].title,
-              subTitle: trainingLogArray[photoIdx].subTitle,
-              description: trainingLogArray[photoIdx].description,
-            }}
+            infos={trainingLogArray}
+            index={photoIdx}
           />
         ) : (
           <></>
