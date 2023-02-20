@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { ReactComponent as UpperArrow } from "../assets/svgs/upper-arrow.svg";
+import { ReactComponent as UpperArrow } from "../../assets/svgs/upper-arrow.svg";
 const Container = styled.div`
   position: fixed;
   bottom: 30px;

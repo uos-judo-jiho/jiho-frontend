@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-scroll";
 import styled from "styled-components";
 import Col from "../../../layouts/Col";
-import OutlineButton from "../../OutlineButton";
+import OutlineButton from "../../Buttons/OutlineButton";
 
 type HomeCardProps = {
   icon: string;
