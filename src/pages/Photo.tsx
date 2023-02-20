@@ -10,6 +10,7 @@ import Title from "../layouts/Title";
 import TrainingLogDatas from "../assets/jsons/trainingLog.json";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { TrainingLogInfoTpye } from "../types/trainingLogInfoType";
+import styled from "styled-components";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState(false);

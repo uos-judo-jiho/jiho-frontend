@@ -14,16 +14,33 @@ type PhotoModalProps = {
   index: number;
 };
 
-const ModalArticleAnimation = keyframes`
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+const IndexContainer = styled.div`
+  display: block;
+  position: absolute;
+  padding-top: 1rem;
+  left: 50%;
+`;
+const IndexSpan = styled.span`
+  font-size: ${(props) => props.theme.tinyFontSize};
+  display: block;
+  color: #999;
 `;
 
-const ContainerAnimation = keyframes`
+/**
+ * 팝업이 닫힐때 스르륵 닫히는 효과
+ */
+const ContainerCloseAnimation = keyframes`
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+`;
+/**
+ * 팝업이 열릴때 스르륵 열리는 효과
+ */
+const ContainerOpenAnimation = keyframes`
     from {
         opacity: 0;
     }
@@ -45,8 +62,7 @@ const Container = styled.div`
   &.openModal {
     display: flex;
     align-items: center;
-    /* 팝업이 열릴때 스르륵 열리는 효과 */
-    animation: ${ContainerAnimation} 0.3s;
+    animation: ${ContainerOpenAnimation} 0.3s;
   }
 `;
 
@@ -56,8 +72,7 @@ const ModalArticle = styled.article`
   margin: auto;
   border-radius: 0.3rem;
   background-color: #fff;
-  /* 팝업이 열릴때 스르륵 열리는 효과 */
-  animation: ${ModalArticleAnimation} 0.3s;
+  animation: ${ContainerOpenAnimation} 0.3s;
   overflow: hidden;
 `;
 
@@ -94,43 +109,45 @@ function PhotoModal({ open, close, infos, index }: PhotoModalProps) {
     setCurrent(current - 1);
   }
   return (
-    <>
-      <Container className={open ? "openModal" : ""}>
-        {open && info ? (
-          <ModalArticle>
-            <StyledBackArrow
-              onClick={prevSlider}
-              current={current}
-              length={length}
-            />
-            <StyledForwardArrow
-              onClick={nextSlider}
-              current={current}
-              length={length}
-            />
-            <CloseBtn onClick={close}>
-              <StyledClose />
-            </CloseBtn>
-            <Main>
-              <Row>
-                <ImgSlider datas={info.imgSrcs} />
-                <ModalDescriptionSection
-                  id={info.id}
-                  title={info.title}
-                  author={info.author}
-                  dateTime={info.dateTime}
-                  subTitle={info.subTitle}
-                  description={info.description}
-                  imgSrcs={[]}
-                ></ModalDescriptionSection>
-              </Row>
-            </Main>
-          </ModalArticle>
-        ) : (
-          <></>
-        )}
-      </Container>
-    </>
+    <Container className={open ? "openModal" : ""}>
+      {open && info ? (
+        <ModalArticle>
+          <StyledBackArrow
+            onClick={prevSlider}
+            current={current}
+            length={length}
+          />
+          <StyledForwardArrow
+            onClick={nextSlider}
+            current={current}
+            length={length}
+          />
+
+          <CloseBtn onClick={close}>
+            <StyledClose />
+          </CloseBtn>
+          <Main>
+            <Row>
+              <ImgSlider datas={info.imgSrcs} />
+              <ModalDescriptionSection
+                id={info.id}
+                title={info.title}
+                author={info.author}
+                dateTime={info.dateTime}
+                subTitle={info.subTitle}
+                description={info.description}
+                imgSrcs={[]}
+              ></ModalDescriptionSection>
+            </Row>
+          </Main>
+          <IndexContainer>
+            <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
+          </IndexContainer>
+        </ModalArticle>
+      ) : (
+        <></>
+      )}
+    </Container>
   );
 }
 

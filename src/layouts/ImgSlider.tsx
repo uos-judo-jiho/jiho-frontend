@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
@@ -40,17 +40,6 @@ const ImgSliderWrapper = styled.div`
   width: 100%;
 `;
 
-const ArrowWrapper = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: #e8e8e8;
-  opacity: 0.9;
-  position: absolute;
-  top: 50%;
-  left: 8px;
-`;
-
 const CircleWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -81,6 +70,10 @@ const CurrentCircle = styled.div`
 function ImgSlider({ datas }: ImgSliderProps) {
   const [current, setCurrent] = useState<number>(0);
   const length = datas.length;
+
+  useEffect(() => {
+    setCurrent(0);
+  }, [datas]);
 
   function nextSlider() {
     setCurrent(current + 1);

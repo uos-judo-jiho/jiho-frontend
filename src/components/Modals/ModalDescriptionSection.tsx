@@ -143,15 +143,16 @@ function ModalDescriptionSection({
           );
         })}
       </DescriptionWrapper>
-      {/* TODO 좋아요 버튼 state 관리 */}
+
       <ModalFooter>
         <Line margin={"10px 0"} borderWidth={"1px"} />
-        <Row alignItems="center">
+        {/* TODO 좋아요 버튼 state 관리 완류 후 아래 코드 활성화*/}
+        {/* <Row alignItems="center">
           <HeartButton onClick={handleHeart}>
             {clickedHeart ? <StyledHeartFill /> : <StyledHeartLine />}
             <HeartCountSpan>{heartCount}</HeartCountSpan>
           </HeartButton>
-        </Row>
+        </Row> */}
       </ModalFooter>
     </DescriptionSection>
   );
