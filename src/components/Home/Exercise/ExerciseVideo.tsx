@@ -3,15 +3,12 @@ import styled from "styled-components";
 import YouTube from "react-youtube";
 
 const Container = styled.div`
-  position: absolute;
-  bottom: -200px;
-  right: 20px;
+  position: relative;
+  width: 40vw;
+  height: inherit;
 `;
 
-const VideoWrapper = styled.div`
-  width: 480px;
-  height: 270px;
-`;
+const VideoWrapper = styled.div``;
 
 function ExerciseVideo() {
   return (

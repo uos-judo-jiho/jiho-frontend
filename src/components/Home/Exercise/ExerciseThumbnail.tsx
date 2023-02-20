@@ -3,14 +3,10 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import OutlineButton from "../../OutlineButton";
 import ThumbnailImg from "../../../assets/images/demo.jpg";
-
-type ExerciseThumbnailProps = {
-  imgSrc: string;
-  dateTime: string;
-};
+import TrainingLogDatas from "../../../assets/jsons/trainingLog.json";
 
 const Stack = styled.div`
-  width: 600px;
+  width: 40vw;
   height: auto;
   position: relative;
 `;
@@ -33,16 +29,22 @@ const Thumbnail = styled.img`
   height: inherit;
 `;
 
-function ExerciseThumbnail({ imgSrc, dateTime }: ExerciseThumbnailProps) {
+function ExerciseThumbnail() {
+  const thumbnailData =
+    TrainingLogDatas.trainingLogs[TrainingLogDatas.trainingLogs.length - 1];
   return (
     <Stack>
-      <ThumbnailTitle>2022.10.10</ThumbnailTitle>
+      <ThumbnailTitle>{thumbnailData.dateTime}</ThumbnailTitle>
       <BtnWrapper>
         <Link to={"/Photo"}>
           <OutlineButton text={"자세히보기"} />
         </Link>
       </BtnWrapper>
-      <Thumbnail src={ThumbnailImg} />
+      <Thumbnail
+        // TODO dev API
+        src={require("../../../assets/images/trainingLog/" +
+          thumbnailData.imgSrcs[0])}
+      />
     </Stack>
   );
 }
