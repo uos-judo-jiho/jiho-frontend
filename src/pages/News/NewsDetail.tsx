@@ -4,6 +4,7 @@ import DefaultLayout from "../../layouts/DefaultLayout";
 import NewsJson from "../../assets/jsons/news.json";
 import SheetWrapper from "../../layouts/SheetWrapper";
 import NewsIndex from "../../components/News/NewsIndex";
+import Title from "../../layouts/Title";
 
 type TParams = {
   id: string;
@@ -18,6 +19,7 @@ function NewsDetail() {
   return (
     <DefaultLayout>
       <SheetWrapper paddingTop={20}>
+        <Title title={news.title} />
         <NewsIndex />
       </SheetWrapper>
     </DefaultLayout>

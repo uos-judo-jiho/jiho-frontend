@@ -7,6 +7,7 @@ const whiteColor: string = "#ffffff";
 const primaryColor: string = "#448aff";
 const darkGreyColor: string = "#121212";
 const greyColor: string = "#eeeeee";
+
 const darkHeaderColor: string = "#424242";
 
 // Font

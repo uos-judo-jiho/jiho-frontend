@@ -80,7 +80,7 @@ header, footer{
 }
 
 button,a{
-
+    background-color:transparent;
     border:none;
     &:hover{
         cursor: pointer; 
