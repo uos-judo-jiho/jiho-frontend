@@ -8,8 +8,8 @@ function NewsIndex() {
     <>
       <Carousel></Carousel>
       <NewsCardContainer>
-        <NewsCard />
-        <NewsCard />
+        <NewsCard index={0} />
+        <NewsCard index={1} />
       </NewsCardContainer>
     </>
   );

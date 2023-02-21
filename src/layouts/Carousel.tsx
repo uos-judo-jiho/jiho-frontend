@@ -7,35 +7,38 @@ import demoImg3 from "../assets/images/demo3.jpg";
 import demoImg4 from "../assets/images/demo4.jpg";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
+// TODO 캐로셀 화살표 구현
 type CarouselAnimationProps = {
   x: number;
 };
 
 const BackAnimation = (x: number) => keyframes`
     from {
-        transform: translateX(${x}px);
+        transform: translateX(${x});
     }
     to {
-        transform: translateX((calc(${x} + 20)px));
+        transform: translateX(${x} + 20);
     }
 `;
 
 const ForwardAnimation = (x: number) => keyframes`
     from {
-      transform: translateX(${x}px);
+      transform: translateX(${x});
     }
     to {
-      transform: translateX(calc(${x}px -10%));
+      transform: translateX((${x} -10));
     }
 `;
 const Window = styled.div`
-  background: coral;
   height: 30%;
+
   overflow: hidden;
+  position: relative;
 `;
 
 const CarouselWrapper = styled.div<CarouselAnimationProps>`
   display: inline-flex;
+  padding: 1rem 0;
 
   &.forward {
     animation: ${(props) => ForwardAnimation(props.x)} 0.5s forwards;
@@ -64,12 +67,25 @@ const ScrollWrapper = styled.div`
   /* } */
 `;
 
-const ImgWrapper = styled.div`
+const CarouselItem = styled.div`
   background: black;
   margin-right: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   scroll-snap-align: start;
   display: inline-block;
+  transition: all 0.5s;
+  transition-delay: 0.5s;
+  cursor: pointer;
+
+  &:hover {
+    scale: 101%;
+    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+  }
+`;
+
+const ImgWrapper = styled.div`
+  width: 100%;
+  height: 100%;
 `;
 
 const Img = styled.img`
@@ -136,9 +152,11 @@ function Carousel() {
           x={currentTranslateX}
         >
           {demoImgArray.map((img, index) => (
-            <ImgWrapper key={"demo" + index}>
-              <Img src={img} />
-            </ImgWrapper>
+            <CarouselItem key={"demo" + index}>
+              <ImgWrapper>
+                <Img src={img} />
+              </ImgWrapper>
+            </CarouselItem>
           ))}
         </CarouselWrapper>
       </ScrollWrapper>
