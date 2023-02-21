@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import NewsJson from "../../assets/jsons/news.json";
 import SheetWrapper from "../../layouts/SheetWrapper";
+import NewsIndex from "../../components/News/NewsIndex";
 
 type TParams = {
   id: string;
@@ -16,7 +17,9 @@ function NewsDetail() {
 
   return (
     <DefaultLayout>
-      <SheetWrapper paddingTop={20}>{[news.title, news.author]}</SheetWrapper>
+      <SheetWrapper paddingTop={20}>
+        <NewsIndex />
+      </SheetWrapper>
     </DefaultLayout>
   );
 }
