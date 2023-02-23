@@ -1,4 +1,4 @@
-export interface TrainingLogInfoTpye {
+export interface ArticleInfoTpye {
   id: string;
   imgSrcs: string[];
   title: string;

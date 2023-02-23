@@ -14,7 +14,7 @@ type SideBarProps = {
 };
 
 const Container = styled.div`
-  z-index: 1;
+  z-index: 999;
   padding: 50px;
   border-radius: 15px 0 0 15px;
   background-color: ${(props) => props.theme.bgColor};

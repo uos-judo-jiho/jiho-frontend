@@ -9,7 +9,7 @@ import Title from "../layouts/Title";
 
 import TrainingLogDatas from "../assets/jsons/trainingLog.json";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
-import { TrainingLogInfoTpye } from "../types/trainingLogInfoType";
+import { ArticleInfoTpye } from "../types/ArticleInfoTpye";
 import styled from "styled-components";
 
 function Photo() {
@@ -17,9 +17,9 @@ function Photo() {
   const [photoIdx, setPhotoIdx] = useState(0);
   const escKey = useKeyEscClose(closeModal);
 
-  const [trainingLogArray, setTrainingLogArray] = useState<
-    TrainingLogInfoTpye[]
-  >([]);
+  const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoTpye[]>(
+    []
+  );
 
   useEffect(() => {
     const trainingLogDatas = TrainingLogDatas;

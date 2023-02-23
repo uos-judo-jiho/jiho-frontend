@@ -4,13 +4,13 @@ import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
 import ImgSlider from "../../layouts/ImgSlider";
 import Row from "../../layouts/Row";
-import { TrainingLogInfoTpye } from "../../types/trainingLogInfoType";
+import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
 import ModalDescriptionSection from "./ModalDescriptionSection";
 
 type PhotoModalProps = {
   open: boolean;
   close: React.MouseEventHandler<HTMLButtonElement>;
-  infos: TrainingLogInfoTpye[];
+  infos: ArticleInfoTpye[];
   index: number;
 };
 
@@ -94,7 +94,7 @@ const Main = styled.main`
 
 function PhotoModal({ open, close, infos, index }: PhotoModalProps) {
   const [current, setCurrent] = useState<number>(index);
-  const [info, setInfo] = useState<TrainingLogInfoTpye>(infos[index]);
+  const [info, setInfo] = useState<ArticleInfoTpye>(infos[index]);
   const length = infos.length;
 
   useEffect(() => {

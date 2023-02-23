@@ -5,7 +5,7 @@ import { formatStringArray } from "../../utils/Utils";
 import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
 import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
 import { useState } from "react";
-import { TrainingLogInfoTpye } from "../../types/trainingLogInfoType";
+import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
 
 const DescriptionSection = styled.section`
   height: inherit;
@@ -90,7 +90,7 @@ function ModalDescriptionSection({
   author,
   subTitle,
   description,
-}: TrainingLogInfoTpye) {
+}: ArticleInfoTpye) {
   const [clickedHeart, setClickedHeart] = useState(false);
   const [heartCount, setHeartCount] = useState(0);
 

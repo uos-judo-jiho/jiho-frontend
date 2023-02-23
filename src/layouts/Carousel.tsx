@@ -1,34 +1,17 @@
-import React, { useEffect, useState, useTransition } from "react";
-import styled, { keyframes } from "styled-components";
-import demoImg from "../assets/images/demo.jpg";
-import demoImg1 from "../assets/images/demo1.jpg";
-import demoImg2 from "../assets/images/demo2.jpg";
-import demoImg3 from "../assets/images/demo3.jpg";
-import demoImg4 from "../assets/images/demo4.jpg";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
-// TODO 캐로셀 화살표 구현
-type CarouselAnimationProps = {
-  x: number;
+type CarouselProps = {
+  datas: string[];
 };
 
-const BackAnimation = (x: number) => keyframes`
-    from {
-        transform: translateX(${x});
-    }
-    to {
-        transform: translateX(${x} + 20);
-    }
-`;
+// TODO 캐로셀 화살표 구현
+type CarouselWrapperProps = {
+  index: number;
+};
 
-const ForwardAnimation = (x: number) => keyframes`
-    from {
-      transform: translateX(${x});
-    }
-    to {
-      transform: translateX((${x} -10));
-    }
-`;
 const Window = styled.div`
   height: 30%;
 
@@ -36,16 +19,9 @@ const Window = styled.div`
   position: relative;
 `;
 
-const CarouselWrapper = styled.div<CarouselAnimationProps>`
+const CarouselWrapper = styled.div<CarouselWrapperProps>`
   display: inline-flex;
   padding: 1rem 0;
-
-  &.forward {
-    animation: ${(props) => ForwardAnimation(props.x)} 0.5s forwards;
-  }
-  &.back {
-    animation: ${(props) => BackAnimation(props.x)} 0.5s forwards;
-  }
 `;
 
 const ScrollWrapper = styled.div`
@@ -57,29 +33,27 @@ const ScrollWrapper = styled.div`
     display: none;
   }
 
-  /* &.data-core-scroller { */
   position: relative;
   white-space: nowrap;
-  scroll-snap-type: mandatory;
+  // TODO snap은 컨테이너의 크기를 조절한 후 활성화
+  /* scroll-snap-type: mandatory;
   scroll-snap-type: x mandatory;
-  overflow-x: scroll;
-  -webkit-overflow-scrolling: touch;
-  /* } */
+  -webkit-overflow-scrolling: touch; */
 `;
 
 const CarouselItem = styled.div`
-  background: black;
-  margin-right: 1rem;
-  border-radius: 1rem;
   scroll-snap-align: start;
   display: inline-block;
+  background: black;
   transition: all 0.5s;
-  transition-delay: 0.5s;
+  border-radius: 1rem;
+  margin-right: 1rem;
+
   cursor: pointer;
 
   &:hover {
-    scale: 101%;
-    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+    transform: scale3d(1.01, 1.01, 1.01);
+    box-shadow: 2px 4px 16px rgb(0 0 0 / 16%);
   }
 `;
 
@@ -95,64 +69,56 @@ const Img = styled.img`
   flex: none;
 `;
 
-function Carousel() {
-  const demoImgArray = [demoImg, demoImg1, demoImg2, demoImg3, demoImg4];
-  const [direction, setDirection] = useState("");
-  const [currentTranslateX, setCurrentTranslateX] = useState(0);
+function Carousel({ datas }: CarouselProps) {
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [carouselWidth, setCarouselWidth] = useState<number>(0);
+  const [carouselItemWidth, setCarouselItemWidth] = useState<number>(0);
+  const [maxIndex, setMaxIndex] = useState<number>(0);
 
   useEffect(() => {
-    const carousel = document.getElementById("carousel") as HTMLElement;
-    const scroll = document.getElementById("scroll") as HTMLElement;
+    const carouselDivWidth = document.getElementById("carousel")?.offsetWidth;
+    const carouselItemDivWidth =
+      document.getElementById("carousel-item")?.offsetWidth;
 
-    function _setCurrentTranslateX() {
-      setCurrentTranslateX(
-        carousel.getBoundingClientRect().left -
-          scroll.getBoundingClientRect().left
-      );
-    }
-    function wacthScroll() {
-      scroll.addEventListener("scroll", _setCurrentTranslateX);
-    }
-    wacthScroll();
-  });
+    setCarouselWidth(carouselDivWidth || 0);
+    setCarouselItemWidth(carouselItemDivWidth || 0);
+    setMaxIndex(
+      Math.ceil((carouselDivWidth || 0) / (carouselItemDivWidth || 1))
+    );
+    console.log(carouselWidth, carouselItemWidth, maxIndex);
+  }, [document.getElementById("carousel")]);
 
   function handleBackArrow() {
-    setDirection("back");
+    if (currentIndex === 0) {
+      return;
+    }
+    setCurrentIndex((prev) => prev - 1);
+    console.log(CarouselWrapper);
   }
 
   function handleForwardArrow() {
-    setDirection("forward");
-    setTimeout(() => {
-      handleAnimationEnd();
-    }, 500);
-  }
-
-  function handleAnimationEnd() {
-    // setDirection("");
+    if (currentIndex === maxIndex) {
+      return;
+    }
+    setCurrentIndex((prev) => prev + 1);
   }
 
   return (
     <Window>
       <StyledBackArrow
         current={1}
-        length={demoImgArray.length}
+        length={datas.length}
         onClick={handleBackArrow}
-        onAnimationEnd={handleAnimationEnd}
       />
       <StyledForwardArrow
         current={1}
-        length={demoImgArray.length}
+        length={datas.length}
         onClick={handleForwardArrow}
-        onAnimationEnd={handleAnimationEnd}
       />
       <ScrollWrapper id={"scroll"}>
-        <CarouselWrapper
-          id={"carousel"}
-          className={direction}
-          x={currentTranslateX}
-        >
-          {demoImgArray.map((img, index) => (
-            <CarouselItem key={"demo" + index}>
+        <CarouselWrapper id={"carousel"} index={currentIndex}>
+          {datas.map((img, index) => (
+            <CarouselItem id={"carousel-item"} key={"demo" + index}>
               <ImgWrapper>
                 <Img src={img} />
               </ImgWrapper>
@@ -160,7 +126,7 @@ function Carousel() {
           ))}
         </CarouselWrapper>
       </ScrollWrapper>
-      {currentTranslateX}
+      {currentIndex}
     </Window>
   );
 }

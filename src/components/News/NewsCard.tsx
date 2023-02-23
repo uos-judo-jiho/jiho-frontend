@@ -1,15 +1,15 @@
-import React, { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import styled from "styled-components";
-import Col from "../../layouts/Col";
 
-import demoImg from "../../assets/images/demo.jpg";
 import PhotoModal from "../Modals/PhotoModal";
 
 // TODO API 뉴스
-import DemoData from "../../assets/jsons/trainingLog.json";
+import Row from "../../layouts/Row";
+import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
 
 type NewsCardProps = {
   index: number;
+  datas: ArticleInfoTpye[];
 };
 
 const Container = styled.div`
@@ -20,8 +20,8 @@ const Container = styled.div`
   cursor: pointer;
 
   &:hover {
-    scale: 101%;
-    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+    transform: scale3d(1.01, 1.01, 1.01);
+    box-shadow: 2px 4px 16px rgb(0 0 0 / 16%);
   }
 `;
 
@@ -31,9 +31,10 @@ const Img = styled.img`
 
 const DescriptionWrapper = styled.div`
   width: 100%;
-  padding: 1rem 0;
+  padding: 0 1rem;
   line-height: normal;
-  word-break: keep-all;
+  text-indent: 0.4rem;
+  /* word-break: keep-all; */
 `;
 
 const SeeMore = styled.span``;
@@ -44,9 +45,8 @@ const MoreButton = styled.button`
   color: ${(props) => props.theme.textColor};
 `;
 
-function NewsCard({ index }: NewsCardProps) {
-  const demoData = DemoData.trainingLogs;
-  const comment = demoData[index].description;
+function NewsCard({ index, datas }: NewsCardProps) {
+  const comment = datas[index].description;
 
   const [isMore, setIsMore] = useState<boolean>(false);
   const textLimit = useRef<number>(200);
@@ -66,8 +66,12 @@ function NewsCard({ index }: NewsCardProps) {
   return (
     <>
       <Container onClick={openSeeMore}>
-        <Col>
-          <Img src={demoImg} />
+        <Row>
+          {/* TODO img src */}
+          <Img
+            src={require("../../assets/images/trainingLog/" +
+              datas[index].imgSrcs[0])}
+          />
           <DescriptionWrapper>
             {commenter}
             <SeeMore>
@@ -75,13 +79,13 @@ function NewsCard({ index }: NewsCardProps) {
               <MoreButton>...더보기</MoreButton>
             </SeeMore>
           </DescriptionWrapper>
-        </Col>
+        </Row>
       </Container>
       {isMore ? (
         <PhotoModal
           open={isMore}
           close={closeSeeMore}
-          infos={demoData}
+          infos={datas}
           index={index}
         />
       ) : (
