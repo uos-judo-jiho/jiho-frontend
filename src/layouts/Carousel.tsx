@@ -8,6 +8,7 @@ type CarouselProps = {
 };
 
 // TODO 캐로셀 화살표 구현
+// 구현 될 때 까지 스크롤로 표현
 type CarouselWrapperProps = {
   index: number;
 };
@@ -105,7 +106,8 @@ function Carousel({ datas }: CarouselProps) {
 
   return (
     <Window>
-      <StyledBackArrow
+      {/* TODO 화살표 구현전까지 스크롤로 하기 */}
+      {/* <StyledBackArrow
         current={1}
         length={datas.length}
         onClick={handleBackArrow}
@@ -114,7 +116,7 @@ function Carousel({ datas }: CarouselProps) {
         current={1}
         length={datas.length}
         onClick={handleForwardArrow}
-      />
+      /> */}
       <ScrollWrapper id={"scroll"}>
         <CarouselWrapper id={"carousel"} index={currentIndex}>
           {datas.map((img, index) => (
@@ -126,7 +128,6 @@ function Carousel({ datas }: CarouselProps) {
           ))}
         </CarouselWrapper>
       </ScrollWrapper>
-      {currentIndex}
     </Window>
   );
 }
