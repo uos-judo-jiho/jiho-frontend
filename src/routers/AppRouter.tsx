@@ -6,10 +6,12 @@ import News from "../pages/News";
 import NewsDetail from "../pages/News/NewsDetail";
 import Photo from "../pages/Photo";
 import Video from "../pages/Video";
+import ScrollToTop from "./ScrollTop";
 
 function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />}></Route>
