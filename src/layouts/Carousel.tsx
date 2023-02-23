@@ -47,7 +47,7 @@ const CarouselItem = styled.div`
   display: inline-block;
   background: black;
   transition: all 0.5s;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   margin-right: 1rem;
 
   cursor: pointer;

@@ -18,6 +18,7 @@ function NewsIndex() {
       ></Carousel>
       <NewsCardContainer>
         {/* TODO 뉴스 데이터로 교체하기 */}
+        {/* TODO infinite scroll 구현하기 */}
         {DemoData.trainingLogs.map((item, index) => {
           return (
             <NewsCard

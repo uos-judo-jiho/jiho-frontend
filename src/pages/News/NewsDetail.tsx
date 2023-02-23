@@ -19,7 +19,7 @@ function NewsDetail() {
   return (
     <DefaultLayout>
       <SheetWrapper paddingTop={20}>
-        <Title title={news.title} />
+        <Title title={"지호지"} />
         <NewsIndex />
       </SheetWrapper>
     </DefaultLayout>

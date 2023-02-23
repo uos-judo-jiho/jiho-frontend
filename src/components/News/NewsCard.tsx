@@ -6,6 +6,7 @@ import PhotoModal from "../Modals/PhotoModal";
 // TODO API 뉴스
 import Row from "../../layouts/Row";
 import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
+import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
 
 type NewsCardProps = {
   index: number;
@@ -14,6 +15,7 @@ type NewsCardProps = {
 
 const Container = styled.div`
   width: 100%;
+  display: flex;
   border-radius: 1rem;
   padding: 2rem 1rem;
   transition: all 0.5s;
@@ -25,8 +27,25 @@ const Container = styled.div`
   }
 `;
 
-const Img = styled.img`
+const ImgWrapper = styled.div`
   width: 50%;
+  @media (max-width: 539px) {
+    width: 100%;
+  }
+`;
+
+const Imgtitle = styled.div`
+  font-size: 1rem;
+  padding-top: 0.5rem;
+  display: none;
+  @media (max-width: 539px) {
+    display: block;
+  }
+`;
+
+const Img = styled.img`
+  width: 100%;
+  border-radius: 0.5rem;
 `;
 
 const DescriptionWrapper = styled.div`
@@ -34,6 +53,10 @@ const DescriptionWrapper = styled.div`
   padding: 0 1rem;
   line-height: normal;
   text-indent: 0.4rem;
+
+  @media (max-width: 539px) {
+    display: none;
+  }
   /* word-break: keep-all; */
 `;
 
@@ -46,6 +69,7 @@ const MoreButton = styled.button`
 `;
 
 function NewsCard({ index, datas }: NewsCardProps) {
+  const escKey = useKeyEscClose(closeSeeMore);
   const comment = datas[index].description;
 
   const [isMore, setIsMore] = useState<boolean>(false);
@@ -66,20 +90,21 @@ function NewsCard({ index, datas }: NewsCardProps) {
   return (
     <>
       <Container onClick={openSeeMore}>
-        <Row>
-          {/* TODO img src */}
+        {/* TODO img src */}
+        <ImgWrapper>
           <Img
             src={require("../../assets/images/trainingLog/" +
               datas[index].imgSrcs[0])}
           />
-          <DescriptionWrapper>
-            {commenter}
-            <SeeMore>
-              <br />
-              <MoreButton>...더보기</MoreButton>
-            </SeeMore>
-          </DescriptionWrapper>
-        </Row>
+          <Imgtitle>{datas[index].author}</Imgtitle>
+        </ImgWrapper>
+        <DescriptionWrapper>
+          {commenter}
+          <SeeMore>
+            <br />
+            <MoreButton>...더보기</MoreButton>
+          </SeeMore>
+        </DescriptionWrapper>
       </Container>
       {isMore ? (
         <PhotoModal
