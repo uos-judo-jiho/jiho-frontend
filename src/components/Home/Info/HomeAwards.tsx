@@ -5,7 +5,7 @@ import Awards from "../../../assets/jsons/awards.json";
 import styled from "styled-components";
 
 const AwardsItem = styled.li`
-  margin: 10px 0;
+  margin: 1rem 0;
   font-size: ${(props) => props.theme.descriptionFontSize};
 `;
 
