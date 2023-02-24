@@ -12,6 +12,7 @@ type LogoProps = {
 type ContainerProps = {
   margin?: number;
 };
+
 const Container = styled.div<ContainerProps>`
   margin: ${(props) => props.margin}px;
   margin-right: -40px;

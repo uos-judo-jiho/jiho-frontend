@@ -11,9 +11,10 @@ import Logo from "../Logo";
 
 const Header = styled.header`
   margin: 0 auto;
+  height: 10vh;
 `;
 const Container = styled.div`
-  min-height: 80px;
+  height: 10vh;
 `;
 
 const StyledMenu = styled(Menu)`

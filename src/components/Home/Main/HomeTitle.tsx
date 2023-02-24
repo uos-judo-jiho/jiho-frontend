@@ -4,8 +4,8 @@ import SheetWrapper from "../../../layouts/SheetWrapper";
 
 const ContainerWrapper = styled.div`
   display: flex;
-  width: 508px;
-  min-height: 480px;
+  width: 30vw;
+  min-height: 30vw;
   height: auto;
   margin: 0 0 60px auto;
   padding-top: 60px;
@@ -44,7 +44,11 @@ function HomeTitle() {
         <Container>
           <SubTitle>서울시립대학교 유도부</SubTitle>
           <Title>지호</Title>
-          <Line width={"352px"} margin={"26px auto 0 0"} borderWidth={"8px"} />
+          <Line
+            width={"100%"}
+            margin={"1rem auto 0 0"}
+            borderWidth={"0.5rem"}
+          />
         </Container>
       </ContainerWrapper>
     </SheetWrapper>

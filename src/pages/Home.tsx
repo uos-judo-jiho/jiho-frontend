@@ -4,17 +4,20 @@ import HomeSectionCards from "../components/Home/Main/HomeSectionCards";
 import HomeSectionMain from "../components/Home/Main/HomeSectionMain";
 import HomeSectionNews from "../components/Home/News/HomeSectionNews";
 import DefaultLayout from "../layouts/DefaultLayout";
+import ScrollSnap from "../layouts/ScrollSnap";
 
 function Home() {
   return (
     <>
-      <DefaultLayout>
-        <HomeSectionMain />
-        {/* <HomeSectionCards /> */}
-        <HomeSectionInfo />
-        <HomeSectionNews />
-        <HomeSectionExercise />
-      </DefaultLayout>
+      <ScrollSnap>
+        <DefaultLayout>
+          <HomeSectionMain />
+          {/* <HomeSectionCards /> */}
+          <HomeSectionInfo />
+          <HomeSectionNews />
+          <HomeSectionExercise />
+        </DefaultLayout>
+      </ScrollSnap>
     </>
   );
 }
