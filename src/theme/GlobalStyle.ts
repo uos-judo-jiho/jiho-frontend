@@ -1,4 +1,22 @@
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, css } from "styled-components";
+
+export const MediaLayout = css`
+  @media (min-width: 1800px) {
+    width: 1700px;
+  }
+  @media (min-width: 1200px) and (max-width: 1799px) {
+    width: 1140px;
+  }
+  @media (min-width: 860px) and (max-width: 1199px) {
+    width: 800px;
+  }
+  @media (max-width: 859px) {
+    width: 540px;
+  }
+  @media (max-width: 539px) {
+    width: 340px;
+  }
+`;
 
 export const GlobalStyle = createGlobalStyle`  
     
@@ -60,22 +78,9 @@ a{
   color:inherit;
 }
 
-header, footer{
-  @media (min-width: 1800px) {
-    width: 1780px;
-  }
-  @media (min-width: 1200px) and (max-width: 1799px) {
-    width: 1140px;
-  }
-  @media (min-width: 860px) and (max-width: 1199px) {
-    width: 800px;
-  }
-  @media (max-width: 859px) {
-    width: 540px;
-  }
-  @media (max-width: 539px) {
-    width: 340px;
-  }
+header, footer
+{
+  ${MediaLayout}
   
 }
 

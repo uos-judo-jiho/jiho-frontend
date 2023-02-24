@@ -1,4 +1,4 @@
-import BGImage from "../../../assets/images/demo3.jpg";
+import BGImage from "../../../assets/images/background-img-training.jpg";
 import HomeSectionBG from "../HomeSectionBG";
 
 import styled from "styled-components";
