@@ -48,7 +48,7 @@ const Description = styled.p`
   text-indent: 0.4em;
 `;
 
-const ModalFooter = styled.div`
+const DescriptionFooter = styled.div`
   flex: 0;
   /* position: absolute;
   bottom: 0;
@@ -143,8 +143,7 @@ function ModalDescriptionSection({
           );
         })}
       </DescriptionWrapper>
-
-      <ModalFooter>
+      <DescriptionFooter>
         <Line margin={"10px 0"} borderWidth={"1px"} />
         {/* TODO 좋아요 버튼 state 관리 완류 후 아래 코드 활성화*/}
         {/* <Row alignItems="center">
@@ -153,7 +152,7 @@ function ModalDescriptionSection({
             <HeartCountSpan>{heartCount}</HeartCountSpan>
           </HeartButton>
         </Row> */}
-      </ModalFooter>
+      </DescriptionFooter>
     </DescriptionSection>
   );
 }

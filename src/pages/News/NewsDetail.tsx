@@ -12,7 +12,7 @@ type TParams = {
 
 function NewsDetail() {
   const { id } = useParams<TParams>();
-  const news = NewsJson.news.find((newsjson) => newsjson.id.toString() === id);
+  const news = NewsJson.news.find((newsjson) => newsjson.year === id);
   if (!news) return <></>;
   console.log(news);
 
@@ -20,7 +20,7 @@ function NewsDetail() {
     <DefaultLayout>
       <SheetWrapper paddingTop={20}>
         <Title title={"지호지"} />
-        <NewsIndex />
+        <NewsIndex articles={news.articles} images={news.images} />
       </SheetWrapper>
     </DefaultLayout>
   );

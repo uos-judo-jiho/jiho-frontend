@@ -122,7 +122,8 @@ function Carousel({ datas }: CarouselProps) {
           {datas.map((img, index) => (
             <CarouselItem id={"carousel-item"} key={"demo" + index}>
               <ImgWrapper>
-                <Img src={img} />
+                {/* TODO img src */}
+                <Img src={require("../assets/images/" + img)} />
               </ImgWrapper>
             </CarouselItem>
           ))}

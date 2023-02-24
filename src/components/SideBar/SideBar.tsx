@@ -110,10 +110,11 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
               </Row>
             </MenuToggle>
             {/* TODO classify itemsInfo Object  */}
+            {/* TODO routing 조절 */}
             <SlideSubMenu
               selected={selected[0]}
               menuId={MENUID.newsToggleMenu}
-              itemsInfo={[{ href: "/news", title: "2022 지호지" }]}
+              itemsInfo={[{ href: "/news/2022", title: "2022 지호지" }]}
             />
           </MenuItem>
           <MenuItem>

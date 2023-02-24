@@ -9,24 +9,22 @@ import demoImg1 from "../../assets/images/demo1.jpg";
 import demoImg2 from "../../assets/images/demo2.jpg";
 import demoImg3 from "../../assets/images/demo3.jpg";
 import demoImg4 from "../../assets/images/demo4.jpg";
+import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
 
-function NewsIndex() {
+type NewsIndexProps = {
+  articles: ArticleInfoTpye[];
+  images: string[];
+};
+
+function NewsIndex({ articles, images }: NewsIndexProps) {
   return (
     <>
-      <Carousel
-        datas={[demoImg, demoImg1, demoImg2, demoImg3, demoImg4]}
-      ></Carousel>
+      <Carousel datas={images}></Carousel>
       <NewsCardContainer>
         {/* TODO 뉴스 데이터로 교체하기 */}
         {/* TODO infinite scroll 구현하기 */}
-        {DemoData.trainingLogs.map((item, index) => {
-          return (
-            <NewsCard
-              key={item.id}
-              index={index}
-              datas={DemoData.trainingLogs}
-            />
-          );
+        {articles.map((item, index) => {
+          return <NewsCard key={item.id} index={index} datas={articles} />;
         })}
       </NewsCardContainer>
     </>

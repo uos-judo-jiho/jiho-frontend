@@ -14,7 +14,7 @@ function AppRouter() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/news" element={<News />}></Route>
+        <Route path="/news" element={<News />} />
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/photo" element={<Photo />} />
