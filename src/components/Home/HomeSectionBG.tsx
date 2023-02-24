@@ -6,16 +6,21 @@ type HomeSectionBGProps = {
   bgImageSrc: string;
   children: React.ReactNode;
   id: string;
+  backgroundCover?: boolean;
 };
 
 type ContainerProps = {
   bgImageSrc: string;
+  backgroundCover?: boolean;
 };
 
 const Container = styled.section<ContainerProps>`
   background-image: url(${(props) => props.bgImageSrc});
+
   background-repeat: no-repeat;
-  background-size: cover;
+  background-color: #121212;
+
+  background-size: ${(props) => (props.backgroundCover ? "cover" : "contain")};
   background-position: center;
   width: 100vw;
   height: 100vh;
@@ -39,9 +44,18 @@ const Container = styled.section<ContainerProps>`
   }
 `;
 
-function HomeSectionBG({ bgImageSrc, children, id }: HomeSectionBGProps) {
+function HomeSectionBG({
+  bgImageSrc,
+  children,
+  id,
+  backgroundCover = true,
+}: HomeSectionBGProps) {
   return (
-    <Container bgImageSrc={bgImageSrc} id={id}>
+    <Container
+      bgImageSrc={bgImageSrc}
+      id={id}
+      backgroundCover={backgroundCover}
+    >
       {children}
     </Container>
   );

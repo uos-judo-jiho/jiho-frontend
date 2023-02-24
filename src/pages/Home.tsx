@@ -10,7 +10,7 @@ function Home() {
     <>
       <DefaultLayout>
         <HomeSectionMain />
-        <HomeSectionCards />
+        {/* <HomeSectionCards /> */}
         <HomeSectionInfo />
         <HomeSectionNews />
         <HomeSectionExercise />

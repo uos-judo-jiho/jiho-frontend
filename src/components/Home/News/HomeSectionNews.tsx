@@ -1,13 +1,13 @@
 import React from "react";
 import HomeSectionBG from "../HomeSectionBG";
-import BGImage from "../../../assets/images/demo2.jpg";
+import BGImage from "../../../assets/images/background-img-mono.jpg";
 import styled from "styled-components";
 import NewsRowContainer from "./NewsRowContainer";
 import NewsCard from "./NewsCard";
 import Row from "../../../layouts/Row";
 import Title from "../../../layouts/Title";
 
-import ImgSrc from "../../../assets/images/demo.jpg";
+import ImgSrc from "../../../assets/images/background-img-group.jpg";
 
 import Executives from "../../../assets/jsons/executives.json";
 import Graduates from "../../../assets/jsons/graduates.json";
@@ -16,10 +16,15 @@ import SheetWrapper from "../../../layouts/SheetWrapper";
 
 function HomeSectionNews() {
   return (
-    <HomeSectionBG bgImageSrc={BGImage} id="sectionNews">
+    <HomeSectionBG
+      bgImageSrc={BGImage}
+      id="sectionNews"
+      backgroundCover={false}
+    >
       <SheetWrapper>
-        <Title title={"2022년 지호지"} />
-        <Row justifyContent="space-between">
+        <Title title={"2022년 지호지"} color={"#eee"} />
+
+        {/* <Row justifyContent="space-between">
           <NewsRowContainer title={"회장단"}>
             {Executives.executives.map((executive) => {
               return (
@@ -116,7 +121,7 @@ function HomeSectionNews() {
               );
             })}
           </NewsRowContainer>
-        </Row>
+        </Row> */}
       </SheetWrapper>
     </HomeSectionBG>
   );

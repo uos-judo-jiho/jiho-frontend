@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import BGImage from "../../../assets/images/demo4.jpg";
+import BGImage from "../../../assets/images/background-img-event.jpg";
 import Row from "../../../layouts/Row";
 import SheetWrapper from "../../../layouts/SheetWrapper";
 import HomeSectionBG from "../HomeSectionBG";

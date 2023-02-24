@@ -1,4 +1,4 @@
-import BGImage from "../../../assets/images/demo.jpg";
+import BGImage from "../../../assets/images/background-img-group.jpg";
 import HomeSectionBG from "../HomeSectionBG";
 
 import HomeTitle from "./HomeTitle";
