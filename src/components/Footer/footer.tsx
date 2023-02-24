@@ -26,7 +26,7 @@ const StyledYoutubeIcon = styled(YoutubeIcon)`
 `;
 
 const DescriptionList = styled.ul`
-  margin-right: 20px;
+  margin-right: 2rem;
 `;
 
 const DescriptionItem = styled.li`

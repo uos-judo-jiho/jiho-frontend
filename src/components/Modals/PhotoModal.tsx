@@ -58,11 +58,12 @@ const Container = styled.div`
   left: 0;
   z-index: 99;
   background-color: rgba(0, 0, 0, 0.6);
+  transition: all 0.3s;
 
   &.openModal {
     display: flex;
     align-items: center;
-    animation: ${ContainerOpenAnimation} 0.3s;
+    animation: ${ContainerOpenAnimation};
   }
 `;
 

@@ -15,7 +15,7 @@ function HomeSectionExercise() {
   return (
     <HomeSectionBG bgImageSrc={BGImage} id="sectionExercise">
       <SheetWrapper>
-        <Title title={"지호 운동"} color={"#eee"} />
+        {/* <Title title={"지호 운동"} color={"#eee"} /> */}
         <Container>
           <ExerciseThumbnail />
           {/* <ExerciseVideo /> */}

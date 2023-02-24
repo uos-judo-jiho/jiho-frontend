@@ -18,7 +18,6 @@ const Container = styled.div`
 `;
 
 const StyledMenu = styled(Menu)`
-  margin-top: 20px;
   cursor: pointer;
   &:hover {
     opacity: 0.6;
@@ -32,7 +31,9 @@ const StyledClose = styled(Close)`
     opacity: 0.6;
   }
 `;
-const NavDropDown = styled.nav``;
+const NavDropDown = styled.nav`
+  margin: auto 0;
+`;
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);

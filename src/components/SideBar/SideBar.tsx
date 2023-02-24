@@ -94,11 +94,11 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
     <Container id="sidebar" ref={outside} className={isOpen ? "open" : ""}>
       <NavWrapper>
         <MenuList>
-          <MenuItem>
+          {/* <MenuItem>
             <Link to={"/about"}>
               <MenuItemTitle>About 지호</MenuItemTitle>
             </Link>
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem>
             <MenuToggle
               href="#"
