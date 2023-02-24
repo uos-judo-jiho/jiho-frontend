@@ -45,7 +45,7 @@ const DescriptionWrapper = styled.div`
 `;
 
 const Description = styled.p`
-  text-indent: 0.4em;
+  /* text-indent: 0.4em; */
 `;
 
 const DescriptionFooter = styled.div`
@@ -134,14 +134,16 @@ function ModalDescriptionSection({
       </DescriptionHeader>
       <Line margin={"10px 0"} borderWidth={"1px"} />
       <DescriptionWrapper>
-        {description.split("\n").map((line, index) => {
-          return (
-            <Description key={"description-p-tag" + index}>
-              {line}
-              <br />
-            </Description>
-          );
-        })}
+        <Description>
+          {description.split("\n").map((line, index) => {
+            return (
+              <>
+                {line}
+                <br />
+              </>
+            );
+          })}
+        </Description>
       </DescriptionWrapper>
       <DescriptionFooter>
         <Line margin={"10px 0"} borderWidth={"1px"} />

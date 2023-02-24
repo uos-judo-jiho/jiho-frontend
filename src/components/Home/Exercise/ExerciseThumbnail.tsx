@@ -11,15 +11,16 @@ const Stack = styled.div`
 
 const ThumbnailTitle = styled.h3`
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 2rem;
+  left: 2rem;
   font-size: ${(props) => props.theme.subTitleFontSize};
+  color: ${(props) => props.theme.textColor};
 `;
 
 const BtnWrapper = styled.div`
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 2rem;
+  right: 2rem;
 `;
 
 const Thumbnail = styled.img`

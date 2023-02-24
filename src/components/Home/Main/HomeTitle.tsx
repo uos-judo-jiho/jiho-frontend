@@ -23,6 +23,7 @@ const SubTitle = styled.h4`
   font-size: 2.25rem;
   letter-spacing: 7px;
   text-transform: none;
+  word-break: keep-all;
   font-weight: 400;
   margin: 0;
   color: ${(props) => props.theme.greyColor};
@@ -44,11 +45,11 @@ function HomeTitle() {
         <Container>
           <SubTitle>서울시립대학교 유도부</SubTitle>
           <Title>지호</Title>
-          <Line
+          {/* <Line
             width={"100%"}
             margin={"1rem auto 0 0"}
             borderWidth={"0.5rem"}
-          />
+          /> */}
         </Container>
       </ContainerWrapper>
     </SheetWrapper>

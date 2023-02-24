@@ -57,7 +57,6 @@ const DescriptionWrapper = styled.div`
   @media (max-width: 539px) {
     display: none;
   }
-  /* word-break: keep-all; */
 `;
 
 const SeeMore = styled.span``;
@@ -73,7 +72,7 @@ function NewsCard({ index, datas }: NewsCardProps) {
   const comment = datas[index].description;
 
   const [isMore, setIsMore] = useState<boolean>(false);
-  const textLimit = useRef<number>(200);
+  const textLimit = useRef<number>(250);
 
   const commenter = useMemo(() => {
     const shortText: string = comment.slice(0, textLimit.current);
