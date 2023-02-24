@@ -13,8 +13,8 @@ import { ArticleInfoType } from "../types/ArticleInfoType";
 import styled from "styled-components";
 
 function Photo() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [photoIdx, setPhotoIdx] = useState(0);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [photoIdx, setPhotoIdx] = useState<number>(0);
   const escKey = useKeyEscClose(closeModal);
 
   const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>(
@@ -61,6 +61,7 @@ function Photo() {
             );
           })}
         </PhotoCardContainer>
+
         {modalOpen ? (
           <PhotoModal
             open={modalOpen}

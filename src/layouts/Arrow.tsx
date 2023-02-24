@@ -5,13 +5,13 @@ import { ReactComponent as ForwardArrow } from "../assets/svgs/arrow_forward_ios
 type ArrowProps = {
   current: number;
   length: number;
+  size?: string;
 };
 
 const ArrowCss = css`
-  width: 20px;
-  height: 20px;
   position: absolute;
   z-index: 10;
+  top: 50%;
   user-select: none;
 
   cursor: pointer;
@@ -19,15 +19,19 @@ const ArrowCss = css`
 
 const StyledBackArrow = styled(BackArrow)<ArrowProps>`
   display: ${(props) => (props.current === 0 ? "none" : "flex")};
-  top: 50%;
+  width: ${(props) => (props.size ? props.size : "20px")};
+  height: ${(props) => (props.size ? props.size : "20px")};
+
   left: 12px;
   ${ArrowCss}
 `;
 
 const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
   display: ${(props) => (props.current < props.length - 1 ? "flex" : "none")};
-  top: 50%;
-  right: 12px;
+  width: ${(props) => (props.size ? props.size : "20px")};
+  height: ${(props) => (props.size ? props.size : "20px")};
+
+  right: 0;
   ${ArrowCss}
 `;
 

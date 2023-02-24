@@ -9,6 +9,10 @@ const ContainerWrapper = styled.div`
   height: auto;
   margin: 0 0 60px auto;
   padding-top: 60px;
+
+  @media (max-width: 859px) {
+    width: 100%;
+  }
 `;
 
 const Container = styled.div`
@@ -40,22 +44,20 @@ const Title = styled.h1`
 
 function HomeTitle() {
   return (
-    <SheetWrapper>
-      <ContainerWrapper>
-        <Container>
-          <SubTitle>
-            서울시립대학교 <br />
-            유도부
-          </SubTitle>
-          <Title>지호</Title>
-          {/* <Line
+    <ContainerWrapper>
+      <Container>
+        <SubTitle>
+          서울시립대학교 <br />
+          유도부
+        </SubTitle>
+        <Title>지호</Title>
+        {/* <Line
             width={"100%"}
             margin={"1rem auto 0 0"}
             borderWidth={"0.5rem"}
           /> */}
-        </Container>
-      </ContainerWrapper>
-    </SheetWrapper>
+      </Container>
+    </ContainerWrapper>
   );
 }
 

@@ -26,6 +26,10 @@ const Thumbnail = styled.img`
     display: flex;
     animation: ${SliderAnimation} 0.8s;
   }
+  @media (max-width: 539px) {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const Slider = styled.section`

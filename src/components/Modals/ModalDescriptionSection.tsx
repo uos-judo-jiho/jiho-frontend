@@ -141,8 +141,8 @@ function ModalDescriptionSection({
             </tr>
           </tbody>
         </DescriptionHeaderTable>
+        <Line margin={"10px 0"} borderWidth={"1px"} />
       </DescriptionHeader>
-      <Line margin={"10px 0"} borderWidth={"1px"} />
       <DescriptionWrapper>
         <DescriptionTitle>{article.title}</DescriptionTitle>
         <Description>

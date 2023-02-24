@@ -7,6 +7,7 @@ import FooterInfo from "../../../assets/jsons/footerData.json";
 
 const Container = styled.div`
   line-height: normal;
+  margin-bottom: 1rem;
 `;
 
 const LogoWrapper = styled.div`
@@ -16,6 +17,10 @@ const LogoWrapper = styled.div`
   height: 140px;
   margin-bottom: 2rem;
   background-color: ${(props) => props.theme.bgColor};
+
+  @media (max-width: 539px) {
+    display: none;
+  }
 `;
 
 const DescriptionContainer = styled.ul``;
@@ -31,7 +36,7 @@ function HomeInfo() {
     <Container>
       <Col>
         <LogoWrapper>
-          <Logo margin={30} />
+          <Logo margin={"2rem"} />
         </LogoWrapper>
         <DescriptionContainer>
           <DescriptionItem>

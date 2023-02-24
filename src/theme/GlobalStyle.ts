@@ -19,6 +19,16 @@ export const MediaLayout = css`
 `;
 
 export const GlobalStyle = createGlobalStyle`  
+
+html{
+  @media (min-width: 1800px) {
+    font-size: 100%;
+
+  }
+  @media (max-width: 859px) {
+    font-size: 62.5%;
+  }
+}
     
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -81,7 +91,12 @@ a{
 header, footer
 {
   ${MediaLayout}
-  
+}
+
+header{
+  @media (max-width: 539px) {
+    width: 100%;
+  }
 }
 
 button,a{

@@ -5,8 +5,12 @@ import OutlineButton from "../../Buttons/OutlineButton";
 
 const Stack = styled.div`
   width: 40vw;
-  height: auto;
+
   position: relative;
+
+  @media (max-width: 539px) {
+    width: 100%;
+  }
 `;
 
 const ThumbnailTitle = styled.h3`
@@ -21,6 +25,9 @@ const BtnWrapper = styled.div`
   position: absolute;
   bottom: 2rem;
   right: 2rem;
+  @media (max-width: 539px) {
+    display: none;
+  }
 `;
 
 const Thumbnail = styled.img`
@@ -32,19 +39,19 @@ function ExerciseThumbnail() {
   const thumbnailData =
     TrainingLogDatas.trainingLogs[TrainingLogDatas.trainingLogs.length - 1];
   return (
-    <Stack>
-      <ThumbnailTitle>{thumbnailData.dateTime}</ThumbnailTitle>
-      <BtnWrapper>
-        <Link to={"/Photo"}>
+    <Link to={"/Photo"}>
+      <Stack>
+        <ThumbnailTitle>{thumbnailData.dateTime}</ThumbnailTitle>
+        <BtnWrapper>
           <OutlineButton text={"자세히보기"} />
-        </Link>
-      </BtnWrapper>
-      <Thumbnail
-        // TODO dev API
-        src={require("../../../assets/images/trainingLog/" +
-          thumbnailData.imgSrcs[0])}
-      />
-    </Stack>
+        </BtnWrapper>
+        <Thumbnail
+          // TODO dev API
+          src={require("../../../assets/images/trainingLog/" +
+            thumbnailData.imgSrcs[0])}
+        />
+      </Stack>
+    </Link>
   );
 }
 

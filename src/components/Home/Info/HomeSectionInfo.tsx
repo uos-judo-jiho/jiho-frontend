@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import BGImage from "../../../assets/images/background-img-event.jpg";
+import MobileRowColLayout from "../../../layouts/MobileRowColLayout";
 import Row from "../../../layouts/Row";
 import SheetWrapper from "../../../layouts/SheetWrapper";
 import HomeSectionBG from "../HomeSectionBG";
@@ -16,10 +17,10 @@ function HomeSectionInfo() {
       <HomeSectionBG bgImageSrc={BGImage} id="sectionInfo">
         <SheetWrapper>
           <Container>
-            <Row justifyContent="space-between">
+            <MobileRowColLayout rowJustifyContent="space-between">
               <HomeInfo />
               <HomeAwards />
-            </Row>
+            </MobileRowColLayout>
           </Container>
         </SheetWrapper>
       </HomeSectionBG>

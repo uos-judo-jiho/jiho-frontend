@@ -6,15 +6,15 @@ import { ReactComponent as LogoSvg } from "../assets/svgs/logo.svg";
 type LogoProps = {
   width?: number;
   height?: number;
-  margin?: number;
+  margin?: string;
 };
 
 type ContainerProps = {
-  margin?: number;
+  margin?: string;
 };
 
 const Container = styled.div<ContainerProps>`
-  margin: ${(props) => props.margin}px;
+  margin: ${(props) => props.margin};
   margin-right: -40px;
 `;
 
@@ -23,7 +23,7 @@ const StyledLogo = styled(LogoSvg)`
   height: ${(props) => props.height}px;
 `;
 
-function Logo({ width = 120, height = 120, margin = 0 }: LogoProps) {
+function Logo({ width = 120, height = 120, margin = "0px" }: LogoProps) {
   return (
     <Container margin={margin}>
       <StyledLogo width={width} height={height} />

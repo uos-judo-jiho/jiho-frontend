@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
 import ImgSlider from "../../layouts/ImgSlider";
+import MobileRowColLayout from "../../layouts/MobileRowColLayout";
 import Row from "../../layouts/Row";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
@@ -85,7 +86,14 @@ const CloseBtn = styled.button`
   z-index: 999;
   top: 12%;
   right: 12%;
+  width: 40px;
+  height: 40px;
   background-color: transparent;
+
+  @media (max-width: 539px) {
+    top: 0;
+    right: 0;
+  }
 `;
 
 const Main = styled.main`
@@ -115,11 +123,13 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
       {open && info ? (
         <ModalArticle>
           <StyledBackArrow
+            size={"40px"}
             onClick={prevSlider}
             current={current}
             length={length}
           />
           <StyledForwardArrow
+            size={"40px"}
             onClick={nextSlider}
             current={current}
             length={length}
@@ -129,13 +139,10 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
             <StyledClose />
           </CloseBtn>
           <Main>
-            <Row>
+            <MobileRowColLayout>
               <ImgSlider datas={info.imgSrcs} />
-              <ModalDescriptionSection
-                article={info}
-                titles={titles}
-              ></ModalDescriptionSection>
-            </Row>
+              <ModalDescriptionSection article={info} titles={titles} />
+            </MobileRowColLayout>
           </Main>
           <IndexContainer>
             <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
