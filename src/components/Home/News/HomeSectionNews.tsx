@@ -13,117 +13,28 @@ import Executives from "../../../assets/jsons/executives.json";
 import Graduates from "../../../assets/jsons/graduates.json";
 import Freshmen from "../../../assets/jsons/freshmen.json";
 import SheetWrapper from "../../../layouts/SheetWrapper";
+import { Link } from "react-router-dom";
+
+const Container = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 function HomeSectionNews() {
   return (
-    <HomeSectionBG
-      bgImageSrc={BGImage}
-      id="sectionNews"
-      backgroundCover={false}
-    >
-      <SheetWrapper>
-        <Title title={"2022년 지호지"} color={"#eee"} />
-
-        {/* <Row justifyContent="space-between">
-          <NewsRowContainer title={"회장단"}>
-            {Executives.executives.map((executive) => {
-              return (
-                <NewsCard
-                  key={executive.id}
-                  // TODO imgSrc Api 적용
-                  imgSrc={ImgSrc}
-                  title={executive.title}
-                  subTitle={executive.subTitle}
-                  id={executive.id}
-                />
-              );
-            })}
-          </NewsRowContainer>
-          <NewsRowContainer title={"졸업자"}>
-            {Graduates.graduates.map((graduate) => {
-              return (
-                <NewsCard
-                  key={graduate.id}
-                  imgSrc={ImgSrc}
-                  title={graduate.title}
-                  subTitle={graduate.subTitle}
-                  id={graduate.id}
-                />
-              );
-            })}
-          </NewsRowContainer>
-        </Row>
-        <Row justifyContent="space-between">
-          <NewsRowContainer title={"신입부원"}>
-            {Freshmen.freshmen.map((freshman) => {
-              return (
-                <NewsCard
-                  key={freshman.id}
-                  imgSrc={ImgSrc}
-                  title={freshman.title}
-                  subTitle={freshman.subTitle}
-                  id={freshman.id}
-                />
-              );
-            })}
-          </NewsRowContainer>
-          <NewsRowContainer title={"교류전"}>
-            {Graduates.graduates.map((graduate) => {
-              return (
-                <NewsCard
-                  key={graduate.id}
-                  imgSrc={ImgSrc}
-                  title={graduate.title}
-                  subTitle={graduate.subTitle}
-                  id={graduate.id}
-                />
-              );
-            })}
-          </NewsRowContainer>
-          <NewsRowContainer title={"대회"}>
-            {Graduates.graduates.map((graduate) => {
-              return (
-                <NewsCard
-                  key={graduate.id}
-                  imgSrc={ImgSrc}
-                  title={graduate.title}
-                  subTitle={graduate.subTitle}
-                  id={graduate.id}
-                />
-              );
-            })}
-          </NewsRowContainer>
-        </Row>
-        <Row justifyContent="space-between">
-          <NewsRowContainer title={"총회"}>
-            {Graduates.graduates.map((graduate) => {
-              return (
-                <NewsCard
-                  key={graduate.id}
-                  imgSrc={ImgSrc}
-                  title={graduate.title}
-                  subTitle={graduate.subTitle}
-                  id={graduate.id}
-                />
-              );
-            })}
-          </NewsRowContainer>
-          <NewsRowContainer title={"엠티 & 소풍"}>
-            {Graduates.graduates.map((graduate) => {
-              return (
-                <NewsCard
-                  key={graduate.id}
-                  imgSrc={ImgSrc}
-                  title={graduate.title}
-                  subTitle={graduate.subTitle}
-                  id={graduate.id}
-                />
-              );
-            })}
-          </NewsRowContainer>
-        </Row> */}
-      </SheetWrapper>
-    </HomeSectionBG>
+    <Container>
+      <Link to={"/news/2022"}>
+        <HomeSectionBG
+          bgImageSrc={BGImage}
+          id="sectionNews"
+          backgroundCover={false}
+        >
+          <SheetWrapper>
+            <Title title={"2022년 지호지"} color={"#eee"} />
+          </SheetWrapper>
+        </HomeSectionBG>
+      </Link>
+    </Container>
   );
 }
 

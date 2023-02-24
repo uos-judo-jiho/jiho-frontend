@@ -1,14 +1,8 @@
-import DemoData from "../../assets/jsons/trainingLog.json";
 import Carousel from "../../layouts/Carousel";
 import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
 // TODO 데이터 바꾸기
-import demoImg from "../../assets/images/demo.jpg";
-import demoImg1 from "../../assets/images/demo1.jpg";
-import demoImg2 from "../../assets/images/demo2.jpg";
-import demoImg3 from "../../assets/images/demo3.jpg";
-import demoImg4 from "../../assets/images/demo4.jpg";
 import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
 
 type NewsIndexProps = {

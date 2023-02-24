@@ -1,9 +1,7 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import OutlineButton from "../../Buttons/OutlineButton";
-import ThumbnailImg from "../../../assets/images/demo.jpg";
 import TrainingLogDatas from "../../../assets/jsons/trainingLog.json";
+import OutlineButton from "../../Buttons/OutlineButton";
 
 const Stack = styled.div`
   width: 40vw;
