@@ -24,7 +24,7 @@ const DescriptionSection = styled.section`
 const DescriptionHeader = styled.div`
   width: 100%;
   line-height: normal;
-  flex: 0;
+  flex: 0 0 auto;
 `;
 const DescriptionHeaderTable = styled.table`
   width: 100%;

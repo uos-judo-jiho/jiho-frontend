@@ -76,7 +76,7 @@ const ModalArticle = styled.article`
   border-radius: 0.3rem;
   background-color: #fff;
   animation: ${ContainerOpenAnimation} 0.3s;
-  overflow: hidden;
+  overflow: auto;
 `;
 
 const StyledClose = styled(Close)``;
