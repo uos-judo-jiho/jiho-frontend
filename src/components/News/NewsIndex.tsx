@@ -3,10 +3,10 @@ import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
 // TODO 데이터 바꾸기
-import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
+import { ArticleInfoType } from "../../types/ArticleInfoType";
 
 type NewsIndexProps = {
-  articles: ArticleInfoTpye[];
+  articles: ArticleInfoType[];
   images: string[];
 };
 

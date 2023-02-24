@@ -113,14 +113,18 @@ function ImgSlider({ datas }: ImgSliderProps) {
           );
         })}
         <CircleWrapper>
-          {datas.map((slider, index) => {
-            return (
-              <CurrentCircle
-                key={"circle" + index}
-                className={index === current ? "active" : ""}
-              />
-            );
-          })}
+          {datas.length === 1 ? (
+            <></>
+          ) : (
+            datas.map((slider, index) => {
+              return (
+                <CurrentCircle
+                  key={"circle" + index}
+                  className={index === current ? "active" : ""}
+                />
+              );
+            })
+          )}
         </CircleWrapper>
       </ImgSliderWrapper>
     </Slider>

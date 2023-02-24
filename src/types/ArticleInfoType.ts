@@ -1,4 +1,4 @@
-export interface ArticleInfoTpye {
+export interface ArticleInfoType {
   id: string;
   imgSrcs: string[];
   title: string;

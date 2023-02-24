@@ -4,14 +4,15 @@ import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
 import ImgSlider from "../../layouts/ImgSlider";
 import Row from "../../layouts/Row";
-import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
+import { ArticleInfoType } from "../../types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
 
 type PhotoModalProps = {
   open: boolean;
   close: React.MouseEventHandler<HTMLButtonElement>;
-  infos: ArticleInfoTpye[];
+  infos: ArticleInfoType[];
   index: number;
+  titles: string[];
 };
 
 const IndexContainer = styled.div`
@@ -93,9 +94,9 @@ const Main = styled.main`
   height: 100%;
 `;
 
-function PhotoModal({ open, close, infos, index }: PhotoModalProps) {
+function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   const [current, setCurrent] = useState<number>(index);
-  const [info, setInfo] = useState<ArticleInfoTpye>(infos[index]);
+  const [info, setInfo] = useState<ArticleInfoType>(infos[index]);
   const length = infos.length;
 
   useEffect(() => {
@@ -131,13 +132,8 @@ function PhotoModal({ open, close, infos, index }: PhotoModalProps) {
             <Row>
               <ImgSlider datas={info.imgSrcs} />
               <ModalDescriptionSection
-                id={info.id}
-                title={info.title}
-                author={info.author}
-                dateTime={info.dateTime}
-                subTitle={info.subTitle}
-                description={info.description}
-                imgSrcs={[]}
+                article={info}
+                titles={titles}
               ></ModalDescriptionSection>
             </Row>
           </Main>

@@ -5,7 +5,12 @@ import { formatStringArray } from "../../utils/Utils";
 import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
 import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
 import { useState } from "react";
-import { ArticleInfoTpye } from "../../types/ArticleInfoTpye";
+import { ArticleInfoType } from "../../types/ArticleInfoType";
+
+type ModalDescriptionSectionProps = {
+  article: ArticleInfoType;
+  titles: string[];
+};
 
 const DescriptionSection = styled.section`
   height: inherit;
@@ -44,8 +49,14 @@ const DescriptionWrapper = styled.div`
   overflow-x: hidden;
 `;
 
+const DescriptionTitle = styled.h3`
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+`;
+
 const Description = styled.p`
-  /* text-indent: 0.4em; */
+  text-indent: 0.4em;
 `;
 
 const DescriptionFooter = styled.div`
@@ -85,12 +96,9 @@ const HeartCountSpan = styled.span`
 `;
 
 function ModalDescriptionSection({
-  title,
-  dateTime,
-  author,
-  subTitle,
-  description,
-}: ArticleInfoTpye) {
+  article,
+  titles,
+}: ModalDescriptionSectionProps) {
   const [clickedHeart, setClickedHeart] = useState(false);
   const [heartCount, setHeartCount] = useState(0);
 
@@ -109,24 +117,26 @@ function ModalDescriptionSection({
           <tbody>
             <tr>
               <DescriptionHeaderTableTdTitle>
-                작성자
-              </DescriptionHeaderTableTdTitle>
-              <DescriptionHeaderTdContent>{author}</DescriptionHeaderTdContent>
-            </tr>
-            <tr>
-              <DescriptionHeaderTableTdTitle>
-                운동 날짜
+                {titles[0]}
               </DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
-                {dateTime}
+                {article.author}
               </DescriptionHeaderTdContent>
             </tr>
             <tr>
               <DescriptionHeaderTableTdTitle>
-                참여 인원
+                {titles[1]}
               </DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
-                {formatStringArray(subTitle)}
+                {formatStringArray(article.subTitle)}
+              </DescriptionHeaderTdContent>
+            </tr>
+            <tr>
+              <DescriptionHeaderTableTdTitle>
+                {titles[2]}
+              </DescriptionHeaderTableTdTitle>
+              <DescriptionHeaderTdContent>
+                {article.dateTime}
               </DescriptionHeaderTdContent>
             </tr>
           </tbody>
@@ -134,8 +144,9 @@ function ModalDescriptionSection({
       </DescriptionHeader>
       <Line margin={"10px 0"} borderWidth={"1px"} />
       <DescriptionWrapper>
+        <DescriptionTitle>{article.title}</DescriptionTitle>
         <Description>
-          {description.split("\n").map((line, index) => {
+          {article.description.split("\n").map((line, index) => {
             return (
               <>
                 {line}

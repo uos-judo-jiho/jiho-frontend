@@ -9,7 +9,7 @@ import Title from "../layouts/Title";
 
 import TrainingLogDatas from "../assets/jsons/trainingLog.json";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
-import { ArticleInfoTpye } from "../types/ArticleInfoTpye";
+import { ArticleInfoType } from "../types/ArticleInfoType";
 import styled from "styled-components";
 
 function Photo() {
@@ -17,7 +17,7 @@ function Photo() {
   const [photoIdx, setPhotoIdx] = useState(0);
   const escKey = useKeyEscClose(closeModal);
 
-  const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoTpye[]>(
+  const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>(
     []
   );
 
@@ -67,6 +67,7 @@ function Photo() {
             close={closeModal}
             infos={trainingLogArray}
             index={photoIdx}
+            titles={["작성자", "참여 인원", "훈련 날짜"]}
           />
         ) : (
           <></>
