@@ -6,6 +6,7 @@ const pinkColor: string = "#ff4667";
 const whiteColor: string = "#ffffff";
 const primaryColor: string = "#448aff";
 const darkGreyColor: string = "#121212";
+const greyColor: string = "#808080";
 const lightGreyColor: string = "#eeeeee";
 
 const darkHeaderColor: string = "#424242";
@@ -21,6 +22,7 @@ export const darkTheme: DefaultTheme = {
   bgColor: darkGreyColor,
   textColor: whiteColor,
   accentColor: yellowColor,
+  greyColor: greyColor,
   lightGreyColor: lightGreyColor,
   titleFontSize: titleFontSize,
   subTitleFontSize: subTitleFontSize,
@@ -33,6 +35,7 @@ export const lightTheme: DefaultTheme = {
   bgColor: whiteColor,
   textColor: darkGreyColor,
   accentColor: yellowColor,
+  greyColor: greyColor,
   lightGreyColor: lightGreyColor,
   titleFontSize: titleFontSize,
   subTitleFontSize: subTitleFontSize,

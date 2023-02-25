@@ -10,9 +10,10 @@ type ContainerProps = {
   color?: string;
 };
 
-const Container = styled.h1`
+const Container = styled.h1<ContainerProps>`
   font-size: ${(props) => props.theme.titleFontSize};
   color: ${(props) => props.color};
+  word-break: keep-all;
 `;
 
 function Title({ title, color }: TitleProps) {

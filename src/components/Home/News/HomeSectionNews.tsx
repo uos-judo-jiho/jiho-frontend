@@ -1,23 +1,24 @@
-import React from "react";
-import HomeSectionBG from "../HomeSectionBG";
-import BGImage from "../../../assets/images/background-img-mono.jpg";
 import styled from "styled-components";
-import NewsRowContainer from "./NewsRowContainer";
-import NewsCard from "./NewsCard";
-import Row from "../../../layouts/Row";
+import BGImage from "../../../assets/images/background-img-mono.jpg";
 import Title from "../../../layouts/Title";
+import HomeSectionBG from "../HomeSectionBG";
 
-import ImgSrc from "../../../assets/images/background-img-group.jpg";
-
-import Executives from "../../../assets/jsons/executives.json";
-import Graduates from "../../../assets/jsons/graduates.json";
-import Freshmen from "../../../assets/jsons/freshmen.json";
-import SheetWrapper from "../../../layouts/SheetWrapper";
 import { Link } from "react-router-dom";
+import SheetWrapper from "../../../layouts/SheetWrapper";
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
+`;
+
+const SeeMore = styled.p`
+  color: ${(props) => props.theme.greyColor};
+  margin-top: 0.5rem;
+  opacity: 0.6;
+
+  &:hover {
+    opacity: 1;
+  }
 `;
 
 function HomeSectionNews() {
@@ -31,6 +32,7 @@ function HomeSectionNews() {
         >
           <SheetWrapper>
             <Title title={"2022년 지호지"} color={"#eee"} />
+            <SeeMore>자세히 보기</SeeMore>
           </SheetWrapper>
         </HomeSectionBG>
       </Link>
