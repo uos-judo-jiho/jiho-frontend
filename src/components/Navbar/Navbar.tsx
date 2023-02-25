@@ -75,7 +75,10 @@ function Navbar() {
           </NavDropDown>
           <LogoWrapper>
             <Link to={"/"}>
-              <Logo isDark={currentPath === "/" ? false : true} />
+              <Logo
+                size={"10vmin"}
+                isDark={currentPath === "/" ? false : true}
+              />
             </Link>
           </LogoWrapper>
         </Row>

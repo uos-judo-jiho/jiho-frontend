@@ -5,22 +5,22 @@ import LogoWhite from "../assets/images/logo/logo-removebg-white.png";
 import LogoBlack from "../assets/images/logo/logo-removebg.png";
 
 type LogoProps = {
-  size?: number;
+  size?: string;
   margin?: string;
   isDark?: boolean;
 };
 
 type ContainerProps = {
   margin: string;
-  size: number;
+  size: string;
 };
 
 const Container = styled.div<ContainerProps>`
   margin: ${(props) => props.margin};
   display: flex;
 
-  width: ${(props) => props.size}px;
-  height: ${(props) => props.size}px;
+  width: ${(props) => props.size};
+  height: ${(props) => props.size};
 `;
 
 const Img = styled.img`
@@ -28,7 +28,7 @@ const Img = styled.img`
   height: 100%;
 `;
 
-function Logo({ size = 60, margin = "0px", isDark = false }: LogoProps) {
+function Logo({ size = "60px", margin = "0px", isDark = false }: LogoProps) {
   return (
     <Container margin={margin} size={size}>
       <Img src={isDark ? LogoBlack : LogoWhite} />
