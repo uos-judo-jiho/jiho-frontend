@@ -26,7 +26,7 @@ const HoveredContainer = styled.div`
   display: none;
   width: 100%;
   height: 100%;
-  font-size: ${(props) => props.theme.subTitleFontSize};
+  font-size: 3vw;
   color: ${(props) => props.theme.bgColor};
   ${ImgWrapper}:hover & {
     display: flex;
