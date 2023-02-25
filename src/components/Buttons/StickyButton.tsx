@@ -11,7 +11,7 @@ const UpperButton = styled.button`
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background-color: ${(props) => props.theme.greyColor};
+  background-color: ${(props) => props.theme.lightGreyColor};
   opacity: 0.8;
 `;
 

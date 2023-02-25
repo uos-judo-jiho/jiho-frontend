@@ -10,7 +10,7 @@ const Container = styled.button<OutlineButtonProps>`
   padding: 0.5rem 1.5rem;
   border: 1px solid ${(props) => props.theme.primaryColor};
   background-color: ${(props) =>
-    props.backgroundColor ? props.backgroundColor : props.theme.greyColor};
+    props.backgroundColor ? props.backgroundColor : props.theme.lightGreyColor};
 
   &:hover {
     color: ${(props) => props.theme.primaryColor};

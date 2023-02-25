@@ -58,7 +58,7 @@ const CurrentCircle = styled.div`
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: ${(props) => props.theme.greyColor};
+  background-color: ${(props) => props.theme.lightGreyColor};
   opacity: 0.3;
 
   margin: 0 4px;

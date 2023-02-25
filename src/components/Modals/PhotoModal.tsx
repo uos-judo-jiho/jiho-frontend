@@ -25,7 +25,7 @@ const IndexContainer = styled.div`
 const IndexSpan = styled.span`
   font-size: ${(props) => props.theme.tinyFontSize};
   display: block;
-  color: ${(props) => props.theme.greyColor};
+  color: ${(props) => props.theme.lightGreyColor};
 `;
 
 /**

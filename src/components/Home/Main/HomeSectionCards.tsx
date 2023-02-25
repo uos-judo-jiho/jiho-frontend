@@ -19,7 +19,7 @@ const RepeatContainer = styled.div`
 `;
 
 const RepeatedCard = styled.div`
-  background-color: ${(props) => props.theme.greyColor};
+  background-color: ${(props) => props.theme.lightGreyColor};
 `;
 
 function HomeSectionCards() {

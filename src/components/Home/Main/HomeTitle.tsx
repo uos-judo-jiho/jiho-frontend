@@ -20,7 +20,7 @@ const Container = styled.div`
   position: relative;
   flex: 1;
   max-width: 100%;
-  border: 2px solid ${(props) => props.theme.greyColor};
+  border: 2px solid ${(props) => props.theme.lightGreyColor};
 `;
 
 const SubTitle = styled.h4`
@@ -30,7 +30,7 @@ const SubTitle = styled.h4`
   line-height: 120%;
   font-weight: 400;
   margin: 0;
-  color: ${(props) => props.theme.greyColor};
+  color: ${(props) => props.theme.lightGreyColor};
 `;
 
 const Title = styled.h1`
@@ -39,7 +39,7 @@ const Title = styled.h1`
   font-size: 5.5rem;
   font-weight: 500;
   margin: 10px 0 0;
-  color: ${(props) => props.theme.greyColor};
+  color: ${(props) => props.theme.lightGreyColor};
 `;
 
 function HomeTitle() {

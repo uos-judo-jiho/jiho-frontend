@@ -14,7 +14,7 @@ const Container = styled.hr<LineProps>`
   margin: ${(props) => props.margin};
   border: ${(props) => props.borderWidth} solid
     ${(props) =>
-      props.borderColor ? props.borderColor : props.theme.greyColor};
+      props.borderColor ? props.borderColor : props.theme.lightGreyColor};
 `;
 
 function Line({
