@@ -7,7 +7,6 @@ import ThumbnailCard from "../../Photo/ThumbnailCard";
 
 const Stack = styled.div`
   width: 40vw;
-
   position: relative;
 
   @media (max-width: 539px) {
@@ -18,6 +17,9 @@ const Stack = styled.div`
 const Container = styled.div`
   width: 40vw;
   position: relative;
+  @media (max-width: 539px) {
+    width: 100%;
+  }
 `;
 
 const HoveredContainer = styled.div`
@@ -31,6 +33,11 @@ const HoveredContainer = styled.div`
   color: ${(props) => props.theme.bgColor};
 
   ${Container}:hover & {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  @media (max-width: 539px) {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -53,6 +60,10 @@ const Thumbnail = styled.img`
   height: inherit;
 
   ${Container}:hover & {
+    filter: brightness(50%);
+  }
+
+  @media (max-width: 539px) {
     filter: brightness(50%);
   }
 `;
