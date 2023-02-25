@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Row from "../../layouts/Row";
 
@@ -10,14 +10,24 @@ import SideBar from "../SideBar/SideBar";
 import Logo from "../Logo";
 
 const Header = styled.header`
-  margin: 0 auto;
-  height: 10vh;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
 `;
 const Container = styled.div`
-  height: 10vh;
+  /* height: 10vh; */
 `;
 
-const StyledMenu = styled(Menu)`
+type StyledMenuProps = {
+  currentPath: string;
+};
+
+const StyledMenu = styled(Menu)<StyledMenuProps>`
+  filter: ${(props) =>
+    props.currentPath === "/"
+      ? `invert(100%) sepia(3%) saturate(607%) hue-rotate(209deg) brightness(116%) contrast(87%)` // #eee
+      : ""};
+
   cursor: pointer;
   &:hover {
     opacity: 0.6;
@@ -43,6 +53,13 @@ const LogoWrapper = styled.div`
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [currentPath, setcurrentPath] = useState("");
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setcurrentPath(location.pathname);
+  }, [location]);
 
   function handleClick() {
     setIsOpen((prev) => !prev);
@@ -54,11 +71,11 @@ function Navbar() {
       <Container>
         <Row justifyContent="space-between">
           <NavDropDown onClick={handleClick}>
-            <StyledMenu />
+            <StyledMenu currentPath={currentPath} />
           </NavDropDown>
           <LogoWrapper>
             <Link to={"/"}>
-              <Logo />
+              <Logo isDark={currentPath === "/" ? false : true} />
             </Link>
           </LogoWrapper>
         </Row>

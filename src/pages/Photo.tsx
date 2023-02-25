@@ -45,7 +45,7 @@ function Photo() {
 
   return (
     <DefaultLayout>
-      <SheetWrapper paddingTop={20}>
+      <SheetWrapper>
         <Title title={"훈련일지"} />
         <PhotoCardContainer>
           {trainingLogArray.map((trainingLog, index) => {

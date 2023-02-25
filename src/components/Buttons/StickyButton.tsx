@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { ReactComponent as UpperArrow } from "../../assets/svgs/upper-arrow.svg";
 const Container = styled.div`
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: 2rem;
+  right: 1rem;
   background-color: transparent;
 `;
 const UpperButton = styled.button`

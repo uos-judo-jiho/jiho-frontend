@@ -30,7 +30,7 @@ export const darkTheme: DefaultTheme = {
 
 export const lightTheme: DefaultTheme = {
   primaryColor: primaryColor,
-  bgColor: whiteColor,
+  bgColor: greyColor,
   textColor: darkGreyColor,
   accentColor: yellowColor,
   greyColor: greyColor,

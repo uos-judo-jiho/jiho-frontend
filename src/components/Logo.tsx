@@ -7,6 +7,7 @@ import LogoBlack from "../assets/images/logo/logo-removebg.png";
 type LogoProps = {
   size?: number;
   margin?: string;
+  isDark?: boolean;
 };
 
 type ContainerProps = {
@@ -27,10 +28,10 @@ const Img = styled.img`
   height: 100%;
 `;
 
-function Logo({ size = 60, margin = "0px" }: LogoProps) {
+function Logo({ size = 60, margin = "0px", isDark = false }: LogoProps) {
   return (
     <Container margin={margin} size={size}>
-      <Img src={LogoBlack} />
+      <Img src={isDark ? LogoBlack : LogoWhite} />
     </Container>
   );
 }

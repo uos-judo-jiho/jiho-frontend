@@ -18,7 +18,7 @@ function NewsDetail() {
 
   return (
     <DefaultLayout>
-      <SheetWrapper paddingTop={20}>
+      <SheetWrapper>
         <Title title={"지호지"} />
         <NewsIndex articles={news.articles} images={news.images} />
       </SheetWrapper>

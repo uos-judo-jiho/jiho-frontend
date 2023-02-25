@@ -88,15 +88,11 @@ a{
   color:inherit;
 }
 
-header, footer
-{
-  ${MediaLayout}
-}
 
-header{
-  @media (max-width: 539px) {
-    width: 100%;
-  }
+
+header,footer{
+  width: 100%;
+  padding: 0 1rem;
 }
 
 button,a{

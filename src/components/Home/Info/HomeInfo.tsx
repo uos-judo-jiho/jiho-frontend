@@ -40,7 +40,7 @@ function HomeInfo() {
     <Container>
       <Col>
         <LogoWrapper>
-          <Logo size={100} />
+          <Logo size={100} isDark={true} />
         </LogoWrapper>
         <DescriptionContainer>
           <DescriptionItem>
