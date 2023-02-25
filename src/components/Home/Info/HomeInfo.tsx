@@ -18,6 +18,10 @@ const LogoWrapper = styled.div`
   margin-bottom: 2rem;
   background-color: ${(props) => props.theme.bgColor};
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   @media (max-width: 539px) {
     display: none;
   }
@@ -36,7 +40,7 @@ function HomeInfo() {
     <Container>
       <Col>
         <LogoWrapper>
-          <Logo margin={"2rem"} />
+          <Logo size={100} />
         </LogoWrapper>
         <DescriptionContainer>
           <DescriptionItem>

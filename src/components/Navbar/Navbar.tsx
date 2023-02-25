@@ -35,6 +35,12 @@ const NavDropDown = styled.nav`
   margin: auto 0;
 `;
 
+const LogoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -50,9 +56,11 @@ function Navbar() {
           <NavDropDown onClick={handleClick}>
             <StyledMenu />
           </NavDropDown>
-          <Link to={"/"}>
-            <Logo />
-          </Link>
+          <LogoWrapper>
+            <Link to={"/"}>
+              <Logo />
+            </Link>
+          </LogoWrapper>
         </Row>
       </Container>
     </Header>
