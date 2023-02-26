@@ -2,8 +2,6 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import TrainingLogDatas from "../../../assets/jsons/trainingLog.json";
 import Col from "../../../layouts/Col";
-import OutlineButton from "../../Buttons/OutlineButton";
-import ThumbnailCard from "../../Photo/ThumbnailCard";
 
 const Stack = styled.div`
   width: 40vw;

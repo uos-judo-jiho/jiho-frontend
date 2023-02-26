@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as UpperArrow } from "../../assets/svgs/upper-arrow.svg";
 const Container = styled.div`
