@@ -34,7 +34,7 @@ function MobileRowColLayout({
       window.removeEventListener("resize", handleWindowResize);
     };
   });
-  console.log(windowSize[0]);
+
   return (
     <>
       {windowSize[0] >= 540 ? (
