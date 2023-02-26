@@ -8,10 +8,9 @@ import SheetWrapper from "../layouts/SheetWrapper";
 import Title from "../layouts/Title";
 
 import TrainingLogDatas from "../assets/jsons/trainingLog.json";
+import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../types/ArticleInfoType";
-import styled from "styled-components";
-import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
