@@ -12,11 +12,12 @@ type ContainerProps = {
 
 const Container = styled.h1<ContainerProps>`
   font-size: ${(props) => props.theme.titleFontSize};
-  color: ${(props) => props.color};
+  color: ${(props) =>
+    props.color === "white" ? props.theme.bgColor : props.theme.blackColor};
   word-break: keep-all;
 `;
 
-function Title({ title, color }: TitleProps) {
+function Title({ title, color = "white" }: TitleProps) {
   return <Container color={color}>{title}</Container>;
 }
 

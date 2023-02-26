@@ -74,7 +74,7 @@ const ModalArticle = styled.article`
   height: 80%;
   margin: auto;
   border-radius: 0.3rem;
-  background-color: #fff;
+  background-color: ${(props) => props.theme.bgColor};
   animation: ${ContainerOpenAnimation} 0.3s;
   overflow: auto;
 `;
@@ -89,11 +89,6 @@ const CloseBtn = styled.button`
   width: 40px;
   height: 40px;
   background-color: transparent;
-
-  @media (max-width: 539px) {
-    top: 0;
-    right: 0;
-  }
 `;
 
 const Main = styled.main`

@@ -19,7 +19,7 @@ function NewsDetail() {
   return (
     <DefaultLayout>
       <SheetWrapper>
-        <Title title={"지호지"} />
+        <Title title={"지호지"} color="black" />
         <NewsIndex articles={news.articles} images={news.images} />
       </SheetWrapper>
     </DefaultLayout>

@@ -31,7 +31,7 @@ function HomeSectionNews() {
           backgroundCover={false}
         >
           <SheetWrapper>
-            <Title title={"2022년 지호지"} color={"#eee"} />
+            <Title title={"2022년 지호지"} />
             <SeeMore>자세히 보기</SeeMore>
           </SheetWrapper>
         </HomeSectionBG>

@@ -1,9 +1,10 @@
 import { DefaultTheme } from "styled-components";
 
 // Color
+const blackColor: string = "#0f0c0c";
 const yellowColor: string = "#ffb746";
 const pinkColor: string = "#ff4667";
-const whiteColor: string = "#ffffff";
+const whiteColor: string = "#f5f5fa";
 const primaryColor: string = "#448aff";
 const darkGreyColor: string = "#121212";
 const greyColor: string = "#808080";
@@ -24,6 +25,7 @@ export const darkTheme: DefaultTheme = {
   accentColor: yellowColor,
   greyColor: greyColor,
   lightGreyColor: lightGreyColor,
+  blackColor: blackColor,
   titleFontSize: titleFontSize,
   subTitleFontSize: subTitleFontSize,
   descriptionFontSize: descriptionFontSize,
@@ -37,6 +39,7 @@ export const lightTheme: DefaultTheme = {
   accentColor: yellowColor,
   greyColor: greyColor,
   lightGreyColor: lightGreyColor,
+  blackColor: blackColor,
   titleFontSize: titleFontSize,
   subTitleFontSize: subTitleFontSize,
   descriptionFontSize: descriptionFontSize,
