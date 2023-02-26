@@ -11,11 +11,13 @@ import TrainingLogDatas from "../assets/jsons/trainingLog.json";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../types/ArticleInfoType";
 import styled from "styled-components";
+import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [photoIdx, setPhotoIdx] = useState<number>(0);
   const escKey = useKeyEscClose(closeModal);
+  const { lockScroll, openScroll } = useBodyScrollLock();
 
   const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>(
     []
@@ -28,9 +30,11 @@ function Photo() {
 
   function openModal() {
     setModalOpen(true);
+    lockScroll();
   }
   function closeModal() {
     setModalOpen(false);
+    openScroll();
   }
   function handleClickCard(index: number) {
     if (!modalOpen) {
@@ -46,7 +50,7 @@ function Photo() {
   return (
     <DefaultLayout>
       <SheetWrapper>
-        <Title title={"훈련일지"} />
+        <Title title={"훈련일지"} color="black" />
         <PhotoCardContainer>
           {trainingLogArray.map((trainingLog, index) => {
             return (

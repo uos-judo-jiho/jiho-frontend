@@ -8,6 +8,7 @@ import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
 import Col from "../../layouts/Col";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import Row from "../../layouts/Row";
+import { useBodyScrollLock } from "../../Hooks/useBodyScrollLock";
 
 type NewsCardProps = {
   index: number;
@@ -97,6 +98,7 @@ const MoreButton = styled.button`
 
 function NewsCard({ index, datas }: NewsCardProps) {
   const escKey = useKeyEscClose(closeSeeMore);
+  const { lockScroll, openScroll } = useBodyScrollLock();
   const comment = datas[index].description;
 
   const [isMore, setIsMore] = useState<boolean>(false);
@@ -110,9 +112,11 @@ function NewsCard({ index, datas }: NewsCardProps) {
 
   function openSeeMore() {
     setIsMore(true);
+    lockScroll();
   }
   function closeSeeMore() {
     setIsMore(false);
+    openScroll();
   }
   return (
     <>
