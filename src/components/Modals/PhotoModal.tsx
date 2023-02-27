@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+import { useMouseDrag } from "../../Hooks/useMouseDrag";
 import { useTouchScroll } from "../../Hooks/useTouchScroll";
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
 import ImgSlider from "../../layouts/ImgSlider";
@@ -67,7 +68,7 @@ const Container = styled.div`
   left: 0;
   z-index: 99;
   background-color: rgba(0, 0, 0, 0.6);
-  transition: all 0.3s;
+  transition: all 0.5s;
 
   &.openModal {
     display: flex;
@@ -92,27 +93,31 @@ const ModalArticle = styled.article`
   width: 80%;
   height: 80vh;
   margin: auto;
-  border-radius: 0.3rem;
+  border-radius: 0.5rem;
   background-color: ${(props) => props.theme.bgColor};
-  animation: ${ContainerOpenAnimation} 0.3s;
+  animation: ${ContainerOpenAnimation} 0.5s;
   overflow: auto;
 
   @media (max-width: 539px) {
     width: 100%;
     height: 100%;
+    border-radius: 0.5rem 0.5rem 0 0;
   }
 `;
 
 const StyledClose = styled(Close)``;
 const MobileSlideBarWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 6px;
-  right: 0;
-  left: 0;
+  display: none;
+  @media (max-width: 539px) {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 6px;
+    right: 0;
+    left: 0;
+  }
 `;
 
 const MobileSlideBar = styled.hr`
@@ -151,6 +156,7 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   const [info, setInfo] = useState<ArticleInfoType>(infos[index]);
   const length = infos.length;
   const { onTouchStart, onTouchEnd } = useTouchScroll(close);
+  const { onMouseDown, onMouseUp } = useMouseDrag(close);
 
   useEffect(() => {
     setInfo(infos[current]);
@@ -167,7 +173,12 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
     <Container className={open ? "openModal" : ""}>
       {open && info ? (
         <MobileModalLayout>
-          <ModalArticle onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+          <ModalArticle
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+          >
             <ArrowWrapper>
               <StyledBackArrow
                 size={"40px"}

@@ -12,7 +12,7 @@ export function useTouchScroll(action: Function) {
     const distanceX = tochedX - e.changedTouches[0].pageX;
     const distanceY = tochedY - e.changedTouches[0].pageY;
     const vector = Math.abs(distanceX / distanceY);
-    console.log(distanceY, vector);
+
     if (distanceY < -20) {
       action();
     }
