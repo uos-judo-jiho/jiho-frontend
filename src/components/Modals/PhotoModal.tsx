@@ -17,28 +17,41 @@ type PhotoModalProps = {
   titles: string[];
 };
 
-/**
- * 팝업이 닫힐때 스르륵 닫히는 효과
- */
-const ContainerCloseAnimation = keyframes`
+const FadeOut = keyframes`
     from {
       opacity: 1;
     }
     to {
       opacity: 0;
     }
-    `;
-/**
- * 팝업이 열릴때 스르륵 열리는 효과
- */
-const ContainerOpenAnimation = keyframes`
+`;
+
+const FadeIn = keyframes`
     from {
       opacity: 0;
     }
     to {
       opacity: 1;
     }
-    `;
+`;
+
+const SlideUp = keyframes`
+  from {
+    transform: translateY(-100px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+`;
+
+const SlideDown = keyframes`  
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-100px);
+  }
+`;
 
 const IndexContainer = styled.div`
   display: block;
@@ -60,7 +73,6 @@ const IndexSpan = styled.span`
 `;
 
 const Container = styled.div`
-  /* display: none; */
   position: fixed;
   top: 0;
   right: 0;
@@ -68,16 +80,21 @@ const Container = styled.div`
   left: 0;
   z-index: 99;
   background-color: rgba(0, 0, 0, 0.6);
-  transition: all 0.5s;
 
-  &.openModal {
-    display: flex;
-    align-items: center;
-    animation: ${ContainerOpenAnimation};
-  }
+  animation-duration: 0.25s;
+  animation-name: ${FadeIn};
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &.closeModal {
-    /* TODO close animation */
+    animation-name: ${FadeOut};
+    & > article {
+      animation-name: ${SlideDown};
+    }
   }
 `;
 
@@ -95,8 +112,12 @@ const ModalArticle = styled.article`
   margin: auto;
   border-radius: 0.5rem;
   background-color: ${(props) => props.theme.bgColor};
-  animation: ${ContainerOpenAnimation} 0.5s;
   overflow: auto;
+
+  animation-duration: 0.25s;
+  animation-timing-function: ease-out;
+  animation-name: ${SlideUp};
+  animation-fill-mode: forwards;
 
   @media (max-width: 539px) {
     width: 100%;
@@ -106,6 +127,7 @@ const ModalArticle = styled.article`
 `;
 
 const StyledClose = styled(Close)``;
+
 const MobileSlideBarWrapper = styled.div`
   display: none;
   @media (max-width: 539px) {
@@ -152,6 +174,8 @@ const Main = styled.main`
 `;
 
 function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
+  const [animate, setAnimate] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(open);
   const [current, setCurrent] = useState<number>(index);
   const [info, setInfo] = useState<ArticleInfoType>(infos[index]);
   const length = infos.length;
@@ -162,6 +186,16 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
     setInfo(infos[current]);
   }, [current]);
 
+  useEffect(() => {
+    console.log(visible, open);
+    if (visible && !open) {
+      setAnimate(true);
+      setTimeout(() => setAnimate(false), 250);
+      alert("modal closed");
+    }
+    setAnimate(open);
+  }, [visible, open]);
+
   function nextSlider() {
     setCurrent(current + 1);
   }
@@ -169,53 +203,51 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   function prevSlider() {
     setCurrent(current - 1);
   }
-  return (
-    <Container className={open ? "openModal" : ""}>
-      {open && info ? (
-        <MobileModalLayout>
-          <ModalArticle
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-          >
-            <ArrowWrapper>
-              <StyledBackArrow
-                size={"40px"}
-                onClick={prevSlider}
-                current={current}
-                length={length}
-              />
-            </ArrowWrapper>
-            <ArrowWrapper>
-              <StyledForwardArrow
-                size={"40px"}
-                onClick={nextSlider}
-                current={current}
-                length={length}
-              />
-            </ArrowWrapper>
 
-            <Main>
-              <MobileSlideBarWrapper>
-                <MobileSlideBar />
-              </MobileSlideBarWrapper>
-              <CloseBtn onClick={close}>
-                <StyledClose />
-              </CloseBtn>
-              <MobileRowColLayout>
-                <ImgSlider datas={info.imgSrcs} />
-                <ModalDescriptionSection article={info} titles={titles} />
-              </MobileRowColLayout>
-            </Main>
-            <IndexContainer>
-              <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
-            </IndexContainer>
-          </ModalArticle>
-        </MobileModalLayout>
-      ) : (
-        <></>
-      )}
+  if (!animate && !visible) return null;
+
+  return (
+    <Container className={open ? "openModal" : "closeModal"}>
+      <MobileModalLayout>
+        <ArrowWrapper>
+          <StyledBackArrow
+            size={"40px"}
+            onClick={prevSlider}
+            current={current}
+            length={length}
+          />
+        </ArrowWrapper>
+        <ArrowWrapper>
+          <StyledForwardArrow
+            size={"40px"}
+            onClick={nextSlider}
+            current={current}
+            length={length}
+          />
+        </ArrowWrapper>
+        <ModalArticle
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+        >
+          <Main>
+            <MobileSlideBarWrapper>
+              <MobileSlideBar />
+            </MobileSlideBarWrapper>
+            <CloseBtn onClick={close}>
+              <StyledClose />
+            </CloseBtn>
+            <MobileRowColLayout>
+              <ImgSlider datas={info.imgSrcs} />
+              <ModalDescriptionSection article={info} titles={titles} />
+            </MobileRowColLayout>
+          </Main>
+          <IndexContainer>
+            <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
+          </IndexContainer>
+        </ModalArticle>
+      </MobileModalLayout>
     </Container>
   );
 }
