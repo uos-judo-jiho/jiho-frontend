@@ -15,8 +15,13 @@ function AdminMenu() {
         </Link>
       </MenuItem>
       <MenuItem>
-        <Link to={"/admin"}>
+        <Link to={"/admin/training"}>
           <MenuItemTitle>훈련 일지</MenuItemTitle>
+        </Link>
+      </MenuItem>
+      <MenuItem>
+        <Link to={"/admin/news"}>
+          <MenuItemTitle>지호지</MenuItemTitle>
         </Link>
       </MenuItem>
     </MenuList>

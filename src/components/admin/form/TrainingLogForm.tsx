@@ -1,4 +1,4 @@
-import { ReactComponent as Plus } from "../../assets/svgs/plus.svg";
+import { ReactComponent as Plus } from "../../../assets/svgs/plus.svg";
 
 import { Button, DatePicker, Form, Input, Space, Upload } from "antd";
 

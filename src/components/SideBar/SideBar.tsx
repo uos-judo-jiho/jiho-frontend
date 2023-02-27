@@ -1,15 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-import { ReactComponent as PlusSvg } from "../../assets/svgs/plus.svg";
 import { ReactComponent as CloseSvg } from "../../assets/svgs/close.svg";
-import Row from "../../layouts/Row";
-import MENUID from "../../types/menuIdType";
 
-import SlideSubMenu from "./SlideSubMenu";
-import ClientMenu from "./ClientMenu";
 import AdminMenu from "./AdminMenu";
+import ClientMenu from "./ClientMenu";
 
 type SideBarProps = {
   isOpen: boolean;
@@ -56,8 +52,10 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === "/admin") {
+    if (location.pathname.includes("/admin")) {
       setIsClient(false);
+    } else {
+      setIsClient(true);
     }
   }, [location]);
 

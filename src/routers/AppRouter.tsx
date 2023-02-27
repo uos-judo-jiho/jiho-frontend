@@ -1,7 +1,6 @@
-import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "../pages/About";
-import AdminHome from "../pages/admin/AdminHome";
+import AdminHomePage from "../pages/admin/AdminHomePage";
 import Home from "../pages/Home";
 import News from "../pages/News";
 import NewsDetail from "../pages/News/NewsDetail";
@@ -22,9 +21,7 @@ function AppRouter() {
         <Route path="/photo" element={<Photo />} />
         <Route path="/video" element={<Video />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/admin" element={<AdminHome />}>
-          <Route path="home" element={<AdminHome />} />
-        </Route>
+        <Route path="/admin/*" element={<AdminHomePage />} />
       </Routes>
     </BrowserRouter>
   );
