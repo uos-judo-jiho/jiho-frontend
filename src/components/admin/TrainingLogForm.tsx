@@ -62,6 +62,7 @@ function TrainingLogForm() {
           <TextArea rows={8} />
         </Form.Item>
 
+        {/* TODO 사진 올리기 구현하기 */}
         <Form.Item label="사진 올리기" valuePropName="fileList">
           <Upload action="/upload.do" listType="picture-card">
             <div>
