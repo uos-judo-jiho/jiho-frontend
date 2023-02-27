@@ -11,6 +11,7 @@ import TrainingLogDatas from "../assets/jsons/trainingLog.json";
 import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../types/ArticleInfoType";
+import MyHelmet from "../helmet/MyHelmet";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -47,37 +48,40 @@ function Photo() {
   }
 
   return (
-    <DefaultLayout>
-      <SheetWrapper>
-        <Title title={"훈련일지"} color="black" />
-        <PhotoCardContainer>
-          {trainingLogArray.map((trainingLog, index) => {
-            return (
-              <ThumbnailCard
-                // TODO imgSrc Api 적용
-                key={"trainingLog" + trainingLog.id}
-                imgSrc={trainingLog.imgSrcs[0]}
-                dateTime={trainingLog.dateTime}
-                handleClickCard={handleClickCard}
-                index={index}
-              />
-            );
-          })}
-        </PhotoCardContainer>
+    <>
+      <MyHelmet helmet="Photo" />
+      <DefaultLayout>
+        <SheetWrapper>
+          <Title title={"훈련일지"} color="black" />
+          <PhotoCardContainer>
+            {trainingLogArray.map((trainingLog, index) => {
+              return (
+                <ThumbnailCard
+                  // TODO imgSrc Api 적용
+                  key={"trainingLog" + trainingLog.id}
+                  imgSrc={trainingLog.imgSrcs[0]}
+                  dateTime={trainingLog.dateTime}
+                  handleClickCard={handleClickCard}
+                  index={index}
+                />
+              );
+            })}
+          </PhotoCardContainer>
 
-        {modalOpen ? (
-          <PhotoModal
-            open={modalOpen}
-            close={closeModal}
-            infos={trainingLogArray}
-            index={photoIdx}
-            titles={["작성자", "참여 인원", "훈련 날짜"]}
-          />
-        ) : (
-          <></>
-        )}
-      </SheetWrapper>
-    </DefaultLayout>
+          {modalOpen ? (
+            <PhotoModal
+              open={modalOpen}
+              close={closeModal}
+              infos={trainingLogArray}
+              index={photoIdx}
+              titles={["작성자", "참여 인원", "훈련 날짜"]}
+            />
+          ) : (
+            <></>
+          )}
+        </SheetWrapper>
+      </DefaultLayout>
+    </>
   );
 }
 

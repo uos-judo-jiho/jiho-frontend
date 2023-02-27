@@ -5,6 +5,7 @@ import NewsJson from "../../assets/jsons/news.json";
 import SheetWrapper from "../../layouts/SheetWrapper";
 import NewsIndex from "../../components/News/NewsIndex";
 import Title from "../../layouts/Title";
+import MyHelmet from "../../helmet/MyHelmet";
 
 type TParams = {
   id: string;
@@ -17,12 +18,15 @@ function NewsDetail() {
   console.log(news);
 
   return (
-    <DefaultLayout>
-      <SheetWrapper>
-        <Title title={"지호지"} color="black" />
-        <NewsIndex articles={news.articles} images={news.images} />
-      </SheetWrapper>
-    </DefaultLayout>
+    <>
+      <MyHelmet helmet="News" />
+      <DefaultLayout>
+        <SheetWrapper>
+          <Title title={"지호지"} color="black" />
+          <NewsIndex articles={news.articles} images={news.images} />
+        </SheetWrapper>
+      </DefaultLayout>
+    </>
   );
 }
 
