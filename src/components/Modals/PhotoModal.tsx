@@ -161,13 +161,19 @@ const ArrowWrapper = styled.div`
 const CloseBtn = styled.button`
   position: absolute;
   z-index: 999;
-  top: 1rem;
-  right: 1rem;
+  top: 12%;
+  right: 12%;
   width: 2rem;
   height: 2rem;
   background-color: transparent;
   @media (max-width: 539px) {
-    display: none;
+    position: initial;
+    margin-left: 90vw;
+
+    animation-duration: 0.5s;
+    animation-timing-function: ease-out;
+    animation-name: ${FadeIn};
+    animation-fill-mode: forwards;
   }
 `;
 
@@ -214,6 +220,9 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   return (
     <Container className={open ? "openModal" : "closeModal"}>
       <MobileModalLayout>
+        <CloseBtn onClick={close}>
+          <StyledClose />
+        </CloseBtn>
         <ArrowWrapper>
           <StyledBackArrow
             size={"40px"}
@@ -237,12 +246,12 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
           onMouseUp={onMouseUp}
         >
           <Main>
-            <MobileSlideBarWrapper>
+            {/* <MobileSlideBarWrapper>
               <MobileSlideBar />
-            </MobileSlideBarWrapper>
-            <CloseBtn onClick={close}>
+            </MobileSlideBarWrapper> */}
+            {/* <CloseBtn onClick={close}>
               <StyledClose />
-            </CloseBtn>
+            </CloseBtn> */}
             <MobileRowColLayout>
               <ImgSlider datas={info.imgSrcs} />
               <ModalDescriptionSection article={info} titles={titles} />
