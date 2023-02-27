@@ -119,6 +119,9 @@ const ModalArticle = styled.article`
   animation-name: ${SlideUp};
   animation-fill-mode: forwards;
 
+  overflow: hidden;
+  isolation: isolate;
+
   @media (max-width: 539px) {
     width: 100%;
     height: 100%;
