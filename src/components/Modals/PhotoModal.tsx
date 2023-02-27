@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+
 import { useMouseDrag } from "../../Hooks/useMouseDrag";
 import { useTouchScroll } from "../../Hooks/useTouchScroll";
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
@@ -8,6 +8,8 @@ import ImgSlider from "../../layouts/ImgSlider";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
+
+import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 
 type PhotoModalProps = {
   open: boolean;
@@ -198,7 +200,6 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   }, [current]);
 
   useEffect(() => {
-    console.log(visible, open);
     if (visible && !open) {
       setAnimate(true);
       setTimeout(() => setAnimate(false), 250);
@@ -240,12 +241,13 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
           />
         </ArrowWrapper>
         <ModalArticle
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-          onMouseDown={onMouseDown}
-          onMouseUp={onMouseUp}
+        // onTouchStart={onTouchStart}
+        // onTouchEnd={onTouchEnd}
+        // onMouseDown={onMouseDown}
+        // onMouseUp={onMouseUp}
         >
           <Main>
+            {/* 모바일 환경에서 드래그로 모달 닫는 액션 */}
             {/* <MobileSlideBarWrapper>
               <MobileSlideBar />
             </MobileSlideBarWrapper> */}

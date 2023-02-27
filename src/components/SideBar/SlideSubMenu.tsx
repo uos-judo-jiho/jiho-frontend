@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { menuItemInfoType } from "../../types/menuItemInfoType";

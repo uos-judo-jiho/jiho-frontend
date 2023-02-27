@@ -1,13 +1,13 @@
 import { useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
+// TODO API 뉴스
 import PhotoModal from "../Modals/PhotoModal";
 
-// TODO API 뉴스
-import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
 import Col from "../../layouts/Col";
-import { ArticleInfoType } from "../../types/ArticleInfoType";
 import Row from "../../layouts/Row";
+import { ArticleInfoType } from "../../types/ArticleInfoType";
+import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
 import { useBodyScrollLock } from "../../Hooks/useBodyScrollLock";
 
 type NewsCardProps = {
