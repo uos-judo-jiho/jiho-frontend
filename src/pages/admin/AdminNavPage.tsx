@@ -1,25 +1,14 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
 import Col from "../../layouts/Col";
 
-const LinkWrapper = styled.div`
-  padding: 1rem;
-`;
+import AdminNavItem from "../../components/admin/AdminNavItem";
 
 function AdminNavPage() {
   return (
-    <Col>
-      <LinkWrapper>
-        <Link to={"/"}>uosjudo.com</Link>
-      </LinkWrapper>
-      <LinkWrapper>
-        <Link to={"/admin/training"}>훈련일지관리</Link>
-      </LinkWrapper>
-      <LinkWrapper>
-        <Link to={"/admin/news"}>지호지관리</Link>
-      </LinkWrapper>
-    </Col>
+    <>
+      <AdminNavItem linkTo={"/"} title={"uosjudo.com"} />
+      <AdminNavItem linkTo={"/admin/training"} title={"훈련 일지 관리"} />
+      <AdminNavItem linkTo={"/admin/news"} title={"지호지 관리"} />
+    </>
   );
 }
 
