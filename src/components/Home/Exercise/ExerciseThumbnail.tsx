@@ -46,7 +46,7 @@ type HoveredSpanProps = {
 };
 
 const HoveredSpan = styled.span<HoveredSpanProps>`
-  font-size: ${(props) => (props.fontSize ? props.fontSize : "2vw")};
+  font-size: ${(props) => (props.fontSize ? props.fontSize : "1rem")};
 
   &:not(:last-child) {
     margin-bottom: 0.5rem;
@@ -82,7 +82,7 @@ function ExerciseThumbnail() {
             <Col justifyContent="center" alignItems="center">
               <HoveredSpan>훈련 일지</HoveredSpan>
               <HoveredSpan>{thumbnailData.dateTime}</HoveredSpan>
-              <HoveredSpan fontSize={"1vw"}>자세히 보기</HoveredSpan>
+              <HoveredSpan fontSize={"0.5rem"}>자세히 보기</HoveredSpan>
             </Col>
           </HoveredContainer>
         </Stack>

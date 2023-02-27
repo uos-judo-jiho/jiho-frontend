@@ -51,11 +51,7 @@ function HomeTitle() {
           유도부
         </SubTitle>
         <Title>지호</Title>
-        {/* <Line
-            width={"100%"}
-            margin={"1rem auto 0 0"}
-            borderWidth={"0.5rem"}
-          /> */}
+        <Line width={"100%"} margin={"1rem auto 0 0"} borderWidth={"0.2rem"} />
       </Container>
     </ContainerWrapper>
   );

@@ -111,7 +111,7 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
         <NavWrapper>
           <MenuList>
             <MenuItem>
-              <Link to={"/about"}>
+              <Link to={"/"}>
                 <MenuItemTitle>About 지호</MenuItemTitle>
               </Link>
             </MenuItem>
