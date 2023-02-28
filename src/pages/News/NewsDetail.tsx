@@ -9,7 +9,7 @@ import Title from "../../layouts/Title";
 import { NewsType } from "../../types/NewsType";
 
 type TParams = {
-  id: string;
+  id: string; // ex] 2022
 };
 
 function NewsDetail() {

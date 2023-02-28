@@ -73,7 +73,7 @@ function Footer() {
           </DescriptionItem>
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/news"}>지호지</Link>
+              <Link to={"/news/2022"}>2022 지호지</Link>
             </LinkWrapper>
           </DescriptionItem>
         </DescriptionList>

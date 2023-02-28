@@ -1,8 +1,7 @@
-import React from "react";
-import DefaultLayout from "../layouts/DefaultLayout";
+import { Navigate } from "react-router-dom";
 
 function News() {
-  return <DefaultLayout>News</DefaultLayout>;
+  return <Navigate to={"/news/2022"} />;
 }
 
 export default News;
