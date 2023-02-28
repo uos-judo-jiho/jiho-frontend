@@ -1,10 +1,9 @@
 import axios from "axios";
-import { Constants } from "../constant/constant";
 
 export async function getTraining() {
-  const methodUrl = "";
+  const methodUrl = "/training";
   await axios
-    .get(Constants.AWS_BASE_URL + methodUrl)
+    .get(methodUrl)
     .then((response) => {
       return response.data;
     })

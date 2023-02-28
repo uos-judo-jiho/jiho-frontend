@@ -54,6 +54,5 @@
   "devDependencies": {
     "@types/styled-components": "^5.1.26",
     "babel-plugin-import": "^1.13.6"
-  },
-  "proxy": "https://localhost:8080"
+  }
 }

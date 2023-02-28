@@ -8,6 +8,7 @@ const { TextArea } = Input;
 function TrainingLogForm() {
   function onFinish(values: any) {
     console.log("Success:", values);
+    console.log("dateTime Object:", values.dateTime.$d);
   }
   return (
     <>

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import DefaultLayout from "../../layouts/DefaultLayout";
 import NewsJson from "../../assets/jsons/news.json";
-import SheetWrapper from "../../layouts/SheetWrapper";
 import NewsIndex from "../../components/News/NewsIndex";
-import Title from "../../layouts/Title";
 import MyHelmet from "../../helmet/MyHelmet";
+import DefaultLayout from "../../layouts/DefaultLayout";
+import SheetWrapper from "../../layouts/SheetWrapper";
+import Title from "../../layouts/Title";
 import { NewsType } from "../../types/NewsType";
 
 type TParams = {

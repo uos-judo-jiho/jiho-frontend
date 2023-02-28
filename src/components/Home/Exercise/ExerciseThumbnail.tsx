@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { testApi } from "../../../api/testApi";
 import TrainingLogDatas from "../../../assets/jsons/trainingLog.json";
 import Col from "../../../layouts/Col";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
@@ -73,11 +73,7 @@ function ExerciseThumbnail() {
   const [thumbnailData, setThumbnailData] = useState<ArticleInfoType>();
 
   useEffect(() => {
-    async function fetchdata() {
-      const { data } = await axios.get("/login");
-      console.log(data);
-    }
-    fetchdata();
+    const res = testApi();
 
     // TODO Api 훈련일지 썸네일 데이터 가져오기
     const data =

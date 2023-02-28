@@ -97,7 +97,6 @@ function Carousel({ datas }: CarouselProps) {
       return;
     }
     setCurrentIndex((prev) => prev - 1);
-    console.log(CarouselWrapper);
   }
 
   function handleForwardArrow() {
