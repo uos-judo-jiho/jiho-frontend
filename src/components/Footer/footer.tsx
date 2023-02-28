@@ -1,10 +1,9 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import FooterInfo from "../../assets/jsons/footerData.json";
 import { ReactComponent as InstargramIcon } from "../../assets/svgs/icons8-instargram-500.svg";
 import { ReactComponent as YoutubeIcon } from "../../assets/svgs/icons8-youtube-500.svg";
-import Row from "../../layouts/Row";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
-import { Link } from "react-router-dom";
 
 const FooterWrapper = styled.footer`
   margin: 40px auto;

@@ -90,7 +90,6 @@ function Carousel({ datas }: CarouselProps) {
     setMaxIndex(
       Math.ceil((carouselDivWidth || 0) / (carouselItemDivWidth || 1))
     );
-    console.log(carouselWidth, carouselItemWidth, maxIndex);
   }, [document.getElementById("carousel")]);
 
   function handleBackArrow() {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import NewsJson from "../../assets/jsons/news.json";
@@ -6,6 +6,7 @@ import SheetWrapper from "../../layouts/SheetWrapper";
 import NewsIndex from "../../components/News/NewsIndex";
 import Title from "../../layouts/Title";
 import MyHelmet from "../../helmet/MyHelmet";
+import { NewsType } from "../../types/NewsType";
 
 type TParams = {
   id: string;
@@ -13,9 +14,16 @@ type TParams = {
 
 function NewsDetail() {
   const { id } = useParams<TParams>();
-  const news = NewsJson.news.find((newsjson) => newsjson.year === id);
-  if (!news) return <></>;
-  console.log(news);
+  const [news, setNews] = useState<NewsType>();
+
+  useEffect(() => {
+    // TODO get API
+    const datas = NewsJson;
+    const data = datas.news.find((newsjson) => newsjson.year === id);
+    setNews(data);
+  }, []);
+
+  if (!news) return null;
 
   return (
     <>

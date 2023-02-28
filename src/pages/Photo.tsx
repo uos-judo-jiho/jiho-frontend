@@ -19,13 +19,13 @@ function Photo() {
   const escKey = useKeyEscClose(closeModal);
   const { lockScroll, openScroll } = useBodyScrollLock();
 
-  const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>(
-    []
-  );
+  const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>();
 
   useEffect(() => {
+    // TODO get API
     const trainingLogDatas = TrainingLogDatas;
-    setTrainingLogArray(trainingLogDatas.trainingLogs.slice(0).reverse());
+    const reversedDatas = trainingLogDatas.trainingLogs.slice(0).reverse();
+    setTrainingLogArray(reversedDatas);
   }, []);
 
   function openModal() {

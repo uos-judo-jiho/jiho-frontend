@@ -1,4 +1,4 @@
-export interface ArticleInfoType {
+export type ArticleInfoType = {
   id: string;
   imgSrcs: string[];
   title: string;
@@ -6,4 +6,4 @@ export interface ArticleInfoType {
   dateTime: string;
   subTitle: string[];
   description: string;
-}
+};

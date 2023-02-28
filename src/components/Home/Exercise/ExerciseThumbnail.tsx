@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import TrainingLogDatas from "../../../assets/jsons/trainingLog.json";
 import Col from "../../../layouts/Col";
+import { ArticleInfoType } from "../../../types/ArticleInfoType";
 
 const Stack = styled.div`
   width: 40vw;
@@ -67,8 +69,17 @@ const Thumbnail = styled.img`
 `;
 
 function ExerciseThumbnail() {
-  const thumbnailData =
-    TrainingLogDatas.trainingLogs[TrainingLogDatas.trainingLogs.length - 1];
+  const [thumbnailData, setThumbnailData] = useState<ArticleInfoType>();
+
+  useEffect(() => {
+    // TODO Api 훈련일지 썸네일 데이터 가져오기
+    const data =
+      TrainingLogDatas.trainingLogs[TrainingLogDatas.trainingLogs.length - 1];
+    setThumbnailData(data);
+  }, []);
+
+  if (!thumbnailData) return null;
+
   return (
     <Container>
       <Link to={"/Photo"}>

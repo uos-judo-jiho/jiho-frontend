@@ -1,8 +1,10 @@
 import axios from "axios";
+import { Constants } from "../constant/constant";
 
 export async function getNews() {
+  const methodUrl = "";
   await axios
-    .get("")
+    .get(Constants.AWS_BASE_URL + methodUrl)
     .then((response) => {
       return response.data;
     })
