@@ -259,10 +259,10 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
               <ModalDescriptionSection article={info} titles={titles} />
             </MobileRowColLayout>
           </Main>
-          <IndexContainer>
-            <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
-          </IndexContainer>
         </ModalArticle>
+        <IndexContainer>
+          <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
+        </IndexContainer>
       </MobileModalLayout>
     </Container>
   );

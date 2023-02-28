@@ -11,6 +11,14 @@ const Container = styled.div`
   height: 100%;
 `;
 
+const TextWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
 const SeeMore = styled.p`
   color: ${(props) => props.theme.greyColor};
   margin-top: 0.5rem;
@@ -31,8 +39,10 @@ function HomeSectionNews() {
           backgroundCover={false}
         >
           <SheetWrapper>
-            <Title title={"2022년 지호지"} />
-            <SeeMore>자세히 보기</SeeMore>
+            <TextWrapper>
+              <Title title={"2022년 지호지"} />
+              <SeeMore>자세히 보기</SeeMore>
+            </TextWrapper>
           </SheetWrapper>
         </HomeSectionBG>
       </Link>

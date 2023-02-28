@@ -4,6 +4,7 @@ import { ReactComponent as InstargramIcon } from "../../assets/svgs/icons8-insta
 import { ReactComponent as YoutubeIcon } from "../../assets/svgs/icons8-youtube-500.svg";
 import Row from "../../layouts/Row";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
+import { Link } from "react-router-dom";
 
 const FooterWrapper = styled.footer`
   margin: 40px auto;
@@ -28,6 +29,7 @@ const StyledYoutubeIcon = styled(YoutubeIcon)`
 
 const DescriptionList = styled.ul`
   margin-right: 2rem;
+  margin-bottom: 0.5rem;
 `;
 
 const DescriptionItem = styled.li`
@@ -43,10 +45,39 @@ const DescriptionItemTitle = styled.li`
   font-size: ${(props) => props.theme.tinyFontSize};
 `;
 
+const LinkWrapper = styled.div`
+  &:hover {
+    opacity: 0.6;
+  }
+`;
+
+const HyperLink = styled.a`
+  &:hover {
+    opacity: 0.6;
+  }
+`;
+
 function Footer() {
   return (
     <FooterWrapper>
       <MobileRowColLayout rowJustifyContent="start">
+        <DescriptionList>
+          <DescriptionItemTitle>
+            <LinkWrapper>
+              <Link to={"/"}>HOME</Link>
+            </LinkWrapper>
+          </DescriptionItemTitle>
+          <DescriptionItem>
+            <LinkWrapper>
+              <Link to={"/photo"}>훈련 일지</Link>
+            </LinkWrapper>
+          </DescriptionItem>
+          <DescriptionItem>
+            <LinkWrapper>
+              <Link to={"/news"}>지호지</Link>
+            </LinkWrapper>
+          </DescriptionItem>
+        </DescriptionList>
         <DescriptionList>
           <DescriptionItemTitle>
             {FooterInfo.title.krTitle}
@@ -67,15 +98,18 @@ function Footer() {
           </DescriptionItemTitle>
           <DescriptionItem>
             {FooterInfo.connetUs.instagram.title}
-            <a href="https://www.instagram.com/uos_judo/" target="_blank">
+            <HyperLink
+              href="https://www.instagram.com/uos_judo/"
+              target="_blank"
+            >
               {FooterInfo.connetUs.instagram.href}
-            </a>
+            </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
             {FooterInfo.connetUs.email.title}
-            <a href="mailto: uosjudojiho@gmail.com">
+            <HyperLink href="mailto: uosjudojiho@gmail.com">
               {FooterInfo.connetUs.email.href}
-            </a>
+            </HyperLink>
           </DescriptionItem>
           {/* TODO 연락처 추가하면 주석 해제 */}
           {/* <DescriptionItem>
