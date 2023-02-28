@@ -4,13 +4,13 @@
       "id": "1",
       "imgSrc": "demo.jpg",
       "title": "",
-      "subTitle": "38기 한지선"
+      "tags": "38기 한지선"
     },
     {
       "id": "2",
       "imgSrc": "demo.jpg",
       "title": "",
-      "subTitle": "38기 정종원"
+      "tags": "38기 정종원"
     }
   ]
 }

@@ -134,7 +134,7 @@ function NewsCard({ index, datas }: NewsCardProps) {
           <Col>
             <ImgTitle>{datas[index].title}</ImgTitle>
             <ImgSubTitle>{datas[index].author}</ImgSubTitle>
-            <ImgSubTitle>{datas[index].subTitle}</ImgSubTitle>
+            <ImgSubTitle>{datas[index].tags}</ImgSubTitle>
           </Col>
         </ImgWrapper>
         <DescriptionWrapper>
@@ -143,9 +143,7 @@ function NewsCard({ index, datas }: NewsCardProps) {
               <DescriptionTitle>{datas[index].title}</DescriptionTitle>
               <Row>
                 <DescriptionSubTitle>{datas[index].author}</DescriptionSubTitle>
-                <DescriptionSubTitle>
-                  {datas[index].subTitle}
-                </DescriptionSubTitle>
+                <DescriptionSubTitle>{datas[index].tags}</DescriptionSubTitle>
               </Row>
             </Col>
           </DescriptionTitleWrapper>

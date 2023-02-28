@@ -4,6 +4,6 @@ export type ArticleInfoType = {
   title: string;
   author: string;
   dateTime: string;
-  subTitle: string[];
+  tags: string[];
   description: string;
 };

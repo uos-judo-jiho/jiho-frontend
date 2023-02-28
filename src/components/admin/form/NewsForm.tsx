@@ -24,7 +24,7 @@ function NewsForm() {
         <Form.Item label="제목" name="title">
           <Input />
         </Form.Item>
-        <Form.List name="subTitle">
+        <Form.List name="tags">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (
@@ -35,7 +35,7 @@ function NewsForm() {
                 >
                   <Form.Item
                     {...restField}
-                    name={[name, "subTitle"]}
+                    name={[name, "tags"]}
                     rules={[{ required: true, message: "태그를 적으세요" }]}
                   >
                     <Input placeholder="태그" />

@@ -25,7 +25,7 @@ function TrainingLogForm() {
         <Form.Item label="제목" name="title">
           <Input />
         </Form.Item>
-        <Form.List name="subTitle">
+        <Form.List name="tags">
           {(fields, { add, remove }) => (
             <>
               {fields.map(({ key, name, ...restField }) => (

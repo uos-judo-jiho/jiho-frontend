@@ -128,7 +128,7 @@ function ModalDescriptionSection({
                 {titles[1]}
               </DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
-                {formatStringArray(article.subTitle)}
+                {formatStringArray(article.tags)}
               </DescriptionHeaderTdContent>
             </tr>
             <tr>
