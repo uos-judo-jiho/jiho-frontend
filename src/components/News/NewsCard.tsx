@@ -91,9 +91,13 @@ const DescriptionWrapper = styled.div`
 const SeeMore = styled.span``;
 const MoreButton = styled.button`
   margin-top: 2px;
-  font-size: ${(props) => props.theme.tinyFontSize};
+  font-size: 1rem;
 
   color: ${(props) => props.theme.textColor};
+
+  &:hover {
+    color: ${(props) => props.theme.greyColor};
+  }
 `;
 
 function NewsCard({ index, datas }: NewsCardProps) {
