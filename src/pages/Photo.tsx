@@ -7,7 +7,7 @@ import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
 import Title from "../layouts/Title";
 
-import { getTraining } from "../api/trainingApi";
+import { getTrainings } from "../api/trainingApi";
 import MyHelmet from "../helmet/MyHelmet";
 import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
@@ -23,7 +23,7 @@ function Photo() {
 
   async function fetchData() {
     try {
-      const result = await getTraining();
+      const result = await getTrainings("2022");
       const reversedDatas = result.trainingLogs.slice(0).reverse();
 
       setTrainingLogArray(reversedDatas);

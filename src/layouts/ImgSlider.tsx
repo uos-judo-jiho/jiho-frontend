@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
+import { Constants } from "../constant/constant";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 type ImgSliderProps = {
@@ -73,11 +74,19 @@ const CurrentCircle = styled.div`
 
 function ImgSlider({ datas }: ImgSliderProps) {
   const [current, setCurrent] = useState<number>(0);
+  const [images, setImages] = useState<string[]>(datas);
+
   const length = datas.length;
 
   useEffect(() => {
     setCurrent(0);
   }, [datas]);
+
+  // useEffect(() => {
+  //   if (images[0] === null) {
+  //     setImages([Constants.LOGO_BLACK]);
+  //   }
+  // }, [datas]);
 
   function nextSlider() {
     setCurrent(current + 1);
@@ -87,7 +96,9 @@ function ImgSlider({ datas }: ImgSliderProps) {
     setCurrent(current - 1);
   }
 
-  if (!Array.isArray(datas) || datas.length <= 0) {
+  if (!Array.isArray(datas) || images.length <= 0) {
+    console.error("Image가 존재하지 않습니다.");
+
     return null;
   }
 
@@ -106,20 +117,20 @@ function ImgSlider({ datas }: ImgSliderProps) {
           length={length}
         />
 
-        {datas.map((slider, index) => {
+        {images.map((image, index) => {
           return (
             <Thumbnail
-              src={slider}
+              src={image}
               key={"thumbnail" + index}
               className={index === current ? "active" : ""}
             />
           );
         })}
         <CircleWrapper>
-          {datas.length === 1 ? (
+          {images.length === 1 ? (
             <></>
           ) : (
-            datas.map((slider, index) => {
+            images.map((image, index) => {
               return (
                 <CurrentCircle
                   key={"circle" + index}

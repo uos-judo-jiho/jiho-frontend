@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { getTraining } from "../../../api/trainingApi";
+import { getTrainings } from "../../../api/trainingApi";
 import Col from "../../../layouts/Col";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 
@@ -48,7 +48,8 @@ type HoveredSpanProps = {
 };
 
 const HoveredSpan = styled.span<HoveredSpanProps>`
-  font-size: ${(props) => (props.fontSize ? props.fontSize : "1rem")};
+  font-size: ${(props) =>
+    props.fontSize ? props.fontSize : props.theme.descriptionFontSize};
 
   &:not(:last-child) {
     margin-bottom: 0.5rem;
@@ -73,7 +74,7 @@ function ExerciseThumbnail() {
 
   async function fetchData() {
     try {
-      const response = await getTraining();
+      const response = await getTrainings("2022");
 
       const data = response.trainingLogs[response.trainingLogs.length - 1];
 

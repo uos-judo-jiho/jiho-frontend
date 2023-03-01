@@ -19,12 +19,12 @@ const Container = styled.div`
 `;
 
 type StyledMenuProps = {
-  currentPath: string;
+  currentpath: string;
 };
 
 const StyledMenu = styled(Menu)<StyledMenuProps>`
   filter: ${(props) =>
-    props.currentPath === "/"
+    props.currentpath === "/"
       ? `invert(100%) sepia(3%) saturate(607%) hue-rotate(209deg) brightness(116%) contrast(87%)` // #eee
       : ""};
 
@@ -71,7 +71,7 @@ function Navbar() {
       <Container>
         <Row justifyContent="space-between">
           <NavDropDown onClick={handleClick}>
-            <StyledMenu currentPath={currentPath} />
+            <StyledMenu currentpath={currentPath} />
           </NavDropDown>
           <LogoWrapper>
             <Link to={"/"}>

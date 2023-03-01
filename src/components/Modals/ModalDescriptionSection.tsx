@@ -1,11 +1,10 @@
+import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
-import Line from "../../layouts/Line";
-import Row from "../../layouts/Row";
-import { formatStringArray } from "../../utils/Utils";
-import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
 import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
-import { useState } from "react";
+import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
+import Line from "../../layouts/Line";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
+import { formatStringArray } from "../../utils/Utils";
 
 type ModalDescriptionSectionProps = {
   article: ArticleInfoType;
@@ -27,7 +26,16 @@ const DescriptionHeader = styled.div`
   flex: 0 0 auto;
 `;
 const DescriptionHeaderTable = styled.table`
+  font-size: ${(props) => props.theme.tinyFontSize};
   width: 100%;
+`;
+
+type DescriptionHeaderTableTrProps = {
+  isDisplay: boolean;
+};
+
+const DescriptionHeaderTableTr = styled.tr<DescriptionHeaderTableTrProps>`
+  display: ${(props) => (props.isDisplay ? "block" : "none")};
 `;
 
 const DescriptionHeaderTableTdTitle = styled.td`
@@ -51,11 +59,12 @@ const DescriptionWrapper = styled.div`
 
 const DescriptionTitle = styled.h3`
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: ${(props) => props.theme.descriptionFontSize};
   margin-bottom: 1rem;
 `;
 
 const Description = styled.p`
+  font-size: ${(props) => props.theme.tinyFontSize};
   text-indent: 0.4em;
 `;
 
@@ -101,6 +110,14 @@ function ModalDescriptionSection({
 }: ModalDescriptionSectionProps) {
   const [clickedHeart, setClickedHeart] = useState(false);
   const [heartCount, setHeartCount] = useState(0);
+  const [isDisplay, setIsDisplay] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (titles[1] === "태그") {
+      setIsDisplay(false);
+      console.log("tag??");
+    }
+  }, []);
 
   function handleHeart() {
     if (!clickedHeart) {
@@ -115,30 +132,30 @@ function ModalDescriptionSection({
       <DescriptionHeader>
         <DescriptionHeaderTable>
           <tbody>
-            <tr>
+            <DescriptionHeaderTableTr isDisplay={true}>
               <DescriptionHeaderTableTdTitle>
                 {titles[0]}
               </DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
                 {article.author}
               </DescriptionHeaderTdContent>
-            </tr>
-            <tr>
+            </DescriptionHeaderTableTr>
+            <DescriptionHeaderTableTr isDisplay={true}>
               <DescriptionHeaderTableTdTitle>
                 {titles[1]}
               </DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
                 {formatStringArray(article.tags)}
               </DescriptionHeaderTdContent>
-            </tr>
-            <tr>
+            </DescriptionHeaderTableTr>
+            <DescriptionHeaderTableTr isDisplay={isDisplay}>
               <DescriptionHeaderTableTdTitle>
                 {titles[2]}
               </DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
                 {article.dateTime}
               </DescriptionHeaderTdContent>
-            </tr>
+            </DescriptionHeaderTableTr>
           </tbody>
         </DescriptionHeaderTable>
         <Line margin={"10px 0"} borderWidth={"1px"} />

@@ -10,6 +10,7 @@ import { ArticleInfoType } from "../../types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
 
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+import { Constants } from "../../constant/constant";
 
 type PhotoModalProps = {
   open: boolean;
@@ -256,7 +257,6 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
             </CloseBtn> */}
             <MobileRowColLayout>
               <ImgSlider datas={info.imgSrcs} />
-
               <ModalDescriptionSection article={info} titles={titles} />
             </MobileRowColLayout>
           </Main>

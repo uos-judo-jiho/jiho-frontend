@@ -19,7 +19,7 @@ function NewsDetail() {
   async function fetchData() {
     try {
       // TODO 지호지가 2023년이 나오면 id와 비교하여 setState를 사용하여야 함.
-      const result = await getNews();
+      const result = await getNews("2022");
 
       // const data = result.find((newsjson) => newsjson.year === id);
       setNews(result);

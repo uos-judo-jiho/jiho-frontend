@@ -76,35 +76,36 @@ const Img = styled.img`
 
 function Carousel({ datas }: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [carouselWidth, setCarouselWidth] = useState<number>(0);
-  const [carouselItemWidth, setCarouselItemWidth] = useState<number>(0);
-  const [maxIndex, setMaxIndex] = useState<number>(0);
+  // TODO 이미지 슬라이딩 구현하기
+  // const [carouselWidth, setCarouselWidth] = useState<number>(0);
+  // const [carouselItemWidth, setCarouselItemWidth] = useState<number>(0);
+  // const [maxIndex, setMaxIndex] = useState<number>(0);
 
-  useEffect(() => {
-    const carouselDivWidth = document.getElementById("carousel")?.offsetWidth;
-    const carouselItemDivWidth =
-      document.getElementById("carousel-item")?.offsetWidth;
+  // useEffect(() => {
+  //   const carouselDivWidth = document.getElementById("carousel")?.offsetWidth;
+  //   const carouselItemDivWidth =
+  //     document.getElementById("carousel-item")?.offsetWidth;
 
-    setCarouselWidth(carouselDivWidth || 0);
-    setCarouselItemWidth(carouselItemDivWidth || 0);
-    setMaxIndex(
-      Math.ceil((carouselDivWidth || 0) / (carouselItemDivWidth || 1))
-    );
-  }, [document.getElementById("carousel")]);
+  //   setCarouselWidth(carouselDivWidth || 0);
+  //   setCarouselItemWidth(carouselItemDivWidth || 0);
+  //   setMaxIndex(
+  //     Math.ceil((carouselDivWidth || 0) / (carouselItemDivWidth || 1))
+  //   );
+  // }, [document.getElementById("carousel")]);
 
-  function handleBackArrow() {
-    if (currentIndex === 0) {
-      return;
-    }
-    setCurrentIndex((prev) => prev - 1);
-  }
+  // function handleBackArrow() {
+  //   if (currentIndex === 0) {
+  //     return;
+  //   }
+  //   setCurrentIndex((prev) => prev - 1);
+  // }
 
-  function handleForwardArrow() {
-    if (currentIndex === maxIndex) {
-      return;
-    }
-    setCurrentIndex((prev) => prev + 1);
-  }
+  // function handleForwardArrow() {
+  //   if (currentIndex === maxIndex) {
+  //     return;
+  //   }
+  //   setCurrentIndex((prev) => prev + 1);
+  // }
 
   return (
     <Window>

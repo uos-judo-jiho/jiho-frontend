@@ -8,6 +8,7 @@ import Row from "../../layouts/Row";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
 import { useBodyScrollLock } from "../../Hooks/useBodyScrollLock";
+import { Constants } from "../../constant/constant";
 
 type NewsCardProps = {
   index: number;
@@ -16,9 +17,13 @@ type NewsCardProps = {
 
 const Container = styled.div`
   width: 100%;
+
+  font-size: ${(props) => props.theme.descriptionFontSize};
+
   display: flex;
   border-radius: 1rem;
   padding: 2rem 1rem;
+
   transition: all 0.5s;
   cursor: pointer;
 
@@ -36,7 +41,8 @@ const ImgWrapper = styled.div`
 `;
 
 const ImgSubTitle = styled.div`
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.tinyFontSize};
+  color: ${(props) => props.theme.greyColor};
   padding-top: 0.5rem;
   display: none;
   @media (max-width: 539px) {
@@ -44,7 +50,7 @@ const ImgSubTitle = styled.div`
   }
 `;
 const ImgTitle = styled.div`
-  font-size: 1.2rem;
+  font-size: ${(props) => props.theme.descriptionFontSize};
   font-weight: bold;
   padding-top: 0.5rem;
   display: none;
@@ -67,13 +73,14 @@ const DescriptionTitleWrapper = styled.div`
 
 const DescriptionTitle = styled.h3`
   text-indent: 0;
-  font-size: 1.2rem;
+  font-size: ${(props) => props.theme.descriptionFontSize};
   font-weight: bold;
 `;
 
 const DescriptionSubTitle = styled.span`
   text-indent: 0;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.tinyFontSize};
+  color: ${(props) => props.theme.greyColor};
   padding-right: 0.5rem;
 `;
 const DescriptionWrapper = styled.div`
@@ -90,7 +97,7 @@ const DescriptionWrapper = styled.div`
 const SeeMore = styled.span``;
 const MoreButton = styled.button`
   margin-top: 2px;
-  font-size: 1rem;
+  font-size: ${(props) => props.theme.tinyFontSize};
 
   color: ${(props) => props.theme.textColor};
 
@@ -126,7 +133,13 @@ function NewsCard({ index, datas }: NewsCardProps) {
     <>
       <Container onClick={openSeeMore}>
         <ImgWrapper>
-          <Img src={datas[index].imgSrcs[0]} />
+          <Img
+            src={
+              datas[index].imgSrcs[0]
+                ? datas[index].imgSrcs[0]
+                : Constants.LOGO_BLACK
+            }
+          />
           <Col>
             <ImgTitle>{datas[index].title}</ImgTitle>
             <ImgSubTitle>{datas[index].author}</ImgSubTitle>

@@ -21,6 +21,7 @@ const TextWrapper = styled.div`
 
 const SeeMore = styled.p`
   color: ${(props) => props.theme.greyColor};
+  font-size: ${(props) => props.theme.tinyFontSize};
   margin-top: 0.5rem;
   opacity: 0.6;
 
