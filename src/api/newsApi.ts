@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { Constants } from "../constant/constant";
 import { NewsType } from "../types/NewsType";
 

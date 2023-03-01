@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
-// TODO API 뉴스
 import PhotoModal from "../Modals/PhotoModal";
 
 import Col from "../../layouts/Col";
@@ -126,7 +125,6 @@ function NewsCard({ index, datas }: NewsCardProps) {
   return (
     <>
       <Container onClick={openSeeMore}>
-        {/* TODO img src */}
         <ImgWrapper>
           <Img src={datas[index].imgSrcs[0]} />
           <Col>

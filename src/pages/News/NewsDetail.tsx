@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getNews } from "../../api/news";
-import NewsJson from "../../assets/jsons/news.json";
+import { getNews } from "../../api/newsApi";
 import NewsIndex from "../../components/News/NewsIndex";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "../../layouts/DefaultLayout";
@@ -19,6 +18,7 @@ function NewsDetail() {
 
   async function fetchData() {
     try {
+      // TODO 지호지가 2023년이 나오면 id와 비교하여 setState를 사용하여야 함.
       const result = await getNews();
 
       // const data = result.find((newsjson) => newsjson.year === id);

@@ -7,12 +7,11 @@ import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
 import Title from "../layouts/Title";
 
-import TrainingLogDatas from "../assets/jsons/trainingLog.json";
+import { getTraining } from "../api/trainingApi";
+import MyHelmet from "../helmet/MyHelmet";
 import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../types/ArticleInfoType";
-import MyHelmet from "../helmet/MyHelmet";
-import { getTraining } from "../api/training";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -33,7 +32,6 @@ function Photo() {
     }
   }
   useEffect(() => {
-    // TODO get API
     fetchData();
     // const trainingLogDatas = TrainingLogDatas;
     // const reversedDatas = trainingLogDatas.trainingLogs.slice(0).reverse();
@@ -69,7 +67,6 @@ function Photo() {
             {trainingLogArray.map((trainingLog, index) => {
               return (
                 <ThumbnailCard
-                  // TODO imgSrc Api 적용
                   key={"trainingLog" + trainingLog.id}
                   imgSrc={trainingLog.imgSrcs ? trainingLog.imgSrcs[0] : ""}
                   dateTime={trainingLog.dateTime}

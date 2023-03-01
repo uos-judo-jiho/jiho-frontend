@@ -58,7 +58,6 @@ function ThumbnailCard({
 
   return (
     <ImgWrapper onClick={handleClick}>
-      {/* TODO dev Thumbnail image API */}
       <Thumbnail src={imgSrc} />
       <HoveredContainer>{dateTime}</HoveredContainer>
     </ImgWrapper>

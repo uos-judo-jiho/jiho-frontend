@@ -109,7 +109,6 @@ function ImgSlider({ datas }: ImgSliderProps) {
         {datas.map((slider, index) => {
           return (
             <Thumbnail
-              // TODO dev Api
               src={slider}
               key={"thumbnail" + index}
               className={index === current ? "active" : ""}

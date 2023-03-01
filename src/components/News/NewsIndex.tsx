@@ -15,7 +15,6 @@ function NewsIndex({ articles, images }: NewsIndexProps) {
     <>
       <Carousel datas={images}></Carousel>
       <NewsCardContainer>
-        {/* TODO 뉴스 데이터로 교체하기 */}
         {/* TODO infinite scroll 구현하기 */}
         {articles.map((item, index) => {
           return (

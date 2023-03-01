@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { testApi } from "../../../api/testApi";
-import { getTraining } from "../../../api/training";
-import TrainingLogDatas from "../../../assets/jsons/trainingLog.json";
+import { getTraining } from "../../../api/trainingApi";
 import Col from "../../../layouts/Col";
-import {
-  ArticleInfoType,
-  TrainingLogsType,
-} from "../../../types/ArticleInfoType";
+import { ArticleInfoType } from "../../../types/ArticleInfoType";
 
 const Stack = styled.div`
   width: 40vw;
@@ -89,22 +84,16 @@ function ExerciseThumbnail() {
   }
 
   useEffect(() => {
-    // TODO Api 훈련일지 썸네일 데이터 가져오기
     fetchData();
   }, []);
 
   if (!thumbnailData) return null;
 
-  // TODO 이미지가 안불러와 지는 문제 해결 -> 개선 필요
-
   return (
     <Container>
       <Link to={"/Photo"}>
         <Stack>
-          <Thumbnail
-            // TODO dev API
-            src={thumbnailData.imgSrcs[0]}
-          />
+          <Thumbnail src={thumbnailData.imgSrcs[0]} />
           <HoveredContainer>
             <Col justifyContent="center" alignItems="center">
               <HoveredSpan>훈련 일지</HoveredSpan>
