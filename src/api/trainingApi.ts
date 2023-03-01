@@ -6,6 +6,6 @@ export async function getTraining() {
   const methodUrl = "api/trainings/2023";
 
   return await axios
-    .get<TrainingLogsType>(Constants.AWS_BASE_URL + methodUrl)
+    .get<TrainingLogsType>(Constants.BASE_URL + methodUrl)
     .then((response) => response.data);
 }

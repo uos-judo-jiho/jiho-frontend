@@ -1,5 +1,5 @@
 export const Constants = {
-  AWS_BASE_URL: "https://uosjudo.com/",
+  BASE_URL: "https://uosjudo.com/",
 } as const;
 
 type T = typeof Constants;

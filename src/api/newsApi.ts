@@ -6,6 +6,6 @@ export async function getNews() {
   const methodUrl = "api/news/2023";
 
   return await axios
-    .get<NewsType>(Constants.AWS_BASE_URL + methodUrl)
+    .get<NewsType>(Constants.BASE_URL + methodUrl)
     .then((response) => response.data);
 }
