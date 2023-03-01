@@ -74,19 +74,14 @@ const CurrentCircle = styled.div`
 
 function ImgSlider({ datas }: ImgSliderProps) {
   const [current, setCurrent] = useState<number>(0);
-  const [images, setImages] = useState<string[]>(datas);
 
-  const length = datas.length;
+  const [length, setLength] = useState<number>(0);
 
   useEffect(() => {
     setCurrent(0);
+    // const datasLength = datas.length;
+    setLength(datas.length);
   }, [datas]);
-
-  // useEffect(() => {
-  //   if (images[0] === null) {
-  //     setImages([Constants.LOGO_BLACK]);
-  //   }
-  // }, [datas]);
 
   function nextSlider() {
     setCurrent(current + 1);
@@ -96,7 +91,7 @@ function ImgSlider({ datas }: ImgSliderProps) {
     setCurrent(current - 1);
   }
 
-  if (!Array.isArray(datas) || images.length <= 0) {
+  if (!Array.isArray(datas) || datas.length <= 0) {
     console.error("Image가 존재하지 않습니다.");
 
     return null;
@@ -117,20 +112,20 @@ function ImgSlider({ datas }: ImgSliderProps) {
           length={length}
         />
 
-        {images.map((image, index) => {
+        {datas.map((image, index) => {
           return (
             <Thumbnail
-              src={image}
+              src={image ? image : Constants.LOGO_BLACK}
               key={"thumbnail" + index}
               className={index === current ? "active" : ""}
             />
           );
         })}
         <CircleWrapper>
-          {images.length === 1 ? (
+          {datas.length === 1 ? (
             <></>
           ) : (
-            images.map((image, index) => {
+            datas.map((image, index) => {
               return (
                 <CurrentCircle
                   key={"circle" + index}

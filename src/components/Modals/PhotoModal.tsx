@@ -67,7 +67,7 @@ const IndexContainer = styled.div`
   }
 `;
 const IndexSpan = styled.span`
-  font-size: ${(props) => props.theme.tinyFontSize};
+  font-size: ${(props) => props.theme.defaultFontSize};
   display: block;
   color: ${(props) => props.theme.lightGreyColor};
   @media (max-width: 539px) {
@@ -192,9 +192,15 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   const [visible, setVisible] = useState<boolean>(open);
   const [current, setCurrent] = useState<number>(index);
   const [info, setInfo] = useState<ArticleInfoType>(infos[index]);
-  const length = infos.length;
+  const [length, setLength] = useState<number>(0);
+
   const { onTouchStart, onTouchEnd } = useTouchScroll(close);
   const { onMouseDown, onMouseUp } = useMouseDrag(close);
+
+  useEffect(() => {
+    const infosLength = infos.length;
+    setLength(infosLength);
+  }, []);
 
   useEffect(() => {
     setInfo(infos[current]);
@@ -204,7 +210,6 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
     if (visible && !open) {
       setAnimate(true);
       setTimeout(() => setAnimate(false), 250);
-      alert("modal closed");
     }
     setAnimate(open);
   }, [visible, open]);

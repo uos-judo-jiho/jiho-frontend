@@ -29,7 +29,7 @@ const LogoWrapper = styled.div`
 
 const DescriptionContainer = styled.ul``;
 const DescriptionItem = styled.li`
-  font-size: ${(props) => props.theme.tinyFontSize};
+  font-size: ${(props) => props.theme.defaultFontSize};
 `;
 
 const DescriptionTitle = styled.h3`

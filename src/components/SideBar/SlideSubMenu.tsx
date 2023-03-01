@@ -13,12 +13,12 @@ const slideDown = (count: number) => keyframes`
       height: 0;
     }
     to {
-      height: ${count * 2}rem;
+      height: ${count * 2 * 1.6}rem;
     }
 `;
 const slideUp = (count: number) => keyframes`
     from {
-        height: ${count * 2}rem;
+        height: ${count * 2 * 1.6}rem;
     }
     to {
       height: 0;
@@ -29,7 +29,7 @@ const slideUp = (count: number) => keyframes`
 const ToggleMenuList = styled.ul<{ count: number }>`
   width: 100%;
   overflow: hidden;
-  font-size: ${(props) => props.theme.descriptionFontSize};
+  font-size: ${(props) => props.theme.defaultFontSize};
 
   &.selected {
     display: block;

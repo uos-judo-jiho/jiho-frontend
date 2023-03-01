@@ -84,6 +84,7 @@ const DescriptionSubTitle = styled.span`
   padding-right: 0.5rem;
 `;
 const DescriptionWrapper = styled.div`
+  font-size: ${(props) => props.theme.defaultFontSize};
   width: 100%;
   padding: 0 1rem;
   line-height: normal;

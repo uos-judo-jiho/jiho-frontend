@@ -12,6 +12,7 @@ declare module "styled-components" {
     titleFontSize: string;
     subTitleFontSize: string;
     descriptionFontSize: string;
+    defaultFontSize: string;
     tinyFontSize: string;
   }
 }

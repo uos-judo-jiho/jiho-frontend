@@ -17,7 +17,7 @@ const DescriptionSection = styled.section`
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 1em;
+  padding: 2rem;
 `;
 
 const DescriptionHeader = styled.div`
@@ -26,7 +26,7 @@ const DescriptionHeader = styled.div`
   flex: 0 0 auto;
 `;
 const DescriptionHeaderTable = styled.table`
-  font-size: ${(props) => props.theme.tinyFontSize};
+  font-size: ${(props) => props.theme.defaultFontSize};
   width: 100%;
 `;
 
@@ -64,7 +64,7 @@ const DescriptionTitle = styled.h3`
 `;
 
 const Description = styled.p`
-  font-size: ${(props) => props.theme.tinyFontSize};
+  font-size: ${(props) => props.theme.defaultFontSize};
   text-indent: 0.4em;
 `;
 
@@ -115,7 +115,6 @@ function ModalDescriptionSection({
   useEffect(() => {
     if (titles[1] === "태그") {
       setIsDisplay(false);
-      console.log("tag??");
     }
   }, []);
 
