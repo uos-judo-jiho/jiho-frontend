@@ -1,3 +1,6 @@
+import axios from "axios";
+import { useEffect } from "react";
+import { testApi } from "../api/testApi";
 import HomeSectionExercise from "../components/Home/Exercise/HomeSectionExercise";
 import HomeSectionInfo from "../components/Home/Info/HomeSectionInfo";
 import HomeSectionMain from "../components/Home/Main/HomeSectionMain";
@@ -7,6 +10,8 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import ScrollSnap from "../layouts/ScrollSnap";
 
 function Home() {
+  useEffect(() => {}, []);
+
   return (
     <>
       <MyHelmet helmet="Home" />

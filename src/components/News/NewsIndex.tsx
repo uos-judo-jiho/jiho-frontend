@@ -18,7 +18,9 @@ function NewsIndex({ articles, images }: NewsIndexProps) {
         {/* TODO 뉴스 데이터로 교체하기 */}
         {/* TODO infinite scroll 구현하기 */}
         {articles.map((item, index) => {
-          return <NewsCard key={item.id} index={index} datas={articles} />;
+          return (
+            <NewsCard key={"news" + item.id} index={index} datas={articles} />
+          );
         })}
       </NewsCardContainer>
     </>

@@ -89,8 +89,7 @@ function ExerciseThumbnail() {
         <Stack>
           <Thumbnail
             // TODO dev API
-            src={require("../../../assets/images/trainingLog/" +
-              thumbnailData.imgSrcs[0])}
+            src={thumbnailData.imgSrcs[0]}
           />
           <HoveredContainer>
             <Col justifyContent="center" alignItems="center">

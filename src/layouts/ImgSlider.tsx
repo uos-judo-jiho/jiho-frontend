@@ -110,7 +110,7 @@ function ImgSlider({ datas }: ImgSliderProps) {
           return (
             <Thumbnail
               // TODO dev Api
-              src={require("../assets/images/trainingLog/" + slider)}
+              src={slider}
               key={"thumbnail" + index}
               className={index === current ? "active" : ""}
             />

@@ -5,3 +5,9 @@ export type NewsType = {
   images: string[];
   articles: ArticleInfoType[];
 };
+
+export interface INewsType {
+  year: string;
+  images: string[];
+  articles: ArticleInfoType[];
+}

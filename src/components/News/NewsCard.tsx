@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 // TODO API 뉴스
@@ -122,15 +122,24 @@ function NewsCard({ index, datas }: NewsCardProps) {
     setIsMore(false);
     openScroll();
   }
+
+  // TODO 이미지가 안불러와 지는 문제 해결 -> 개선 필요
+  let imgSrc = "";
+  Object.values(datas[index]).forEach((element) => {
+    if (typeof element === "object") {
+      if (element[0][0] === "h") {
+        imgSrc = element[0];
+      }
+    }
+  });
+
   return (
     <>
       <Container onClick={openSeeMore}>
         {/* TODO img src */}
         <ImgWrapper>
-          <Img
-            src={require("../../assets/images/trainingLog/" +
-              datas[index].imgSrcs[0])}
-          />
+          <Img src={imgSrc} />
+          {/* <Img src={datas[index].imgSrc[0]} /> */}
           <Col>
             <ImgTitle>{datas[index].title}</ImgTitle>
             <ImgSubTitle>{datas[index].author}</ImgSubTitle>

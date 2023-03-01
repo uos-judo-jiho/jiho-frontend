@@ -22,6 +22,7 @@
     "react-router-dom": "^6.6.2",
     "react-scripts": "5.0.1",
     "react-scroll": "^1.8.9",
+    "react-snap": "^1.23.0",
     "react-youtube": "^10.1.0",
     "styled-components": "^5.3.6",
     "typescript": "^4.9.4",
@@ -31,7 +32,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postbuild": "react-snap"
   },
   "eslintConfig": {
     "extends": [
@@ -54,5 +56,12 @@
   "devDependencies": {
     "@types/styled-components": "^5.1.26",
     "babel-plugin-import": "^1.13.6"
-  }
+  },
+  "reactSnap": {
+    "include": [
+      "/",
+      "/index"
+    ]
+  },
+  "proxy": "https://uosjudo.com"
 }

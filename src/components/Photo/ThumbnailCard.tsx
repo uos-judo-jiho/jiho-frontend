@@ -59,7 +59,7 @@ function ThumbnailCard({
   return (
     <ImgWrapper onClick={handleClick}>
       {/* TODO dev Thumbnail image API */}
-      <Thumbnail src={require("../../assets/images/trainingLog/" + imgSrc)} />
+      <Thumbnail src={imgSrc} />
       <HoveredContainer>{dateTime}</HoveredContainer>
     </ImgWrapper>
   );
