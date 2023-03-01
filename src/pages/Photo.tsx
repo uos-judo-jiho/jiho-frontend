@@ -12,6 +12,7 @@ import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../types/ArticleInfoType";
 import MyHelmet from "../helmet/MyHelmet";
+import { getTraining } from "../api/training";
 
 function Photo() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -21,11 +22,22 @@ function Photo() {
 
   const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>();
 
+  async function fetchData() {
+    try {
+      const result = await getTraining();
+      const reversedDatas = result.trainingLogs.slice(0).reverse();
+
+      setTrainingLogArray(reversedDatas);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   useEffect(() => {
     // TODO get API
-    const trainingLogDatas = TrainingLogDatas;
-    const reversedDatas = trainingLogDatas.trainingLogs.slice(0).reverse();
-    setTrainingLogArray(reversedDatas);
+    fetchData();
+    // const trainingLogDatas = TrainingLogDatas;
+    // const reversedDatas = trainingLogDatas.trainingLogs.slice(0).reverse();
+    // setTrainingLogArray(reversedDatas);
   }, []);
 
   function openModal() {
@@ -59,7 +71,7 @@ function Photo() {
                 <ThumbnailCard
                   // TODO imgSrc Api 적용
                   key={"trainingLog" + trainingLog.id}
-                  imgSrc={trainingLog.imgSrcs[0]}
+                  imgSrc={trainingLog.imgSrcs ? trainingLog.imgSrcs[0] : ""}
                   dateTime={trainingLog.dateTime}
                   handleClickCard={handleClickCard}
                   index={index}

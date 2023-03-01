@@ -1,12 +1,11 @@
 import axios from "axios";
 import { Constants } from "../constant/constant";
+import { ArticleInfoType, TrainingLogsType } from "../types/ArticleInfoType";
 
 export async function getTraining() {
-  const methodUrl = "api/trainings";
-  await axios
-    .get(Constants.AWS_BASE_URL + methodUrl)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => console.error(error));
+  const methodUrl = "api/trainings/2023";
+
+  return await axios
+    .get<TrainingLogsType>(Constants.AWS_BASE_URL + methodUrl)
+    .then((response) => response.data);
 }

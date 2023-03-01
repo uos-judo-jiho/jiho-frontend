@@ -7,3 +7,7 @@ export type ArticleInfoType = {
   tags: string[];
   description: string;
 };
+
+export type TrainingLogsType = {
+  trainingLogs: Array<ArticleInfoType>;
+};

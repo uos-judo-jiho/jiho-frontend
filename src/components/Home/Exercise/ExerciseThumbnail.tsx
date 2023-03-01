@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { testApi } from "../../../api/testApi";
+import { getTraining } from "../../../api/training";
 import TrainingLogDatas from "../../../assets/jsons/trainingLog.json";
 import Col from "../../../layouts/Col";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
+import {
+  ArticleInfoType,
+  TrainingLogsType,
+} from "../../../types/ArticleInfoType";
 
 const Stack = styled.div`
   width: 40vw;
@@ -72,16 +76,26 @@ const Thumbnail = styled.img`
 function ExerciseThumbnail() {
   const [thumbnailData, setThumbnailData] = useState<ArticleInfoType>();
 
-  useEffect(() => {
-    const res = testApi();
+  async function fetchData() {
+    try {
+      const response = await getTraining();
 
+      const data = response.trainingLogs[response.trainingLogs.length - 1];
+
+      setThumbnailData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
     // TODO Api 훈련일지 썸네일 데이터 가져오기
-    const data =
-      TrainingLogDatas.trainingLogs[TrainingLogDatas.trainingLogs.length - 1];
-    setThumbnailData(data);
+    fetchData();
   }, []);
 
   if (!thumbnailData) return null;
+
+  // TODO 이미지가 안불러와 지는 문제 해결 -> 개선 필요
 
   return (
     <Container>

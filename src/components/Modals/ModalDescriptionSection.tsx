@@ -146,7 +146,7 @@ function ModalDescriptionSection({
       <DescriptionWrapper>
         <DescriptionTitle>{article.title}</DescriptionTitle>
         <Description>
-          {article.description.split("\n").map((line, index) => {
+          {article.description.split("\n").map((line) => {
             return (
               <>
                 {line}

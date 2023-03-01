@@ -216,16 +216,6 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
     setCurrent(current - 1);
   }
 
-  // TODO 이미지가 안불러와 지는 문제 해결 -> 개선 필요
-  let imgSrcs: string[] = [];
-  Object.values(info).forEach((element) => {
-    if (typeof element === "object") {
-      if (element[0][0] === "h") {
-        imgSrcs = element;
-      }
-    }
-  });
-
   if (!animate && !visible) return null;
 
   return (
@@ -265,8 +255,8 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
               <StyledClose />
             </CloseBtn> */}
             <MobileRowColLayout>
-              {/* <ImgSlider datas={info.imgSrcs} /> */}
-              <ImgSlider datas={imgSrcs} />
+              <ImgSlider datas={info.imgSrcs} />
+
               <ModalDescriptionSection article={info} titles={titles} />
             </MobileRowColLayout>
           </Main>

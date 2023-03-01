@@ -20,7 +20,7 @@ function NewsDetail() {
   async function fetchData() {
     try {
       const result = await getNews();
-      console.log(result);
+
       // const data = result.find((newsjson) => newsjson.year === id);
       setNews(result);
     } catch (error) {
@@ -28,12 +28,7 @@ function NewsDetail() {
     }
   }
   useEffect(() => {
-    // TODO get API
     fetchData();
-
-    // const datas = NewsJson;
-    // const data = datas.news.find((newsjson) => newsjson.year === id);
-    // setNews(data);
   }, []);
 
   if (!news) return null;

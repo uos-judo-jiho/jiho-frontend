@@ -7,7 +7,6 @@ export async function testApi() {
   await axios
     .get(methodUrl)
     .then((response) => {
-      console.log(response.data);
       return response.data;
     })
     .catch((error) => console.error(error));
