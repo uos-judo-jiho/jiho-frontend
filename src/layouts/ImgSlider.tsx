@@ -9,7 +9,7 @@ type ImgSliderProps = {
 
 const SliderAnimation = keyframes`
     from {
-        opacity: 0;
+        opacity: 0.7;
     }
     to {
         opacity: 1;

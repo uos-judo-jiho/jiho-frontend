@@ -10,7 +10,9 @@ type AdminNavItemProps = {
   title: string;
 };
 
-const TitleSpan = styled.span``;
+const TitleSpan = styled.span`
+  font-size: ${(props) => props.theme.defaultFontSize};
+`;
 
 const LinkWrapper = styled.div`
   padding: 1rem;

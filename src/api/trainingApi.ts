@@ -9,3 +9,5 @@ export async function getTrainings(year: string) {
     .get<TrainingLogsType>(Constants.BASE_URL + methodUrl)
     .then((response) => response.data);
 }
+
+export async function postTraining() {}

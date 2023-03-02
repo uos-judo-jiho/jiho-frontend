@@ -12,7 +12,9 @@ import MyHelmet from "../helmet/MyHelmet";
 import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../types/ArticleInfoType";
+import useFetchData from "../Hooks/useFetchData";
 
+// TODO 무한 스크롤 구현
 function Photo() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [photoIdx, setPhotoIdx] = useState<number>(0);
@@ -21,22 +23,20 @@ function Photo() {
 
   const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>();
 
-  async function fetchData() {
-    try {
-      const result = await getTrainings("2022");
-      const reversedDatas = result.trainingLogs.slice(0).reverse();
+  /*
+    TODO 
+    훈련일지는 모든 데이터 필요 
+    1. 퀴리 요청에서 순차적으로 2022, 2023, ... 으로 프론트에서 계속 요청
+    2. 백에서 한번에 다주기
+  */
+  const { loading, error, response } = useFetchData(getTrainings, "2022");
 
-      setTrainingLogArray(reversedDatas);
-    } catch (error) {
-      console.error(error);
-    }
-  }
   useEffect(() => {
-    fetchData();
-    // const trainingLogDatas = TrainingLogDatas;
-    // const reversedDatas = trainingLogDatas.trainingLogs.slice(0).reverse();
-    // setTrainingLogArray(reversedDatas);
-  }, []);
+    if (!loading && !error && response) {
+      const reversedDatas = response.trainingLogs.slice(0).reverse();
+      setTrainingLogArray(reversedDatas);
+    }
+  }, [loading, error, response]);
 
   function openModal() {
     setModalOpen(true);

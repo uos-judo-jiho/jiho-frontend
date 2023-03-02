@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { getTrainings } from "../../../api/trainingApi";
+import useFetchData from "../../../Hooks/useFetchData";
 import Col from "../../../layouts/Col";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 
@@ -72,21 +73,18 @@ const Thumbnail = styled.img`
 function ExerciseThumbnail() {
   const [thumbnailData, setThumbnailData] = useState<ArticleInfoType>();
 
-  async function fetchData() {
-    try {
-      const response = await getTrainings("2022");
+  // TODO 훈련일지는 이번 년도 데이터 가져오기
+  // 혹은 백에서 가장 최근 데이터만 주기
 
-      const data = response.trainingLogs[response.trainingLogs.length - 1];
-
-      setThumbnailData(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const { loading, error, response } = useFetchData(getTrainings, "2022");
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (!loading && !error && response) {
+      // 가장 최근 데이터만 가져오기
+      const data = response.trainingLogs[response.trainingLogs.length - 1];
+      setThumbnailData(data);
+    }
+  }, [loading, error, response]);
 
   if (!thumbnailData) return null;
 
