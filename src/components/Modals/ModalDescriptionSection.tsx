@@ -39,7 +39,7 @@ const DescriptionHeaderTableTr = styled.tr<DescriptionHeaderTableTrProps>`
 `;
 
 const DescriptionHeaderTableTdTitle = styled.td`
-  width: 5rem;
+  width: 10rem;
 `;
 
 const DescriptionHeaderTdContent = styled.td`

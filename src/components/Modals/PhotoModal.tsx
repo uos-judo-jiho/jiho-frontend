@@ -170,8 +170,9 @@ const CloseBtn = styled.button`
   height: 2rem;
   background-color: transparent;
   @media (max-width: 539px) {
-    position: initial;
-    margin-left: 90vw;
+    position: absolute;
+    top: 10%;
+    right: 1rem;
 
     animation-duration: 0.5s;
     animation-timing-function: ease-out;

@@ -35,6 +35,7 @@ const Container = styled.div`
 
 const ImgWrapper = styled.div`
   width: 50%;
+
   @media (max-width: 539px) {
     width: 100%;
   }
@@ -64,7 +65,13 @@ const ImgTitle = styled.div`
 
 const Img = styled.img`
   width: 100%;
+  height: 100%;
   border-radius: 0.5rem;
+  object-fit: contain;
+
+  @media (max-width: 539px) {
+    height: inherit;
+  }
 `;
 
 const DescriptionTitleWrapper = styled.div`

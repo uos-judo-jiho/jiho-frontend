@@ -5,7 +5,9 @@ import SheetWrapper from "../../../layouts/SheetWrapper";
 const ContainerWrapper = styled.div`
   display: flex;
   width: 30vw;
-  min-height: 30vw;
+  height: 30vw;
+  min-width: 35rem;
+  min-height: 35rem;
   height: auto;
   margin: 0 0 60px auto;
   padding-top: 60px;
@@ -24,8 +26,8 @@ const Container = styled.div`
 `;
 
 const SubTitle = styled.h4`
-  font-size: 2.25rem;
-  letter-spacing: 7px;
+  font-size: 3.5rem;
+  letter-spacing: 0.7rem;
   text-transform: none;
   line-height: 120%;
   font-weight: 400;

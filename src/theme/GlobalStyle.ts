@@ -86,7 +86,7 @@ a{
 
 header,footer{
   width: 100%;
-  padding: 0 1rem;
+  padding: 0 1.6rem;
 }
 
 button,a{

@@ -21,6 +21,9 @@ const Thumbnail = styled.img`
   height: 30vw;
   object-fit: cover;
 
+  min-width: 30rem;
+  min-height: 30rem;
+
   display: none;
 
   &.active {
@@ -30,6 +33,8 @@ const Thumbnail = styled.img`
   @media (max-width: 539px) {
     width: 100%;
     height: 100%;
+    min-width: 100%;
+    min-height: 100%;
   }
 `;
 
