@@ -7,12 +7,6 @@ type CarouselProps = {
   datas: string[];
 };
 
-// TODO 캐로셀 화살표 구현
-// 구현 될 때 까지 스크롤로 표현
-type CarouselWrapperProps = {
-  index: number;
-};
-
 const Window = styled.div`
   height: 30%;
 
@@ -20,7 +14,7 @@ const Window = styled.div`
   position: relative;
 `;
 
-const CarouselWrapper = styled.div<CarouselWrapperProps>`
+const CarouselWrapper = styled.div`
   display: inline-flex;
   padding: 1rem 0;
 `;
@@ -29,6 +23,7 @@ const ScrollWrapper = styled.div`
   overflow-x: scroll;
 
   overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
     display: none;
@@ -75,55 +70,66 @@ const Img = styled.img`
 `;
 
 function Carousel({ datas }: CarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  // TODO 이미지 슬라이딩 구현하기
-  // const [carouselWidth, setCarouselWidth] = useState<number>(0);
-  // const [carouselItemWidth, setCarouselItemWidth] = useState<number>(0);
-  // const [maxIndex, setMaxIndex] = useState<number>(0);
+  const [scrollContainerWidth, setScrollContainerWidth] = useState(0);
+  const [scrollDistance, setScrollDistance] = useState(0);
 
-  // useEffect(() => {
-  //   const carouselDivWidth = document.getElementById("carousel")?.offsetWidth;
-  //   const carouselItemDivWidth =
-  //     document.getElementById("carousel-item")?.offsetWidth;
+  const [scrollContainer, setScrollContainer] = useState<
+    HTMLElement | undefined
+  >();
+  const [leftArrow, setLeftArrow] = useState<HTMLElement | undefined>();
+  const [rightArrow, setRightArrow] = useState<HTMLElement | undefined>();
 
-  //   setCarouselWidth(carouselDivWidth || 0);
-  //   setCarouselItemWidth(carouselItemDivWidth || 0);
-  //   setMaxIndex(
-  //     Math.ceil((carouselDivWidth || 0) / (carouselItemDivWidth || 1))
-  //   );
-  // }, [document.getElementById("carousel")]);
+  useEffect(() => {
+    setLeftArrow(document.getElementById("leftArrow") as HTMLElement);
+    setRightArrow(document.getElementById("rightArrow") as HTMLElement);
+    setScrollContainer(document.getElementById("scroll") as HTMLElement);
+    if (!leftArrow || !rightArrow || !scrollContainer) {
+      console.error("dom id isnt exist");
+    } else {
+      const scrollContainerWidth = scrollContainer.clientWidth;
+      const scrollDistance = scrollContainerWidth / 3;
 
-  // function handleBackArrow() {
-  //   if (currentIndex === 0) {
-  //     return;
-  //   }
-  //   setCurrentIndex((prev) => prev - 1);
-  // }
+      setScrollContainerWidth(scrollContainerWidth);
+      setScrollDistance(scrollDistance);
+      setScrollContainer(scrollContainer);
 
-  // function handleForwardArrow() {
-  //   if (currentIndex === maxIndex) {
-  //     return;
-  //   }
-  //   setCurrentIndex((prev) => prev + 1);
-  // }
+      leftArrow.onclick = function () {
+        scrollContainer.scrollBy({
+          top: 0,
+          left: -scrollDistance,
+          behavior: "smooth",
+        });
+      };
+      rightArrow.onclick = function () {
+        scrollContainer.scrollBy({
+          top: 0,
+          left: +scrollDistance,
+          behavior: "smooth",
+        });
+      };
+    }
+  }, [scrollContainer, leftArrow, rightArrow]);
 
   return (
     <Window>
-      {/* TODO 화살표 구현전까지 스크롤로 하기 */}
-      {/* <StyledBackArrow
+      <StyledBackArrow
+        id="leftArrow"
         current={1}
         length={datas.length}
-        onClick={handleBackArrow}
+        size={"3rem"}
+        isBackGround={true}
       />
       <StyledForwardArrow
+        id="rightArrow"
         current={1}
         length={datas.length}
-        onClick={handleForwardArrow}
-      /> */}
+        size={"3rem"}
+        isBackGround={true}
+      />
       <ScrollWrapper id={"scroll"}>
-        <CarouselWrapper id={"carousel"} index={currentIndex}>
+        <CarouselWrapper id={"carousel"}>
           {datas.map((img, index) => (
-            <CarouselItem id={"carousel-item"} key={"demo" + index}>
+            <CarouselItem id={"carousel-item"} key={"CarouselItem" + index}>
               <ImgWrapper>
                 <Img src={img} />
               </ImgWrapper>

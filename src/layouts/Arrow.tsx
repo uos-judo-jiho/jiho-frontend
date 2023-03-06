@@ -6,6 +6,9 @@ type ArrowProps = {
   current: number;
   length: number;
   size?: string;
+  id?: string;
+
+  isBackGround?: boolean;
 };
 
 const ArrowCss = css`
@@ -19,20 +22,38 @@ const ArrowCss = css`
 
 const StyledBackArrow = styled(BackArrow)<ArrowProps>`
   display: ${(props) => (props.current === 0 ? "none" : "flex")};
-  width: ${(props) => (props.size ? props.size : "20px")};
-  height: ${(props) => (props.size ? props.size : "20px")};
+  width: ${(props) => (props.size ? props.size : "2rem")};
+  height: ${(props) => (props.size ? props.size : "2rem")};
 
-  left: 12px;
+  left: 1.2rem;
   ${ArrowCss}
+
+  ${(props) =>
+    props.isBackGround
+      ? css`
+          border-radius: 50%;
+          padding: 0.5rem;
+          background-color: ${(props) => props.theme.lightGreyColor};
+        `
+      : ``}
 `;
 
 const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
   display: ${(props) => (props.current < props.length - 1 ? "flex" : "none")};
-  width: ${(props) => (props.size ? props.size : "20px")};
-  height: ${(props) => (props.size ? props.size : "20px")};
+  width: ${(props) => (props.size ? props.size : "2rem")};
+  height: ${(props) => (props.size ? props.size : "2rem")};
 
-  right: 0;
+  right: 1.2rem;
   ${ArrowCss}
+
+  ${(props) =>
+    props.isBackGround
+      ? css`
+          border-radius: 50%;
+          padding: 0.5rem;
+          background-color: ${(props) => props.theme.lightGreyColor};
+        `
+      : ``}
 `;
 
 export { StyledBackArrow, StyledForwardArrow };

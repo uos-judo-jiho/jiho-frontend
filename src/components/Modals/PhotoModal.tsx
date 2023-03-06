@@ -10,7 +10,6 @@ import { ArticleInfoType } from "../../types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
 
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
-import { Constants } from "../../constant/constant";
 
 type PhotoModalProps = {
   open: boolean;
