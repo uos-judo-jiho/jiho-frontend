@@ -56,93 +56,12 @@ function formatAwards(award: TAwards): string {
  *
  * 리턴값 예시 2023.02.28.화
  */
-function formatDateTimeObject2String(dateTimeObj: Object): string {
-  const obj2String = dateTimeObj.toString();
-  const arr = obj2String.split(" ");
-  const year = arr[3];
-  const month = arr[1];
-  const day = arr[2];
-  const week = arr[0];
+function formatDateTime(dateTimeString: string): string {
+  var result = dateTimeString;
+  result = result.replaceAll(".", "");
+  var resultList = result.split(" ");
 
-  var result: string = year + ".";
-
-  switch (month) {
-    case "Jan":
-      result += "01";
-      break;
-    case "Feb":
-      result += "02";
-      break;
-    case "Mar":
-      result += "03";
-      break;
-    case "Apr":
-      result += "04";
-      break;
-    case "May":
-      result += "05";
-      break;
-    case "Jun":
-      result += "06";
-      break;
-    case "Jul":
-      result += "07";
-      break;
-    case "Aug":
-      result += "08";
-      break;
-    case "Sep":
-      result += "09";
-      break;
-    case "Oct":
-      result += "10";
-      break;
-    case "Nov":
-      result += "11";
-      break;
-    case "Dec":
-      result += "12";
-      break;
-    default:
-      break;
-  }
-
-  result += ".";
-
-  if (parseInt(day) < 10) {
-    result = result + "0" + day;
-  } else {
-    result += day;
-  }
-  result += ".";
-
-  switch (week) {
-    case "Mon":
-      result += "월";
-      break;
-    case "Tue":
-      result += "화";
-      break;
-    case "Wed":
-      result += "수";
-      break;
-    case "Thu":
-      result += "목";
-      break;
-    case "Fri":
-      result += "금";
-      break;
-    case "Sat":
-      result += "토";
-      break;
-    case "Sun":
-      result += "일";
-      break;
-    default:
-      break;
-  }
-
-  return result;
+  return resultList.join("-");
 }
 
-export { formatStringArray, formatAwards, formatDateTimeObject2String };
+export { formatStringArray, formatAwards, formatDateTime };
