@@ -17,6 +17,8 @@ const ArrowCss = css`
   top: 50%;
   user-select: none;
 
+  transform: translate(0, -50%);
+
   cursor: pointer;
 `;
 

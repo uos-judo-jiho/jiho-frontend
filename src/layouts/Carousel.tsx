@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
+// TODO 스크롤 위치 값 가져와서 화살표 사라지게 하기
 
 type CarouselProps = {
   datas: string[];
@@ -72,6 +73,7 @@ const Img = styled.img`
 function Carousel({ datas }: CarouselProps) {
   const [scrollContainerWidth, setScrollContainerWidth] = useState(0);
   const [scrollDistance, setScrollDistance] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   const [scrollContainer, setScrollContainer] = useState<
     HTMLElement | undefined
