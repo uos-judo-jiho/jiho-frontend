@@ -20,6 +20,10 @@ const ArrowCss = css`
   transform: translate(0, -50%);
 
   cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 const StyledBackArrow = styled(BackArrow)<ArrowProps>`
