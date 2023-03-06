@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Constants } from "../constant/constant";
+import { useTouchScroll } from "../Hooks/useTouchScroll";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 type ImgSliderProps = {
@@ -9,7 +10,7 @@ type ImgSliderProps = {
 
 const SliderAnimation = keyframes`
     from {
-        opacity: 0.7;
+      opacity: 0.9;
     }
     to {
         opacity: 1;
@@ -19,7 +20,8 @@ const SliderAnimation = keyframes`
 const Thumbnail = styled.img`
   width: 30vw;
   height: 30vw;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: ${(props) => props.theme.blackColor};
 
   min-width: 30rem;
   min-height: 30rem;
@@ -55,14 +57,15 @@ const CircleWrapper = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  bottom: 12px;
+  bottom: 1.2rem;
   right: 0;
   left: 0;
+  transform: translate(0, -1.2rem);
 `;
 
 const CurrentCircle = styled.div`
-  width: 4px;
-  height: 4px;
+  width: 0.4rem;
+  height: 0.4rem;
   border-radius: 50%;
   background-color: ${(props) => props.theme.lightGreyColor};
   opacity: 0.3;
@@ -71,29 +74,41 @@ const CurrentCircle = styled.div`
 
   &.active {
     background-color: ${(props) => props.theme.bgColor};
-    width: 5px;
-    height: 5px;
+    width: 0.5rem;
+    height: 0.5rem;
     opacity: 1;
   }
 `;
 
 function ImgSlider({ datas }: ImgSliderProps) {
   const [current, setCurrent] = useState<number>(0);
-
   const [length, setLength] = useState<number>(0);
+
+  const { onTouchStart, onTouchEnd } = useTouchScroll([nextSlider, prevSlider]);
 
   useEffect(() => {
     setCurrent(0);
-    // const datasLength = datas.length;
     setLength(datas.length);
   }, [datas]);
 
   function nextSlider() {
-    setCurrent(current + 1);
+    setCurrent((prev) => {
+      if (prev === length - 1) {
+        return prev;
+      } else {
+        return prev + 1;
+      }
+    });
   }
 
   function prevSlider() {
-    setCurrent(current - 1);
+    setCurrent((prev) => {
+      if (prev === 0) {
+        return prev;
+      } else {
+        return prev - 1;
+      }
+    });
   }
 
   if (!Array.isArray(datas) || datas.length <= 0) {
@@ -104,17 +119,19 @@ function ImgSlider({ datas }: ImgSliderProps) {
 
   return (
     <Slider>
-      <ImgSliderWrapper>
+      <ImgSliderWrapper onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <StyledBackArrow
           onClick={prevSlider}
           current={current}
           length={length}
+          isBackGround={true}
         />
 
         <StyledForwardArrow
           onClick={nextSlider}
           current={current}
           length={length}
+          isBackGround={true}
         />
 
         {datas.map((image, index) => {
@@ -126,19 +143,18 @@ function ImgSlider({ datas }: ImgSliderProps) {
             />
           );
         })}
+
         <CircleWrapper>
-          {datas.length === 1 ? (
-            <></>
-          ) : (
-            datas.map((image, index) => {
-              return (
-                <CurrentCircle
-                  key={"circle" + index}
-                  className={index === current ? "active" : ""}
-                />
-              );
-            })
-          )}
+          {datas.length === 1
+            ? null
+            : datas.map((image, index) => {
+                return (
+                  <CurrentCircle
+                    key={"circle" + index}
+                    className={index === current ? "active" : ""}
+                  />
+                );
+              })}
         </CircleWrapper>
       </ImgSliderWrapper>
     </Slider>

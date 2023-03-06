@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function useTouchScroll(action: Function) {
+export function useTouchScroll(actions: Function[]) {
   const [tochedX, setTochedX] = useState<number>(0);
   const [tochedY, setTochedY] = useState<number>(0);
 
@@ -13,8 +13,10 @@ export function useTouchScroll(action: Function) {
     const distanceY = tochedY - e.changedTouches[0].pageY;
     const vector = Math.abs(distanceX / distanceY);
 
-    if (distanceY < -20) {
-      action();
+    if (distanceX < -20) {
+      actions[1]();
+    } else if (distanceX > 20) {
+      actions[0]();
     }
   };
   return { onTouchStart, onTouchEnd };

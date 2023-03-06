@@ -170,7 +170,7 @@ const CloseBtn = styled.button`
   background-color: transparent;
   @media (max-width: 539px) {
     position: absolute;
-    top: 10%;
+    top: 7rem;
     right: 1rem;
 
     animation-duration: 0.5s;
@@ -194,8 +194,8 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   const [info, setInfo] = useState<ArticleInfoType>(infos[index]);
   const [length, setLength] = useState<number>(0);
 
-  const { onTouchStart, onTouchEnd } = useTouchScroll(close);
-  const { onMouseDown, onMouseUp } = useMouseDrag(close);
+  // const { onTouchStart, onTouchEnd } = useTouchScroll(close);
+  // const { onMouseDown, onMouseUp } = useMouseDrag(close);
 
   useEffect(() => {
     const infosLength = infos.length;
@@ -232,7 +232,7 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
         </CloseBtn>
         <ArrowWrapper>
           <StyledBackArrow
-            size={"40px"}
+            size={"4rem"}
             onClick={prevSlider}
             current={current}
             length={length}
@@ -240,7 +240,7 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
         </ArrowWrapper>
         <ArrowWrapper>
           <StyledForwardArrow
-            size={"40px"}
+            size={"4rem"}
             onClick={nextSlider}
             current={current}
             length={length}
