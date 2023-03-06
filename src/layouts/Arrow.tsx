@@ -6,6 +6,7 @@ type ArrowProps = {
   current: number;
   length: number;
   size?: string;
+  mobileSize?: string;
   id?: string;
 
   isBackGround?: boolean;
@@ -42,6 +43,11 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
           background-color: ${(props) => props.theme.lightGreyColor};
         `
       : ``}
+
+  @media (max-width: 539px) {
+    width: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
+    height: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
+  }
 `;
 
 const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
@@ -60,6 +66,11 @@ const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
           background-color: ${(props) => props.theme.lightGreyColor};
         `
       : ``}
+
+  @media (max-width: 539px) {
+    width: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
+    height: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
+  }
 `;
 
 export { StyledBackArrow, StyledForwardArrow };
