@@ -10,6 +10,7 @@ import { ArticleInfoType } from "../../types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
 
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+import ModalArticleContainer from "./ModalArticleContainer";
 
 type PhotoModalProps = {
   open: boolean;
@@ -108,31 +109,6 @@ const MobileModalLayout = styled.div`
   }
 `;
 
-const ModalArticle = styled.article`
-  width: 80vw;
-  height: 80vh;
-  margin: auto;
-  border-radius: 0.5rem;
-  background-color: ${(props) => props.theme.bgColor};
-  overflow: auto;
-
-  animation-duration: 0.25s;
-  animation-timing-function: ease-out;
-  animation-name: ${SlideUp};
-  animation-fill-mode: forwards;
-
-  overflow: hidden;
-  isolation: isolate;
-
-  @media (max-width: 539px) {
-    width: 100%;
-    height: 100%;
-    border-radius: 0.5rem 0.5rem 0 0;
-    overflow: scroll;
-    isolation: auto;
-  }
-`;
-
 const StyledClose = styled(Close)``;
 
 const MobileSlideBarWrapper = styled.div`
@@ -168,6 +144,7 @@ const CloseBtn = styled.button`
   width: 2rem;
   height: 2rem;
   background-color: transparent;
+
   @media (max-width: 539px) {
     position: absolute;
     top: 7rem;
@@ -246,26 +223,7 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
             length={length}
           />
         </ArrowWrapper>
-        <ModalArticle
-        // onTouchStart={onTouchStart}
-        // onTouchEnd={onTouchEnd}
-        // onMouseDown={onMouseDown}
-        // onMouseUp={onMouseUp}
-        >
-          <Main>
-            {/* 모바일 환경에서 드래그로 모달 닫는 액션 */}
-            {/* <MobileSlideBarWrapper>
-              <MobileSlideBar />
-            </MobileSlideBarWrapper> */}
-            {/* <CloseBtn onClick={close}>
-              <StyledClose />
-            </CloseBtn> */}
-            <MobileRowColLayout>
-              <ImgSlider datas={info.imgSrcs} />
-              <ModalDescriptionSection article={info} titles={titles} />
-            </MobileRowColLayout>
-          </Main>
-        </ModalArticle>
+        <ModalArticleContainer info={info} titles={titles} />
         <IndexContainer>
           <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
         </IndexContainer>

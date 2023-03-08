@@ -47,11 +47,6 @@ const CarouselItem = styled.div`
   margin-right: 1rem;
 
   cursor: pointer;
-
-  /* &:hover {
-    transform: scale3d(1.01, 1.01, 1.01);
-    box-shadow: 2px 4px 16px rgb(0 0 0 / 16%);
-  } */
 `;
 
 const ImgWrapper = styled.div`
@@ -101,7 +96,7 @@ function Carousel({ datas }: CarouselProps) {
       console.error("dom id isnt exist");
     } else {
       const scrollContainerWidth = scrollContainer.clientWidth;
-      const scrollDistance = scrollContainerWidth / 2;
+      const scrollDistance = scrollContainerWidth;
 
       setScrollContainerWidth(scrollContainerWidth);
       setScrollDistance(scrollDistance);
@@ -145,7 +140,10 @@ function Carousel({ datas }: CarouselProps) {
       <ScrollWrapper id={"scroll"}>
         <CarouselWrapper id={"carousel"}>
           {datas.map((img, index) => (
-            <CarouselItem id={"carousel-item"} key={"CarouselItem" + index}>
+            <CarouselItem
+              id={"carousel-item" + index}
+              key={"CarouselItem" + index}
+            >
               <ImgWrapper>
                 <Img src={img} />
               </ImgWrapper>
