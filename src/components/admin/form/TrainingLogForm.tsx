@@ -1,15 +1,37 @@
 import { ReactComponent as Plus } from "../../../assets/svgs/plus.svg";
 
 import { Button, DatePicker, Form, Input, Space, Upload } from "antd";
+import { RcFile } from "antd/es/upload/interface";
+import axios from "axios";
+import { useState } from "react";
+import { Constants } from "../../../constant/constant";
+import { formatDateTime } from "../../../utils/Utils";
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 function TrainingLogForm() {
+  const [fileList, setFileList] = useState<RcFile[]>([]);
+  const meta: { [key: string]: string } = {
+    title: "title 1",
+    contents: "contents 1",
+  };
+
   function onFinish(values: any) {
     console.log("Success:", values);
-    console.log("dateTime Object:", values.dateTime.$d);
+    console.log(
+      "dateTime string:",
+      formatDateTime(new Date(values.dateTime.$d).toLocaleDateString()),
+      typeof new Date(values.dateTime.$d).toLocaleDateString()
+    );
   }
+
+  function handleUpload() {
+    console.log(fileList);
+
+    axios.post(Constants.BASE_URL + "api/login", fileList, {});
+  }
+
   return (
     <>
       <Form
@@ -65,7 +87,17 @@ function TrainingLogForm() {
 
         {/* TODO 사진 올리기 구현하기 */}
         <Form.Item label="사진 올리기" valuePropName="fileList">
-          <Upload action="/upload.do" listType="picture-card">
+          <Upload
+            name="files"
+            listType="picture-card"
+            action={Constants.BASE_URL + "api/login"}
+            beforeUpload={(file) => {
+              setFileList((prev) => {
+                return [...prev, file];
+              });
+              return false; // 파일 선택시 바로 업로드 하지 않고 후에 한꺼번에 전송하기 위함
+            }}
+          >
             <div>
               <Plus />
               <div>사진 올리기</div>
@@ -73,7 +105,7 @@ function TrainingLogForm() {
           </Upload>
         </Form.Item>
 
-        <Button block type="primary" htmlType="submit">
+        <Button block type="primary" htmlType="submit" onClick={handleUpload}>
           제출하기
         </Button>
       </Form>

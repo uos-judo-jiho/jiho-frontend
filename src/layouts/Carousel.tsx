@@ -48,10 +48,10 @@ const CarouselItem = styled.div`
 
   cursor: pointer;
 
-  &:hover {
+  /* &:hover {
     transform: scale3d(1.01, 1.01, 1.01);
     box-shadow: 2px 4px 16px rgb(0 0 0 / 16%);
-  }
+  } */
 `;
 
 const ImgWrapper = styled.div`
@@ -61,6 +61,8 @@ const ImgWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  overflow: hidden;
 `;
 
 const Img = styled.img`
@@ -68,6 +70,16 @@ const Img = styled.img`
   height: 20vw;
   object-fit: contain;
   flex: none;
+
+  transform: scale3d(1, 1, 1);
+  transition: transform 0.5s;
+
+  &:hover {
+    transform: scale3d(1.2, 1.2, 1.2);
+    transition: transform 0.5s;
+
+    /* box-shadow: 2px 4px 16px rgb(0 0 0 / 16%); */
+  }
 `;
 
 function Carousel({ datas }: CarouselProps) {
@@ -89,7 +101,7 @@ function Carousel({ datas }: CarouselProps) {
       console.error("dom id isnt exist");
     } else {
       const scrollContainerWidth = scrollContainer.clientWidth;
-      const scrollDistance = scrollContainerWidth / 3;
+      const scrollDistance = scrollContainerWidth / 2;
 
       setScrollContainerWidth(scrollContainerWidth);
       setScrollDistance(scrollDistance);
@@ -120,6 +132,7 @@ function Carousel({ datas }: CarouselProps) {
         length={datas.length}
         size={"3rem"}
         isBackGround={true}
+        isMobileVisible={false}
       />
       <StyledForwardArrow
         id="rightArrow"
@@ -127,6 +140,7 @@ function Carousel({ datas }: CarouselProps) {
         length={datas.length}
         size={"3rem"}
         isBackGround={true}
+        isMobileVisible={false}
       />
       <ScrollWrapper id={"scroll"}>
         <CarouselWrapper id={"carousel"}>

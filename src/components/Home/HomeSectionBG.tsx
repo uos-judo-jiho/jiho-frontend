@@ -17,7 +17,7 @@ const Container = styled.section<ContainerProps>`
   background-image: url(${(props) => props.bgImageSrc});
 
   background-repeat: no-repeat;
-  background-color: #121212;
+  background-color: ${(props) => props.theme.blackColor};
 
   background-size: ${(props) => (props.backgroundCover ? "cover" : "contain")};
   background-position: center;

@@ -119,6 +119,12 @@ function Footer() {
               {FooterInfo.connetUs.tel.title}
               <a href="tel: 010-2222-3333">{FooterInfo.connetUs.tel.href}</a>
             </DescriptionItem> */}
+          <DescriptionItem>
+            {FooterInfo.connetUs.dev.title}
+            <HyperLink href="mailto: min390@uos.ac.kr">
+              {FooterInfo.connetUs.dev.href}
+            </HyperLink>
+          </DescriptionItem>
         </DescriptionList>
 
         {/* <Row alignItems="center" justifyContent="center">

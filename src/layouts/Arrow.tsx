@@ -8,6 +8,7 @@ type ArrowProps = {
   size?: string;
   mobileSize?: string;
   id?: string;
+  isMobileVisible?: boolean;
 
   isBackGround?: boolean;
 };
@@ -70,6 +71,7 @@ const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
   @media (max-width: 539px) {
     width: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
     height: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
+    display: ${(props) => (props.isMobileVisible ? "block" : "none;")};
   }
 `;
 
