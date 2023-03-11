@@ -4,27 +4,6 @@ import NewsCardContainer from "./NewsCardContainer";
 
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 
-// TODO remove demo img
-import demo1 from "../../assets/images/background-img-event.jpg";
-import demo2 from "../../assets/images/background-img-group.jpg";
-import demo3 from "../../assets/images/background-img-mono.jpg";
-import demo4 from "../../assets/images/background-img-training.jpg";
-
-const demoImgs = [
-  demo1,
-  demo2,
-  demo3,
-  demo4,
-  demo1,
-  demo2,
-  demo3,
-  demo4,
-  demo1,
-  demo2,
-  demo3,
-  demo4,
-];
-
 type NewsIndexProps = {
   articles: ArticleInfoType[];
   images: string[];
@@ -33,12 +12,7 @@ type NewsIndexProps = {
 function NewsIndex({ articles, images }: NewsIndexProps) {
   return (
     <>
-      <Carousel
-        datas={
-          // images
-          demoImgs
-        }
-      ></Carousel>
+      <Carousel datas={images}></Carousel>
       <NewsCardContainer>
         {/* TODO infinite scroll 구현하기 */}
         {articles.map((item, index) => {

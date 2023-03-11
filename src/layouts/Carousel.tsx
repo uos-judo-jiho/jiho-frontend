@@ -119,6 +119,8 @@ function Carousel({ datas }: CarouselProps) {
     }
   }, [scrollContainer, leftArrow, rightArrow]);
 
+  if (datas.length === 0) return null;
+
   return (
     <Window>
       <StyledBackArrow

@@ -1,5 +1,5 @@
-import React from "react";
 import { Button, Checkbox, Form, Input } from "antd";
+import React from "react";
 
 type AdminLoginProps = {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
