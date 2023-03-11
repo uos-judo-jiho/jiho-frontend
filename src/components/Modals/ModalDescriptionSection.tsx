@@ -144,6 +144,7 @@ function ModalDescriptionSection({
                 {titles[1]}
               </DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
+                {/* TODO html space 처리하기 */}
                 {formatStringArray(article.tags)}
               </DescriptionHeaderTdContent>
             </DescriptionHeaderTableTr>

@@ -17,11 +17,16 @@ const SliderAnimation = keyframes`
     }
 `;
 
-const Thumbnail = styled.img`
+type ThumbnailProps = {
+  isImage?: boolean;
+};
+
+const Thumbnail = styled.img<ThumbnailProps>`
   width: 30vw;
   height: 30vw;
   object-fit: contain;
-  background-color: ${(props) => props.theme.blackColor};
+  background-color: ${(props) =>
+    props.isImage ? props.theme.blackColor : props.theme.bgColor};
 
   min-width: 30rem;
   min-height: 30rem;
@@ -137,6 +142,7 @@ function ImgSlider({ datas }: ImgSliderProps) {
         {datas.map((image, index) => {
           return (
             <Thumbnail
+              isImage={image ? true : false}
               src={image ? image : Constants.LOGO_BLACK}
               key={"thumbnail" + index}
               className={index === current ? "active" : ""}

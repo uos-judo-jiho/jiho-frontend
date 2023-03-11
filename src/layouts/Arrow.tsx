@@ -9,7 +9,6 @@ type ArrowProps = {
   mobileSize?: string;
   id?: string;
   isMobileVisible?: boolean;
-
   isBackGround?: boolean;
 };
 
