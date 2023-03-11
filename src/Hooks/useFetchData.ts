@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-function useFetchData(getApi: any, params: any) {
+function useFetchData(getApi: any, params?: any) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [response, setResponse] = useState<any>();
@@ -9,7 +9,12 @@ function useFetchData(getApi: any, params: any) {
     try {
       await setLoading(true);
       await setError(false);
-      const res = await getApi(params);
+      var res = "";
+      if (params) {
+        res = await getApi(params);
+      } else {
+        res = await getApi();
+      }
 
       setResponse(res);
       setLoading(false);
