@@ -130,15 +130,15 @@ function ImgSlider({ datas }: ImgSliderProps) {
           current={current}
           length={length}
           isBackGround={true}
+          isMobileVisible={true}
         />
-
         <StyledForwardArrow
           onClick={nextSlider}
           current={current}
           length={length}
           isBackGround={true}
+          isMobileVisible={true}
         />
-
         {datas.map((image, index) => {
           return (
             <Thumbnail

@@ -1,5 +1,6 @@
 import { Button, Checkbox, Form, Input } from "antd";
 import React from "react";
+import { loginApi } from "../../../api/loginApi";
 
 type AdminLoginProps = {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -7,7 +8,9 @@ type AdminLoginProps = {
 
 function AdminLogin({ setIsLogin }: AdminLoginProps) {
   function onFinish(values: any) {
-    if (values.username === "jiho" && values.password === "1234") {
+    const response = loginApi(values.username, values.password);
+    console.log(response);
+    if (true) {
       console.log("Success:", values);
       setIsLogin(true);
     } else {

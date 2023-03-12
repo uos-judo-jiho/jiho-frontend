@@ -21,7 +21,7 @@ function AppRouter() {
         <Route path="/photo" element={<Photo />} />
         <Route path="/video" element={<Video />} />
         <Route path="*" element={<NotFound />} />
-        {/* <Route path="/admin/*" element={<AdminHomePage />} /> */}
+        <Route path="/admin/*" element={<AdminHomePage />} />
       </Routes>
     </BrowserRouter>
   );

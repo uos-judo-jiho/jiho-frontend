@@ -16,9 +16,8 @@ const ArrowCss = css`
   position: absolute;
   z-index: 10;
   top: 50%;
-  user-select: none;
-
   transform: translate(0, -50%);
+  user-select: none;
 
   cursor: pointer;
 
@@ -41,6 +40,7 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
           border-radius: 50%;
           padding: 0.5rem;
           background-color: ${(props) => props.theme.lightGreyColor};
+          box-shadow: 0 0 0.2rem ${(props) => props.theme.blackColor};
         `
       : ``}
 
