@@ -1,4 +1,3 @@
-import React from "react";
 import styled, { keyframes } from "styled-components";
 import ImgSlider from "../../layouts/ImgSlider";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
@@ -37,7 +36,7 @@ const ModalArticle = styled.article`
 
   @media (max-width: 539px) {
     width: 100%;
-    height: 100%;
+    height: 95%;
     border-radius: 0.5rem 0.5rem 0 0;
     overflow: scroll;
     isolation: auto;

@@ -1,13 +1,8 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 
-import { useMouseDrag } from "../../Hooks/useMouseDrag";
-import { useTouchScroll } from "../../Hooks/useTouchScroll";
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
-import ImgSlider from "../../layouts/ImgSlider";
-import MobileRowColLayout from "../../layouts/MobileRowColLayout";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
-import ModalDescriptionSection from "./ModalDescriptionSection";
 
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ModalArticleContainer from "./ModalArticleContainer";
@@ -57,22 +52,22 @@ const SlideDown = keyframes`
 `;
 
 const IndexContainer = styled.div`
-  display: block;
-  position: absolute;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 5%;
   padding-top: 1rem;
-  left: 50%;
+  color: ${(props) => props.theme.lightGreyColor};
 
   @media (max-width: 539px) {
-    display: none;
+    background-color: ${(props) => props.theme.bgColor};
+    color: ${(props) => props.theme.blackColor};
   }
 `;
 const IndexSpan = styled.span`
   font-size: ${(props) => props.theme.defaultFontSize};
   display: block;
-  color: ${(props) => props.theme.lightGreyColor};
-  @media (max-width: 539px) {
-    display: none;
-  }
 `;
 
 const Container = styled.div`
@@ -111,28 +106,15 @@ const MobileModalLayout = styled.div`
 
 const StyledClose = styled(Close)``;
 
-const MobileSlideBarWrapper = styled.div`
-  display: none;
-  @media (max-width: 539px) {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 6px;
-    right: 0;
-    left: 0;
-  }
-`;
+type ArrowWrapperProps = {
+  isMobileVisible: boolean;
+  isDesktopVisible: boolean;
+};
 
-const MobileSlideBar = styled.hr`
-  width: 10%;
-  border: 2px solid ${(props) => props.theme.greyColor};
-  border-radius: 1rem;
-`;
-const ArrowWrapper = styled.div`
+const ArrowWrapper = styled.div<ArrowWrapperProps>`
+  display: ${(props) => (props.isDesktopVisible ? "flex" : "none")};
   @media (max-width: 539px) {
-    display: none;
+    display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
   }
 `;
 
@@ -155,13 +137,6 @@ const CloseBtn = styled.button`
     animation-name: ${FadeIn};
     animation-fill-mode: forwards;
   }
-`;
-
-const Main = styled.main`
-  position: relative;
-  padding: 1rem;
-  width: 100%;
-  height: 100%;
 `;
 
 function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
@@ -199,6 +174,10 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
     setCurrent(current - 1);
   }
 
+  function handleCurrent(index: number) {
+    setCurrent(index);
+  }
+
   if (!animate && !visible) return null;
 
   return (
@@ -207,15 +186,13 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
         <CloseBtn onClick={close}>
           <StyledClose />
         </CloseBtn>
-        <ArrowWrapper>
+        <ArrowWrapper isMobileVisible={false} isDesktopVisible={true}>
           <StyledBackArrow
             size={"4rem"}
             onClick={prevSlider}
             current={current}
             length={length}
           />
-        </ArrowWrapper>
-        <ArrowWrapper>
           <StyledForwardArrow
             size={"4rem"}
             onClick={nextSlider}
@@ -225,6 +202,22 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
         </ArrowWrapper>
         <ModalArticleContainer info={info} titles={titles} />
         <IndexContainer>
+          <ArrowWrapper isMobileVisible={true} isDesktopVisible={false}>
+            <StyledBackArrow
+              size={"4rem"}
+              onClick={prevSlider}
+              current={current}
+              length={length}
+              isMobileVisible={true}
+            />
+            <StyledForwardArrow
+              size={"4rem"}
+              onClick={nextSlider}
+              current={current}
+              length={length}
+              isMobileVisible={true}
+            />
+          </ArrowWrapper>
           <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
         </IndexContainer>
       </MobileModalLayout>

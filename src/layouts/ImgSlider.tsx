@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { Constants } from "../constant/constant";
 import { useTouchScroll } from "../Hooks/useTouchScroll";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
+import StackImageIndex from "./StackImageIndex";
 
 type ImgSliderProps = {
   datas: string[]; // imgSrcs: string[]

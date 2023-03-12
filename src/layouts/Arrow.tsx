@@ -27,7 +27,7 @@ const ArrowCss = css`
 `;
 
 const StyledBackArrow = styled(BackArrow)<ArrowProps>`
-  display: ${(props) => (props.current === 0 ? "none" : "flex")};
+  display: ${(props) => (props.current === 0 ? "none" : "flex")} !important;
   width: ${(props) => (props.size ? props.size : "2rem")};
   height: ${(props) => (props.size ? props.size : "2rem")};
 
@@ -47,12 +47,13 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
   @media (max-width: 539px) {
     width: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
     height: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
-    display: ${(props) => (props.isMobileVisible ? "block" : "none;")};
+    display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
   }
 `;
 
 const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
-  display: ${(props) => (props.current < props.length - 1 ? "flex" : "none")};
+  display: ${(props) =>
+    props.current < props.length - 1 ? "flex" : "none"} !important;
   width: ${(props) => (props.size ? props.size : "2rem")};
   height: ${(props) => (props.size ? props.size : "2rem")};
 
@@ -71,7 +72,7 @@ const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
   @media (max-width: 539px) {
     width: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
     height: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
-    display: ${(props) => (props.isMobileVisible ? "block" : "none;")};
+    display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
   }
 `;
 
