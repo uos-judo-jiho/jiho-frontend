@@ -71,11 +71,11 @@ const Img = styled.img`
   transform: scale3d(1, 1, 1);
   transition: transform 0.5s;
 
-  &:hover {
-    transform: scale3d(1.2, 1.2, 1.2);
-    transition: transform 0.5s;
-
-    /* box-shadow: 2px 4px 16px rgb(0 0 0 / 16%); */
+  @media (min-width: 540px) {
+    &:hover {
+      transform: scale3d(1.2, 1.2, 1.2);
+      transition: transform 0.5s;
+    }
   }
 `;
 

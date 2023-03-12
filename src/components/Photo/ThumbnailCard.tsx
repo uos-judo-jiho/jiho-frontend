@@ -30,10 +30,12 @@ const HoveredContainer = styled.div`
   height: 100%;
   font-size: 3vw;
   color: ${(props) => props.theme.bgColor};
-  ${ImgWrapper}:hover & {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  @media (min-width: 540px) {
+    ${ImgWrapper}:hover & {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 `;
 
@@ -44,8 +46,10 @@ const Thumbnail = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  ${ImgWrapper}:hover & {
-    filter: brightness(50%);
+  @media (min-width: 540px) {
+    ${ImgWrapper}:hover & {
+      filter: brightness(50%);
+    }
   }
 `;
 function ThumbnailCard({

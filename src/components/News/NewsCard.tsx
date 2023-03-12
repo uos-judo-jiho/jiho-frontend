@@ -27,9 +27,11 @@ const Container = styled.div`
   transition: all 0.5s;
   cursor: pointer;
 
-  &:hover {
-    transform: scale3d(1.01, 1.01, 1.01);
-    box-shadow: 2px 4px 16px rgb(0 0 0 / 16%);
+  @media (min-width: 540px) {
+    &:hover {
+      transform: scale3d(1.01, 1.01, 1.01);
+      box-shadow: 2px 4px 16px rgb(0 0 0 / 16%);
+    }
   }
 `;
 
