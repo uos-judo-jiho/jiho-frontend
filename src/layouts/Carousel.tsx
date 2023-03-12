@@ -9,7 +9,7 @@ type CarouselProps = {
 };
 
 const Window = styled.div`
-  height: 30%;
+  height: 20vmax;
 
   overflow: hidden;
   position: relative;
@@ -18,9 +18,11 @@ const Window = styled.div`
 const CarouselWrapper = styled.div`
   display: inline-flex;
   padding: 1rem 0;
+  height: inherit;
 `;
 
 const ScrollWrapper = styled.div`
+  height: inherit;
   overflow-x: scroll;
 
   overscroll-behavior-x: contain;
@@ -62,7 +64,7 @@ const ImgWrapper = styled.div`
 
 const Img = styled.img`
   width: 20vw;
-  height: 20vw;
+  height: 100%;
   object-fit: contain;
   flex: none;
 

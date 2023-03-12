@@ -13,7 +13,6 @@ function Home() {
       <ScrollSnap>
         <DefaultLayout>
           <HomeSectionMain />
-          {/* <HomeSectionCards /> */}
           <HomeSectionInfo />
           <HomeSectionNews />
           <HomeSectionExercise />

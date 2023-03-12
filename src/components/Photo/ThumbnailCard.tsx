@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { Constants } from "../../constant/constant";
+import useLazyImage from "../../Hooks/useLazyImage";
 
 type ThumbnailCardProps = {
   imgSrc: string;
@@ -52,13 +54,20 @@ function ThumbnailCard({
   index,
   handleClickCard,
 }: ThumbnailCardProps) {
+  const { imgRef, isLoading } = useLazyImage();
+
   function handleClick() {
     handleClickCard(index);
   }
 
   return (
     <ImgWrapper onClick={handleClick}>
-      <Thumbnail src={imgSrc} />
+      <Thumbnail
+        loading="lazy"
+        ref={imgRef}
+        src={isLoading ? imgSrc : Constants.BG_COLOR_808080}
+        alt={"훈련 일지: " + dateTime}
+      />
       <HoveredContainer>{dateTime}</HoveredContainer>
     </ImgWrapper>
   );
