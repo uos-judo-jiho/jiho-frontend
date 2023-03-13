@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Row from "../../layouts/Row";
 
-import { ReactComponent as Menu } from "../../assets/svgs/menu.svg";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+import { ReactComponent as Menu } from "../../assets/svgs/menu.svg";
 
-import SideBar from "../SideBar/SideBar";
 import Logo from "../Logo";
+import SideBar from "../SideBar/SideBar";
 
 const Header = styled.header`
   position: fixed;

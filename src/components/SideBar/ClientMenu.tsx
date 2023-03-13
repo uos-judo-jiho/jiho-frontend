@@ -74,11 +74,6 @@ function ClientMenu() {
           ]}
         />
       </MenuItem>
-      {/* <MenuItem>
-            <Link to="/">
-              <MenuItemTitle>Connect Us</MenuItemTitle>
-            </Link>
-          </MenuItem> */}
     </MenuList>
   );
 }

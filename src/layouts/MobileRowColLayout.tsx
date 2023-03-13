@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
 import Col from "./Col";
 import Row from "./Row";
 

@@ -6,5 +6,5 @@ export const Constants = {
 } as const;
 
 type T = typeof Constants;
-type TConstants = keyof T;
-type TConstantsValue = keyof T[keyof T];
+export type TConstants = keyof T;
+export type TConstantsValue = keyof T[keyof T];

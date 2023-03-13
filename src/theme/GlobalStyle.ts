@@ -1,4 +1,4 @@
-import styled, { createGlobalStyle, css } from "styled-components";
+import { createGlobalStyle, css } from "styled-components";
 
 export const MediaLayout = css`
   @media (min-width: 1800px) {

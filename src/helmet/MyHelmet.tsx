@@ -7,7 +7,7 @@ type MyHelmetProps = {
 function MyHelmet({ helmet }: MyHelmetProps) {
   useEffect(() => {
     document.title = "Uos Judo Team Jiho | " + helmet;
-  }, []);
+  }, [helmet]);
 
   return <></>;
 }

@@ -1,5 +1,3 @@
-import Col from "../../layouts/Col";
-
 import AdminNavItem from "../../components/admin/AdminNavItem";
 
 function AdminNavPage() {

@@ -10,13 +10,13 @@ import Title from "../../layouts/Title";
 import { NewsType } from "../../types/NewsType";
 
 type TParams = {
-  id: string; // ex] 2022
+  id: string; // ex] "2022"
 };
 
 function NewsDetail() {
   const { id } = useParams<TParams>();
   const [news, setNews] = useState<NewsType>();
-  const { loading, error, response } = useFetchData(getNews, "2022");
+  const { loading, error, response } = useFetchData(getNews, id);
 
   useEffect(() => {
     setNews(response);
