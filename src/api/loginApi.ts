@@ -1,12 +1,12 @@
 import axios from "axios";
 import { Constants } from "../constant/constant";
 
-export async function loginApi(id: string, password: string) {
+export async function loginApi(values: any) {
   const methodUrl = "api/login";
 
   const formData = new FormData();
-  formData.append("email", id);
-  formData.append("password", password);
+  formData.append("email", values.username);
+  formData.append("password", values.password);
 
   const config = {
     headers: {
@@ -16,6 +16,6 @@ export async function loginApi(id: string, password: string) {
 
   return await axios
     .post(Constants.BASE_URL + methodUrl, formData)
-    .then((response) => response)
+    .then((response) => response.data)
     .catch((error) => error);
 }
