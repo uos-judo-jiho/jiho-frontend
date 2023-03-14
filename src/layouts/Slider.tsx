@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 
 import styled from "styled-components";
+import { Constants } from "../constant/constant";
 import { useTouchScroll } from "../Hooks/useTouchScroll";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
+
+// TODO 페이지 넘길 때 사진이 흘러가는 에니메이션 막기
 
 type SliderProps = {
   datas: string[];
@@ -145,7 +148,11 @@ function Slider({ datas }: SliderProps) {
           onTouchEnd={onTouchEnd}
         >
           {datas.map((img, i) => (
-            <IMG src={img} key={"thumbnail" + i} isImage={img ? true : false} />
+            <IMG
+              src={img ? img : Constants.LOGO_BLACK}
+              key={"thumbnail" + i}
+              isImage={img ? true : false}
+            />
           ))}
         </SliderContainer>
         <CircleWrapper>

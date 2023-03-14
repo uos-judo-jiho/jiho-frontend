@@ -17,6 +17,7 @@ type NewsCardProps = {
 
 const Container = styled.div`
   width: 100%;
+  max-height: 30rem;
 
   font-size: ${(props) => props.theme.descriptionFontSize};
 
@@ -73,6 +74,7 @@ const Img = styled.img`
 
   @media (max-width: 539px) {
     height: inherit;
+    max-height: 20rem;
   }
 `;
 
@@ -169,7 +171,7 @@ function NewsCard({ index, datas }: NewsCardProps) {
           {commenter}
           <SeeMore>
             <br />
-            <MoreButton>...더보기</MoreButton>
+            <MoreButton>...자세히 보기</MoreButton>
           </SeeMore>
         </DescriptionWrapper>
       </Container>
