@@ -22,6 +22,7 @@ function AdminLogin({ setIsLogin }: AdminLoginProps) {
   }
 
   useEffect(() => {
+    // TODO response 값 체크 바꾸기
     if (!loading && !error && response === "Accept Login") {
       console.log("Success:", response);
       setIsLogin(true);

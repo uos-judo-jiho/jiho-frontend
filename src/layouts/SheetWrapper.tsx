@@ -15,7 +15,7 @@ const Container = styled.div<SheetWrapperProps>`
   ${MediaLayout}
 `;
 
-function SheetWrapper({ children, paddingTop = 4 }: SheetWrapperProps) {
+function SheetWrapper({ children, paddingTop = 8 }: SheetWrapperProps) {
   return <Container paddingTop={paddingTop}>{children}</Container>;
 }
 
