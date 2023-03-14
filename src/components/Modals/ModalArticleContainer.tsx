@@ -1,6 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import ImgSlider from "../../layouts/ImgSlider";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
+import Slider from "../../layouts/Slider";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
 
@@ -67,7 +68,8 @@ function ModalArticleContainer({ info, titles }: ModalArticleContainerProsp) {
               <StyledClose />
             </CloseBtn> */}
         <MobileRowColLayout>
-          <ImgSlider datas={info.imgSrcs} />
+          {/* <ImgSlider datas={info.imgSrcs} /> */}
+          <Slider datas={info.imgSrcs} />
           <ModalDescriptionSection article={info} titles={titles} />
         </MobileRowColLayout>
       </Main>
