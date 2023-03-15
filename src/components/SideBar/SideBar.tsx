@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { SetStateAction, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -81,7 +81,13 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
     <>
       <Container id="sidebar" ref={outside} className={isOpen ? "open" : ""}>
         <StyledClose onClick={toggleSide} />
-        <NavWrapper>{isClient ? <ClientMenu /> : <AdminMenu />}</NavWrapper>
+        <NavWrapper>
+          {isClient ? (
+            <ClientMenu selected={selected} setSelected={setSelected} />
+          ) : (
+            <AdminMenu />
+          )}
+        </NavWrapper>
       </Container>
     </>
   );

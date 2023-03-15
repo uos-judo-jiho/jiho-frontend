@@ -20,4 +20,9 @@ const StyledPlus = styled(PlusSvg)`
   margin-top: -2px;
 `;
 
+export type MenuProps = {
+  selected: boolean[];
+  setSelected: React.Dispatch<React.SetStateAction<boolean[]>>;
+};
+
 export { MenuList, MenuToggle, MenuItemTitle, MenuItem, StyledPlus };

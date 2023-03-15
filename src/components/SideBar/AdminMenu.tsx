@@ -1,5 +1,10 @@
 import { Link } from "react-router-dom";
-import { MenuItem, MenuItemTitle, MenuList } from "./MenuStyledComponents";
+import {
+  MenuItem,
+  MenuItemTitle,
+  MenuList,
+  MenuProps,
+} from "./MenuStyledComponents";
 
 function AdminMenu() {
   return (
