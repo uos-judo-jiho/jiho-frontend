@@ -14,8 +14,6 @@ import {
 } from "./MenuStyledComponents";
 
 function ClientMenu({ selected, setSelected }: MenuProps) {
-  // const initSelected = [false, false];
-  // const [selected, setSelected] = useState(initSelected);
   function handleClickMenu(id: MENUID) {
     let current;
     switch (id) {

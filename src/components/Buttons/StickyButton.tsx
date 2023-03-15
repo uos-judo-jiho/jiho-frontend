@@ -8,9 +8,9 @@ const Container = styled.div`
   background-color: transparent;
 `;
 const UpperButton = styled.button`
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 4.8rem;
+  height: 4.8rem;
+  border-radius: 1.2rem;
   background-color: ${(props) => props.theme.lightGreyColor};
   opacity: 0.8;
 `;

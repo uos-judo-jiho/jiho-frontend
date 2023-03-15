@@ -1,23 +1,24 @@
 import { DefaultTheme } from "styled-components";
+import { Constants } from "../constant/constant";
 
 // Color
-const blackColor: string = "#0f0c0c";
-const yellowColor: string = "#ffb746";
-const pinkColor: string = "#ff4667";
-const whiteColor: string = "#f5f5fa";
-const primaryColor: string = "#448aff";
-const darkGreyColor: string = "#121212";
-const greyColor: string = "#808080";
-const lightGreyColor: string = "#eeeeee";
+const blackColor: string = Constants.BLACK_COLOR;
+const yellowColor: string = Constants.YELLOW_COLOR;
+const pinkColor: string = Constants.PINK_COLOR;
+const whiteColor: string = Constants.WHITE_COLOR;
+const primaryColor: string = Constants.PRIMARY_COLOR;
+const darkGreyColor: string = Constants.DARK_GREY_COLOR;
+const greyColor: string = Constants.GREY_COLOR;
+const lightGreyColor: string = Constants.LIGHT_GREY_COLOR;
 
-const darkHeaderColor: string = "#424242";
+const darkHeaderColor: string = Constants.DARK_HEADER_COLOR;
 
 // Font
-const titleFontSize: string = "3.6rem"; // 36px
-const subTitleFontSize: string = "3rem"; // 30px
-const descriptionFontSize: string = "1.8rem"; // 18px
-const defaultFontSize: string = "1.6rem"; // 16px
-const tinyFontSize: string = "1.2rem"; // 12px
+const titleFontSize: string = Constants.TITLE_FONT_SIZE; // 36px
+const subTitleFontSize: string = Constants.SUB_TITLE_FONT_SIZE; // 30px
+const descriptionFontSize: string = Constants.DESCRIPTION_FONT_SIZE; // 18px
+const defaultFontSize: string = Constants.DEFAULT_FONT_SIZE; // 16px
+const tinyFontSize: string = Constants.TINY_FONT_SIZE; // 12px
 
 export const darkTheme: DefaultTheme = {
   primaryColor: darkGreyColor,
