@@ -9,6 +9,8 @@ import { ArticleInfoType } from "../../types/ArticleInfoType";
 import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
 import { useBodyScrollLock } from "../../Hooks/useBodyScrollLock";
 import { Constants } from "../../constant/constant";
+import useLazyImage from "../../Hooks/useLazyImage";
+import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
 
 type NewsCardProps = {
   index: number;
@@ -120,6 +122,7 @@ const MoreButton = styled.button`
 
 function NewsCard({ index, datas }: NewsCardProps) {
   const escKey = useKeyEscClose(closeSeeMore);
+  const { imgRef, isLoading } = useLazyImage();
   const { lockScroll, openScroll } = useBodyScrollLock();
   const comment = datas[index].description;
 
@@ -143,21 +146,28 @@ function NewsCard({ index, datas }: NewsCardProps) {
 
   return (
     <>
-      <Container onClick={openSeeMore}>
+      <Container onClick={openSeeMore} ref={imgRef}>
         <ImgWrapper>
-          <Img
-            src={
-              datas[index].imgSrcs[0]
-                ? datas[index].imgSrcs[0]
-                : Constants.LOGO_BLACK
-            }
-          />
+          {isLoading ? (
+            <Img
+              loading="lazy"
+              alt={datas[index].title + datas[index].author}
+              src={
+                datas[index].imgSrcs[0]
+                  ? datas[index].imgSrcs[0]
+                  : Constants.LOGO_BLACK
+              }
+            />
+          ) : (
+            <SkeletonThumbnail />
+          )}
           <Col>
             <ImgTitle>{datas[index].title}</ImgTitle>
             <ImgSubTitle>{datas[index].author}</ImgSubTitle>
             <ImgSubTitle>{datas[index].tags}</ImgSubTitle>
           </Col>
         </ImgWrapper>
+
         <DescriptionWrapper>
           <DescriptionTitleWrapper>
             <Col>
