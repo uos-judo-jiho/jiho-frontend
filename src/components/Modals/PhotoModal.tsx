@@ -90,9 +90,6 @@ const Container = styled.div`
 
   &.closeModal {
     animation-name: ${FadeOut};
-    & > article {
-      animation-name: ${SlideDown};
-    }
   }
 `;
 
@@ -172,10 +169,6 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
 
   function prevSlider() {
     setCurrent(current - 1);
-  }
-
-  function handleCurrent(index: number) {
-    setCurrent(index);
   }
 
   if (!animate && !visible) return null;
