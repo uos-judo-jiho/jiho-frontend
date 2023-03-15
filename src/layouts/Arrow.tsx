@@ -5,6 +5,7 @@ import { ReactComponent as ForwardArrow } from "../assets/svgs/arrow_forward_ios
 type ArrowProps = {
   current: number;
   length: number;
+  horizontalPosition?: string;
   size?: string;
   mobileSize?: string;
   id?: string;
@@ -31,7 +32,8 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
   width: ${(props) => (props.size ? props.size : "2rem")};
   height: ${(props) => (props.size ? props.size : "2rem")};
 
-  left: 1.2rem;
+  left: ${(props) =>
+    props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
   ${ArrowCss}
 
   ${(props) =>
@@ -57,7 +59,8 @@ const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
   width: ${(props) => (props.size ? props.size : "2rem")};
   height: ${(props) => (props.size ? props.size : "2rem")};
 
-  right: 1.2rem;
+  right: ${(props) =>
+    props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
   ${ArrowCss}
 
   ${(props) =>

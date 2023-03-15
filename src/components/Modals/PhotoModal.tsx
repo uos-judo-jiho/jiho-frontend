@@ -94,6 +94,7 @@ const Container = styled.div`
 `;
 
 const MobileModalLayout = styled.div`
+  position: relative;
   @media (max-width: 539px) {
     width: 100%;
     height: 100%;
@@ -118,8 +119,8 @@ const ArrowWrapper = styled.div<ArrowWrapperProps>`
 const CloseBtn = styled.button`
   position: absolute;
   z-index: 999;
-  top: 12%;
-  right: 12%;
+  top: 1rem;
+  right: 1rem;
   width: 2rem;
   height: 2rem;
   background-color: transparent;
@@ -142,9 +143,6 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   const [current, setCurrent] = useState<number>(index);
   const [info, setInfo] = useState<ArticleInfoType>(infos[index]);
   const [length, setLength] = useState<number>(0);
-
-  // const { onTouchStart, onTouchEnd } = useTouchScroll(close);
-  // const { onMouseDown, onMouseUp } = useMouseDrag(close);
 
   useEffect(() => {
     const infosLength = infos.length;
@@ -175,24 +173,24 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
 
   return (
     <Container className={open ? "openModal" : "closeModal"}>
+      <ArrowWrapper isMobileVisible={false} isDesktopVisible={true}>
+        <StyledBackArrow
+          size={"4rem"}
+          onClick={prevSlider}
+          current={current}
+          length={length}
+        />
+        <StyledForwardArrow
+          size={"4rem"}
+          onClick={nextSlider}
+          current={current}
+          length={length}
+        />
+      </ArrowWrapper>
       <MobileModalLayout>
         <CloseBtn onClick={close}>
           <StyledClose />
         </CloseBtn>
-        <ArrowWrapper isMobileVisible={false} isDesktopVisible={true}>
-          <StyledBackArrow
-            size={"4rem"}
-            onClick={prevSlider}
-            current={current}
-            length={length}
-          />
-          <StyledForwardArrow
-            size={"4rem"}
-            onClick={nextSlider}
-            current={current}
-            length={length}
-          />
-        </ArrowWrapper>
         <ModalArticleContainer info={info} titles={titles} />
         <IndexContainer>
           <ArrowWrapper isMobileVisible={true} isDesktopVisible={false}>
