@@ -34,22 +34,31 @@ const initValues = {
 function ArticleForm({ apiUrl }: ArticleFormProps) {
   const [fileList, setFileList] = useState<RcFile[]>([]);
   const [values, setValues] = useState<ValuesType>(initValues);
+  const [form] = Form.useForm();
+
   const meta: { [key: string]: string } = {
     title: "title 1",
     contents: "contents 1",
   };
 
   function onFinish(params: any) {
-    setValues({
-      ...values,
-      author: params.author,
-      title: params.title,
-      tags: params.tags.map((x: any) => x.name),
-      description: params.description,
-      dateTime: formatDateTime(
-        new Date(params.dateTime.$d).toLocaleDateString()
-      ),
+    const isFull = Object.values(params).every((element) => {
+      return element !== undefined;
     });
+    if (isFull) {
+      setValues({
+        ...values,
+        author: params.author,
+        title: params.title,
+        tags: params.tags.map((x: any) => x.name),
+        description: params.description,
+        dateTime: formatDateTime(
+          new Date(params.dateTime.$d).toLocaleDateString()
+        ),
+      });
+      console.log(isFull);
+    } else {
+    }
   }
 
   function handleUpload() {
@@ -60,13 +69,18 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
     console.log("useEffect");
     if (!Object.values(values).some((el) => el.length === 0)) {
       // TODO post api
+      console.log("api call");
       console.log(values);
+      form.resetFields();
+      setValues(initValues);
+      setFileList([]);
     }
   }, [values]);
 
   return (
     <>
       <Form
+        form={form}
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 14 }}
         layout="horizontal"
@@ -74,10 +88,18 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
         style={{ maxWidth: 600 }}
         onFinish={onFinish}
       >
-        <Form.Item label="작성자" name="author">
+        <Form.Item
+          label="작성자"
+          name="author"
+          rules={[{ required: true, message: "작성자를 적으세요" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item label="제목" name="title">
+        <Form.Item
+          label="제목"
+          name="title"
+          rules={[{ required: true, message: "제목을 적으세요" }]}
+        >
           <Input />
         </Form.Item>
         <Form.List name="tags">
@@ -109,11 +131,19 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
           )}
         </Form.List>
 
-        <Form.Item label="작성 날짜" name="dateTime">
+        <Form.Item
+          label="작성 날짜"
+          name="dateTime"
+          rules={[{ required: true, message: "날짜를 선택하세요" }]}
+        >
           <DatePicker />
         </Form.Item>
 
-        <Form.Item label="본문" name="description">
+        <Form.Item
+          label="본문"
+          name="description"
+          rules={[{ required: true, message: "본문를 적으세요" }]}
+        >
           <TextArea rows={8} />
         </Form.Item>
 
