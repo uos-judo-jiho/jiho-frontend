@@ -1,6 +1,7 @@
 import HomeSectionExercise from "../components/Home/Exercise/HomeSectionExercise";
 import HomeSectionInfo from "../components/Home/Info/HomeSectionInfo";
 import HomeSectionMain from "../components/Home/Main/HomeSectionMain";
+import HomeSectionMore from "../components/Home/More/HomeSectionMore";
 import HomeSectionNews from "../components/Home/News/HomeSectionNews";
 import MyHelmet from "../helmet/MyHelmet";
 import DefaultLayout from "../layouts/DefaultLayout";
@@ -16,6 +17,7 @@ function Home() {
           <HomeSectionInfo />
           <HomeSectionNews />
           <HomeSectionExercise />
+          <HomeSectionMore />
         </DefaultLayout>
       </ScrollSnap>
     </>

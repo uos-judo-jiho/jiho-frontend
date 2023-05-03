@@ -8,6 +8,7 @@ import NotFound from "../pages/NotFound";
 import Photo from "../pages/Photo";
 import Video from "../pages/Video";
 import ScrollToTop from "./ScrollTop";
+import Notice from "../pages/Notice";
 
 function AppRouter() {
   return (
@@ -20,6 +21,7 @@ function AppRouter() {
         <Route path="/about" element={<About />} />
         <Route path="/photo" element={<Photo />} />
         <Route path="/video" element={<Video />} />
+        <Route path="/notice" element={<Notice />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/admin/*" element={<AdminHomePage />} />
       </Routes>
