@@ -11,7 +11,8 @@ type CardRowContainerProps = {
 };
 
 const Container = styled.div`
-  margin: 10px 0;
+  width: 100%;
+  margin: 1rem 0;
 `;
 
 const Title = styled.h3`

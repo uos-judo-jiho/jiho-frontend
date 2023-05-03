@@ -1,13 +1,16 @@
 import React from "react";
 import MyHelmet from "../helmet/MyHelmet";
 import DefaultLayout from "../layouts/DefaultLayout";
+import SheetWrapper from "../layouts/SheetWrapper";
 
 function Notice() {
   return (
     <>
-      <MyHelmet helmet="Home" />
+      <MyHelmet helmet="Notice" />
 
-      <DefaultLayout>공지사항</DefaultLayout>
+      <DefaultLayout>
+        <SheetWrapper>공지사항</SheetWrapper>
+      </DefaultLayout>
     </>
   );
 }
