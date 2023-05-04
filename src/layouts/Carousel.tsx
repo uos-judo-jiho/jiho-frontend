@@ -99,7 +99,7 @@ function Carousel({ datas }: CarouselProps) {
     setCarouselEl(document.getElementById("carousel") as HTMLElement);
 
     if (!leftArrow || !rightArrow || !scrollContainer || !carouselEl) {
-      console.error("dom id isnt exist");
+      // console.error("dom id isnt exist");
     } else {
       const carouselElWidth = carouselEl.clientWidth;
       const scrollDistance = scrollContainer.clientWidth;

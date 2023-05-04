@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import Col from "../../../layouts/Col";
 import Title from "../../../layouts/Title";
 import Logo from "../../Logo";
@@ -8,6 +8,12 @@ import FooterInfo from "../../../assets/jsons/footerData.json";
 const Container = styled.div`
   line-height: normal;
   margin-bottom: 1rem;
+`;
+
+const MobileInvisible = css`
+  @media (max-width: 539px) {
+    display: none;
+  }
 `;
 
 const LogoWrapper = styled.div`
@@ -22,9 +28,7 @@ const LogoWrapper = styled.div`
   justify-content: center;
   align-items: center;
 
-  @media (max-width: 539px) {
-    display: none;
-  }
+  ${MobileInvisible}
 `;
 
 const DescriptionContainer = styled.ul``;
@@ -56,7 +60,7 @@ function HomeInfo() {
           </DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
-          <DescriptionItem>
+          {/* <DescriptionItem>
             <DescriptionTitle>{FooterInfo.connetUs.title}</DescriptionTitle>
           </DescriptionItem>
           <DescriptionItem>
@@ -71,7 +75,7 @@ function HomeInfo() {
               {FooterInfo.connetUs.email.href}
             </a>
           </DescriptionItem>
-          {/* <DescriptionItem>
+          <DescriptionItem>
             {FooterInfo.connetUs.tel.title}
             <a href="tel: 010-2222-3333">{FooterInfo.connetUs.tel.href}</a>
           </DescriptionItem> */}

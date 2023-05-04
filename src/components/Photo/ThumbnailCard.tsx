@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import useLazyImage from "../../Hooks/useLazyImage";
 import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
+import { useState } from "react";
 
 type ThumbnailCardProps = {
   imgSrc: string;
@@ -57,19 +58,32 @@ function ThumbnailCard({
   index,
   handleClickCard,
 }: ThumbnailCardProps) {
-  const { imgRef, isLoading } = useLazyImage();
+  // const { imgRef, isLoading, setIsLoading } = useLazyImage();
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleClick() {
     handleClickCard(index);
   }
 
+  function handleLoad() {
+    setIsLoading(true);
+    console.log(isLoading);
+  }
+
   return (
-    <ImgWrapper onClick={handleClick} ref={imgRef}>
+    // <ImgWrapper onClick={handleClick} ref={imgRef}>
+    <ImgWrapper onClick={handleClick}>
       {isLoading ? (
         <Thumbnail loading="lazy" src={imgSrc} alt={"훈련 일지: " + dateTime} />
       ) : (
         <SkeletonThumbnail />
       )}
+      <img
+        src={imgSrc}
+        alt={"훈련 일지: " + dateTime}
+        style={{ display: "none" }}
+        onLoad={handleLoad}
+      />
 
       <HoveredContainer>{dateTime}</HoveredContainer>
     </ImgWrapper>

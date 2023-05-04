@@ -158,16 +158,16 @@ function ModalDescriptionSection({
             </DescriptionHeaderTableTr>
           </tbody>
         </DescriptionHeaderTable>
-        <Line margin={"10px 0"} borderWidth={"1px"} />
+        <Line margin={"1rem 0"} borderWidth={"0.1rem"} />
       </DescriptionHeader>
       <DescriptionWrapper>
         <DescriptionTitle>{article.title}</DescriptionTitle>
         <Description>
-          {article.description.split("\n").map((line) => {
+          {article.description.split("\n").map((line, index) => {
             return (
               <>
                 {line}
-                <br />
+                <br key={line + index} />
               </>
             );
           })}

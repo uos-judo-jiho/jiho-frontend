@@ -3,7 +3,7 @@ import SkeletonItem from "./SkeletonItem";
 
 const Container = styled.div`
   width: 100%;
-  height: 100%;
+  height: auto;
   overflow: hidden;
   position: relative;
 `;

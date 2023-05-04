@@ -21,7 +21,7 @@ const LinkWrapper = styled.div`
 `;
 
 const StyledArrow = styled(LeftArrow)`
-  width: 20px;
+  width: 2rem;
   margin-left: 1rem;
 `;
 

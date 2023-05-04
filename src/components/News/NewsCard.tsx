@@ -33,7 +33,7 @@ const Container = styled.div`
   @media (min-width: 540px) {
     &:hover {
       transform: scale3d(1.01, 1.01, 1.01);
-      box-shadow: 2px 4px 16px rgb(0 0 0 / 16%);
+      box-shadow: 0.2rem 0.4rem 1.6rem rgb(0 0 0 / 16%);
     }
   }
 `;
@@ -72,7 +72,7 @@ const Img = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 0.5rem;
-  object-fit: contain;
+  object-fit: cover;
 
   @media (max-width: 539px) {
     height: inherit;
@@ -122,7 +122,8 @@ const MoreButton = styled.button`
 
 function NewsCard({ index, datas }: NewsCardProps) {
   const escKey = useKeyEscClose(closeSeeMore);
-  const { imgRef, isLoading } = useLazyImage();
+  // const { imgRef, isLoading } = useLazyImage();
+  const [isLoading, setIsLoading] = useState(false);
   const { lockScroll, openScroll } = useBodyScrollLock();
   const comment = datas[index].description;
 
@@ -143,10 +144,14 @@ function NewsCard({ index, datas }: NewsCardProps) {
     setIsMore(false);
     openScroll();
   }
+  function handleLoding() {
+    setIsLoading(true);
+  }
 
   return (
     <>
-      <Container onClick={openSeeMore} ref={imgRef}>
+      {/* <Container onClick={openSeeMore} ref={imgRef}> */}
+      <Container onClick={openSeeMore}>
         <ImgWrapper>
           {isLoading ? (
             <Img
@@ -161,6 +166,17 @@ function NewsCard({ index, datas }: NewsCardProps) {
           ) : (
             <SkeletonThumbnail />
           )}
+          <img
+            alt={datas[index].title + datas[index].author}
+            src={
+              datas[index].imgSrcs[0]
+                ? datas[index].imgSrcs[0]
+                : Constants.LOGO_BLACK
+            }
+            style={{ display: "none" }}
+            onLoad={handleLoding}
+          />
+
           <Col>
             <ImgTitle>{datas[index].title}</ImgTitle>
             <ImgSubTitle>{datas[index].author}</ImgSubTitle>

@@ -13,7 +13,7 @@ const AwardsItem = styled.li`
 
 const SubTitle = styled.h3`
   font-size: ${(props) => props.theme.subTitleFontSize};
-  margin-bottom: 12px;
+  margin-bottom: 1.2rem;
 `;
 
 function HomeAwards() {

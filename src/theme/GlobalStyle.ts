@@ -22,6 +22,9 @@ export const GlobalStyle = createGlobalStyle`
 
 html{
     font-size: 62.5%;
+  @media (max-width: 859px) {
+    font-size: 50%;
+  }
 }
     
 html, body, div, span, applet, object, iframe,

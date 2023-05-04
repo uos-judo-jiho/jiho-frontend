@@ -28,7 +28,7 @@ const Img = styled.img`
   height: 100%;
 `;
 
-function Logo({ size = "60px", margin = "0px", isDark = false }: LogoProps) {
+function Logo({ size = "6rem", margin = "0rem", isDark = false }: LogoProps) {
   return (
     <Container margin={margin} size={size}>
       <Img src={isDark ? LogoBlack : LogoWhite} />
