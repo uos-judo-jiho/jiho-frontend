@@ -126,6 +126,18 @@ function Footer() {
             </HyperLink>
           </DescriptionItem>
         </DescriptionList>
+        <DescriptionList
+          style={{
+            display: "flex",
+            alignItems: "flex-end",
+          }}
+        >
+          <LinkWrapper>
+            <Link to={"/admin"}>
+              <DescriptionItem>관리자 페이지로 ▶️</DescriptionItem>
+            </Link>
+          </LinkWrapper>
+        </DescriptionList>
 
         {/* <Row alignItems="center" justifyContent="center">
           <SNSLink href="https://www.instagram.com/uos_judo/" target="_blank">

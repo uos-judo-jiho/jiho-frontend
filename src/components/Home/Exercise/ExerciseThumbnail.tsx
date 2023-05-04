@@ -7,7 +7,8 @@ import Col from "../../../layouts/Col";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 
 const Stack = styled.div`
-  width: 40vw;
+  width: 100%;
+
   position: relative;
 
   @media (max-width: 539px) {
@@ -16,7 +17,8 @@ const Stack = styled.div`
 `;
 
 const Container = styled.div`
-  width: 40vw;
+  width: 60%;
+  margin: auto;
   position: relative;
   @media (max-width: 539px) {
     width: 100%;
