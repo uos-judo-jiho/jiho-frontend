@@ -11,17 +11,17 @@ type NewsCardProps = {
 };
 
 const Container = styled.div`
-  margin-right: 20px;
+  margin-right: 2rem;
 `;
 
 const ImgContainer = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 10rem;
+  height: 10rem;
 `;
 
 const Title = styled.p`
   font-size: ${(props) => props.theme.descriptionFontSize};
-  margin: 10px 0;
+  margin: 1rem 0;
 `;
 const Subtitle = styled.p`
   font-size: ${(props) => props.theme.descriptionFontSize};

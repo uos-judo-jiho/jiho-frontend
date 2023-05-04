@@ -84,7 +84,7 @@ const HeartButton = styled.button`
 const HeartStyle = css`
   width: 1.5em;
   height: 1.5em;
-  vertical-align: -7px;
+  vertical-align: -0.7rem;
   background-color: transparent;
 `;
 

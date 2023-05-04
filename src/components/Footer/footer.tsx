@@ -16,8 +16,8 @@ const FooterWrapper = styled.footer`
 const SNSLink = styled.a``;
 
 const IconWrapper = styled.span`
-  width: 54px;
-  height: 54px;
+  width: 5.4rem;
+  height: 5.4rem;
 `;
 
 const StyledInstargramIcon = styled(InstargramIcon)`

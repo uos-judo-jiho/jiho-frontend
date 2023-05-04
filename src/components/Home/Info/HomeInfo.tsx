@@ -17,10 +17,10 @@ const MobileInvisible = css`
 `;
 
 const LogoWrapper = styled.div`
-  border: 2px solid ${(props) => props.theme.textColor};
+  border: 0.2rem solid ${(props) => props.theme.textColor};
   border-radius: 50%;
-  width: 140px;
-  height: 140px;
+  width: 14rem;
+  height: 14rem;
   margin-bottom: 2rem;
   background-color: ${(props) => props.theme.bgColor};
 
@@ -38,7 +38,7 @@ const DescriptionItem = styled.li`
 
 const DescriptionTitle = styled.h3`
   font-size: ${(props) => props.theme.subTitleFontSize};
-  margin-bottom: 12px;
+  margin-bottom: 1.2rem;
 `;
 
 function HomeInfo() {

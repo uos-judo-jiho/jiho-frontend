@@ -9,8 +9,8 @@ const ContainerWrapper = styled.div`
   min-width: 35rem;
   min-height: 35rem;
   height: auto;
-  margin: 0 0 60px auto;
-  padding-top: 60px;
+  margin: 0 0 6rem auto;
+  padding-top: 6rem;
 
   @media (max-width: 859px) {
     width: 100%;
@@ -18,11 +18,11 @@ const ContainerWrapper = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 30px;
+  padding: 3rem;
   position: relative;
   flex: 1;
   max-width: 100%;
-  border: 2px solid ${(props) => props.theme.lightGreyColor};
+  border: 0.2rem solid ${(props) => props.theme.lightGreyColor};
 `;
 
 const SubTitle = styled.h4`

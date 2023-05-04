@@ -25,7 +25,7 @@ const Container = styled.div`
 
   display: flex;
   border-radius: 1rem;
-  padding: 2rem 1rem;
+  padding: 2rem 0rem;
 
   transition: all 0.5s;
   cursor: pointer;
@@ -40,9 +40,10 @@ const Container = styled.div`
 
 const ImgWrapper = styled.div`
   width: 50%;
-
+  padding: 0rem 1rem;
   @media (max-width: 539px) {
     width: 100%;
+    padding: 0rem;
   }
 `;
 

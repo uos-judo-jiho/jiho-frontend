@@ -35,7 +35,7 @@ const FadeIn = keyframes`
 
 const SlideUp = keyframes`
   from {
-    transform: translateY(-100px);
+    transform: translateY(-10.0rem);
   }
   to {
     transform: translateY(0px);
