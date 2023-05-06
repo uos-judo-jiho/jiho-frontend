@@ -108,7 +108,9 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
           {datas.map((data, index) => {
             return (
               <Item key={title + index}>
-                <ItemWrapper>{data}</ItemWrapper>
+                <Link to={"./photo/" + index}>
+                  <ItemWrapper>{data}</ItemWrapper>
+                </Link>
               </Item>
             );
           })}

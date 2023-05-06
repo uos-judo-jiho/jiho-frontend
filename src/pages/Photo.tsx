@@ -13,9 +13,12 @@ import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
 import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../types/ArticleInfoType";
 import useFetchData from "../Hooks/useFetchData";
+import { useParams } from "react-router-dom";
+import { redirect } from "react-router-dom";
 
 // TODO 무한 스크롤 구현
 function Photo() {
+  const { id } = useParams<string>();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [photoIdx, setPhotoIdx] = useState<number>(0);
   const escKey = useKeyEscClose(closeModal);
@@ -37,6 +40,14 @@ function Photo() {
       setTrainingLogArray(reversedDatas);
     }
   }, [loading, error, response]);
+
+  useEffect(() => {
+    if (trainingLogArray && id) {
+      if (parseInt(id) < trainingLogArray.length) handleClickCard(parseInt(id));
+    } else {
+      redirect("./photo");
+    }
+  }, [id, trainingLogArray]);
 
   function openModal() {
     setModalOpen(true);

@@ -67,7 +67,6 @@ function ThumbnailCard({
 
   function handleLoad() {
     setIsLoading(true);
-    console.log(isLoading);
   }
 
   return (

@@ -167,7 +167,7 @@ function ModalDescriptionSection({
             return (
               <>
                 {line}
-                <br key={line + index} />
+                <br key={line + index.toString()} />
               </>
             );
           })}

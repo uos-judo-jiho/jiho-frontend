@@ -20,6 +20,7 @@ function AppRouter() {
         <Route path="/news/:id" element={<NewsDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/photo" element={<Photo />} />
+        <Route path="/photo/:id" element={<Photo />} />
         <Route path="/video" element={<Video />} />
         <Route path="/notice" element={<Notice />} />
         <Route path="*" element={<NotFound />} />
