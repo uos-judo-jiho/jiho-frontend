@@ -2,7 +2,7 @@
   {
     "id": "6",
     "imgSrcs": ["image11.jpg", "image12.jpg"],
-    "title": "Dummy Article 6 Dummy Article Dummy Article Dummy Article Dummy Article Dummy Article Dummy Article Dummy Article ",
+    "title": "Dummy Article 6",
     "author": "Emily Brown",
     "dateTime": "2023-05-11",
     "tags": ["tag11", "tag12"],
