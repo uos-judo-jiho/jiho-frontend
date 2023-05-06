@@ -1,4 +1,4 @@
-export type TAwards = {
+export type AwardsType = {
   title: string;
   gold: number;
   silver: number;

@@ -1,4 +1,4 @@
-import { TAwards } from "../types/TAwards";
+import { AwardsType } from "../types/AwardsType";
 
 /** string array에 띄어쓰기를 포함하여 string으로 반환
  * @param stringArray
@@ -14,11 +14,11 @@ function formatStringArray(stringArray: string[]): string {
 
 /**
  *
- * @param award TAwards type.
+ * @param award AwardsType type.
  * @returns string.
- * 수상이력을 TAwards type으로 받아서 string으로 포멧팅한다.
+ * 수상이력을 AwardsType type으로 받아서 string으로 포멧팅한다.
  */
-function formatAwards(award: TAwards): string {
+function formaAwardsType(award: AwardsType): string {
   let result: string = award.title + " | ";
 
   if (award.gold > 0) {
@@ -64,4 +64,4 @@ function formatDateTime(dateTimeString: string): string {
   return resultList.join("-");
 }
 
-export { formatStringArray, formatAwards, formatDateTime };
+export { formatStringArray, formaAwardsType, formatDateTime };

@@ -1,0 +1,29 @@
+[
+  {
+    "id": "6",
+    "imgSrcs": ["image11.jpg", "image12.jpg"],
+    "title": "Dummy Article 6 Dummy Article Dummy Article Dummy Article Dummy Article Dummy Article Dummy Article Dummy Article ",
+    "author": "Emily Brown",
+    "dateTime": "2023-05-11",
+    "tags": ["tag11", "tag12"],
+    "description": "This is a dummy article 6."
+  },
+  {
+    "id": "7",
+    "imgSrcs": ["image13.jpg", "image14.jpg"],
+    "title": "Dummy Article 7",
+    "author": "Robert Taylor",
+    "dateTime": "2023-05-12",
+    "tags": ["tag13", "tag14"],
+    "description": "This is a dummy article 7."
+  },
+  {
+    "id": "8",
+    "imgSrcs": ["image15.jpg", "image16.jpg"],
+    "title": "Dummy Article 8",
+    "author": "Olivia Wilson",
+    "dateTime": "2023-05-13",
+    "tags": ["tag15", "tag16"],
+    "description": "This is a dummy article 8."
+  }
+]

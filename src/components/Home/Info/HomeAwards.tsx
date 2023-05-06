@@ -3,8 +3,8 @@ import Col from "../../../layouts/Col";
 
 import Awards from "../../../assets/jsons/awards.json";
 import styled from "styled-components";
-import { TAwards } from "../../../types/TAwards";
-import { formatAwards } from "../../../utils/Utils";
+import { AwardsType } from "../../../types/AwardsType";
+import { formaAwardsType } from "../../../utils/Utils";
 
 const AwardsItem = styled.li`
   margin: 1rem 0;
@@ -17,7 +17,7 @@ const SubTitle = styled.h3`
 `;
 
 function HomeAwards() {
-  const awards: TAwards[] = Awards.awards;
+  const awards: AwardsType[] = Awards.awards;
 
   return (
     <Col>
@@ -25,7 +25,7 @@ function HomeAwards() {
       <ul>
         {awards.map((award) => {
           return (
-            <AwardsItem key={award.title}>{formatAwards(award)}</AwardsItem>
+            <AwardsItem key={award.title}>{formaAwardsType(award)}</AwardsItem>
           );
         })}
       </ul>

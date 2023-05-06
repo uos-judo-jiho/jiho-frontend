@@ -73,6 +73,11 @@ function ClientMenu({ selected, setSelected }: MenuProps) {
           ]}
         />
       </MenuItem>
+      <MenuItem>
+        <Link to={"/notice"}>
+          <MenuItemTitle>공지사항</MenuItemTitle>
+        </Link>
+      </MenuItem>
     </MenuList>
   );
 }
