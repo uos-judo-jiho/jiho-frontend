@@ -108,9 +108,15 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
           {datas.map((data, index) => {
             return (
               <Item key={title + index}>
-                <Link to={"./photo/" + index}>
-                  <ItemWrapper>{data}</ItemWrapper>
-                </Link>
+                {title === "훈련일지" ? (
+                  <Link to={"./photo/" + index}>
+                    <ItemWrapper>{data}</ItemWrapper>
+                  </Link>
+                ) : (
+                  <Link to={"./news/2022/" + index}>
+                    <ItemWrapper>{data}</ItemWrapper>
+                  </Link>
+                )}
               </Item>
             );
           })}

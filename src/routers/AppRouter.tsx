@@ -18,6 +18,7 @@ function AppRouter() {
         <Route path="/" element={<Home />} />
         <Route path="/news" element={<News />} />
         <Route path="/news/:id" element={<NewsDetail />} />
+        <Route path="/news/:id/:index" element={<NewsDetail />} />
         <Route path="/about" element={<About />} />
         <Route path="/photo" element={<Photo />} />
         <Route path="/photo/:id" element={<Photo />} />

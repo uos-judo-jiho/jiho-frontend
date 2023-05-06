@@ -3,18 +3,19 @@ import styled from "styled-components";
 
 import PhotoModal from "../Modals/PhotoModal";
 
+import { useBodyScrollLock } from "../../Hooks/useBodyScrollLock";
+import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
+import { Constants } from "../../constant/constant";
 import Col from "../../layouts/Col";
 import Row from "../../layouts/Row";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
-import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
-import { useBodyScrollLock } from "../../Hooks/useBodyScrollLock";
-import { Constants } from "../../constant/constant";
-import useLazyImage from "../../Hooks/useLazyImage";
 import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
+import { redirect } from "react-router-dom";
 
 type NewsCardProps = {
   index: number;
   datas: ArticleInfoType[];
+  selectedIndex?: number;
 };
 
 const Container = styled.div`
@@ -121,7 +122,7 @@ const MoreButton = styled.button`
   }
 `;
 
-function NewsCard({ index, datas }: NewsCardProps) {
+function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
   const escKey = useKeyEscClose(closeSeeMore);
   // const { imgRef, isLoading } = useLazyImage();
   const [isLoading, setIsLoading] = useState(false);
@@ -136,6 +137,14 @@ function NewsCard({ index, datas }: NewsCardProps) {
 
     return shortText;
   }, []);
+
+  useEffect(() => {
+    if (selectedIndex === index) {
+      openSeeMore();
+    } else {
+      redirect("./news/2022");
+    }
+  }, [selectedIndex]);
 
   function openSeeMore() {
     setIsMore(true);

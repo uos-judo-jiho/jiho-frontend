@@ -7,9 +7,10 @@ import { ArticleInfoType } from "../../types/ArticleInfoType";
 type NewsIndexProps = {
   articles: ArticleInfoType[];
   images: string[];
+  selectedIndex?: number;
 };
 
-function NewsIndex({ articles, images }: NewsIndexProps) {
+function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
   return (
     <>
       <Carousel datas={images}></Carousel>
@@ -17,7 +18,12 @@ function NewsIndex({ articles, images }: NewsIndexProps) {
         {/* TODO infinite scroll 구현하기 */}
         {articles.map((item, index) => {
           return (
-            <NewsCard key={"news" + item.id} index={index} datas={articles} />
+            <NewsCard
+              key={"news" + item.id}
+              index={index}
+              datas={articles}
+              selectedIndex={selectedIndex}
+            />
           );
         })}
       </NewsCardContainer>

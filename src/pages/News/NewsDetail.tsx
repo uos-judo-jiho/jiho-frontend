@@ -11,14 +11,16 @@ import { NewsType } from "../../types/NewsType";
 
 type TParams = {
   id: string; // ex] "2022"
+  index: string; // ex] "1"
 };
 
 function NewsDetail() {
-  const { id } = useParams<TParams>();
+  const { id, index } = useParams<TParams>();
   const [news, setNews] = useState<NewsType>();
   const { loading, error, response } = useFetchData(getNews, id);
 
   useEffect(() => {
+    console.log(id, index);
     setNews(response);
   }, [loading, error, response]);
 
@@ -30,7 +32,11 @@ function NewsDetail() {
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"지호지"} color="black" />
-          <NewsIndex articles={news.articles} images={news.images} />
+          <NewsIndex
+            articles={news.articles}
+            images={news.images}
+            selectedIndex={parseInt(index as string)}
+          />
         </SheetWrapper>
       </DefaultLayout>
     </>
