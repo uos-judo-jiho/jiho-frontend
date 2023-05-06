@@ -83,7 +83,7 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
 
         const datas = sliceDatas.map(
           (log: ArticleInfoType) =>
-            "[" + log.dateTime + "] " + log.author + " " + log.description
+            "[ " + log.dateTime + " ] " + log.author + " " + log.description
         );
         setDatas(datas);
       } else if (title === "지호지") {
@@ -91,7 +91,7 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
 
         const datas = sliceDatas.map(
           (log: ArticleInfoType) =>
-            "[" + log.author + "] " + " " + log.description
+            "[ " + log.author + " ] " + " " + log.description
         );
         setDatas(datas);
       }

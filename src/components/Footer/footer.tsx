@@ -6,7 +6,7 @@ import { ReactComponent as YoutubeIcon } from "../../assets/svgs/icons8-youtube-
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
 
 const FooterWrapper = styled.footer`
-  margin: 4rem auto;
+  margin: 8rem auto 4rem auto;
 
   @media (max-width: 539px) {
     margin: 1rem auto;
