@@ -20,6 +20,7 @@ const Container = styled.div`
   width: 60%;
   margin: auto;
   position: relative;
+  box-shadow: 0 0.4rem 0.8rem 0 rgba(0, 0, 0, 0.2);
   @media (max-width: 539px) {
     width: 100%;
   }
@@ -39,6 +40,7 @@ const HoveredContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 0.8rem 1.6rem 0 rgba(0, 0, 0, 0.2);
   }
   @media (max-width: 539px) {
     display: flex;

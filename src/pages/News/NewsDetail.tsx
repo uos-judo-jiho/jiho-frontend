@@ -20,7 +20,6 @@ function NewsDetail() {
   const { loading, error, response } = useFetchData(getNews, id);
 
   useEffect(() => {
-    console.log(id, index);
     setNews(response);
   }, [loading, error, response]);
 

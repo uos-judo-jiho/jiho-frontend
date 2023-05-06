@@ -39,6 +39,10 @@ const ItemList = styled.ul`
 
 const Item = styled.li`
   padding: 0.4rem 0;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 const ItemWrapper = styled.div`
@@ -108,15 +112,15 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
           {datas.map((data, index) => {
             return (
               <Item key={title + index}>
-                {title === "훈련일지" ? (
-                  <Link to={"./photo/" + index}>
-                    <ItemWrapper>{data}</ItemWrapper>
-                  </Link>
-                ) : (
-                  <Link to={"./news/2022/" + index}>
-                    <ItemWrapper>{data}</ItemWrapper>
-                  </Link>
-                )}
+                <Link
+                  to={
+                    title === "훈련일지"
+                      ? "./photo/" + index
+                      : "./news/2022/" + index
+                  }
+                >
+                  <ItemWrapper>{data}</ItemWrapper>
+                </Link>
               </Item>
             );
           })}
