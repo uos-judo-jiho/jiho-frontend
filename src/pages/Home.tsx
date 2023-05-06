@@ -17,7 +17,7 @@ function Home() {
           <HomeSectionInfo />
           <HomeSectionNews />
           <HomeSectionExercise />
-          {/* <HomeSectionMore /> */}
+          <HomeSectionMore />
         </DefaultLayout>
       </ScrollSnap>
     </>

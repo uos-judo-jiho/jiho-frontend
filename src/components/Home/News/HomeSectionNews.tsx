@@ -28,6 +28,10 @@ const SeeMore = styled.p`
   &:hover {
     opacity: 1;
   }
+  @media (max-width: 539px) {
+    opacity: 1;
+    color: ${(props) => props.theme.bgColor};
+  }
 `;
 
 function HomeSectionNews() {
