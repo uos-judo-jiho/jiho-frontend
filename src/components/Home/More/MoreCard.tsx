@@ -78,10 +78,8 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
       // 가장 최근 데이터만 가져오기
 
       if (title === "훈련일지") {
-        const sliceDatas = response.trainingLogs
-          .slice(0)
-          .reverse()
-          .slice(0, 10);
+        setCardType("photo");
+        const sliceDatas = response.trainingLogs.slice(0).reverse().slice(0, 8);
 
         const datas = sliceDatas.map(
           (log: ArticleInfoType) =>
@@ -89,7 +87,8 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
         );
         setDatas(datas);
       } else if (title === "지호지") {
-        const sliceDatas = response.articles.slice(0, 10);
+        setCardType("news/2022");
+        const sliceDatas = response.articles.slice(0, 8);
 
         const datas = sliceDatas.map(
           (log: ArticleInfoType) =>
@@ -98,8 +97,9 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
 
         setDatas(datas);
       } else if (title === "공지사항") {
+        setCardType("notice");
         // TODO api 적용
-        const sliceDatas = demoNotice.slice(0, 10);
+        const sliceDatas = demoNotice.slice(0, 8);
 
         const datas = sliceDatas.map(
           (log: ArticleInfoType) =>
@@ -125,13 +125,7 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
           {datas.map((data, index) => {
             return (
               <Item key={title + index}>
-                <Link
-                  to={
-                    title === "훈련일지"
-                      ? "./photo/" + index
-                      : "./news/2022/" + index
-                  }
-                >
+                <Link to={cardType + "/" + index}>
                   <ItemWrapper>{data}</ItemWrapper>
                 </Link>
               </Item>

@@ -64,6 +64,7 @@ function Footer() {
   return (
     <FooterWrapper>
       <MobileRowColLayout rowJustifyContent="start">
+        {/* Home 훈련 일지 지호지 */}
         <DescriptionList>
           <DescriptionItemTitle>
             <LinkWrapper>
@@ -81,6 +82,7 @@ function Footer() {
             </LinkWrapper>
           </DescriptionItem>
         </DescriptionList>
+        {/* 지호 이름 */}
         <DescriptionList>
           <DescriptionItemTitle>
             {FooterInfo.title.krTitle}
@@ -88,6 +90,7 @@ function Footer() {
           <DescriptionItem>{FooterInfo.title.enTitle}</DescriptionItem>
           <DescriptionItem>{FooterInfo.title.since}</DescriptionItem>
         </DescriptionList>
+        {/* 정규 운동 */}
         <DescriptionList>
           <DescriptionItemTitle>
             {FooterInfo.exercise.title}
@@ -95,6 +98,7 @@ function Footer() {
           <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
         </DescriptionList>
+        {/* Connect Us */}
         <DescriptionList>
           <DescriptionItemTitle>
             {FooterInfo.connetUs.title}
@@ -126,7 +130,8 @@ function Footer() {
             </HyperLink>
           </DescriptionItem>
         </DescriptionList>
-        <DescriptionList
+        {/* 관리자 페이지로 */}
+        {/* <DescriptionList
           style={{
             display: "flex",
             alignItems: "flex-end",
@@ -137,7 +142,7 @@ function Footer() {
               <DescriptionItem>관리자 페이지로 ▶️</DescriptionItem>
             </Link>
           </LinkWrapper>
-        </DescriptionList>
+        </DescriptionList> */}
 
         {/* <Row alignItems="center" justifyContent="center">
           <SNSLink href="https://www.instagram.com/uos_judo/" target="_blank">

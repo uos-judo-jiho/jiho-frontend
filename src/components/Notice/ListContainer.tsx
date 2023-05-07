@@ -31,16 +31,19 @@ function ListContainer() {
   return (
     <Container>
       <ItemList>
-        {demoNotice.map((data) => {
-          return (
-            <Item key={data.title + data.id}>
-              <DescriptionWrapper>
-                <Link to={"/notice/" + data.id}>{data.title}</Link>
-              </DescriptionWrapper>
-              <DateTimeWrapper>{data.dateTime}</DateTimeWrapper>
-            </Item>
-          );
-        })}
+        {demoNotice
+          .slice(0)
+          .reverse()
+          .map((data) => {
+            return (
+              <Item key={data.title + data.id}>
+                <DescriptionWrapper>
+                  <Link to={"/notice/" + data.id}>{data.title}</Link>
+                </DescriptionWrapper>
+                <DateTimeWrapper>{data.dateTime}</DateTimeWrapper>
+              </Item>
+            );
+          })}
       </ItemList>
     </Container>
   );
