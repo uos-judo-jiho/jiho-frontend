@@ -37,10 +37,7 @@ function ClientMenu({ selected, setSelected }: MenuProps) {
         </Link>
       </MenuItem>
       <MenuItem>
-        <MenuToggle
-          href="#"
-          onClick={() => handleClickMenu(MENUID.newsToggleMenu)}
-        >
+        <MenuToggle onClick={() => handleClickMenu(MENUID.newsToggleMenu)}>
           <Row justifyContent="space-between" alignItems="center">
             <MenuItemTitle>지호지</MenuItemTitle>
             <StyledPlus />
@@ -55,10 +52,7 @@ function ClientMenu({ selected, setSelected }: MenuProps) {
         />
       </MenuItem>
       <MenuItem>
-        <MenuToggle
-          href="#"
-          onClick={() => handleClickMenu(MENUID.trainingToggleMenu)}
-        >
+        <MenuToggle onClick={() => handleClickMenu(MENUID.trainingToggleMenu)}>
           <Row justifyContent="space-between" alignItems="center">
             <MenuItemTitle>지호운동</MenuItemTitle>
             <StyledPlus />

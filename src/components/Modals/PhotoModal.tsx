@@ -76,7 +76,7 @@ const Container = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 99;
+  z-index: 10000;
   background-color: rgba(0, 0, 0, 0.6);
 
   animation-duration: 0.25s;

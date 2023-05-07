@@ -57,11 +57,17 @@ const StyledUpperArrow = styled(UpperArrow)`
 `;
 
 function StickyButton() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [isRender, setIsRender] = useState<boolean>(false);
 
   function toggleVisible() {
     const scrolled = document.documentElement.scrollTop;
-    scrolled > 300 ? setVisible(true) : setVisible(false);
+    if (scrolled > 300) {
+      setVisible(true);
+      setIsRender(true);
+    } else {
+      setVisible(false);
+    }
   }
   function handleClick() {
     window.scrollTo({
@@ -80,18 +86,22 @@ function StickyButton() {
 
   return (
     <Container>
-      {visible ? (
-        <FadeInAnimationWrapper>
-          <UpperButton onClick={handleClick}>
-            <StyledUpperArrow />
-          </UpperButton>
-        </FadeInAnimationWrapper>
+      {isRender ? (
+        visible ? (
+          <FadeInAnimationWrapper>
+            <UpperButton onClick={handleClick}>
+              <StyledUpperArrow />
+            </UpperButton>
+          </FadeInAnimationWrapper>
+        ) : (
+          <FadeOutAnimationWrapper>
+            <UpperButton onClick={handleClick}>
+              <StyledUpperArrow />
+            </UpperButton>
+          </FadeOutAnimationWrapper>
+        )
       ) : (
-        <FadeOutAnimationWrapper>
-          <UpperButton onClick={handleClick}>
-            <StyledUpperArrow />
-          </UpperButton>
-        </FadeOutAnimationWrapper>
+        <></>
       )}
     </Container>
   );
