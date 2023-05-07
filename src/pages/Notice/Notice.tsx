@@ -6,12 +6,12 @@ import Title from "../../layouts/Title";
 import { Constants } from "../../constant/constant";
 import Line from "../../layouts/Line";
 import ListContainer from "../../components/Notice/ListContainer";
+// TODO api 적용
 
 function Notice() {
   return (
     <>
       <MyHelmet helmet="Notice" />
-
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"공지사항"} color={Constants.BLACK_COLOR} />

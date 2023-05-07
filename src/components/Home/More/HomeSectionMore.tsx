@@ -9,11 +9,11 @@ const Container = styled.div``;
 const GridContainer = styled.div`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 2rem;
   @media (max-width: 539px) {
     grid-template-columns: none;
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
   }
 `;
 
@@ -23,12 +23,11 @@ function HomeSectionMore() {
       <Container>
         <Title title={"More"} color={Constants.LOGO_BLACK} />
         <GridContainer>
-          {/* <MoreCard
-          title="공지사항"
-          description="공지사항 보러가기"
-          linkTo="/notice"
-          dataTitles={[""]}
-        /> */}
+          <MoreCard
+            title="공지사항"
+            description="공지사항 보러가기"
+            linkTo="/notice"
+          />
           <MoreCard
             title="훈련일지"
             description="훈련일지 보러가기"

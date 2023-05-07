@@ -16,10 +16,12 @@ const NoticeTitleH3 = styled.h3`
 `;
 const SubTitleWrapper = styled.div`
   font-size: ${(props) => props.theme.defaultFontSize};
+  padding-top: 1rem;
   display: flex;
 `;
 const SubTitleItem = styled.span`
   display: flex;
+  color: ${(props) => props.theme.blackColor};
   &:not(:last-child)::after {
     content: "|";
     padding: 0 0.4rem;

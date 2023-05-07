@@ -6,6 +6,7 @@ import useFetchData from "../../../Hooks/useFetchData";
 import { getTrainings } from "../../../api/trainingApi";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 import { getNews } from "../../../api/newsApi";
+import demoNotice from "../../../assets/jsons/tmpNotice.json";
 
 type MoreCardProps = {
   title: string;
@@ -34,7 +35,7 @@ const Title = styled.h1``;
 
 const ItemList = styled.ul`
   width: 100%;
-  padding: 0.8rem 0;
+  margin: 0.8rem 0;
 `;
 
 const Item = styled.li`
@@ -47,6 +48,7 @@ const Item = styled.li`
 
 const ItemWrapper = styled.div`
   display: block;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -62,7 +64,7 @@ const More = styled.p`
 
 function MoreCard({ title, linkTo, description }: MoreCardProps) {
   const [datas, setDatas] = useState<string[]>([]);
-
+  const [cardType, setCardType] = useState<string>(title);
   // TODO 훈련일지는 이번 년도 데이터 가져오기
   // 혹은 백에서 가장 최근 데이터만 주기
 
@@ -93,6 +95,17 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
           (log: ArticleInfoType) =>
             "[ " + log.author + " ] " + " " + log.description
         );
+
+        setDatas(datas);
+      } else if (title === "공지사항") {
+        // TODO api 적용
+        const sliceDatas = demoNotice.slice(0, 10);
+
+        const datas = sliceDatas.map(
+          (log: ArticleInfoType) =>
+            "[ " + log.dateTime + " ] " + " " + log.title
+        );
+
         setDatas(datas);
       }
     }
