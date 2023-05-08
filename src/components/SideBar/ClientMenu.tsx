@@ -12,6 +12,7 @@ import {
   MenuToggle,
   StyledPlus,
 } from "./MenuStyledComponents";
+import ToggleMenuItem from "./ToggleMenuItem";
 
 function ClientMenu({ selected, setSelected }: MenuProps) {
   function handleClickMenu(id: MENUID) {
@@ -37,34 +38,21 @@ function ClientMenu({ selected, setSelected }: MenuProps) {
         </Link>
       </MenuItem>
       <MenuItem>
-        <MenuToggle onClick={() => handleClickMenu(MENUID.newsToggleMenu)}>
-          <Row justifyContent="space-between" alignItems="center">
-            <MenuItemTitle>지호지</MenuItemTitle>
-            <StyledPlus />
-          </Row>
-        </MenuToggle>
-        {/* TODO classify itemsInfo Object  */}
-        {/* TODO routing 조절 */}
-        <SlideSubMenu
+        <ToggleMenuItem
+          handleClickMenu={handleClickMenu}
           selected={selected[0]}
-          menuId={MENUID.newsToggleMenu}
-          itemsInfo={[{ href: "/news/2022", title: "2022 지호지" }]}
+          parentTitle={"지호지"}
+          targetMenu={MENUID.newsToggleMenu}
+          subMenuItemList={[{ href: "/news/2022", title: "2022 지호지" }]}
         />
       </MenuItem>
       <MenuItem>
-        <MenuToggle onClick={() => handleClickMenu(MENUID.trainingToggleMenu)}>
-          <Row justifyContent="space-between" alignItems="center">
-            <MenuItemTitle>지호운동</MenuItemTitle>
-            <StyledPlus />
-          </Row>
-        </MenuToggle>
-        <SlideSubMenu
+        <ToggleMenuItem
+          handleClickMenu={handleClickMenu}
           selected={selected[1]}
-          menuId={MENUID.newsToggleMenu}
-          itemsInfo={[
-            { href: "/photo", title: "훈련일지" },
-            // { href: "/video", title: "영상" },
-          ]}
+          parentTitle={"지호운동"}
+          targetMenu={MENUID.trainingToggleMenu}
+          subMenuItemList={[{ href: "/photo", title: "훈련일지" }]}
         />
       </MenuItem>
       <MenuItem>

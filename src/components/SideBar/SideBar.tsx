@@ -16,6 +16,7 @@ const Container = styled.div`
   z-index: 999;
   padding: 50px;
   background-color: ${(props) => props.theme.bgColor};
+  box-shadow: 0.4rem 1rem 1rem rgba(0, 0, 0, 0.2);
   height: 100%;
   width: 25%;
   left: -55%;
