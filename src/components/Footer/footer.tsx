@@ -68,17 +68,17 @@ function Footer() {
         <DescriptionList>
           <DescriptionItemTitle>
             <LinkWrapper>
-              <Link to={"/"}>HOME</Link>
+              <Link to={"/"}>HOME으로 바로가기</Link>
             </LinkWrapper>
           </DescriptionItemTitle>
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/photo"}>훈련 일지</Link>
+              <Link to={"/photo"}>훈련 일지로 바로가기</Link>
             </LinkWrapper>
           </DescriptionItem>
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/news/2022"}>2022 지호지</Link>
+              <Link to={"/news/2022"}>2022 지호지로 바로가기</Link>
             </LinkWrapper>
           </DescriptionItem>
         </DescriptionList>

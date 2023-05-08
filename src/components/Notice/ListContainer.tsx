@@ -1,7 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import demoNotice from "../../assets/jsons/tmpNotice.json";
+
 import { Link } from "react-router-dom";
+import Line from "../../layouts/Line";
+import { Constants } from "../../constant/constant";
+
+type ListContainerProps = {
+  datas: any[];
+};
 
 const Container = styled.div``;
 const ItemList = styled.ul`
@@ -10,38 +16,63 @@ const ItemList = styled.ul`
 `;
 const Item = styled.li`
   display: flex;
-  justify-content: space-between;
-  padding: 0.8rem 0;
+  padding: 1.2rem 0;
+  text-align: center;
 `;
-const DescriptionWrapper = styled.span`
-  opacity: 0.8;
-  max-width: 60%;
+const DescriptionWrapper = styled.div`
+  flex: 80%;
+`;
+
+const LinkWrapper = styled.div`
+  background-color: transparent;
+  text-align: start;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   &:hover {
-    opacity: 1;
     text-decoration-line: underline;
   }
 `;
-const DateTimeWrapper = styled.span`
-  text-align: end;
+const DateTimeWrapper = styled.div`
+  white-space: nowrap;
+  text-align: center;
+  flex: 10%;
 `;
-function ListContainer() {
+const TagWrapper = styled.div`
+  text-align: center;
+  flex: 10%;
+`;
+function ListContainer({ datas }: ListContainerProps) {
   return (
     <Container>
       <ItemList>
-        {demoNotice
+        <Item>
+          <TagWrapper>번호</TagWrapper>
+          <DescriptionWrapper>제목</DescriptionWrapper>
+          <DateTimeWrapper>개시일</DateTimeWrapper>
+        </Item>
+        <Line borderColor={Constants.LIGHT_GREY_COLOR} borderWidth="1px" />
+
+        {datas
           .slice(0)
           .reverse()
           .map((data) => {
             return (
-              <Item key={data.title + data.id}>
-                <DescriptionWrapper>
-                  <Link to={"/notice/" + data.id}>{data.title}</Link>
-                </DescriptionWrapper>
-                <DateTimeWrapper>{data.dateTime}</DateTimeWrapper>
-              </Item>
+              <div key={data.title + data.id}>
+                <Item>
+                  <TagWrapper>{parseInt(data.id) + 1}</TagWrapper>
+                  <DescriptionWrapper>
+                    <Link to={"/notice/" + data.id}>
+                      <LinkWrapper>{data.title}</LinkWrapper>
+                    </Link>
+                  </DescriptionWrapper>
+                  <DateTimeWrapper>{data.dateTime}</DateTimeWrapper>
+                </Item>
+                <Line
+                  borderColor={Constants.LIGHT_GREY_COLOR}
+                  borderWidth="1px"
+                />
+              </div>
             );
           })}
       </ItemList>
