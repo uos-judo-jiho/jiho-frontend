@@ -1,7 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Line from "../../../layouts/Line";
+
+const FadeIn = keyframes`
+    from {
+      opacity: 0.5;
+    }
+    to {
+      opacity: 1;
+    }
+`;
+
 const Container = styled.div`
   width: max-content;
 
@@ -14,6 +24,8 @@ const LinkWrapper = styled.div`
   &:hover {
     background-color: ${(props) => props.theme.lightGreyColor};
     color: ${(props) => props.theme.textColor};
+    animation: ${FadeIn} 0.5s;
+    animation-timing-function: ease-in-out;
   }
 `;
 

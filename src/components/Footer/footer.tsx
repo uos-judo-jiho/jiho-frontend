@@ -9,7 +9,7 @@ const FooterWrapper = styled.footer`
   margin: 8rem auto 4rem auto;
 
   @media (max-width: 539px) {
-    margin: 1rem auto;
+    margin: 8rem auto 2rem auto;
   }
 `;
 

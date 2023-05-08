@@ -21,15 +21,15 @@ const FadeOut = keyframes`
 
 const Container = styled.div`
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 20px;
+  right: 20px;
 
   background-color: transparent;
 `;
 const UpperButton = styled.button`
-  width: 4.8rem;
-  height: 4.8rem;
-  border-radius: 1.2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   background-color: ${(props) => props.theme.lightGreyColor};
   opacity: 0.8;
 `;
