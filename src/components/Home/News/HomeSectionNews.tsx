@@ -16,7 +16,7 @@ const TextWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 const SeeMore = styled.p`

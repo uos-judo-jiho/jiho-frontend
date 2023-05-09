@@ -14,6 +14,8 @@ type MoreCardProps = {
   linkTo: string;
 };
 
+const FETCH_DATA_LEN = 8;
+
 const Card = styled.div`
   width: 100%;
   box-shadow: 0 0.4rem 0.8rem 0 rgba(0, 0, 0, 0.2);
@@ -65,6 +67,7 @@ const More = styled.p`
 function MoreCard({ title, linkTo, description }: MoreCardProps) {
   const [datas, setDatas] = useState<string[]>([]);
   const [cardType, setCardType] = useState<string>(title);
+
   // TODO 훈련일지는 이번 년도 데이터 가져오기
   // 혹은 백에서 가장 최근 데이터만 주기
 
@@ -79,7 +82,10 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
 
       if (title === "훈련일지") {
         setCardType("photo");
-        const sliceDatas = response.trainingLogs.slice(0).reverse().slice(0, 8);
+        const sliceDatas = response.trainingLogs
+          .slice(0)
+          .reverse()
+          .slice(0, FETCH_DATA_LEN);
 
         const datas = sliceDatas.map(
           (log: ArticleInfoType) =>
@@ -88,7 +94,7 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
         setDatas(datas);
       } else if (title === "지호지") {
         setCardType("news/2022");
-        const sliceDatas = response.articles.slice(0, 8);
+        const sliceDatas = response.articles.slice(0, FETCH_DATA_LEN);
 
         const datas = sliceDatas.map(
           (log: ArticleInfoType) =>
@@ -99,7 +105,7 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
       } else if (title === "공지사항") {
         setCardType("notice");
         // TODO api 적용
-        const sliceDatas = demoNotice.slice(0, 8);
+        const sliceDatas = demoNotice.slice(0, FETCH_DATA_LEN);
 
         const datas = sliceDatas.map(
           (log: ArticleInfoType) =>

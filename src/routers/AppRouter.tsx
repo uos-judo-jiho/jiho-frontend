@@ -10,25 +10,13 @@ import Video from "../pages/Video";
 import ScrollToTop from "./ScrollTop";
 import Notice from "../pages/Notice/Notice";
 import NoticeDetail from "../pages/Notice/NoticeDetail";
+import SitemapRoutes from "../seo/sitemapRoutes";
 
 function AppRouter() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/news" element={<News />} />
-        <Route path="/news/:id" element={<NewsDetail />} />
-        <Route path="/news/:id/:index" element={<NewsDetail />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/photo" element={<Photo />} />
-        <Route path="/photo/:id" element={<Photo />} />
-        <Route path="/video" element={<Video />} />
-        <Route path="/notice" element={<Notice />} />
-        <Route path="/notice/:id" element={<NoticeDetail />} />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/admin/*" element={<AdminHomePage />} />
-      </Routes>
+      {SitemapRoutes}
     </BrowserRouter>
   );
 }

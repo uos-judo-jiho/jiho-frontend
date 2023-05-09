@@ -49,7 +49,7 @@ function ListContainer({ datas }: ListContainerProps) {
         <Item>
           <TagWrapper>번호</TagWrapper>
           <DescriptionWrapper>제목</DescriptionWrapper>
-          <DateTimeWrapper>개시일</DateTimeWrapper>
+          <DateTimeWrapper>작성일</DateTimeWrapper>
         </Item>
         <Line borderColor={Constants.LIGHT_GREY_COLOR} borderWidth="1px" />
 

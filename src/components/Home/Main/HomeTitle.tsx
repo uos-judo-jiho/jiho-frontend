@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Line from "../../../layouts/Line";
-import SheetWrapper from "../../../layouts/SheetWrapper";
 
 const ContainerWrapper = styled.div`
   display: flex;
@@ -53,7 +52,12 @@ function HomeTitle() {
           유도부
         </SubTitle>
         <Title>지호</Title>
-        <Line width={"100%"} margin={"1rem auto 0 0"} borderWidth={"0.2rem"} />
+        <Line
+          width={"100%"}
+          margin={"1rem auto 1rem 0"}
+          borderWidth={"0.2rem"}
+        />
+        <SubTitle>Uos Judo Team Jiho</SubTitle>
       </Container>
     </ContainerWrapper>
   );

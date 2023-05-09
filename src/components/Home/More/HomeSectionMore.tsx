@@ -9,6 +9,9 @@ const Container = styled.div``;
 const GridContainer = styled.div`
   display: grid;
   width: 100%;
+
+  padding-top: 2rem;
+
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 2rem;
   @media (max-width: 539px) {
@@ -21,7 +24,7 @@ function HomeSectionMore() {
   return (
     <SheetWrapper>
       <Container>
-        <Title title={"More"} color={Constants.LOGO_BLACK} />
+        <Title title={"개시글 전체보기"} color={Constants.LOGO_BLACK} />
         <GridContainer>
           <MoreCard
             title="공지사항"
