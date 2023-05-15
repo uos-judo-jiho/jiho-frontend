@@ -1,7 +1,6 @@
-import { Button, Checkbox, Form, Input } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import styled from "styled-components";
 import { loginApi } from "../../../api/loginApi";
-import useFetchData from "../../../Hooks/useFetchData";
 
 type AdminLoginProps = {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,70 +11,104 @@ type LoginValuesType = {
   password: string;
 };
 
-function AdminLogin({ setIsLogin }: AdminLoginProps) {
-  const [loginValues, setloginValues] = useState<LoginValuesType>();
+const FormContainer = styled.div`
+  background-color: white;
+  padding: 2rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+`;
 
-  const { loading, error, response } = useFetchData(loginApi, loginValues);
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px;
+`;
 
-  function onFinish(values: LoginValuesType) {
-    setloginValues(values);
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledInput = styled.input`
+  &[type="text"],
+  &[type="password"] {
+    height: 25px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
-  useEffect(() => {
-    // TODO response 값 체크 바꾸기
-    if (!loading && !error && response === "Accept Login") {
-      console.log("Success:", response);
-      setIsLogin(true);
-    } else if (!loading && response != "Accept Login") {
-      alert("사용자 이름과 비밀번호가 일치하지 않습니다.");
-      onFinishFailed("사용자 이름과 비밀번호가 일치하지 않습니다.");
-    }
-  }, [response]);
+  &[type="submit"] {
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    background: #01d28e;
+    border: 1px solid #01d28e;
+    color: #fff;
+    padding: 10px 20px;
+  }
 
-  function onFinishFailed(errorInfo: any) {
-    console.error("Failed:", errorInfo);
+  &[type="submit"]:hover {
+    background: #6cf0c2;
+  }
+`;
+
+function AdminLogin({ setIsLogin }: AdminLoginProps) {
+  const [loginValue, setloginValue] = useState<LoginValuesType>({
+    username: "",
+    password: "",
+  });
+
+  function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setloginValue((prev) => {
+      return { ...prev, username: event.target.value };
+    });
+  }
+  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setloginValue((prev) => {
+      return { ...prev, password: event.target.value };
+    });
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const res = await loginApi(loginValue);
+
+    if (res === "Accept Login") {
+      setIsLogin(true);
+    }
   }
   return (
-    <Form
-      name="basic"
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-    >
-      <Form.Item
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: "Please input your username!" }]}
-      >
-        <Input />
-      </Form.Item>
+    <FormContainer>
+      <form onSubmit={handleSubmit}>
+        <InputContainer>
+          <label htmlFor="uname">Username </label>
+          <StyledInput
+            id="uname"
+            type="text"
+            name="uname"
+            onChange={handleUsernameChange}
+            required
+          />
 
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}
-      >
-        <Input.Password />
-      </Form.Item>
+          {/* {renderErrorMessage("uname")} */}
+        </InputContainer>
+        <InputContainer>
+          <label htmlFor="password">Password </label>
+          <StyledInput
+            id="password"
+            type="password"
+            name="password"
+            onChange={handlePasswordChange}
+            required
+          />
 
-      <Form.Item
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{ offset: 8, span: 16 }}
-      >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+          {/* {renderErrorMessage("pass")} */}
+        </InputContainer>
+        <ButtonContainer>
+          <StyledInput type="submit" />
+        </ButtonContainer>
+      </form>
+    </FormContainer>
   );
 }
 
