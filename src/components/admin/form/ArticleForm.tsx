@@ -1,32 +1,20 @@
-import { DatePicker, Form, Input } from "antd";
-import { RcFile } from "antd/es/upload/interface";
-import { useEffect, useState } from "react";
-import { formatDateTime } from "../../../utils/Utils";
+import { useState } from "react";
+import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
   FormContainer,
   InputContainer,
   StyledInput,
+  StyledLabel,
   StyledTextArea,
   TagAddButton,
   TagDeleteButton,
   TagsContainer,
 } from "./StyledComponent/FormContainer";
-
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
+import { ValuesType } from "./Type/ArticleType";
 
 type ArticleFormProps = {
   apiUrl: string;
-};
-
-type ValuesType = {
-  author: string;
-  title: string;
-  tags: string[];
-  description: string;
-  dateTime: string;
-  images: RcFile[];
 };
 
 const initValues = {
@@ -39,50 +27,7 @@ const initValues = {
 };
 
 function ArticleForm({ apiUrl }: ArticleFormProps) {
-  const [fileList, setFileList] = useState<RcFile[]>([]);
   const [values, setValues] = useState<ValuesType>(initValues);
-  const [form] = Form.useForm();
-
-  const meta: { [key: string]: string } = {
-    title: "title 1",
-    contents: "contents 1",
-  };
-
-  function onFinish(params: any) {
-    const isFull = Object.values(params).every((element) => {
-      return element !== undefined;
-    });
-    if (isFull) {
-      setValues({
-        ...values,
-        author: params.author,
-        title: params.title,
-        tags: params.tags.map((x: any) => x.name),
-        description: params.description,
-        dateTime: formatDateTime(
-          new Date(params.dateTime.$d).toLocaleDateString()
-        ),
-      });
-      console.log(isFull);
-    } else {
-    }
-  }
-
-  function handleUpload() {
-    setValues({ ...values, images: fileList });
-  }
-
-  useEffect(() => {
-    console.log("useEffect");
-    if (!Object.values(values).some((el) => el.length === 0)) {
-      // TODO post api
-      console.log("api call");
-      console.log(values);
-      form.resetFields();
-      setValues(initValues);
-      setFileList([]);
-    }
-  }, [values]);
 
   function handleSumbit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -154,7 +99,9 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
       <FormContainer>
         <form onSubmit={handleSumbit}>
           <InputContainer>
-            <label htmlFor="author">작성자</label>
+            <StyledLabel htmlFor="author" aria-required="true">
+              작성자
+            </StyledLabel>
             <StyledInput
               id="author"
               type="text"
@@ -164,7 +111,9 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
             />
           </InputContainer>
           <InputContainer>
-            <label htmlFor="title">제목</label>
+            <StyledLabel htmlFor="title" aria-required="true">
+              제목
+            </StyledLabel>
             <StyledInput
               id="title"
               type="text"
@@ -173,9 +122,10 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
               required
             />
           </InputContainer>
-
           <InputContainer>
-            <label htmlFor="tag">참여 인원</label>
+            <StyledLabel htmlFor="tag" aria-required="true">
+              참여 인원
+            </StyledLabel>
             {values.tags.map((tag, index) => {
               return (
                 <TagsContainer key={"tag" + index}>
@@ -188,16 +138,19 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
                   <TagDeleteButton
                     onClick={(event) => handleDeleteTagClick(event, index)}
                   >
-                    삭제
+                    ❌
                   </TagDeleteButton>
                 </TagsContainer>
               );
             })}
-            <TagAddButton onClick={handleAddTagsClick}>추가하기</TagAddButton>
+            <TagAddButton onClick={handleAddTagsClick}>
+              참여 인원 추가 ➕
+            </TagAddButton>
           </InputContainer>
-          {/* TODO 작성날짜 추가 */}
           <InputContainer>
-            <label htmlFor="date">훈련날짜</label>
+            <StyledLabel htmlFor="date" aria-required="true">
+              훈련날짜
+            </StyledLabel>
             <StyledInput
               id="date"
               type="date"
@@ -207,7 +160,9 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
             />
           </InputContainer>
           <InputContainer>
-            <label htmlFor="description">본문</label>
+            <StyledLabel htmlFor="description" aria-required="true">
+              본문
+            </StyledLabel>
             <StyledTextArea
               id="description"
               name="description"
@@ -216,6 +171,20 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
             />
           </InputContainer>
           {/* TODO 사진 올리기 */}
+          <ImageUploader setValues={setValues} />
+          {/* <InputContainer>
+            <StyledLabel htmlFor="file" aria-required="true">
+              사진 올리기
+            </label>
+            <StyledInput
+              id="file"
+              accept="image/*"
+              type="file"
+              name="file"
+              onChange={handleFileChange}
+              required
+            />
+          </InputContainer> */}
           <ButtonContainer>
             <StyledInput type="submit" />
           </ButtonContainer>

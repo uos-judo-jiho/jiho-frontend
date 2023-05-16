@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const StyledLabel = styled.label`
+  font-size: ${(props) => props.theme.defaultFontSize};
+`;
+
 export const FormContainer = styled.div`
   background-color: white;
   padding: 2rem;
@@ -28,7 +32,7 @@ export const StyledInput = styled.input`
   &[type="submit"] {
     margin-top: 10px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: ${(props) => props.theme.defaultFontSize};
     background: #01d28e;
     border: 1px solid #01d28e;
     color: #fff;
@@ -40,6 +44,9 @@ export const StyledInput = styled.input`
   }
 
   &[type="date"] {
+  }
+
+  &[type="file"] {
   }
 `;
 
@@ -58,3 +65,25 @@ export const TagsContainer = styled.div`
 export const TagAddButton = styled.button``;
 
 export const TagDeleteButton = styled.button``;
+
+export const PreviewContainer = styled.div`
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1rem;
+  grid-template-columns: repeat(5, 1fr);
+`;
+export const PreviewImgContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+export const PreviewImg = styled.img`
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+`;
+
+export const PreviewName = styled.span`
+  font-size: ${(props) => props.theme.defaultFontSize};
+`;
