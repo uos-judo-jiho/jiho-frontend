@@ -97,6 +97,7 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
         {previewImg.map((el, index) => {
           return (
             <PreviewImgContainer key={"upload-img" + index}>
+              {index + 1}
               <PreviewImg src={previewImg[index]} />
               <TagDeleteButton onClick={(event) => deleteImg(event, index)}>
                 <PreviewName>❌</PreviewName>

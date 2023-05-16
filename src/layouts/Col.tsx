@@ -1,13 +1,25 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 type ColProps = {
   children: React.ReactNode;
   alignItems?: string;
   justifyContent?: string;
+  full?: boolean;
 };
 
-const Container = styled.div<{ alignItems?: string; justifyContent?: string }>`
+const Container = styled.div<{
+  alignItems?: string;
+  justifyContent?: string;
+  full: boolean;
+}>`
+  ${(props) =>
+    props.full
+      ? css`
+          height: 100%;
+          width: 100%;
+        `
+      : ""}
   display: flex;
   flex-direction: column;
 
@@ -15,9 +27,13 @@ const Container = styled.div<{ alignItems?: string; justifyContent?: string }>`
   justify-content: ${(props) => props.justifyContent || "normal"};
 `;
 
-function Col({ children, alignItems, justifyContent }: ColProps) {
+function Col({ children, alignItems, justifyContent, full = false }: ColProps) {
   return (
-    <Container alignItems={alignItems} justifyContent={justifyContent}>
+    <Container
+      alignItems={alignItems}
+      justifyContent={justifyContent}
+      full={full}
+    >
       {children}
     </Container>
   );

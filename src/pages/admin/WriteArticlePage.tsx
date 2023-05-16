@@ -33,7 +33,6 @@ function WriteArticlePage() {
 
     default:
       return <></>;
-      break;
   }
 }
 
