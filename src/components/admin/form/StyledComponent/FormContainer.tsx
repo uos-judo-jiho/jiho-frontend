@@ -73,6 +73,7 @@ export const StyledTextArea = styled.textarea`
 export const TagsContainer = styled.div`
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   gap: 1rem;
 `;
 
@@ -91,6 +92,7 @@ export const PreviewImgContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-size: ${(props) => props.theme.defaultFontSize};
 `;
 export const PreviewImg = styled.img`
   width: 100%;

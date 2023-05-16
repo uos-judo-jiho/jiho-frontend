@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
@@ -16,10 +16,12 @@ import { ValuesType } from "./Type/ArticleType";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 import { Link, useNavigate } from "react-router-dom";
 import { getImageFileFromSrc } from "../../../utils/Utils";
+import SubmitModal from "../../Modals/AlertModals/SubmitModal";
 
 type ArticleFormProps = {
   apiUrl: string;
   data?: ArticleInfoType;
+  type: string;
 };
 
 const initValues = {
@@ -31,8 +33,11 @@ const initValues = {
   images: [],
 };
 
-function ArticleForm({ apiUrl, data }: ArticleFormProps) {
+function ArticleForm({ apiUrl, data, type }: ArticleFormProps) {
   const [values, setValues] = useState<ValuesType>(initValues);
+  const [confirm, setConfirm] = useState();
+  const [cancel, setCancel] = useState();
+  const [open, setOpen] = useState<boolean>(false);
   const naviagate = useNavigate();
 
   useEffect(() => {
@@ -66,9 +71,9 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
 
   if (!values) return <></>;
 
-  function handleSumbit(event: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log(values);
+    setOpen(true);
   }
 
   function handleAuthorChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -139,7 +144,7 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
   return (
     <>
       <FormContainer>
-        <form onSubmit={handleSumbit}>
+        <form onSubmit={handleSubmit}>
           <InputContainer>
             <StyledLabel htmlFor="author" aria-required="true">
               작성자
@@ -167,15 +172,16 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
             />
           </InputContainer>
           <InputContainer>
-            <StyledLabel htmlFor="tag" aria-required="true">
-              참여 인원
+            <StyledLabel htmlFor="tag0">
+              {type === "training" ? "참여 인원" : "태그"}
             </StyledLabel>
             {values.tags.map((tag, index) => {
               return (
                 <TagsContainer key={"tag" + index}>
+                  {index + 1}
                   <StyledInput
-                    id="tag"
-                    name="tag"
+                    id={"tag" + index}
+                    name={"tag" + index}
                     onChange={(event) => handleTagsChange(event, index)}
                     required
                     value={tag}
@@ -189,12 +195,12 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
               );
             })}
             <TagAddButton onClick={handleAddTagsClick}>
-              참여 인원 추가 ➕
+              {type === "training" ? "참여 인원" : "태그"} +
             </TagAddButton>
           </InputContainer>
           <InputContainer>
             <StyledLabel htmlFor="date" aria-required="true">
-              훈련날짜
+              날짜
             </StyledLabel>
             <StyledInput
               id="date"
@@ -226,6 +232,15 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
           </ButtonContainer>
         </form>
       </FormContainer>
+      <SubmitModal
+        confirmText={"확인"}
+        cancelText={"취소"}
+        description={"변경사항을 저장하시겠습니까?"}
+        open={open}
+        setOpen={setOpen}
+        handleConfirm={() => {}}
+        handleCancel={() => {}}
+      />
     </>
   );
 }

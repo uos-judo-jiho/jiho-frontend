@@ -4,7 +4,7 @@ type TrainingLogFormProps = {
   data?: ArticleInfoType;
 };
 function TrainingLogForm({ data }: TrainingLogFormProps) {
-  return <ArticleForm apiUrl={""} data={data} />;
+  return <ArticleForm apiUrl={""} data={data} type={"training"} />;
 }
 
 export default TrainingLogForm;

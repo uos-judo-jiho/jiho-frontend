@@ -5,7 +5,7 @@ type NoticeFormProps = {
   data?: ArticleInfoType;
 };
 function NoticeForm({ data }: NoticeFormProps) {
-  return <ArticleForm apiUrl={""} data={data} />;
+  return <ArticleForm apiUrl={""} data={data} type={"notice"} />;
 }
 
 export default NoticeForm;
