@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useFetchData from "../../../Hooks/useFetchData";
 import { getTrainings } from "../../../api/trainingApi";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
 import TrainingLogForm from "../../../components/admin/form/TrainingLogForm";
-import Title from "../../../layouts/Title";
 import { Constants } from "../../../constant/constant";
+import Title from "../../../layouts/Title";
+import { ArticleInfoType } from "../../../types/ArticleInfoType";
 
 function AdminTrainingLogDetail() {
   const { id } = useParams();
@@ -36,6 +36,7 @@ function AdminTrainingLogDetail() {
   }, [trainingLogArray]);
 
   if (!trainingLogArray || !trainingLog) return <></>;
+
   return (
     <>
       <Title title={"훈련일지 수정"} color={Constants.BLACK_COLOR} />

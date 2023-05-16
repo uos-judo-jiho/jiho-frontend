@@ -22,6 +22,20 @@ export const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
+export const CancelButton = styled.button`
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: ${(props) => props.theme.defaultFontSize};
+  background: ${(props) => props.theme.accentColor};
+  border: 1px solid ${(props) => props.theme.accentColor};
+  color: #fff;
+  padding: 10px 20px;
+  margin-right: 1rem;
+
+  &:hover {
+    opacity: 0.6;
+  }
+`;
 export const StyledInput = styled.input`
   &[type="text"],
   &[type="password"] {

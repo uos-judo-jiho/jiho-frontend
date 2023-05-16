@@ -4,6 +4,7 @@ import ListContainer from "../../../layouts/ListContainer";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 import useFetchData from "../../../Hooks/useFetchData";
 import { getTrainings } from "../../../api/trainingApi";
+import { Link } from "react-router-dom";
 
 function AdminTrainingLog() {
   const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>();
@@ -24,8 +25,13 @@ function AdminTrainingLog() {
   }, [loading, error, response]);
 
   if (!trainingLogArray) return <></>;
+
+  function handleNewArticle(event: React.MouseEvent<HTMLButtonElement>) {}
   return (
     <FormContainer title="훈련일지 관리">
+      <Link to="/admin/training/write">
+        <button onClick={handleNewArticle}>새 글쓰기</button>
+      </Link>
       <ListContainer
         datas={trainingLogArray}
         targetUrl={"/admin/training/"}

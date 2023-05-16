@@ -16,6 +16,7 @@ function FormContainer({ children, title }: FormContainerProps) {
   return (
     <Container>
       <Title title={title} color="black" />
+
       {children}
     </Container>
   );

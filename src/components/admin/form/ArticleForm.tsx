@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
+  CancelButton,
   FormContainer,
   InputContainer,
   StyledInput,
@@ -13,10 +14,11 @@ import {
 } from "./StyledComponent/FormContainer";
 import { ValuesType } from "./Type/ArticleType";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
+import { Link, useNavigate } from "react-router-dom";
 
 type ArticleFormProps = {
   apiUrl: string;
-  data: ArticleInfoType;
+  data?: ArticleInfoType;
 };
 
 const initValues = {
@@ -30,8 +32,10 @@ const initValues = {
 
 function ArticleForm({ apiUrl, data }: ArticleFormProps) {
   const [values, setValues] = useState<ValuesType>(initValues);
+  const naviagate = useNavigate();
 
   useEffect(() => {
+    if (!data) return;
     let defaultValues: ValuesType = {
       author: data.author,
       title: data.title,
@@ -108,6 +112,11 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
     setValues((prev) => {
       return { ...prev, dateTime: event.target.value };
     });
+  }
+
+  function handleCancelSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+    // TODO 취소 모달 만들기
+    naviagate(-1);
   }
 
   return (
@@ -192,9 +201,10 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
             />
           </InputContainer>
           {/* TODO 사진 올리기 */}
-          <ImageUploader setValues={setValues} data={data.imgSrcs} />
+          <ImageUploader setValues={setValues} data={[]} />
 
           <ButtonContainer>
+            <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
             <StyledInput type="submit" />
           </ButtonContainer>
         </form>
