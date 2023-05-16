@@ -2,11 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 import { Link } from "react-router-dom";
-import Line from "../../layouts/Line";
-import { Constants } from "../../constant/constant";
+import Line from "./Line";
+import { Constants } from "../constant/constant";
 
 type ListContainerProps = {
   datas: any[];
+  targetUrl: string;
 };
 
 const Container = styled.div``;
@@ -42,7 +43,7 @@ const TagWrapper = styled.div`
   text-align: center;
   flex: 10%;
 `;
-function ListContainer({ datas }: ListContainerProps) {
+function ListContainer({ datas, targetUrl }: ListContainerProps) {
   return (
     <Container>
       <ItemList>
@@ -62,7 +63,7 @@ function ListContainer({ datas }: ListContainerProps) {
                 <Item>
                   <TagWrapper>{parseInt(data.id) + 1}</TagWrapper>
                   <DescriptionWrapper>
-                    <Link to={"/notice/" + data.id}>
+                    <Link to={targetUrl + data.id}>
                       <LinkWrapper>{data.title}</LinkWrapper>
                     </Link>
                   </DescriptionWrapper>

@@ -13,11 +13,12 @@ import { ValuesType } from "../Type/ArticleType";
 
 type ImageUploaderProps = {
   setValues: React.Dispatch<React.SetStateAction<ValuesType>>;
+  data: string[];
 };
 
-function ImageUploader({ setValues }: ImageUploaderProps) {
+function ImageUploader({ setValues, data }: ImageUploaderProps) {
   const [img, setImg] = useState<File[]>([]);
-  const [previewImg, setPreviewImg] = useState<string[]>([]);
+  const [previewImg, setPreviewImg] = useState<string[]>(data);
   const [isFull, setIsFull] = useState<boolean>(false);
 
   function insertImg(event: React.ChangeEvent<HTMLInputElement>) {

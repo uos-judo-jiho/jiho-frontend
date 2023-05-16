@@ -1,4 +1,4 @@
-import AdminNavItem from "../../components/admin/AdminNavItem";
+import AdminNavItem from "../../components/admin/Main/AdminNavItem";
 
 function AdminNavPage() {
   return (

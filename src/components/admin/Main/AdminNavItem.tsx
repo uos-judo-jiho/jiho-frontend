@@ -1,9 +1,7 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import Col from "../../layouts/Col";
 
-import { ReactComponent as LeftArrow } from "../../assets/svgs/arrow_forward_ios.svg";
+import { ReactComponent as LeftArrow } from "../../../assets/svgs/arrow_forward_ios.svg";
 
 type AdminNavItemProps = {
   linkTo: string;

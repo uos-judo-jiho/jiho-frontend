@@ -5,8 +5,8 @@ import SheetWrapper from "../../layouts/SheetWrapper";
 import Title from "../../layouts/Title";
 import { Constants } from "../../constant/constant";
 import Line from "../../layouts/Line";
-import ListContainer from "../../components/Notice/ListContainer";
 import demoNotice from "../../assets/jsons/tmpNotice.json";
+import ListContainer from "../../layouts/ListContainer";
 // TODO api 적용
 
 function Notice() {
@@ -17,7 +17,7 @@ function Notice() {
         <SheetWrapper>
           <Title title={"공지사항"} color={Constants.BLACK_COLOR} />
           <Line margin="1rem 0" borderColor={Constants.GREY_COLOR} />
-          <ListContainer datas={demoNotice} />
+          <ListContainer datas={demoNotice} targetUrl={"/notice/"} />
         </SheetWrapper>
       </DefaultLayout>
     </>

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Title from "../../layouts/Title";
+import Title from "../../../layouts/Title";
 
 type FormContainerProps = {
   children: React.ReactNode;

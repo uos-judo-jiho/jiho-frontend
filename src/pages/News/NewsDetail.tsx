@@ -8,14 +8,10 @@ import DefaultLayout from "../../layouts/DefaultLayout";
 import SheetWrapper from "../../layouts/SheetWrapper";
 import Title from "../../layouts/Title";
 import { NewsType } from "../../types/NewsType";
-
-type TParams = {
-  id: string; // ex] "2022"
-  index: string; // ex] "1"
-};
+import { TNewsParams } from "../../types/TNewsParams";
 
 function NewsDetail() {
-  const { id, index } = useParams<TParams>();
+  const { id, index } = useParams<TNewsParams>();
   const [news, setNews] = useState<NewsType>();
   const { loading, error, response } = useFetchData(getNews, id);
 

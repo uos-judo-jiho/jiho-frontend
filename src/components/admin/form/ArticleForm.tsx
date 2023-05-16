@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
@@ -12,9 +12,11 @@ import {
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 import { ValuesType } from "./Type/ArticleType";
+import { ArticleInfoType } from "../../../types/ArticleInfoType";
 
 type ArticleFormProps = {
   apiUrl: string;
+  data: ArticleInfoType;
 };
 
 const initValues = {
@@ -26,8 +28,22 @@ const initValues = {
   images: [],
 };
 
-function ArticleForm({ apiUrl }: ArticleFormProps) {
+function ArticleForm({ apiUrl, data }: ArticleFormProps) {
   const [values, setValues] = useState<ValuesType>(initValues);
+
+  useEffect(() => {
+    let defaultValues: ValuesType = {
+      author: data.author,
+      title: data.title,
+      tags: data.tags,
+      description: data.description,
+      dateTime: data.dateTime,
+      images: [],
+    };
+    setValues(defaultValues);
+  }, [data]);
+
+  if (!values) return <></>;
 
   function handleSumbit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -108,6 +124,7 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
               name="author"
               onChange={handleAuthorChange}
               required
+              value={values.author}
             />
           </InputContainer>
           <InputContainer>
@@ -120,6 +137,7 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
               name="title"
               onChange={handleTitleChange}
               required
+              value={values.title}
             />
           </InputContainer>
           <InputContainer>
@@ -134,6 +152,7 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
                     name="tag"
                     onChange={(event) => handleTagsChange(event, index)}
                     required
+                    value={tag}
                   />
                   <TagDeleteButton
                     onClick={(event) => handleDeleteTagClick(event, index)}
@@ -157,6 +176,7 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
               name="date"
               onChange={handleDateChange}
               required
+              value={values.dateTime}
             />
           </InputContainer>
           <InputContainer>
@@ -168,122 +188,18 @@ function ArticleForm({ apiUrl }: ArticleFormProps) {
               name="description"
               onChange={handleDescriptionChange}
               required
+              value={values.description}
             />
           </InputContainer>
           {/* TODO 사진 올리기 */}
-          <ImageUploader setValues={setValues} />
-          {/* <InputContainer>
-            <StyledLabel htmlFor="file" aria-required="true">
-              사진 올리기
-            </label>
-            <StyledInput
-              id="file"
-              accept="image/*"
-              type="file"
-              name="file"
-              onChange={handleFileChange}
-              required
-            />
-          </InputContainer> */}
+          <ImageUploader setValues={setValues} data={data.imgSrcs} />
+
           <ButtonContainer>
             <StyledInput type="submit" />
           </ButtonContainer>
         </form>
       </FormContainer>
     </>
-    // <>
-    //   <Form
-    //     form={form}
-    //     labelCol={{ span: 4 }}
-    //     wrapperCol={{ span: 14 }}
-    //     layout="horizontal"
-    //     disabled={false}
-    //     style={{ maxWidth: 600 }}
-    //     onFinish={onFinish}
-    //   >
-    //     <Form.Item
-    //       label="작성자"
-    //       name="author"
-    //       rules={[{ required: true, message: "작성자를 적으세요" }]}
-    //     >
-    //       <Input />
-    //     </Form.Item>
-    //     <Form.Item
-    //       label="제목"
-    //       name="title"
-    //       rules={[{ required: true, message: "제목을 적으세요" }]}
-    //     >
-    //       <Input />
-    //     </Form.Item>
-    //     <Form.List name="tags">
-    //       {(fields, { add, remove }) => (
-    //         <>
-    //           {fields.map(({ key, name, ...restField }) => (
-    //             <Space
-    //               key={key}
-    //               style={{ display: "flex", marginBottom: 8 }}
-    //               align="baseline"
-    //             >
-    //               <Form.Item
-    //                 {...restField}
-    //                 name={[name, "name"]}
-    //                 rules={[{ required: true, message: "태그를 적으세요" }]}
-    //               >
-    //                 <Input placeholder="태그" />
-    //               </Form.Item>
-
-    //               <Button onClick={() => remove(name)}>제거하기</Button>
-    //             </Space>
-    //           ))}
-    //           <Form.Item>
-    //             <Button type="dashed" onClick={() => add()} block>
-    //               태그 추가하기
-    //             </Button>
-    //           </Form.Item>
-    //         </>
-    //       )}
-    //     </Form.List>
-
-    //     <Form.Item
-    //       label="작성 날짜"
-    //       name="dateTime"
-    //       rules={[{ required: true, message: "날짜를 선택하세요" }]}
-    //     >
-    //       <DatePicker />
-    //     </Form.Item>
-
-    //     <Form.Item
-    //       label="본문"
-    //       name="description"
-    //       rules={[{ required: true, message: "본문를 적으세요" }]}
-    //     >
-    //       <TextArea rows={8} />
-    //     </Form.Item>
-
-    //     <Form.Item label="사진 올리기" valuePropName="fileList">
-    //       <Upload
-    //         name="files"
-    //         listType="picture-card"
-    //         action={Constants.BASE_URL + apiUrl}
-    //         beforeUpload={(file) => {
-    //           setFileList((prev) => {
-    //             return [...prev, file];
-    //           });
-    //           return false; // 파일 선택시 바로 업로드 하지 않고 후에 한꺼번에 전송하기 위함
-    //         }}
-    //       >
-    //         <div>
-    //           <Plus />
-    //           <div>사진 올리기</div>
-    //         </div>
-    //       </Upload>
-    //     </Form.Item>
-
-    //     <Button block type="primary" htmlType="submit" onClick={handleUpload}>
-    //       제출하기
-    //     </Button>
-    //   </Form>
-    // </>
   );
 }
 
