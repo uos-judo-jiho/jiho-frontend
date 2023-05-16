@@ -84,9 +84,7 @@ function Footer() {
           {/* 관리자 페이지로 */}
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/admin"}>
-                <DescriptionItem>관리자 페이지로</DescriptionItem>
-              </Link>
+              <Link to={"/admin"}>관리자 페이지로</Link>
             </LinkWrapper>
           </DescriptionItem>
         </DescriptionList>

@@ -35,8 +35,6 @@ const initValues = {
 
 function ArticleForm({ apiUrl, data, type }: ArticleFormProps) {
   const [values, setValues] = useState<ValuesType>(initValues);
-  const [confirm, setConfirm] = useState();
-  const [cancel, setCancel] = useState();
   const [open, setOpen] = useState<boolean>(false);
   const naviagate = useNavigate();
 
@@ -73,7 +71,12 @@ function ArticleForm({ apiUrl, data, type }: ArticleFormProps) {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setOpen(true);
+    if (open) {
+      // TODO API CALL
+      console.log(values);
+    } else {
+      setOpen(true);
+    }
   }
 
   function handleAuthorChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -138,6 +141,7 @@ function ArticleForm({ apiUrl, data, type }: ArticleFormProps) {
 
   function handleCancelSubmit(event: React.MouseEvent<HTMLButtonElement>) {
     // TODO 취소 모달 만들기
+
     naviagate(-1);
   }
 
@@ -223,24 +227,20 @@ function ArticleForm({ apiUrl, data, type }: ArticleFormProps) {
               value={values.description}
             />
           </InputContainer>
-          {/* TODO 사진 올리기 */}
           <ImageUploader setValues={setValues} data={data?.imgSrcs} />
-
           <ButtonContainer>
             <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
             <StyledInput type="submit" />
           </ButtonContainer>
+          <SubmitModal
+            confirmText={"확인"}
+            cancelText={"취소"}
+            description={"변경사항을 저장하시겠습니까?"}
+            open={open}
+            setOpen={setOpen}
+          />
         </form>
       </FormContainer>
-      <SubmitModal
-        confirmText={"확인"}
-        cancelText={"취소"}
-        description={"변경사항을 저장하시겠습니까?"}
-        open={open}
-        setOpen={setOpen}
-        handleConfirm={() => {}}
-        handleCancel={() => {}}
-      />
     </>
   );
 }

@@ -2,6 +2,8 @@ import React from "react";
 import styled, { css } from "styled-components";
 import Col from "../../../layouts/Col";
 import Row from "../../../layouts/Row";
+import { StyledInput } from "../../admin/form/StyledComponent/FormContainer";
+import { useNavigate } from "react-router-dom";
 
 type SubmitModalProps = {
   confirmText: string;
@@ -9,8 +11,6 @@ type SubmitModalProps = {
   description: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  handleConfirm: React.MouseEventHandler<HTMLButtonElement>;
-  handleCancel: React.MouseEventHandler<HTMLButtonElement>;
 };
 const Container = styled.div`
   position: fixed;
@@ -71,9 +71,14 @@ function SubmitModal({
   description,
   open,
   setOpen,
-  handleConfirm,
-  handleCancel,
 }: SubmitModalProps) {
+  const naviagate = useNavigate();
+  function handleCancel() {
+    setOpen(false);
+  }
+  function handleConfirm() {
+    naviagate(-1);
+  }
   return (
     <>
       {open ? (
