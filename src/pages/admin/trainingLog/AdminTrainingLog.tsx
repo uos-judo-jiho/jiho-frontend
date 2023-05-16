@@ -38,6 +38,7 @@ function AdminTrainingLog() {
       <ListContainer
         datas={trainingLogArray}
         targetUrl={"/admin/training/"}
+        additionalTitle={true}
       ></ListContainer>
     </FormContainer>
   );

@@ -27,6 +27,7 @@ function AdminNews() {
       <ListContainer
         datas={news.articles}
         targetUrl={"/admin/news/"}
+        additionalTitle={true}
       ></ListContainer>
     </FormContainer>
   );

@@ -15,6 +15,7 @@ import {
 import { ValuesType } from "./Type/ArticleType";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 import { Link, useNavigate } from "react-router-dom";
+import { getImageFileFromSrc } from "../../../utils/Utils";
 
 type ArticleFormProps = {
   apiUrl: string;
@@ -44,6 +45,22 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
       dateTime: data.dateTime,
       images: [],
     };
+
+    async function _convertFileFromSrc() {
+      let defaultFiles: File[] = [];
+      data?.imgSrcs.map(async (previewImgsrc) => {
+        const imgSrc = previewImgsrc;
+        const file = await getImageFileFromSrc(imgSrc);
+        if (file) {
+          defaultFiles.push(file);
+        }
+      });
+      if (defaultFiles) {
+        defaultValues = { ...defaultValues, images: defaultFiles };
+      }
+    }
+    _convertFileFromSrc();
+
     setValues(defaultValues);
   }, [data]);
 
@@ -201,7 +218,7 @@ function ArticleForm({ apiUrl, data }: ArticleFormProps) {
             />
           </InputContainer>
           {/* TODO 사진 올리기 */}
-          <ImageUploader setValues={setValues} data={[]} />
+          <ImageUploader setValues={setValues} data={data?.imgSrcs} />
 
           <ButtonContainer>
             <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>

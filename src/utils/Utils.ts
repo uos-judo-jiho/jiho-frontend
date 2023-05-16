@@ -1,4 +1,4 @@
-import { AwardsType } from "../types/AwardsType";
+import { AwardsType } from "../types/TAwards";
 
 /** string array에 띄어쓰기를 포함하여 string으로 반환
  * @param stringArray
@@ -7,7 +7,7 @@ import { AwardsType } from "../types/AwardsType";
  * 예시] 매개변수 : ["a", "b", "c"]
  * 반환값 : "a b c "
  */
-function formatStringArray(stringArray: string[]): string {
+export function formatStringArray(stringArray: string[]): string {
   var resultStringArray = stringArray.join(" ");
   return resultStringArray;
 }
@@ -18,7 +18,7 @@ function formatStringArray(stringArray: string[]): string {
  * @returns string.
  * 수상이력을 AwardsType type으로 받아서 string으로 포멧팅한다.
  */
-function formaAwardsType(award: AwardsType): string {
+export function formaAwardsType(award: AwardsType): string {
   let result: string = award.title + " | ";
 
   if (award.gold > 0) {
@@ -56,7 +56,7 @@ function formaAwardsType(award: AwardsType): string {
  *
  * 리턴값 예시 2023.02.28.화
  */
-function formatDateTime(dateTimeString: string): string {
+export function formatDateTime(dateTimeString: string): string {
   var result = dateTimeString;
   result = result.replaceAll(".", "");
   var resultList = result.split(" ");
@@ -64,4 +64,14 @@ function formatDateTime(dateTimeString: string): string {
   return resultList.join("-");
 }
 
-export { formatStringArray, formaAwardsType, formatDateTime };
+export async function getImageFileFromSrc(src: string) {
+  try {
+    const response = await fetch(src);
+    const blob = await response.blob();
+    const file = new File([blob], "image.jpg", { type: blob.type });
+    return file;
+  } catch (error) {
+    console.error("Error converting image source to File:", error);
+    return null;
+  }
+}

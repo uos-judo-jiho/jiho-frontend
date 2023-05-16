@@ -81,6 +81,14 @@ function Footer() {
               <Link to={"/news/2022"}>2022 지호지로 바로가기</Link>
             </LinkWrapper>
           </DescriptionItem>
+          {/* 관리자 페이지로 */}
+          <DescriptionItem>
+            <LinkWrapper>
+              <Link to={"/admin"}>
+                <DescriptionItem>관리자 페이지로</DescriptionItem>
+              </Link>
+            </LinkWrapper>
+          </DescriptionItem>
         </DescriptionList>
         {/* 지호 이름 */}
         <DescriptionList>
@@ -130,19 +138,6 @@ function Footer() {
             </HyperLink>
           </DescriptionItem>
         </DescriptionList>
-        {/* 관리자 페이지로 */}
-        {/* <DescriptionList
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-          }}
-        >
-          <LinkWrapper>
-            <Link to={"/admin"}>
-              <DescriptionItem>관리자 페이지로 ▶️</DescriptionItem>
-            </Link>
-          </LinkWrapper>
-        </DescriptionList> */}
 
         {/* <Row alignItems="center" justifyContent="center">
           <SNSLink href="https://www.instagram.com/uos_judo/" target="_blank">

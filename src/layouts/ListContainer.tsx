@@ -4,10 +4,12 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Line from "./Line";
 import { Constants } from "../constant/constant";
+import { ArticleInfoType } from "../types/ArticleInfoType";
 
 type ListContainerProps = {
-  datas: any[];
+  datas: ArticleInfoType[];
   targetUrl: string;
+  additionalTitle?: boolean;
 };
 
 const Container = styled.div``;
@@ -43,7 +45,11 @@ const TagWrapper = styled.div`
   text-align: center;
   flex: 10%;
 `;
-function ListContainer({ datas, targetUrl }: ListContainerProps) {
+function ListContainer({
+  datas,
+  targetUrl,
+  additionalTitle = false,
+}: ListContainerProps) {
   return (
     <Container>
       <ItemList>
@@ -54,28 +60,28 @@ function ListContainer({ datas, targetUrl }: ListContainerProps) {
         </Item>
         <Line borderColor={Constants.LIGHT_GREY_COLOR} borderWidth="1px" />
 
-        {datas
-          .slice(0)
-          .reverse()
-          .map((data) => {
-            return (
-              <div key={data.title + data.id}>
-                <Item>
-                  <TagWrapper>{parseInt(data.id) + 1}</TagWrapper>
-                  <DescriptionWrapper>
-                    <Link to={targetUrl + data.id}>
-                      <LinkWrapper>{data.title}</LinkWrapper>
-                    </Link>
-                  </DescriptionWrapper>
-                  <DateTimeWrapper>{data.dateTime}</DateTimeWrapper>
-                </Item>
-                <Line
-                  borderColor={Constants.LIGHT_GREY_COLOR}
-                  borderWidth="1px"
-                />
-              </div>
-            );
-          })}
+        {datas.map((data) => {
+          return (
+            <div key={data.title + data.id}>
+              <Item>
+                <TagWrapper>{parseInt(data.id) + 1}</TagWrapper>
+                <DescriptionWrapper>
+                  <Link to={targetUrl + data.id}>
+                    <LinkWrapper>
+                      {data.title}
+                      {additionalTitle ? " " + data.author : ""}
+                    </LinkWrapper>
+                  </Link>
+                </DescriptionWrapper>
+                <DateTimeWrapper>{data.dateTime}</DateTimeWrapper>
+              </Item>
+              <Line
+                borderColor={Constants.LIGHT_GREY_COLOR}
+                borderWidth="1px"
+              />
+            </div>
+          );
+        })}
       </ItemList>
     </Container>
   );

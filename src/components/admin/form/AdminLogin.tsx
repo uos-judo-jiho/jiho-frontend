@@ -6,6 +6,10 @@ import {
   InputContainer,
   StyledInput,
 } from "./StyledComponent/FormContainer";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import Title from "../../../layouts/Title";
+import { Constants } from "../../../constant/constant";
 
 type AdminLoginProps = {
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,6 +19,17 @@ type LoginValuesType = {
   username: string;
   password: string;
 };
+
+const BackDescription = styled.div`
+  font-size: ${(props) => props.theme.defaultFontSize};
+  text-align: center;
+  margin: 1rem 0;
+  text-decoration-line: underline;
+
+  &:hover {
+    opacity: 0.6;
+  }
+`;
 
 function AdminLogin({ setIsLogin }: AdminLoginProps) {
   const [loginValue, setloginValue] = useState<LoginValuesType>({
@@ -43,37 +58,43 @@ function AdminLogin({ setIsLogin }: AdminLoginProps) {
     }
   }
   return (
-    <FormContainer>
-      <form onSubmit={handleSubmit}>
-        <InputContainer>
-          <label htmlFor="uname">Username </label>
-          <StyledInput
-            id="uname"
-            type="text"
-            name="uname"
-            onChange={handleUsernameChange}
-            required
-          />
+    <>
+      <Title title={"관리자 로그인"} color={Constants.BLACK_COLOR} />
+      <FormContainer>
+        <form onSubmit={handleSubmit}>
+          <InputContainer>
+            <label htmlFor="uname">Username </label>
+            <StyledInput
+              id="uname"
+              type="text"
+              name="uname"
+              onChange={handleUsernameChange}
+              required
+            />
 
-          {/* {renderErrorMessage("uname")} */}
-        </InputContainer>
-        <InputContainer>
-          <label htmlFor="password">Password </label>
-          <StyledInput
-            id="password"
-            type="password"
-            name="password"
-            onChange={handlePasswordChange}
-            required
-          />
+            {/* {renderErrorMessage("uname")} */}
+          </InputContainer>
+          <InputContainer>
+            <label htmlFor="password">Password </label>
+            <StyledInput
+              id="password"
+              type="password"
+              name="password"
+              onChange={handlePasswordChange}
+              required
+            />
 
-          {/* {renderErrorMessage("pass")} */}
-        </InputContainer>
-        <ButtonContainer>
-          <StyledInput type="submit" />
-        </ButtonContainer>
-      </form>
-    </FormContainer>
+            {/* {renderErrorMessage("pass")} */}
+          </InputContainer>
+          <ButtonContainer>
+            <StyledInput type="submit" />
+          </ButtonContainer>
+        </form>
+      </FormContainer>
+      <Link to={"/"}>
+        <BackDescription>홈으로 돌아가기</BackDescription>
+      </Link>
+    </>
   );
 }
 

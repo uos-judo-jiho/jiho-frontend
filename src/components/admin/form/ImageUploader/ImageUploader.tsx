@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   InputContainer,
   PreviewContainer,
@@ -10,16 +10,34 @@ import {
   TagDeleteButton,
 } from "../StyledComponent/FormContainer";
 import { ValuesType } from "../Type/ArticleType";
+import { getImageFileFromSrc } from "../../../../utils/Utils";
 
 type ImageUploaderProps = {
   setValues: React.Dispatch<React.SetStateAction<ValuesType>>;
-  data: string[];
+  data?: string[];
 };
 
 function ImageUploader({ setValues, data }: ImageUploaderProps) {
   const [img, setImg] = useState<File[]>([]);
-  const [previewImg, setPreviewImg] = useState<string[]>(data);
+  const [previewImg, setPreviewImg] = useState<string[]>(data || []);
   const [isFull, setIsFull] = useState<boolean>(false);
+
+  useEffect(() => {
+    async function _convertFileFromSrc() {
+      let defaultFiles: File[] = [];
+      previewImg.map(async (previewImgsrc) => {
+        const imgSrc = previewImgsrc;
+        const file = await getImageFileFromSrc(imgSrc);
+        if (file) {
+          defaultFiles.push(file);
+        }
+      });
+      if (defaultFiles) {
+        setImg(defaultFiles);
+      }
+    }
+    _convertFileFromSrc();
+  }, [data]);
 
   function insertImg(event: React.ChangeEvent<HTMLInputElement>) {
     let reader = new FileReader();
@@ -57,6 +75,10 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
 
     setImg([...imgArr]);
     setPreviewImg([...imgNameArr]);
+
+    setValues((prev) => {
+      return { ...prev, images: [...imgArr] };
+    });
   }
 
   return (
@@ -70,17 +92,14 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
         type="file"
         name="file"
         onChange={insertImg}
-        required
       />
       <PreviewContainer>
-        {img.map((el, index) => {
-          const { name } = el;
-
+        {previewImg.map((el, index) => {
           return (
             <PreviewImgContainer key={"upload-img" + index}>
               <PreviewImg src={previewImg[index]} />
               <TagDeleteButton onClick={(event) => deleteImg(event, index)}>
-                <PreviewName>{name} ❌</PreviewName>
+                <PreviewName>❌</PreviewName>
               </TagDeleteButton>
             </PreviewImgContainer>
           );

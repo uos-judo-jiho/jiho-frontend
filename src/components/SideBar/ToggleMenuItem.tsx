@@ -27,7 +27,6 @@ function ToggleMenuItem({
         <Row justifyContent="space-between" alignItems="center">
           <MenuItemTitle>{parentTitle}</MenuItemTitle>
           {selected ? <>-</> : <>+</>}
-          {/* <StyledPlus /> */}
         </Row>
       </MenuToggle>
       {/* TODO classify itemsInfo Object  */}
