@@ -5,7 +5,7 @@ export const StyledLabel = styled.label`
 `;
 
 export const FormContainer = styled.div`
-  background-color: white;
+  background-color: ${(props) => props.theme.bgColor};
   padding: 2rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 `;
@@ -47,14 +47,14 @@ export const StyledInput = styled.input`
     margin-top: 10px;
     cursor: pointer;
     font-size: ${(props) => props.theme.defaultFontSize};
-    background: #01d28e;
-    border: 1px solid #01d28e;
+    background: ${(props) => props.theme.primaryColor};
+    border: 1px solid ${(props) => props.theme.primaryColor};
     color: #fff;
     padding: 10px 20px;
   }
 
   &[type="submit"]:hover {
-    background: #6cf0c2;
+    opacity: 0.6;
   }
 
   &[type="date"] {
@@ -100,4 +100,17 @@ export const PreviewImg = styled.img`
 
 export const PreviewName = styled.span`
   font-size: ${(props) => props.theme.defaultFontSize};
+`;
+
+export const NewArticleButton = styled.button`
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: ${(props) => props.theme.defaultFontSize};
+  background: ${(props) => props.theme.primaryColor};
+  border: 1px solid ${(props) => props.theme.primaryColor};
+  color: #fff;
+  padding: 10px 20px;
+  &:hover {
+    opacity: 0.6;
+  }
 `;

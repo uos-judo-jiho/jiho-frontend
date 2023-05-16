@@ -5,6 +5,8 @@ import AdminTrainingLog from "../pages/admin/trainingLog/AdminTrainingLog";
 import AdminTrainingLogDetail from "../pages/admin/trainingLog/AdminTrainingLogDetail";
 import AdminNewsDetail from "../pages/admin/News/AdminNewsDetail";
 import WriteArticlePage from "../pages/admin/WriteArticlePage";
+import AdminNotice from "../pages/admin/Notice/AdminNotice";
+import AdminNoticeDetail from "../pages/admin/Notice/AdminNoticeDetail";
 
 function AdminRouter() {
   return (
@@ -17,6 +19,9 @@ function AdminRouter() {
       <Route path="news" element={<AdminNews />} />
       <Route path="news/:id" element={<AdminNewsDetail />} />
       <Route path="news/write" element={<WriteArticlePage />} />
+      <Route path="notice" element={<AdminNotice />} />
+      <Route path="notice/:id" element={<AdminNoticeDetail />} />
+      <Route path="notice/write" element={<WriteArticlePage />} />
     </Routes>
   );
 }

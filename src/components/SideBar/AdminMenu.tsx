@@ -29,6 +29,11 @@ function AdminMenu() {
           <MenuItemTitle>지호지</MenuItemTitle>
         </Link>
       </MenuItem>
+      <MenuItem>
+        <Link to={"/admin/notice"}>
+          <MenuItemTitle>공지사항</MenuItemTitle>
+        </Link>
+      </MenuItem>
     </MenuList>
   );
 }

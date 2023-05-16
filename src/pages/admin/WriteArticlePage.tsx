@@ -3,6 +3,7 @@ import NewsForm from "../../components/admin/form/NewsForm";
 import Title from "../../layouts/Title";
 import { Constants } from "../../constant/constant";
 import TrainingLogForm from "../../components/admin/form/TrainingLogForm";
+import NoticeForm from "../../components/admin/form/NoticeForm";
 
 function WriteArticlePage() {
   const pathname = window.location.pathname;
@@ -20,6 +21,13 @@ function WriteArticlePage() {
         <>
           <Title title={"지호지 글쓰기"} color={Constants.BLACK_COLOR} />
           <NewsForm />
+        </>
+      );
+    case "notice":
+      return (
+        <>
+          <Title title={"공지사항 글쓰기"} color={Constants.BLACK_COLOR} />
+          <NoticeForm />
         </>
       );
 

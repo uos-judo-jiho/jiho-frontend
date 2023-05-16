@@ -5,6 +5,7 @@ import FormContainer from "../../../components/admin/form/FormContainer";
 import ListContainer from "../../../layouts/ListContainer";
 import { NewsType } from "../../../types/NewsType";
 import { Link } from "react-router-dom";
+import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
 
 function AdminNews() {
   const [news, setNews] = useState<NewsType>();
@@ -19,7 +20,9 @@ function AdminNews() {
   return (
     <FormContainer title="지호지 관리">
       <Link to="/admin/news/write">
-        <button onClick={handleNewArticle}>새 글쓰기</button>
+        <NewArticleButton onClick={handleNewArticle}>
+          새 글쓰기
+        </NewArticleButton>
       </Link>
       <ListContainer
         datas={news.articles}
