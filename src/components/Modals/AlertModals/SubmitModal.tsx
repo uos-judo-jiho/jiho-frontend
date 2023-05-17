@@ -72,13 +72,10 @@ function SubmitModal({
   open,
   setOpen,
 }: SubmitModalProps) {
-  const naviagate = useNavigate();
   function handleCancel() {
     setOpen(false);
   }
-  function handleConfirm() {
-    naviagate(-1);
-  }
+  function handleConfirm() {}
   return (
     <>
       {open ? (

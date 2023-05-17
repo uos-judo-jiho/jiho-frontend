@@ -18,6 +18,8 @@ import {
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 import { ValuesType } from "./Type/ArticleType";
+import Loading from "../../Skeletons/Loading";
+import styled from "styled-components";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -33,9 +35,27 @@ const initValues = {
   images: [],
 };
 
+const LoadingWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10000;
+  background-color: rgba(0, 0, 0, 0.6);
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
 function ArticleForm({ data, type }: ArticleFormProps) {
   const [values, setValues] = useState<ValuesType>(initValues);
   const [open, setOpen] = useState<boolean>(false);
+  const [isSubmited, setIsSubmited] = useState<boolean>(false);
   const naviagate = useNavigate();
 
   useEffect(() => {
@@ -73,9 +93,12 @@ function ArticleForm({ data, type }: ArticleFormProps) {
     event.preventDefault();
     if (open) {
       // TODO API CALL
+      setIsSubmited(true);
       const res = await postBoard(type, values);
       console.log(values);
       console.log(res);
+      setIsSubmited(false);
+      naviagate(-1);
     } else {
       setOpen(true);
     }
@@ -143,7 +166,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
 
   function handleCancelSubmit(event: React.MouseEvent<HTMLButtonElement>) {
     // TODO 취소 모달 만들기
-
+    event.preventDefault();
     naviagate(-1);
   }
 
@@ -243,6 +266,15 @@ function ArticleForm({ data, type }: ArticleFormProps) {
           />
         </form>
       </FormContainer>
+      {isSubmited ? (
+        <LoadingWrapper>
+          <LoadingContainer>
+            <Loading />
+          </LoadingContainer>
+        </LoadingWrapper>
+      ) : (
+        <></>
+      )}
     </>
   );
 }

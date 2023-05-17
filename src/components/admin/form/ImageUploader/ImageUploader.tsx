@@ -25,7 +25,7 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
   useEffect(() => {
     async function _convertFileFromSrc() {
       let defaultFiles: File[] = [];
-      previewImg.map(async (previewImgsrc, index) => {
+      [...previewImg].map(async (previewImgsrc, index) => {
         const imgSrc = previewImgsrc;
         const file = await getImageFileFromSrc(imgSrc, index.toString());
         if (file) {
@@ -40,15 +40,34 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
   }, [data]);
 
   function insertImg(event: React.ChangeEvent<HTMLInputElement>) {
-    let reader = new FileReader();
+    if (isFull) {
+      alert("사진은 최대 10장까지 추가할 수 있습니다.");
+      return;
+    } else if (img.length > 10) {
+      setIsFull(true);
+      return;
+    }
 
-    if (event.target.files && event.target.files[0]) {
-      if (img.length > 10) {
-        setIsFull(true);
-        return;
+    let urlList = [...previewImg];
+
+    if (event.target.files) {
+      const files = Array.from(event.target.files);
+
+      for (let i = 0; i < files.length; i++) {
+        const currentImageUrl = URL.createObjectURL(files[i]);
+        urlList.push(currentImageUrl);
       }
-      reader.readAsDataURL(event.target.files[0]);
-      const newImgs = [...img, event.target.files[0]];
+
+      if (urlList.length > 10) {
+        urlList = urlList.slice(0, 10);
+      }
+      setPreviewImg(urlList);
+
+      let newImgs = [...img, ...files];
+
+      if (newImgs.length > 10) {
+        newImgs = newImgs.slice(0, 10);
+      }
 
       setImg(newImgs);
 
@@ -56,20 +75,13 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
         return { ...prev, images: newImgs };
       });
     }
-
-    reader.onloadend = () => {
-      const previewImgUrl = reader.result as string;
-
-      if (previewImgUrl) {
-        setPreviewImg([...previewImg, previewImgUrl]);
-      }
-    };
   }
 
   function deleteImg(
     event: React.MouseEvent<HTMLButtonElement>,
     index: number
   ) {
+    event.preventDefault();
     const imgArr = img.filter((el, idx) => idx !== index);
     const imgNameArr = previewImg.filter((el, idx) => idx !== index);
 
@@ -92,6 +104,7 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
         type="file"
         name="file"
         onChange={insertImg}
+        multiple
       />
       <PreviewContainer>
         {previewImg.map((el, index) => {
