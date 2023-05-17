@@ -51,9 +51,9 @@ function ArticleForm({ apiUrl, data, type }: ArticleFormProps) {
 
     async function _convertFileFromSrc() {
       let defaultFiles: File[] = [];
-      data?.imgSrcs.map(async (previewImgsrc) => {
+      data?.imgSrcs.map(async (previewImgsrc, index) => {
         const imgSrc = previewImgsrc;
-        const file = await getImageFileFromSrc(imgSrc);
+        const file = await getImageFileFromSrc(imgSrc, index.toString());
         if (file) {
           defaultFiles.push(file);
         }

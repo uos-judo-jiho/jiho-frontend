@@ -36,14 +36,17 @@ export function formaAwardsType(award: AwardsType): string {
   if (award.menGroup > 0) {
     result += " 남자 단체전 ";
     result += award.menGroup;
+    result += " 위";
   }
   if (award.womenGroup > 0) {
     result += " 여자 단체전 ";
     result += award.womenGroup;
+    result += " 위";
   }
   if (award.group > 0) {
     result += " 혼성 단체전 ";
     result += award.group;
+    result += " 위";
   }
 
   return result;
@@ -64,11 +67,13 @@ export function formatDateTime(dateTimeString: string): string {
   return resultList.join("-");
 }
 
-export async function getImageFileFromSrc(src: string) {
+export async function getImageFileFromSrc(src: string, filename: string) {
   try {
     const response = await fetch(src);
     const blob = await response.blob();
-    const file = new File([blob], "image.jpg", { type: blob.type });
+    const file = new File([blob], "image" + filename + ".jpg", {
+      type: blob.type,
+    });
     return file;
   } catch (error) {
     console.error("Error converting image source to File:", error);

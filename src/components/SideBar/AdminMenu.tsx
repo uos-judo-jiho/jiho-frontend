@@ -32,7 +32,7 @@ function AdminMenu() {
       <MenuItem>
         <Link to={"/admin/notice"}>
           {/* TODO 관리자 공지사항 완성 */}
-          <MenuItemTitle>공지사항 (미완)</MenuItemTitle>
+          <MenuItemTitle>공지사항</MenuItemTitle>
         </Link>
       </MenuItem>
     </MenuList>

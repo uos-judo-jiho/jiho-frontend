@@ -68,6 +68,7 @@ export const StyledTextArea = styled.textarea`
   height: 300px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   resize: none;
+  line-height: 160%;
 `;
 
 export const TagsContainer = styled.div`

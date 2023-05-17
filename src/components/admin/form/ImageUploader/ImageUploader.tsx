@@ -25,9 +25,9 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
   useEffect(() => {
     async function _convertFileFromSrc() {
       let defaultFiles: File[] = [];
-      previewImg.map(async (previewImgsrc) => {
+      previewImg.map(async (previewImgsrc, index) => {
         const imgSrc = previewImgsrc;
-        const file = await getImageFileFromSrc(imgSrc);
+        const file = await getImageFileFromSrc(imgSrc, index.toString());
         if (file) {
           defaultFiles.push(file);
         }

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import FormContainer from "../../../components/admin/form/FormContainer";
 import { Link } from "react-router-dom";
+import demoNotice from "../../../assets/jsons/tmpNotice.json";
+import FormContainer from "../../../components/admin/form/FormContainer";
 import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "../../../layouts/ListContainer";
-import useFetchData from "../../../Hooks/useFetchData";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import demoNotice from "../../../assets/jsons/tmpNotice.json";
 
 function AdminNotice() {
   const [articleArray, setArticleArray] = useState<ArticleInfoType[]>();
