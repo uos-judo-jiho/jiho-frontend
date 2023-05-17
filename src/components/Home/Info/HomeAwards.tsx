@@ -3,7 +3,7 @@ import Col from "../../../layouts/Col";
 
 import Awards from "../../../assets/jsons/awards.json";
 import styled from "styled-components";
-import { AwardsType } from "../../../types/AwardsType";
+import { AwardsType } from "../../../types/TAwards";
 import { formaAwardsType } from "../../../utils/Utils";
 
 const AwardsItem = styled.li`

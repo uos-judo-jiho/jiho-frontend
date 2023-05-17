@@ -1,4 +1,9 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { postBoard } from "../../../api/postBoard";
+import { ArticleInfoType } from "../../../types/ArticleInfoType";
+import { getImageFileFromSrc } from "../../../utils/Utils";
+import SubmitModal from "../../Modals/AlertModals/SubmitModal";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
@@ -13,13 +18,8 @@ import {
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 import { ValuesType } from "./Type/ArticleType";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import { Link, useNavigate } from "react-router-dom";
-import { getImageFileFromSrc } from "../../../utils/Utils";
-import SubmitModal from "../../Modals/AlertModals/SubmitModal";
 
 type ArticleFormProps = {
-  apiUrl: string;
   data?: ArticleInfoType;
   type: string;
 };
@@ -33,7 +33,7 @@ const initValues = {
   images: [],
 };
 
-function ArticleForm({ apiUrl, data, type }: ArticleFormProps) {
+function ArticleForm({ data, type }: ArticleFormProps) {
   const [values, setValues] = useState<ValuesType>(initValues);
   const [open, setOpen] = useState<boolean>(false);
   const naviagate = useNavigate();
@@ -69,11 +69,13 @@ function ArticleForm({ apiUrl, data, type }: ArticleFormProps) {
 
   if (!values) return <></>;
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (open) {
       // TODO API CALL
+      const res = await postBoard(type, values);
       console.log(values);
+      console.log(res);
     } else {
       setOpen(true);
     }
