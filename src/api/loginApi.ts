@@ -13,9 +13,13 @@ export async function loginApi(values: any) {
       "content-type": "form-data",
     },
   };
-
-  return await axios
-    .post(Constants.BASE_URL + methodUrl, formData)
-    .then((response) => response.data)
-    .catch((error) => error);
+  try {
+    const res = await axios
+      .post(Constants.BASE_URL + methodUrl, formData)
+      .then((response) => response.data)
+      .catch((error) => error);
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
 }

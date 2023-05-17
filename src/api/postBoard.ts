@@ -23,7 +23,12 @@ export async function postBoard(boardType: string, data: ValuesType) {
       "content-type": "form-data",
     },
   };
-  return await axios
-    .post(Constants.BASE_URL + methodUrl, formData, config)
-    .then((response) => response.data);
+  try {
+    const res = await axios
+      .post(Constants.BASE_URL + methodUrl, formData, config)
+      .then((response) => response.data);
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
 }
