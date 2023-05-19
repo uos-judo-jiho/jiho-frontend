@@ -173,7 +173,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
   return (
     <>
       <FormContainer>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} method="post">
           <InputContainer>
             <StyledLabel htmlFor="author" aria-required="true">
               작성자
