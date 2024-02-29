@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function useTouchScroll(actions: Function[]) {
+const useTouchScroll = (actions: Function[]) => {
   const [tochedX, setTochedX] = useState<number>(0);
   const [tochedY, setTochedY] = useState<number>(0);
 
@@ -20,4 +20,6 @@ export function useTouchScroll(actions: Function[]) {
     }
   };
   return { onTouchStart, onTouchEnd };
-}
+};
+
+export default useTouchScroll;

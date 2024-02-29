@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { menuItemInfoType } from "../../types/menuItemInfoType";
+import { MenuItemInfoType } from "../../types/MenuItemInfoType";
 
 type SlideSubMenuProps = {
   selected: boolean;
   menuId: string;
-  itemsInfo: menuItemInfoType[];
+  itemsInfo: MenuItemInfoType[];
 };
 
 const slideDown = (count: number) => keyframes`

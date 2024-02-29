@@ -7,12 +7,8 @@ export default function useGoogleAnalytics() {
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (
-      !window.location.href.includes("localhost") &&
-      process.env.REACT_APP_GA_TRACKING_ID
-    ) {
-      // 환경 변수 사용
-      ReactGA.initialize(process.env.REACT_APP_GA_TRACKING_ID);
+    if (!window.location.href.includes("localhost")) {
+      ReactGA.initialize("G-TLK4ZTXFH0");
     }
 
     setInitialized(true);

@@ -7,17 +7,32 @@ import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
 import Title from "../layouts/Title";
 
+import { redirect, useParams } from "react-router-dom";
+import useBodyScrollLock from "../Hooks/useBodyScrollLock";
+import useFetchData from "../Hooks/useFetchData";
+import useKeyEscClose from "../Hooks/useKeyEscClose";
 import { getTrainings } from "../api/trainingApi";
 import MyHelmet from "../helmet/MyHelmet";
-import { useBodyScrollLock } from "../Hooks/useBodyScrollLock";
-import { useKeyEscClose } from "../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../types/ArticleInfoType";
-import useFetchData from "../Hooks/useFetchData";
-import { useParams } from "react-router-dom";
-import { redirect } from "react-router-dom";
 
 // TODO 무한 스크롤 구현
 function Photo() {
+  const openModal = () => {
+    setModalOpen(true);
+    lockScroll();
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    openScroll();
+  };
+  const handleClickCard = (index: number) => {
+    if (!modalOpen) {
+      openModal();
+      setPhotoIdx(index);
+    }
+  };
+
   const { id } = useParams<string>();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [photoIdx, setPhotoIdx] = useState<number>(0);
@@ -43,26 +58,17 @@ function Photo() {
 
   useEffect(() => {
     if (trainingLogArray && id) {
-      if (parseInt(id) < trainingLogArray.length) handleClickCard(parseInt(id));
+      if (parseInt(id) < trainingLogArray.length) {
+        if (!modalOpen) {
+          setModalOpen(true);
+          lockScroll();
+          setPhotoIdx(parseInt(id));
+        }
+      }
     } else {
       redirect("./photo");
     }
-  }, [id, trainingLogArray]);
-
-  function openModal() {
-    setModalOpen(true);
-    lockScroll();
-  }
-  function closeModal() {
-    setModalOpen(false);
-    openScroll();
-  }
-  function handleClickCard(index: number) {
-    if (!modalOpen) {
-      openModal();
-      setPhotoIdx(index);
-    }
-  }
+  }, [id, lockScroll, modalOpen, trainingLogArray]);
 
   if (!Array.isArray(trainingLogArray) || trainingLogArray.length <= 0) {
     return null;

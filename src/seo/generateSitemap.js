@@ -1,5 +1,5 @@
 require("babel-register")({
-  presets: ["es5", "react"],
+  presets: ["es6", "react"],
 });
 
 const router = require("./sitemapRoutes").default;
