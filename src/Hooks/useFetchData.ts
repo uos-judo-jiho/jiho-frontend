@@ -19,7 +19,7 @@ const useFetchData = (apiMethod: any, params?: any) => {
       setResponse(res);
       setLoading(false);
     } catch (err) {
-      setError(err as boolean);
+      setError(!!err);
     }
   }, [apiMethod, params]);
 
