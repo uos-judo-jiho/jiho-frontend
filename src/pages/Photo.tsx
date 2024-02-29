@@ -9,11 +9,8 @@ import Title from "../layouts/Title";
 
 import { redirect, useParams } from "react-router-dom";
 import useBodyScrollLock from "../Hooks/useBodyScrollLock";
-import useFetchData from "../Hooks/useFetchData";
 import useKeyEscClose from "../Hooks/useKeyEscClose";
-import { getTrainings } from "../api/trainingApi";
 import MyHelmet from "../helmet/MyHelmet";
-import { ArticleInfoType } from "../types/ArticleInfoType";
 import { useTrainings } from "../recoills/tranings";
 
 // TODO 무한 스크롤 구현
@@ -66,7 +63,7 @@ function Photo() {
             {trainings.map((trainingLog, index) => {
               return (
                 <ThumbnailCard
-                  key={"trainingLog" + trainingLog.id}
+                  key={trainingLog.id}
                   imgSrc={trainingLog?.imgSrcs[0] ?? ""}
                   dateTime={trainingLog.dateTime}
                   handleClickCard={handleClickCard}

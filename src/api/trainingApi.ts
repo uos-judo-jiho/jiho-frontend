@@ -8,6 +8,8 @@ export const getTrainings = async (
   year: string
 ): Promise<ArticleInfoType[]> => {
   return await axios
-    .get<ArticleInfoType[]>(Constants.BASE_URL + methodUrl + year)
-    .then((response) => response.data);
+    .get<{ trainingLogs: ArticleInfoType[] }>(
+      Constants.BASE_URL + methodUrl + year
+    )
+    .then((response) => response.data.trainingLogs);
 };
