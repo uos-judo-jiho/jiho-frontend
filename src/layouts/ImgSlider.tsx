@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { Constants } from "../constant/constant";
-import { useTouchScroll } from "../Hooks/useTouchScroll";
+import useTouchScroll from "../Hooks/useTouchScroll";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 type ImgSliderProps = {

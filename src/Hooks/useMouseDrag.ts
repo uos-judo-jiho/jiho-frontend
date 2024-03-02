@@ -21,6 +21,12 @@ export function useMouseDrag(action: Function) {
     if (dragSpaceY > 100) {
       action();
     }
-  }, [mouseUpClientX]);
+  }, [
+    action,
+    mouseDownClientX,
+    mouseDownClientY,
+    mouseUpClientX,
+    mouseUpClientY,
+  ]);
   return { onMouseDown, onMouseUp };
 }

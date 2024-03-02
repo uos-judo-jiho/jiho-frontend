@@ -1,20 +1,22 @@
 import { useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import AppRouter from "./routers/AppRouter";
 import { GlobalStyle } from "./theme/GlobalStyle";
 import { darkTheme, lightTheme } from "./theme/theme";
-import useGoogleAnalytics from "./ga/googleAnalytics";
-import { BrowserRouter } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 function App() {
   const [isDark, setIsDart] = useState(false);
 
   return (
-    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-      <GlobalStyle />
-      <BrowserRouter>
-        <AppRouter />
-      </BrowserRouter>
-    </ThemeProvider>
+    <RecoilRoot>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <GlobalStyle />
+        <BrowserRouter>
+          <AppRouter />
+        </BrowserRouter>
+      </ThemeProvider>
+    </RecoilRoot>
   );
 }
 

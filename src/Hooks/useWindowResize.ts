@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 var delay = 500;
 var timer: any = null;
 
-export function useWindowResize(TargetEl?: HTMLElement) {
+const useWindowResize = (TargetEl?: HTMLElement) => {
   const [elWidth, setElWidth] = useState<number>();
 
   if (!TargetEl) {
@@ -17,4 +17,6 @@ export function useWindowResize(TargetEl?: HTMLElement) {
   }
 
   return elWidth;
-}
+};
+
+export default useWindowResize;

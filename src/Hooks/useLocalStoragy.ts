@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export function useLocalStoragy(key: string, defaultValue: null | any) {
+const useLocalStoragy = (key: string, defaultValue: null | any) => {
   const [value, setValue] = useState(defaultValue);
 
   useEffect(() => {
@@ -9,4 +9,6 @@ export function useLocalStoragy(key: string, defaultValue: null | any) {
   }, [key, value]);
 
   return [value, setValue];
-}
+};
+
+export default useLocalStoragy;

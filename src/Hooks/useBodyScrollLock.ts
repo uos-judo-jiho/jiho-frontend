@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 
-export function useBodyScrollLock() {
+const useBodyScrollLock = () => {
   let scrollPosition = 0;
   const lockScroll = useCallback(() => {
     // for IOS safari
@@ -18,7 +18,9 @@ export function useBodyScrollLock() {
     document.body.style.removeProperty("top");
     document.body.style.removeProperty("width");
     window.scrollTo(0, scrollPosition);
-  }, []);
+  }, [scrollPosition]);
 
   return { lockScroll, openScroll };
-}
+};
+
+export default useBodyScrollLock;

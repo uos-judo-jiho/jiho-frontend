@@ -1,4 +1,4 @@
-export interface menuItemInfoType {
+export interface MenuItemInfoType {
   href: string;
   title: string;
 }
