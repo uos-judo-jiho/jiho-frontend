@@ -5,6 +5,7 @@ import { getTrainings } from "../../../api/trainingApi";
 import useFetchData from "../../../Hooks/useFetchData";
 import Col from "../../../layouts/Col";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
+import { useTrainings } from "../../../recoills/tranings";
 
 const Stack = styled.div`
   width: 100%;
@@ -75,32 +76,18 @@ const Thumbnail = styled.img`
 `;
 
 function ExerciseThumbnail() {
-  const [thumbnailData, setThumbnailData] = useState<ArticleInfoType>();
-
-  // TODO 훈련일지는 이번 년도 데이터 가져오기
-  // 혹은 백에서 가장 최근 데이터만 주기
-
-  const { loading, error, response } = useFetchData(getTrainings, "2022");
-
-  useEffect(() => {
-    if (!loading && !error && response) {
-      // 가장 최근 데이터만 가져오기
-      const data = response.trainingLogs[response.trainingLogs.length - 1];
-      setThumbnailData(data);
-    }
-  }, [loading, error, response]);
-
-  if (!thumbnailData) return null;
+  const { trainings } = useTrainings();
+  const lastTraningData = trainings[trainings.length - 1];
 
   return (
     <Container>
       <Link to={"/Photo"}>
         <Stack>
-          <Thumbnail src={thumbnailData.imgSrcs[0]} />
+          <Thumbnail src={lastTraningData?.imgSrcs[0]} />
           <HoveredContainer>
             <Col justifyContent="center" alignItems="center">
               <HoveredSpan>훈련 일지</HoveredSpan>
-              <HoveredSpan>{thumbnailData.dateTime}</HoveredSpan>
+              <HoveredSpan>{lastTraningData?.dateTime}</HoveredSpan>
               <HoveredSpan fontSize={"0.5rem"}>자세히 보기</HoveredSpan>
             </Col>
           </HoveredContainer>

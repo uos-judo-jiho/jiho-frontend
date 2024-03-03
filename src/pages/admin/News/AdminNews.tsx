@@ -1,21 +1,12 @@
-import { useEffect, useState } from "react";
-import useFetchData from "../../../Hooks/useFetchData";
-import { getNews } from "../../../api/newsApi";
-import FormContainer from "../../../components/admin/form/FormContainer";
-import ListContainer from "../../../layouts/ListContainer";
-import { NewsType } from "../../../types/NewsType";
 import { Link } from "react-router-dom";
+import FormContainer from "../../../components/admin/form/FormContainer";
 import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
+import ListContainer from "../../../layouts/ListContainer";
+import { useNews } from "../../../recoills/news";
 
 function AdminNews() {
-  const [news, setNews] = useState<NewsType>();
-  const { loading, error, response } = useFetchData(getNews, "2022");
+  const { news } = useNews();
 
-  useEffect(() => {
-    setNews(response);
-  }, [loading, error, response]);
-
-  if (!news) return null;
   function handleNewArticle(event: React.MouseEvent<HTMLButtonElement>) {}
   return (
     <FormContainer title="지호지 관리">

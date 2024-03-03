@@ -16,7 +16,3 @@ export type ArticleInfoFormDataType = {
   tags: string[];
   description: string;
 };
-
-export type TrainingLogsType = {
-  trainingLogs: Array<ArticleInfoType>;
-};

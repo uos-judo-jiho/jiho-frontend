@@ -3,14 +3,14 @@ import styled from "styled-components";
 
 import PhotoModal from "../Modals/PhotoModal";
 
-import { useBodyScrollLock } from "../../Hooks/useBodyScrollLock";
-import { useKeyEscClose } from "../../Hooks/useKeyEscClose";
+import { redirect } from "react-router-dom";
+import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
+import useKeyEscClose from "../../Hooks/useKeyEscClose";
 import { Constants } from "../../constant/constant";
 import Col from "../../layouts/Col";
 import Row from "../../layouts/Row";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
-import { redirect } from "react-router-dom";
 
 type NewsCardProps = {
   index: number;

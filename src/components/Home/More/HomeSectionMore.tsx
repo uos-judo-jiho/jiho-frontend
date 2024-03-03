@@ -26,7 +26,7 @@ function HomeSectionMore() {
       <Container>
         <Title title={"개시글 전체보기"} color={Constants.LOGO_BLACK} />
         <GridContainer>
-          <MoreCard
+          {/* <MoreCard
             title="공지사항"
             description="공지사항 보러가기"
             linkTo="/notice"
@@ -40,7 +40,7 @@ function HomeSectionMore() {
             title="지호지"
             description="지호지 보러가기"
             linkTo="/news/2022"
-          />
+          /> */}
         </GridContainer>
       </Container>
     </SheetWrapper>
