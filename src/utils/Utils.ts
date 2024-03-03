@@ -71,7 +71,7 @@ export async function getImageFileFromSrc(src: string, filename: string) {
   try {
     const response = await fetch(src);
     const blob = await response.blob();
-    const file = new File([blob], "image" + filename + ".jpg", {
+    const file = new File([blob], "image" + filename + ".png", {
       type: blob.type,
     });
     return file;
