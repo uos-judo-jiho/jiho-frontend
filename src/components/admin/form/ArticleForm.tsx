@@ -87,9 +87,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
     setValues(defaultValues);
   }, [data]);
 
-  if (!values) return <></>;
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (open) {
       // TODO API CALL
@@ -100,38 +98,40 @@ function ArticleForm({ data, type }: ArticleFormProps) {
     } else {
       setOpen(true);
     }
-  }
+  };
 
-  function handleAuthorChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues((prev) => {
       return { ...prev, author: event.target.value };
     });
-  }
-  function handleTitleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  };
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues((prev) => {
       return { ...prev, title: event.target.value };
     });
-  }
+  };
 
-  function handleDescriptionChange(
+  const handleDescriptionChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
-  ) {
+  ) => {
     setValues((prev) => {
       return { ...prev, description: event.target.value };
     });
-  }
-  function handleTagsChange(
+  };
+
+  const handleTagsChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     index: number
-  ) {
+  ) => {
     setValues((prev) => {
       let oldTags = [...prev.tags];
       oldTags[index] = event.target.value;
       return { ...prev, tags: oldTags };
     });
-  }
+  };
 
-  function handleAddTagsClick(event: React.MouseEvent<HTMLButtonElement>) {
+  const handleAddTagsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
     setValues((prev) => {
@@ -139,12 +139,12 @@ function ArticleForm({ data, type }: ArticleFormProps) {
       newTags.push("");
       return { ...prev, tags: newTags };
     });
-  }
+  };
 
-  function handleDeleteTagClick(
+  const handleDeleteTagClick = (
     event: React.MouseEvent<HTMLButtonElement>,
     index: number
-  ) {
+  ) => {
     event.preventDefault();
 
     setValues((prev) => {
@@ -154,19 +154,19 @@ function ArticleForm({ data, type }: ArticleFormProps) {
 
       return { ...prev, tags: changedTags };
     });
-  }
+  };
 
-  function handleDateChange(event: React.ChangeEvent<HTMLInputElement>) {
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues((prev) => {
       return { ...prev, dateTime: event.target.value };
     });
-  }
+  };
 
-  function handleCancelSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+  const handleCancelSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     // TODO 취소 모달 만들기
     event.preventDefault();
     naviagate(-1);
-  }
+  };
 
   return (
     <>
@@ -264,14 +264,12 @@ function ArticleForm({ data, type }: ArticleFormProps) {
           />
         </form>
       </FormContainer>
-      {isSubmited ? (
+      {isSubmited && (
         <LoadingWrapper>
           <LoadingContainer>
             <Loading />
           </LoadingContainer>
         </LoadingWrapper>
-      ) : (
-        <></>
       )}
     </>
   );

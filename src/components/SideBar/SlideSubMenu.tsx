@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import { MenuItemInfoType } from "../../types/MenuItemInfoType";
+import { MenuItemInfoType } from "../../types/menuItemInfoType";
 
 type SlideSubMenuProps = {
   selected: boolean;

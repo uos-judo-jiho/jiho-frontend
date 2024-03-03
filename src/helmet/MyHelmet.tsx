@@ -4,12 +4,12 @@ type MyHelmetProps = {
   helmet: string;
 };
 
-function MyHelmet({ helmet }: MyHelmetProps) {
+const MyHelmet = ({ helmet }: MyHelmetProps) => {
   useEffect(() => {
     document.title = "Uos Judo Team Jiho | " + helmet;
   }, [helmet]);
 
   return <></>;
-}
+};
 
 export default MyHelmet;
