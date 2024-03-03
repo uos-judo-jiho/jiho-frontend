@@ -9,11 +9,11 @@ import {
   StyledLabel,
   TagDeleteButton,
 } from "../StyledComponent/FormContainer";
-import { ValuesType } from "../Type/ArticleType";
+import { ArticleType } from "../Type/ArticleType";
 import { getImageFileFromSrc } from "../../../../utils/Utils";
 
 type ImageUploaderProps = {
-  setValues: React.Dispatch<React.SetStateAction<ValuesType>>;
+  setValues: React.Dispatch<React.SetStateAction<ArticleType>>;
   data?: string[];
 };
 
@@ -37,7 +37,7 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
       }
     }
     _convertFileFromSrc();
-  }, [data]);
+  }, [data, previewImg]);
 
   function insertImg(event: React.ChangeEvent<HTMLInputElement>) {
     if (isFull) {

@@ -1,50 +1,30 @@
 import axios from "axios";
 import { Constants } from "../constant/constant";
-import { ValuesType } from "../components/admin/form/Type/ArticleType";
+import { ArticleType } from "../components/admin/form/Type/ArticleType";
+import { toBase64 } from "../utils/Utils";
 
 const methodUrl = "api/upload/";
-export async function postBoard(boardType: string, data: ValuesType) {
-  const formData = new FormData();
-  //   const Srcs = [...data.images];
-  //   formData.append(
-  //     "pictures",
-  //     new Blob([JSON.stringify(Srcs)], { type: "multipart/form-data" })
-  //   );
-  data.images.forEach((src) => {
-    formData.append("pictures", src);
-  });
-
-  const jsonFile = {
-    title: data.title,
-    author: data.author,
-    description: data.description,
-    dataTime: data.dateTime,
-    tags: [...data.tags],
-    boardType: boardType,
-  };
-  //   formData.append("title", data.title);
-  //   formData.append("author", data.author);
-  //   formData.append("description", data.description);
-  //   formData.append("dateTime", data.dateTime);
-  //   data.tags.forEach((tag) => {
-  //     formData.append("tags", tag);
-  //   });
-  //   formData.append("boardType", boardType);
-
-  formData.append(
-    "uploadBoardDto",
-    new Blob([JSON.stringify(jsonFile)], { type: "application/json" })
-    // JSON.stringify(jsonFile)
-  );
-  const config = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  };
-
+export async function postBoard(boardType: string, data: ArticleType) {
   try {
+    const images: string[] = [];
+
+    for await (const imgs of data.images) {
+      const imgBase64 = await toBase64(imgs);
+      if (typeof imgBase64 === "string") {
+        images.push(imgBase64);
+      }
+    }
+
     const res = await axios
-      .post(Constants.BASE_URL + methodUrl, formData, config)
+      .post(Constants.BASE_URL + methodUrl, {
+        title: data.title,
+        author: data.author,
+        description: data.description,
+        dateTime: data.dateTime,
+        tags: data.tags,
+        boardType: boardType,
+        image: images,
+      })
       .then((response) => {
         if (response.data.status === 200) {
           return response.data;

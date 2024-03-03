@@ -17,7 +17,7 @@ import {
   TagDeleteButton,
   TagsContainer,
 } from "./StyledComponent/FormContainer";
-import { ValuesType } from "./Type/ArticleType";
+import { ArticleType } from "./Type/ArticleType";
 import Loading from "../../Skeletons/Loading";
 import styled from "styled-components";
 
@@ -53,14 +53,14 @@ const LoadingContainer = styled.div`
 `;
 
 function ArticleForm({ data, type }: ArticleFormProps) {
-  const [values, setValues] = useState<ValuesType>(initValues);
+  const [values, setValues] = useState<ArticleType>(initValues);
   const [open, setOpen] = useState<boolean>(false);
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
   const naviagate = useNavigate();
 
   useEffect(() => {
     if (!data) return;
-    let defaultValues: ValuesType = {
+    let defaultValues: ArticleType = {
       author: data.author,
       title: data.title,
       tags: data.tags,
@@ -95,8 +95,6 @@ function ArticleForm({ data, type }: ArticleFormProps) {
       // TODO API CALL
       setIsSubmited(true);
       const res = await postBoard(type, values);
-      console.log(values);
-      console.log(res);
       setIsSubmited(false);
       naviagate(-1);
     } else {
