@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ReactGA from "react-ga";
 
-export default function useGoogleAnalytics() {
+const useGoogleAnalytics = () => {
   const location = useLocation();
   const [initialized, setInitialized] = useState(false);
 
@@ -19,4 +19,6 @@ export default function useGoogleAnalytics() {
       ReactGA.pageview(location.pathname + location.search);
     }
   }, [initialized, location]);
-}
+};
+
+export default useGoogleAnalytics;

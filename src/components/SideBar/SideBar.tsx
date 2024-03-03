@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -44,7 +44,7 @@ const StyledClose = styled(CloseSvg)`
   cursor: pointer;
 `;
 
-function SideBar({ isOpen, setIsOpen }: SideBarProps) {
+const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   const outside = useRef<any>();
 
   const initSelected = [false, false];
@@ -67,16 +67,16 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
     };
   });
 
-  function handlerOutside(e: any) {
+  const handlerOutside = (e: any) => {
     if (!outside.current.contains(e.target)) {
       toggleSide();
     }
-  }
+  };
 
-  function toggleSide() {
+  const toggleSide = () => {
     setSelected(initSelected);
     setIsOpen(false);
-  }
+  };
 
   return (
     <>
@@ -92,6 +92,6 @@ function SideBar({ isOpen, setIsOpen }: SideBarProps) {
       </Container>
     </>
   );
-}
+};
 
 export default SideBar;

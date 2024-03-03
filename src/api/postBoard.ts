@@ -4,7 +4,10 @@ import { ArticleType } from "../components/admin/form/Type/ArticleType";
 import { toBase64 } from "../utils/Utils";
 
 const methodUrl = "api/upload/";
-export async function postBoard(boardType: string, data: ArticleType) {
+export const postBoard = async (
+  boardType: "news" | "training" | "notice",
+  data: ArticleType
+) => {
   try {
     const images: string[] = [];
 
@@ -37,4 +40,4 @@ export async function postBoard(boardType: string, data: ArticleType) {
     console.error(error);
     return error;
   }
-}
+};

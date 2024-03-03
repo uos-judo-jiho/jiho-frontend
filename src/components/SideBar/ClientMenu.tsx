@@ -9,8 +9,8 @@ import {
 } from "./MenuStyledComponents";
 import ToggleMenuItem from "./ToggleMenuItem";
 
-function ClientMenu({ selected, setSelected }: MenuProps) {
-  function handleClickMenu(id: MENUID) {
+const ClientMenu = ({ selected, setSelected }: MenuProps) => {
+  const handleClickMenu = (id: MENUID) => {
     let current;
     switch (id) {
       case MENUID.newsToggleMenu:
@@ -24,7 +24,7 @@ function ClientMenu({ selected, setSelected }: MenuProps) {
       default:
         break;
     }
-  }
+  };
   return (
     <MenuList>
       <MenuItem>
@@ -57,6 +57,6 @@ function ClientMenu({ selected, setSelected }: MenuProps) {
       </MenuItem>
     </MenuList>
   );
-}
+};
 
 export default ClientMenu;
