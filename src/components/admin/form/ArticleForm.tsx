@@ -23,7 +23,7 @@ import styled from "styled-components";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
-  type: string;
+  type: "news" | "training" | "notice";
 };
 
 const initValues = {
