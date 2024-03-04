@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useWindowResize } from "../Hooks/useWindowResize";
+import useWindowResize from "../Hooks/useWindowResize";
 
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 

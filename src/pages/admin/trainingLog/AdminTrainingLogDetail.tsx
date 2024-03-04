@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import useFetchData from "../../../Hooks/useFetchData";
-import { getTrainings } from "../../../api/trainingApi";
 import TrainingLogForm from "../../../components/admin/form/TrainingLogForm";
 import { Constants } from "../../../constant/constant";
 import Title from "../../../layouts/Title";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
+import { useTrainings } from "../../../recoills/tranings";
 
 function AdminTrainingLogDetail() {
   const { id } = useParams();
-  const [trainingLogArray, setTrainingLogArray] = useState<ArticleInfoType[]>();
-  const [trainingLog, setTrainingLog] = useState<ArticleInfoType>();
 
   /*
     TODO 
@@ -18,24 +13,8 @@ function AdminTrainingLogDetail() {
     1. 퀴리 요청에서 순차적으로 2022, 2023, ... 으로 프론트에서 계속 요청
     2. 백에서 한번에 다주기
   */
-  const { loading, error, response } = useFetchData(getTrainings, "2022");
-
-  useEffect(() => {
-    if (!loading && !error && response) {
-      const reversedDatas = response.trainingLogs.slice(0).reverse();
-      setTrainingLogArray(reversedDatas);
-    }
-  }, [loading, error, response]);
-
-  useEffect(() => {
-    const targetArticle = trainingLogArray?.find(
-      (item) => item.id.toString() === id
-    );
-
-    setTrainingLog(targetArticle);
-  }, [trainingLogArray]);
-
-  if (!trainingLogArray || !trainingLog) return <></>;
+  const { trainings } = useTrainings();
+  const trainingLog = trainings.find((item) => item.id.toString() === id);
 
   return (
     <>

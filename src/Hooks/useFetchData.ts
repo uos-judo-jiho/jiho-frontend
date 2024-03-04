@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-function useFetchData(apiMethod: any, params?: any) {
+const useFetchData = (apiMethod: any, params?: any) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
   const [response, setResponse] = useState<any>();
 
   const sendQuery = useCallback(async () => {
     try {
-      await setLoading(true);
-      await setError(false);
-      var res = "";
+      setLoading(true);
+      setError(false);
+      let res = "";
       if (params) {
         res = await apiMethod(params);
       } else {
@@ -19,14 +19,14 @@ function useFetchData(apiMethod: any, params?: any) {
       setResponse(res);
       setLoading(false);
     } catch (err) {
-      setError(err as boolean);
+      setError(!!err);
     }
-  }, [params]);
+  }, [apiMethod, params]);
 
   useEffect(() => {
     sendQuery();
   }, [params, sendQuery, apiMethod]);
   return { loading, error, response };
-}
+};
 
 export default useFetchData;

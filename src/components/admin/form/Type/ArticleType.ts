@@ -1,4 +1,4 @@
-export type ValuesType = {
+export type ArticleType = {
   author: string;
   title: string;
   tags: string[];

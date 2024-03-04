@@ -71,7 +71,7 @@ export async function getImageFileFromSrc(src: string, filename: string) {
   try {
     const response = await fetch(src);
     const blob = await response.blob();
-    const file = new File([blob], "image" + filename + ".jpg", {
+    const file = new File([blob], "image" + filename + ".png", {
       type: blob.type,
     });
     return file;
@@ -80,3 +80,18 @@ export async function getImageFileFromSrc(src: string, filename: string) {
     return null;
   }
 }
+
+export const toBase64 = async (file: File): Promise<string | unknown> => {
+  try {
+    const data = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};

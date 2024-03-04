@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import YouTube from "react-youtube";
 
 const Container = styled.div`
   position: relative;
@@ -14,7 +13,7 @@ function ExerciseVideo() {
   return (
     <Container>
       <VideoWrapper>
-        <YouTube
+        {/* <YouTube
           // TODO videoID 바꾸기
           videoId="-4mtPGtQGBQ"
           opts={{
@@ -30,7 +29,7 @@ function ExerciseVideo() {
           onEnd={(e) => {
             e.target.stopVideo(0);
           }}
-        />
+        /> */}
       </VideoWrapper>
     </Container>
   );

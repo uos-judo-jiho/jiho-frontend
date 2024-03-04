@@ -1,31 +1,14 @@
 import { useParams } from "react-router-dom";
 import NewsForm from "../../../components/admin/form/NewsForm";
-import { useEffect, useState } from "react";
-import { NewsType } from "../../../types/NewsType";
-import useFetchData from "../../../Hooks/useFetchData";
-import { getNews } from "../../../api/newsApi";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import Title from "../../../layouts/Title";
 import { Constants } from "../../../constant/constant";
+import Title from "../../../layouts/Title";
+import { useNews } from "../../../recoills/news";
 
 function AdminNewsDetail() {
   const { id } = useParams();
 
-  const [news, setNews] = useState<NewsType>();
-  const [article, setArticle] = useState<ArticleInfoType>();
-  const { loading, error, response } = useFetchData(getNews, "2022");
-
-  useEffect(() => {
-    const newNews = response as NewsType;
-    setNews(newNews);
-  }, [loading, error, response]);
-
-  useEffect(() => {
-    const targetArticle = news?.articles.find(
-      (item) => item.id.toString() === id
-    );
-    setArticle(targetArticle);
-  }, [news]);
+  const { news } = useNews();
+  const article = news.articles.find((item) => item.id.toString() === id);
 
   if (!news || !article) return null;
 
