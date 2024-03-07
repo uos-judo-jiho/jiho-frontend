@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prod:start": "npm run build && serve -s build",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "wbuild": "set\"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
@@ -50,7 +51,8 @@
   },
   "devDependencies": {
     "@types/styled-components": "^5.1.26",
-    "babel-plugin-import": "^1.13.6"
+    "babel-plugin-import": "^1.13.6",
+    "serve": "^14.2.1"
   },
   "proxy": "https://uosjudo.com"
 }

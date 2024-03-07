@@ -6,10 +6,15 @@ import SheetWrapper from "../../layouts/SheetWrapper";
 import Title from "../../layouts/Title";
 import { useNews } from "../../recoills/news";
 import { TNewsParams } from "../../types/TNewsParams";
+import { useEffect } from "react";
 
 function NewsDetail() {
   const { id, index } = useParams<TNewsParams>();
-  const { news } = useNews();
+  const { news, fetch } = useNews();
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   return (
     <>
