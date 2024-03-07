@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { login } from "../../../api/login";
+import { login } from "../../../api/admin/login";
 import {
   ButtonContainer,
   FormContainer,

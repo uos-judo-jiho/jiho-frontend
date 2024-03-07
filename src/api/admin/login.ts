@@ -1,8 +1,8 @@
 import axios from "axios";
-import { Constants } from "../constant/constant";
+import { Constants } from "../../constant/constant";
 
 export async function login(values: any) {
-  const methodUrl = "api/login";
+  const methodUrl = "api/admin/login";
 
   try {
     const res = await axios

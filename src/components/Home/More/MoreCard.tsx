@@ -1,20 +1,15 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Row from "../../../layouts/Row";
-import { useEffect, useState } from "react";
-import useFetchData from "../../../Hooks/useFetchData";
-import { getTrainings } from "../../../api/training";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import { getNews } from "../../../api/news";
-import demoNotice from "../../../assets/jsons/tmpNotice.json";
 
 type MoreCardProps = {
   title: string;
-  description: string;
+  data: ArticleInfoType[];
   linkTo: string;
 };
 
-const FETCH_DATA_LEN = 8;
+const DATA_LEN = 8;
 
 const Card = styled.div`
   width: 100%;
@@ -64,60 +59,8 @@ const More = styled.p`
   }
 `;
 
-function MoreCard({ title, linkTo, description }: MoreCardProps) {
-  const [datas, setDatas] = useState<string[]>([]);
-  const [cardType, setCardType] = useState<string>(title);
-
-  // TODO 훈련일지는 이번 년도 데이터 가져오기
-  // 혹은 백에서 가장 최근 데이터만 주기
-
-  const { loading, error, response } = useFetchData(
-    title === "훈련일지" ? getTrainings : getNews,
-    "2022"
-  );
-
-  useEffect(() => {
-    if (!loading && !error && response) {
-      // 가장 최근 데이터만 가져오기
-
-      if (title === "훈련일지") {
-        setCardType("photo");
-        const sliceDatas = response.trainingLogs
-          .slice(0)
-          .reverse()
-          .slice(0, FETCH_DATA_LEN);
-
-        const datas = sliceDatas.map(
-          (log: ArticleInfoType) =>
-            "[ " + log.dateTime + " ] " + log.author + " " + log.description
-        );
-        setDatas(datas);
-      } else if (title === "지호지") {
-        setCardType("news/2022");
-        const sliceDatas = response.articles.slice(0, FETCH_DATA_LEN);
-
-        const datas = sliceDatas.map(
-          (log: ArticleInfoType) =>
-            "[ " + log.author + " ] " + " " + log.description
-        );
-
-        setDatas(datas);
-      } else if (title === "공지사항") {
-        setCardType("notice");
-        // TODO api 적용
-        const sliceDatas = demoNotice.slice(0, FETCH_DATA_LEN);
-
-        const datas = sliceDatas.map(
-          (log: ArticleInfoType) =>
-            "[ " + log.dateTime + " ] " + " " + log.title
-        );
-
-        setDatas(datas);
-      }
-    }
-  }, [loading, error, response]);
-
-  if (!datas) return <></>;
+function MoreCard({ title, linkTo, data }: MoreCardProps) {
+  const boardData = data.slice(0, DATA_LEN);
   return (
     <Card>
       <Container>
@@ -128,11 +71,11 @@ function MoreCard({ title, linkTo, description }: MoreCardProps) {
           </Link>
         </Row>
         <ItemList>
-          {datas.map((data, index) => {
+          {boardData.map((item, index) => {
             return (
               <Item key={title + index}>
-                <Link to={cardType + "/" + index}>
-                  <ItemWrapper>{data}</ItemWrapper>
+                <Link to={linkTo + "/" + item.id}>
+                  <ItemWrapper>{`[${item.dateTime}] ${item.description}`}</ItemWrapper>
                 </Link>
               </Item>
             );

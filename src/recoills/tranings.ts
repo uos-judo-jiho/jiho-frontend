@@ -17,7 +17,6 @@ export const useTrainings = () => {
       return;
     }
     const newTrainingList = await getTrainings("2022");
-
     if (!newTrainingList) {
       return;
     }
