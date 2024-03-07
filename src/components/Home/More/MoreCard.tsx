@@ -3,9 +3,9 @@ import styled from "styled-components";
 import Row from "../../../layouts/Row";
 import { useEffect, useState } from "react";
 import useFetchData from "../../../Hooks/useFetchData";
-import { getTrainings } from "../../../api/trainingApi";
+import { getTrainings } from "../../../api/training";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import { getNews } from "../../../api/newsApi";
+import { getNews } from "../../../api/news";
 import demoNotice from "../../../assets/jsons/tmpNotice.json";
 
 type MoreCardProps = {

@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { atom, useRecoilState } from "recoil";
-import { getTrainings } from "../api/trainingApi";
+import { getTrainings } from "../api/training";
 import { ArticleInfoType } from "../types/ArticleInfoType";
 
 const TrainingList = atom<ArticleInfoType[]>({

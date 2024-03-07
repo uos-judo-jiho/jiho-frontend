@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Constants } from "../constant/constant";
 
-export async function loginApi(values: any) {
+export async function login(values: any) {
   const methodUrl = "api/login";
 
   try {

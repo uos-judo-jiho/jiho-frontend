@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { loginApi } from "../../../api/loginApi";
+import { login } from "../../../api/login";
 import {
   ButtonContainer,
   FormContainer,
@@ -51,7 +51,7 @@ function AdminLogin({ setIsLogin }: AdminLoginProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const res = await loginApi(loginValue);
+    const res = await login(loginValue);
 
     if (res === "Accept Login") {
       setIsLogin(true);

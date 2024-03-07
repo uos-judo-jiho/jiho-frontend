@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { getTrainings } from "../../../api/trainingApi";
+import { getTrainings } from "../../../api/training";
 import useFetchData from "../../../Hooks/useFetchData";
 import Col from "../../../layouts/Col";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
