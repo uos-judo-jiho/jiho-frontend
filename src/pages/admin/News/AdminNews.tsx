@@ -3,9 +3,14 @@ import FormContainer from "../../../components/admin/form/FormContainer";
 import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "../../../layouts/ListContainer";
 import { useNews } from "../../../recoills/news";
+import { useEffect } from "react";
 
 function AdminNews() {
-  const { news } = useNews();
+  const { news, fetch } = useNews();
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   function handleNewArticle(event: React.MouseEvent<HTMLButtonElement>) {}
   return (
