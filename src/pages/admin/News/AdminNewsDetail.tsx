@@ -3,12 +3,17 @@ import NewsForm from "../../../components/admin/form/NewsForm";
 import { Constants } from "../../../constant/constant";
 import Title from "../../../layouts/Title";
 import { useNews } from "../../../recoills/news";
+import { useEffect } from "react";
 
 function AdminNewsDetail() {
   const { id } = useParams();
 
-  const { news } = useNews();
+  const { news, fetch } = useNews();
   const article = news.articles.find((item) => item.id.toString() === id);
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   if (!news || !article) return null;
 

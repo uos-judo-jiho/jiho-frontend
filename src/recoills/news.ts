@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { atom, useRecoilState } from "recoil";
-import { getNews } from "../api/newsApi";
+import { getNews } from "../api/news";
 import { NewsType } from "../types/NewsType";
 
 const NewList = atom<NewsType>({
