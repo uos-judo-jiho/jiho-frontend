@@ -53,7 +53,7 @@ function AdminLogin({ setIsLogin }: AdminLoginProps) {
 
     const res = await login(loginValue);
 
-    if (res === "Accept Login") {
+    if (res || !res?.message) {
       setIsLogin(true);
     } else {
       alert("로그인에 실패하였습니다.");

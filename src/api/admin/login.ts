@@ -19,8 +19,10 @@ export async function login(values: any) {
       )
       .then((response) => response.data)
       .catch((error) => error);
+
     return res;
   } catch (error) {
     console.error(error);
+    return false;
   }
 }
