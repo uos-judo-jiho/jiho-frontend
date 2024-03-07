@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { postBoard } from "../../../api/postBoard";
+import styled from "styled-components";
+import { uploadBoard } from "../../../api/admin/upload";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import { getImageFileFromSrc } from "../../../utils/Utils";
+import { getImageFileFromSrc, toBase64 } from "../../../utils/Utils";
 import SubmitModal from "../../Modals/AlertModals/SubmitModal";
+import Loading from "../../Skeletons/Loading";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
@@ -18,8 +20,6 @@ import {
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 import { ArticleType } from "./Type/ArticleType";
-import Loading from "../../Skeletons/Loading";
-import styled from "styled-components";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -90,9 +90,33 @@ function ArticleForm({ data, type }: ArticleFormProps) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (open) {
-      // TODO API CALL
       setIsSubmited(true);
-      const res = await postBoard(type, values);
+
+      const images: string[] = [];
+      for await (const imgs of values.images) {
+        const imgBase64 = await toBase64(imgs);
+        if (typeof imgBase64 === "string") {
+          images.push(imgBase64);
+        }
+      }
+
+      const res = await uploadBoard(
+        {
+          title: values.title,
+          author: values.author,
+          description: values.description,
+          dateTime: values.dateTime,
+          tags: values.tags,
+          imgSrcs: images,
+        },
+        type
+      );
+
+      if (!res) {
+        console.error("upload error");
+        alert("업로드에 실패하였습니다.");
+      }
+
       setIsSubmited(false);
       naviagate(-1);
     } else {
