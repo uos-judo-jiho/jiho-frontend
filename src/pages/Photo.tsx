@@ -37,7 +37,11 @@ function Photo() {
   const escKey = useKeyEscClose(closeModal);
   const { lockScroll, openScroll } = useBodyScrollLock();
 
-  const { trainings } = useTrainings();
+  const { trainings, fetch } = useTrainings();
+
+  useEffect(() => {
+    fetch();
+  }, []);
 
   useEffect(() => {
     if (trainings && id) {
