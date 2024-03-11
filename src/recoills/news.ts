@@ -47,14 +47,13 @@ export const useNews = () => {
     [_filterNews, isLoad, news, setNews]
   );
 
-  const refreshNew = useCallback(
-    (year: "2022" | "2023" | "2024" = "2022") => {
-      _filterNews(news);
-      setIsLoad(false);
-      fetch(year);
-    },
-    [_filterNews, fetch, news]
-  );
+  const refreshNew = useCallback(() => {
+    _filterNews(news);
+    setIsLoad(false);
+    ["2022", "2023", "2024"].forEach(async (year) => {
+      await fetch(year as "2022" | "2023" | "2024");
+    });
+  }, [_filterNews, fetch, news]);
 
   return { fetch, refreshNew, news };
 };

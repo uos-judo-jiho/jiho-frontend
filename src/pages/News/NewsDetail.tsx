@@ -13,7 +13,10 @@ function NewsDetail() {
   const { news, fetch } = useNews();
 
   useEffect(() => {
-    fetch();
+    if (["2022", "2023", "2024"].includes(id?.toString() ?? "")) {
+      const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
+      fetch(year ?? "2022");
+    }
   }, []);
 
   const currentPageNews = news.find(

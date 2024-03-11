@@ -16,7 +16,10 @@ function AdminNewsDetail() {
     ?.articles.find((item) => item.id.toString() === id);
 
   useEffect(() => {
-    fetch();
+    (async () => {
+      await fetch("2022");
+      await fetch("2024");
+    })();
   }, []);
 
   if (!news || !article) return null;
