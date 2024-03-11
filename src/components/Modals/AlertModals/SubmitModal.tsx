@@ -34,6 +34,7 @@ const ModalContainer = styled.div`
 `;
 
 const CloseButton = styled.button``;
+
 const StyledButton = css`
   margin-top: 10px;
   cursor: pointer;
@@ -79,7 +80,7 @@ function SubmitModal({
     onSubmit && onSubmit();
   }
 
-  if (open) return <></>;
+  if (!open) return <></>;
 
   return (
     <Container>
