@@ -21,7 +21,9 @@ export const useTrainings = () => {
       return;
     }
 
-    setTrainings(newTrainingList);
+    setTrainings(
+      newTrainingList.sort((a, b) => (a.dateTime > b.dateTime ? -1 : 1))
+    );
     setIsLoad(true);
   }, [isLoad, setTrainings]);
 

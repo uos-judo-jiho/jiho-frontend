@@ -6,6 +6,7 @@ import MoreCard from "./MoreCard";
 import { useNews } from "../../../recoills/news";
 import { useTrainings } from "../../../recoills/tranings";
 import { useEffect } from "react";
+import { useNotices } from "../../../recoills/notices";
 
 const Container = styled.div``;
 
@@ -24,22 +25,22 @@ const GridContainer = styled.div`
 `;
 
 function HomeSectionMore() {
-  const { news, fetch: newsFetch } = useNews();
-  const { trainings, fetch: trainingsFetch } = useTrainings();
-
-  useEffect(() => {
-    newsFetch();
-    trainingsFetch();
-  }, []);
+  const { news } = useNews();
+  const { trainings } = useTrainings();
+  const { notices } = useNotices();
 
   return (
     <SheetWrapper>
       <Container>
         <Title title={"게시글 전체보기"} color={Constants.LOGO_BLACK} />
         <GridContainer>
-          {/* <MoreCard title="공지사항" linkTo="/notice" /> */}
+          <MoreCard title="공지사항" linkTo="/notice" data={notices} />
           <MoreCard title="훈련일지" linkTo="/photo" data={trainings} />
-          <MoreCard title="지호지" linkTo="/news/2022" data={news.articles} />
+          <MoreCard
+            title="지호지"
+            linkTo="/news/2022"
+            data={news[0]?.articles || []}
+          />
         </GridContainer>
       </Container>
     </SheetWrapper>

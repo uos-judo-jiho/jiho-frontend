@@ -10,7 +10,7 @@ function AdminHomePage() {
 
   return (
     <>
-      <MyHelmet helmet="Admin" />
+      <MyHelmet title="Admin" />
       <DefaultLayout>
         <SheetWrapper>
           {isLogin ? <AdminRouter /> : <AdminLogin setIsLogin={setIsLogin} />}

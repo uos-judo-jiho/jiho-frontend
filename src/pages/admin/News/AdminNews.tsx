@@ -6,10 +6,14 @@ import { useNews } from "../../../recoills/news";
 import { useEffect } from "react";
 
 function AdminNews() {
-  const { news, fetch } = useNews();
+  const { news, refreshNew } = useNews();
+  const articles = news
+    .map((newsData) => newsData.articles)
+    .flat()
+    .sort((a, b) => (a.id > b.id ? -1 : 1));
 
   useEffect(() => {
-    fetch();
+    refreshNew();
   }, []);
 
   function handleNewArticle(event: React.MouseEvent<HTMLButtonElement>) {}
@@ -21,7 +25,7 @@ function AdminNews() {
         </NewArticleButton>
       </Link>
       <ListContainer
-        datas={news.articles}
+        datas={articles}
         targetUrl={"/admin/news/"}
         additionalTitle={true}
       ></ListContainer>

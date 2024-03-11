@@ -1,28 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import demoNotice from "../../../assets/jsons/tmpNotice.json";
 import FormContainer from "../../../components/admin/form/FormContainer";
 import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "../../../layouts/ListContainer";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
+import { useNotices } from "../../../recoills/notices";
 
 function AdminNotice() {
-  const [articleArray, setArticleArray] = useState<ArticleInfoType[]>();
-
+  const { notices, fetch } = useNotices();
   useEffect(() => {
-    setArticleArray(demoNotice);
+    fetch();
   }, []);
-
-  //   const { loading, error, response } = useFetchData(getTrainings, "2022");
-
-  //   useEffect(() => {
-  //     if (!loading && !error && response) {
-  //       const reversedDatas = response.trainingLogs.slice(0).reverse();
-  //       setArticleArray(reversedDatas);
-  //     }
-  //   }, [loading, error, response]);
-
-  if (!articleArray) return <></>;
 
   function handleNewArticle(event: React.MouseEvent<HTMLButtonElement>) {}
 
@@ -33,7 +20,7 @@ function AdminNotice() {
           새 글쓰기
         </NewArticleButton>
       </Link>
-      <ListContainer datas={articleArray} targetUrl={"/admin/notice/"} />
+      <ListContainer datas={notices} targetUrl={"/admin/notice/"} />
     </FormContainer>
   );
 }

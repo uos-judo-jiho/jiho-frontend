@@ -12,6 +12,7 @@ import NoticeDescription from "../../components/Notice/NoticeDetail/NoticeDescri
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import NoticeFooter from "../../components/Notice/NoticeDetail/NoticeFooter";
+import { useNotices } from "../../recoills/notices";
 
 const TitleWrapper = styled.div`
   width: min-content;
@@ -23,19 +24,29 @@ const TitleWrapper = styled.div`
 
 function NoticeDetail() {
   const { id } = useParams();
-  const [data, setData] = useState<ArticleInfoType>();
+  const { notices, fetch } = useNotices();
+
   useEffect(() => {
-    if (id) {
-      const fetchData = demoNotice.find((value) => value.id === id);
-      setData(fetchData);
-    }
-  }, [id]);
+    fetch();
+  }, []);
+
+  const data = notices.find((value) => value.id === id);
 
   if (!data) return <></>;
 
+  const metaDescription = [data.title, data.description.slice(0, 80)].join(
+    " | "
+  );
+
+  const metaImgUrl = data.imgSrcs[0];
+
   return (
     <>
-      <MyHelmet helmet="Notice" />
+      <MyHelmet
+        title="Notice"
+        description={metaDescription}
+        imgUrl={metaImgUrl}
+      />
       <DefaultLayout>
         <SheetWrapper>
           <TitleWrapper>

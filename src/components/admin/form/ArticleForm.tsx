@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { uploadBoard } from "../../../api/admin/upload";
+import {
+  deleteBoard,
+  updateBoard,
+  uploadBoard,
+} from "../../../api/admin/board";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 import { getImageFileFromSrc, toBase64 } from "../../../utils/Utils";
 import SubmitModal from "../../Modals/AlertModals/SubmitModal";
@@ -54,9 +58,12 @@ const LoadingContainer = styled.div`
 
 function ArticleForm({ data, type }: ArticleFormProps) {
   const [values, setValues] = useState<ArticleType>(initValues);
-  const [open, setOpen] = useState<boolean>(false);
+  const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
   const naviagate = useNavigate();
+
+  const isNew = !data;
 
   useEffect(() => {
     if (!data) return;
@@ -89,7 +96,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (open) {
+    if (isSubmitOpen) {
       setIsSubmited(true);
 
       const images: string[] = [];
@@ -99,18 +106,33 @@ function ArticleForm({ data, type }: ArticleFormProps) {
           images.push(imgBase64);
         }
       }
-
-      const res = await uploadBoard(
-        {
-          title: values.title,
-          author: values.author,
-          description: values.description,
-          dateTime: values.dateTime,
-          tags: values.tags,
-          imgSrcs: images,
-        },
-        type
-      );
+      let res;
+      if (isNew) {
+        res = await uploadBoard(
+          {
+            title: values.title,
+            author: values.author,
+            description: values.description,
+            dateTime: values.dateTime,
+            tags: values.tags,
+            imgSrcs: images,
+          },
+          type
+        );
+      } else {
+        res = await updateBoard(
+          {
+            id: data.id,
+            title: values.title,
+            author: values.author,
+            description: values.description,
+            dateTime: values.dateTime,
+            tags: values.tags,
+            imgSrcs: images,
+          },
+          type
+        );
+      }
 
       if (!res) {
         console.error("upload error");
@@ -120,7 +142,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
       setIsSubmited(false);
       naviagate(-1);
     } else {
-      setOpen(true);
+      setIsSubmitOpen(true);
     }
   };
 
@@ -190,6 +212,11 @@ function ArticleForm({ data, type }: ArticleFormProps) {
     // TODO 취소 모달 만들기
     event.preventDefault();
     naviagate(-1);
+  };
+
+  const handleDeleteSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setIsDeleteOpen(true);
   };
 
   return (
@@ -276,17 +303,39 @@ function ArticleForm({ data, type }: ArticleFormProps) {
           </InputContainer>
           <ImageUploader setValues={setValues} data={data?.imgSrcs} />
           <ButtonContainer>
-            <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
-            <StyledInput type="submit" />
+            {!isNew && (
+              <CancelButton onClick={handleDeleteSubmit}>삭제</CancelButton>
+            )}
+            <>
+              <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
+              <StyledInput type="submit" />
+            </>
           </ButtonContainer>
           <SubmitModal
             confirmText={"확인"}
             cancelText={"취소"}
             description={"변경사항을 저장하시겠습니까?"}
-            open={open}
-            setOpen={setOpen}
+            open={isSubmitOpen}
+            setOpen={setIsSubmitOpen}
           />
         </form>
+        {!isNew && (
+          <SubmitModal
+            confirmText={"삭제"}
+            cancelText={"취소"}
+            description={"게시물을 삭제하기겠습니까?"}
+            open={isDeleteOpen}
+            setOpen={setIsDeleteOpen}
+            onSubmit={async () => {
+              const res = await deleteBoard(data.id);
+              if (res) {
+                alert("게시물을 삭제하였습니다!");
+              } else {
+                alert("게시물을 삭제에 실패하였습니다!");
+              }
+            }}
+          />
+        )}
       </FormContainer>
       {isSubmited && (
         <LoadingWrapper>

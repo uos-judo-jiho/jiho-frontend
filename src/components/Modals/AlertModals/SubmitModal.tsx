@@ -2,8 +2,6 @@ import React from "react";
 import styled, { css } from "styled-components";
 import Col from "../../../layouts/Col";
 import Row from "../../../layouts/Row";
-import { StyledInput } from "../../admin/form/StyledComponent/FormContainer";
-import { useNavigate } from "react-router-dom";
 
 type SubmitModalProps = {
   confirmText: string;
@@ -11,6 +9,7 @@ type SubmitModalProps = {
   description: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onSubmit?: () => void;
 };
 const Container = styled.div`
   position: fixed;
@@ -35,6 +34,7 @@ const ModalContainer = styled.div`
 `;
 
 const CloseButton = styled.button``;
+
 const StyledButton = css`
   margin-top: 10px;
   cursor: pointer;
@@ -71,35 +71,33 @@ function SubmitModal({
   description,
   open,
   setOpen,
+  onSubmit,
 }: SubmitModalProps) {
   function handleCancel() {
     setOpen(false);
   }
-  function handleConfirm() {}
+  function handleConfirm() {
+    onSubmit && onSubmit();
+  }
+
+  if (!open) return <></>;
+
   return (
-    <>
-      {open ? (
-        <Container>
-          <ModalContainer>
-            <Col full>
-              <Description>{description}</Description>
-              <div>
-                <Row justifyContent="center">
-                  <CancelButton onClick={handleCancel}>
-                    {cancelText}
-                  </CancelButton>
-                  <ConfirmButton onClick={handleConfirm}>
-                    {confirmText}
-                  </ConfirmButton>
-                </Row>
-              </div>
-            </Col>
-          </ModalContainer>
-        </Container>
-      ) : (
-        <></>
-      )}
-    </>
+    <Container>
+      <ModalContainer>
+        <Col full>
+          <Description>{description}</Description>
+          <div>
+            <Row justifyContent="center">
+              <CancelButton onClick={handleCancel}>{cancelText}</CancelButton>
+              <ConfirmButton onClick={handleConfirm}>
+                {confirmText}
+              </ConfirmButton>
+            </Row>
+          </div>
+        </Col>
+      </ModalContainer>
+    </Container>
   );
 }
 

@@ -7,11 +7,13 @@ import { useEffect } from "react";
 
 function AdminTrainingLog() {
   const { trainings, fetch } = useTrainings();
+
   useEffect(() => {
     fetch();
   }, []);
 
   const handleNewArticle = (event: React.MouseEvent<HTMLButtonElement>) => {};
+
   return (
     <FormContainer title="훈련일지 관리">
       <Link to="/admin/training/write">
@@ -23,7 +25,7 @@ function AdminTrainingLog() {
         datas={trainings}
         targetUrl={"/admin/training/"}
         additionalTitle={true}
-      ></ListContainer>
+      />
     </FormContainer>
   );
 }

@@ -57,9 +57,20 @@ function Photo() {
     }
   }, [id, lockScroll, modalOpen, trainings]);
 
+  const metaDescription = [
+    trainings[0].title,
+    trainings[0].description.slice(0, 80),
+  ].join(" | ");
+
+  const metaImgUrl = trainings[0].imgSrcs[0];
+
   return (
     <>
-      <MyHelmet helmet="Photo" />
+      <MyHelmet
+        title="Photo"
+        description={metaDescription}
+        imgUrl={metaImgUrl}
+      />
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />

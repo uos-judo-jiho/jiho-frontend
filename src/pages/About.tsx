@@ -8,7 +8,7 @@ import SheetWrapper from "../layouts/SheetWrapper";
 function About() {
   return (
     <>
-      <MyHelmet helmet="About" />
+      <MyHelmet title="About" />
       <DefaultLayout>
         <SheetWrapper>
           <MobileRowColLayout rowJustifyContent="space-between">
