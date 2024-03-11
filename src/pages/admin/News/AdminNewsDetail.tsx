@@ -9,7 +9,11 @@ function AdminNewsDetail() {
   const { id } = useParams();
 
   const { news, fetch } = useNews();
-  const article = news.articles.find((item) => item.id.toString() === id);
+  const article = news
+    .find((newsData) =>
+      newsData.articles.find((item) => item.id.toString() === id)
+    )
+    ?.articles.find((item) => item.id.toString() === id);
 
   useEffect(() => {
     fetch();

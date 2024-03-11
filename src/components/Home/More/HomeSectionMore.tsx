@@ -30,7 +30,7 @@ function HomeSectionMore() {
   const { notices, fetch: noticesFetch } = useNotices();
 
   useEffect(() => {
-    newsFetch();
+    newsFetch("2022");
     trainingsFetch();
     noticesFetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -43,7 +43,11 @@ function HomeSectionMore() {
         <GridContainer>
           <MoreCard title="공지사항" linkTo="/notice" data={notices} />
           <MoreCard title="훈련일지" linkTo="/photo" data={trainings} />
-          <MoreCard title="지호지" linkTo="/news/2022" data={news.articles} />
+          <MoreCard
+            title="지호지"
+            linkTo="/news/2022"
+            data={news[0]?.articles || []}
+          />
         </GridContainer>
       </Container>
     </SheetWrapper>

@@ -16,13 +16,17 @@ function NewsDetail() {
     fetch();
   }, []);
 
+  const currentPageNews = news.find(
+    (newsData) => newsData.year.toString() === id?.toString()
+  );
+
   const metaDescription = [
-    news.year,
-    news.articles[0].title,
-    news.articles[0].description.slice(0, 80),
+    currentPageNews?.year,
+    currentPageNews?.articles[0].title,
+    currentPageNews?.articles[0].description.slice(0, 80),
   ].join(" | ");
 
-  const metaImgUrl = news.articles[0].imgSrcs[0];
+  const metaImgUrl = currentPageNews?.articles[0].imgSrcs[0];
 
   return (
     <>
@@ -35,8 +39,8 @@ function NewsDetail() {
         <SheetWrapper>
           <Title title={"지호지"} color="black" />
           <NewsIndex
-            articles={news.articles}
-            images={news.images}
+            articles={currentPageNews?.articles || []}
+            images={currentPageNews?.images || []}
             selectedIndex={parseInt(index as string)}
           />
         </SheetWrapper>

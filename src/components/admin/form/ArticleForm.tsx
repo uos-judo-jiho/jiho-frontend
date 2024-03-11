@@ -5,7 +5,7 @@ import {
   deleteBoard,
   updateBoard,
   uploadBoard,
-} from "../../../api/admin/upload";
+} from "../../../api/admin/board";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 import { getImageFileFromSrc, toBase64 } from "../../../utils/Utils";
 import SubmitModal from "../../Modals/AlertModals/SubmitModal";
