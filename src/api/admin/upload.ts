@@ -3,13 +3,13 @@ import { Constants } from "../../constant/constant";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import { Cookies } from "react-cookie";
 
-const methodUrl = "api/admin/upload/";
+const methodUrl = "api/admin/board/";
 
 /**
  * Create board
  * @description
  * ```bash
- * curl BASE_URL/api/admin/upload/
+ * curl BASE_URL/api/admin/board/
  * -X POST 
  * -d '{
         title: articleInfo.title,
@@ -61,10 +61,9 @@ export const uploadBoard = async (
  * Update board 
  * @description
  * ```bash
- * curl BASE_URL/api/admin/upload/
- * -X PATCH 
+ * curl BASE_URL/api/admin/board/${id}
+ * -X PUT 
  * -d '{
- *      id: articleInfo.id,
         title: articleInfo.title,
         author: articleInfo.author,
         boardType,
@@ -81,8 +80,8 @@ export const updateBoard = async (
 ) => {
   const cookies = new Cookies();
   try {
-    const res = await axios.patch(
-      `${Constants.BASE_URL}${methodUrl}`,
+    const res = await axios.put(
+      `${Constants.BASE_URL}${methodUrl}${articleInfo.id}`,
       {
         id: articleInfo.id,
         title: articleInfo.title,
@@ -114,26 +113,19 @@ export const updateBoard = async (
  * Delete board
  * @description
  * ```bash
- * curl BASE_URL/api/admin/upload/
- * -X DELETE 
- * --data "id=id&board=boardType"
+ * curl BASE_URL/api/admin/board/${id}
+ * -X DELETE
   ```
  */
-export const deleteBoard = async (
-  id: string,
-  boardType: "news" | "training" | "notice"
-) => {
+export const deleteBoard = async (id: string) => {
   const cookies = new Cookies();
   try {
-    const res = await axios.delete(
-      `${Constants.BASE_URL}${methodUrl}?id=${id}&board=${boardType}`,
-      {
-        headers: {
-          Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
-        },
-        withCredentials: true,
-      }
-    );
+    const res = await axios.delete(`${Constants.BASE_URL}${methodUrl}${id}`, {
+      headers: {
+        Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
+      },
+      withCredentials: true,
+    });
     if (res) {
       return true;
     }

@@ -326,7 +326,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               open={isDeleteOpen}
               setOpen={setIsDeleteOpen}
               onSubmit={async () => {
-                const res = await deleteBoard(data.id, type);
+                const res = await deleteBoard(data.id);
                 if (res) {
                   alert("개시물을 삭제하였습니다!");
                 } else {
