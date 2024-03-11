@@ -26,7 +26,6 @@ const AdminMenu = () => {
       </MenuItem>
       <MenuItem>
         <Link to={"/admin/notice"}>
-          {/* TODO 관리자 공지사항 완성 */}
           <MenuItemTitle>공지사항</MenuItemTitle>
         </Link>
       </MenuItem>
