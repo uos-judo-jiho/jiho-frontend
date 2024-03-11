@@ -25,16 +25,9 @@ const GridContainer = styled.div`
 `;
 
 function HomeSectionMore() {
-  const { news, fetch: newsFetch } = useNews();
-  const { trainings, fetch: trainingsFetch } = useTrainings();
-  const { notices, fetch: noticesFetch } = useNotices();
-
-  useEffect(() => {
-    newsFetch("2022");
-    trainingsFetch();
-    noticesFetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { news } = useNews();
+  const { trainings } = useTrainings();
+  const { notices } = useNotices();
 
   return (
     <SheetWrapper>

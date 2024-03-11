@@ -76,13 +76,9 @@ const Thumbnail = styled.img`
 `;
 
 function ExerciseThumbnail() {
-  const { trainings, fetch } = useTrainings();
+  const { trainings } = useTrainings();
 
   const lastTraningData = trainings[0];
-
-  useEffect(() => {
-    fetch();
-  }, []);
 
   return (
     <Container>
