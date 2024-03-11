@@ -318,24 +318,24 @@ function ArticleForm({ data, type }: ArticleFormProps) {
             open={isSubmitOpen}
             setOpen={setIsSubmitOpen}
           />
-          {!isNew && (
-            <SubmitModal
-              confirmText={"삭제"}
-              cancelText={"취소"}
-              description={"개시물을 삭제하기겠습니까?"}
-              open={isDeleteOpen}
-              setOpen={setIsDeleteOpen}
-              onSubmit={async () => {
-                const res = await deleteBoard(data.id);
-                if (res) {
-                  alert("개시물을 삭제하였습니다!");
-                } else {
-                  alert("개시물을 삭제에 실패하였습니다!");
-                }
-              }}
-            />
-          )}
         </form>
+        {!isNew && (
+          <SubmitModal
+            confirmText={"삭제"}
+            cancelText={"취소"}
+            description={"게시물을 삭제하기겠습니까?"}
+            open={isDeleteOpen}
+            setOpen={setIsDeleteOpen}
+            onSubmit={async () => {
+              const res = await deleteBoard(data.id);
+              if (res) {
+                alert("게시물을 삭제하였습니다!");
+              } else {
+                alert("게시물을 삭제에 실패하였습니다!");
+              }
+            }}
+          />
+        )}
       </FormContainer>
       {isSubmited && (
         <LoadingWrapper>

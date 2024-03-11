@@ -1,7 +1,7 @@
 import { createGlobalStyle, css } from "styled-components";
 
 export const MediaLayout = css`
-  @media (min-width: 1200px) and (max-width: 1799px) {
+  @media (min-width: 1200px) {
     width: 1080px;
   }
   @media (min-width: 860px) and (max-width: 1199px) {

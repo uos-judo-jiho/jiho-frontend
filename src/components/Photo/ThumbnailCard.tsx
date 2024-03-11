@@ -27,7 +27,7 @@ const HoveredContainer = styled.div`
   display: none;
   width: 100%;
   height: 100%;
-  font-size: 3vw;
+  font-size: 3.2rem;
   color: ${(props) => props.theme.bgColor};
   @media (min-width: 540px) {
     ${ImgWrapper}:hover & {
