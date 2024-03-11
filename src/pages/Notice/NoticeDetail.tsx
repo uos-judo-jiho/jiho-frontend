@@ -35,7 +35,7 @@ function NoticeDetail() {
 
   return (
     <>
-      <MyHelmet helmet="Notice" />
+      <MyHelmet title="Notice" />
       <DefaultLayout>
         <SheetWrapper>
           <TitleWrapper>

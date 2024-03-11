@@ -12,7 +12,7 @@ import ListContainer from "../../layouts/ListContainer";
 function Notice() {
   return (
     <>
-      <MyHelmet helmet="Notice" />
+      <MyHelmet title="Notice" />
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"공지사항"} color={Constants.BLACK_COLOR} />

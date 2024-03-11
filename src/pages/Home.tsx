@@ -10,7 +10,7 @@ import ScrollSnap from "../layouts/ScrollSnap";
 function Home() {
   return (
     <>
-      <MyHelmet helmet="Home" />
+      <MyHelmet title="Home" />
       <ScrollSnap>
         <DefaultLayout>
           <HomeSectionMain />

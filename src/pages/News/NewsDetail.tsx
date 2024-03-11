@@ -16,9 +16,21 @@ function NewsDetail() {
     fetch();
   }, []);
 
+  const metaDescription = [
+    news.year,
+    news.articles[0].title,
+    news.articles[0].description.slice(0, 80),
+  ].join(" | ");
+
+  const metaImgUrl = news.articles[0].imgSrcs[0];
+
   return (
     <>
-      <MyHelmet helmet="News" />
+      <MyHelmet
+        title="News"
+        description={metaDescription}
+        imgUrl={metaImgUrl}
+      />
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"지호지"} color="black" />
