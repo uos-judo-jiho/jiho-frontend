@@ -16,6 +16,7 @@ const Container = styled.h1<ContainerProps>`
   color: ${(props) =>
     props.color === "white" ? props.theme.bgColor : props.theme.blackColor};
   word-break: keep-all;
+  margin-bottom: 20px;
 `;
 
 function Title({

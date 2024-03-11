@@ -1,7 +1,6 @@
-import styled from "styled-components";
-import useLazyImage from "../../Hooks/useLazyImage";
-import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
 import { useState } from "react";
+import styled from "styled-components";
+import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
 
 type ThumbnailCardProps = {
   imgSrc: string;
@@ -10,7 +9,7 @@ type ThumbnailCardProps = {
   handleClickCard: (index: number) => void;
 };
 
-const ImgWrapper = styled.div`
+const ImgWrapper = styled.li`
   width: 100%;
   position: relative;
   &:hover {
@@ -70,7 +69,6 @@ function ThumbnailCard({
   }
 
   return (
-    // <ImgWrapper onClick={handleClick} ref={imgRef}>
     <ImgWrapper onClick={handleClick}>
       {isLoading ? (
         <Thumbnail loading="lazy" src={imgSrc} alt={"훈련 일지: " + dateTime} />

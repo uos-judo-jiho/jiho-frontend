@@ -75,7 +75,7 @@ function MoreCard({ title, linkTo, data }: MoreCardProps) {
             return (
               <Item key={title + index}>
                 <Link to={linkTo + "/" + item.id}>
-                  <ItemWrapper>{`[${item.dateTime}] ${item.description}`}</ItemWrapper>
+                  <ItemWrapper>{`[${item.author}] ${item.description}`}</ItemWrapper>
                 </Link>
               </Item>
             );
