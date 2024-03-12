@@ -8,11 +8,11 @@ import { useEffect } from "react";
 function AdminTrainingLogDetail() {
   const { id } = useParams();
 
-  const { trainings, fetch } = useTrainings();
+  const { trainings, refreshTraining } = useTrainings();
   const trainingLog = trainings.find((item) => item.id.toString() === id);
 
   useEffect(() => {
-    fetch();
+    refreshTraining();
   }, []);
 
   return (

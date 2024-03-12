@@ -7,10 +7,10 @@ import { useNotices } from "../../../recoills/notices";
 
 function AdminNoticeDetail() {
   const { id } = useParams();
-  const { notices, fetch } = useNotices();
+  const { notices, refreshNotice } = useNotices();
 
   useEffect(() => {
-    fetch();
+    refreshNotice();
   }, []);
 
   const targetArticle = notices.find((item) => item.id.toString() === id);

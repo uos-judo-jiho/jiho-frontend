@@ -24,10 +24,12 @@ import {
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 import { ArticleType } from "./Type/ArticleType";
+import { uploadPicture } from "../../../api/admin/pictures";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
   type: "news" | "training" | "notice";
+  gallery?: boolean;
 };
 
 const initValues = {
@@ -56,7 +58,7 @@ const LoadingContainer = styled.div`
   height: 100%;
 `;
 
-function ArticleForm({ data, type }: ArticleFormProps) {
+function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [values, setValues] = useState<ArticleType>(initValues);
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
@@ -107,31 +109,35 @@ function ArticleForm({ data, type }: ArticleFormProps) {
         }
       }
       let res;
-      if (isNew) {
-        res = await uploadBoard(
-          {
-            title: values.title,
-            author: values.author,
-            description: values.description,
-            dateTime: values.dateTime,
-            tags: values.tags,
-            imgSrcs: images,
-          },
-          type
-        );
+      if (gallery) {
+        res = await uploadPicture(values.dateTime.slice(0, 4), images);
       } else {
-        res = await updateBoard(
-          {
-            id: data.id,
-            title: values.title,
-            author: values.author,
-            description: values.description,
-            dateTime: values.dateTime,
-            tags: values.tags,
-            imgSrcs: images,
-          },
-          type
-        );
+        if (isNew) {
+          res = await uploadBoard(
+            {
+              title: values.title,
+              author: values.author,
+              description: values.description,
+              dateTime: values.dateTime,
+              tags: values.tags,
+              imgSrcs: images,
+            },
+            type
+          );
+        } else {
+          res = await updateBoard(
+            {
+              id: data.id,
+              title: values.title,
+              author: values.author,
+              description: values.description,
+              dateTime: values.dateTime,
+              tags: values.tags,
+              imgSrcs: images,
+            },
+            type
+          );
+        }
       }
 
       if (!res) {
@@ -228,6 +234,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               작성자
             </StyledLabel>
             <StyledInput
+              disabled={gallery}
               id="author"
               type="text"
               name="author"
@@ -241,6 +248,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               제목
             </StyledLabel>
             <StyledInput
+              disabled={gallery}
               id="title"
               type="text"
               name="title"
@@ -258,6 +266,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
                 <TagsContainer key={"tag" + index}>
                   {index + 1}
                   <StyledInput
+                    disabled={gallery}
                     id={"tag" + index}
                     name={"tag" + index}
                     onChange={(event) => handleTagsChange(event, index)}
@@ -281,6 +290,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               날짜
             </StyledLabel>
             <StyledInput
+              disabled={gallery}
               id="date"
               type="date"
               name="date"
@@ -294,6 +304,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               본문
             </StyledLabel>
             <StyledTextArea
+              disabled={gallery}
               id="description"
               name="description"
               onChange={handleDescriptionChange}
@@ -301,7 +312,11 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               value={values.description}
             />
           </InputContainer>
-          <ImageUploader setValues={setValues} data={data?.imgSrcs} />
+          <ImageUploader
+            setValues={setValues}
+            data={data?.imgSrcs}
+            imageLimit={gallery ? 20 : 10}
+          />
           <ButtonContainer>
             {!isNew && (
               <CancelButton onClick={handleDeleteSubmit}>삭제</CancelButton>
