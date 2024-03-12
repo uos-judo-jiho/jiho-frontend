@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import styled from "styled-components";
+import NoticeDescription from "../../components/Notice/NoticeDetail/NoticeDescription";
+import NoticeFooter from "../../components/Notice/NoticeDetail/NoticeFooter";
+import NoticeTitle from "../../components/Notice/NoticeDetail/NoticeTitle";
+import { Constants } from "../../constant/constant";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import SheetWrapper from "../../layouts/SheetWrapper";
 import Title from "../../layouts/Title";
-import { Constants } from "../../constant/constant";
-import demoNotice from "../../assets/jsons/tmpNotice.json";
-import { ArticleInfoType } from "../../types/ArticleInfoType";
-import NoticeTitle from "../../components/Notice/NoticeDetail/NoticeTitle";
-import NoticeDescription from "../../components/Notice/NoticeDetail/NoticeDescription";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import NoticeFooter from "../../components/Notice/NoticeDetail/NoticeFooter";
 import { useNotices } from "../../recoills/notices";
 
 const TitleWrapper = styled.div`

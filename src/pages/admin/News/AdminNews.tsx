@@ -4,6 +4,7 @@ import { NewArticleButton } from "../../../components/admin/form/StyledComponent
 import ListContainer from "../../../layouts/ListContainer";
 import { useNews } from "../../../recoills/news";
 import { useEffect } from "react";
+import Row from "../../../layouts/Row";
 
 function AdminNews() {
   const { news, refreshNew } = useNews();
@@ -16,14 +17,16 @@ function AdminNews() {
     refreshNew();
   }, []);
 
-  function handleNewArticle(event: React.MouseEvent<HTMLButtonElement>) {}
   return (
     <FormContainer title="지호지 관리">
-      <Link to="/admin/news/write">
-        <NewArticleButton onClick={handleNewArticle}>
-          새 글쓰기
-        </NewArticleButton>
-      </Link>
+      <Row gap={12}>
+        <Link to="/admin/news/write">
+          <NewArticleButton>새 글쓰기</NewArticleButton>
+        </Link>
+        <Link to="/admin/news/gallery">
+          <NewArticleButton>년도별 갤러리 보기</NewArticleButton>
+        </Link>
+      </Row>
       <ListContainer
         datas={articles}
         targetUrl={"/admin/news/"}
