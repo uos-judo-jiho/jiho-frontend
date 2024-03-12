@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   deleteBoard,
@@ -146,7 +146,8 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
       }
 
       setIsSubmited(false);
-      naviagate(-1);
+      alert("업로드에 성공하였습니다.");
+      redirect(`/admin/${type}/${gallery ? "gallery" : ""}`);
     } else {
       setIsSubmitOpen(true);
     }
@@ -329,7 +330,9 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           <SubmitModal
             confirmText={"확인"}
             cancelText={"취소"}
-            description={"변경사항을 저장하시겠습니까?"}
+            description={`${
+              isNew ? "변경사항" : "작성한 글"
+            }을 저장하시겠습니까?`}
             open={isSubmitOpen}
             setOpen={setIsSubmitOpen}
           />
@@ -345,6 +348,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               const res = await deleteBoard(data.id);
               if (res) {
                 alert("게시물을 삭제하였습니다!");
+                redirect(`/admin/${type}/${gallery ? "gallery" : ""}`);
               } else {
                 alert("게시물을 삭제에 실패하였습니다!");
               }
