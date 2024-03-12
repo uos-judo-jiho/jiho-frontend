@@ -20,6 +20,13 @@ const descriptionFontSize: string = Constants.DESCRIPTION_FONT_SIZE; // 18px
 const defaultFontSize: string = Constants.DEFAULT_FONT_SIZE; // 16px
 const tinyFontSize: string = Constants.TINY_FONT_SIZE; // 12px
 
+// Line Height
+const titleLineHeight: string = Constants.TITLE_LINE_HEIGHT; // 36px
+const subTitleLineHeight: string = Constants.SUB_TITLE_LINE_HEIGHT; // 30px
+const descriptionLineHeight: string = Constants.DESCRIPTION_LINE_HEIGHT; // 18px
+const defaultLineHeight: string = Constants.DEFAULT_LINE_HEIGHT; // 16px
+const tinyLineHeight: string = Constants.TINY_LINE_HEIGHT; // 12px
+
 export const darkTheme: DefaultTheme = {
   primaryColor: darkGreyColor,
   bgColor: darkGreyColor,
@@ -33,6 +40,11 @@ export const darkTheme: DefaultTheme = {
   descriptionFontSize: descriptionFontSize,
   defaultFontSize: defaultFontSize,
   tinyFontSize: tinyFontSize,
+  titleLineHeight: titleLineHeight,
+  subTitleLineHeight: subTitleLineHeight,
+  descriptionLineHeight: descriptionLineHeight,
+  defaultLineHeight: defaultLineHeight,
+  tinyLineHeight: tinyLineHeight,
 };
 
 export const lightTheme: DefaultTheme = {
@@ -48,4 +60,9 @@ export const lightTheme: DefaultTheme = {
   descriptionFontSize: descriptionFontSize,
   defaultFontSize: defaultFontSize,
   tinyFontSize: tinyFontSize,
+  titleLineHeight: titleLineHeight,
+  subTitleLineHeight: subTitleLineHeight,
+  descriptionLineHeight: descriptionLineHeight,
+  defaultLineHeight: defaultLineHeight,
+  tinyLineHeight: tinyLineHeight,
 };

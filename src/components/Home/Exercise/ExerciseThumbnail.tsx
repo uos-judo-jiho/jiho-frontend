@@ -89,7 +89,7 @@ function ExerciseThumbnail() {
             <Col justifyContent="center" alignItems="center">
               <HoveredSpan>훈련 일지</HoveredSpan>
               <HoveredSpan>{lastTraningData?.dateTime}</HoveredSpan>
-              <HoveredSpan fontSize={"0.5rem"}>자세히 보기</HoveredSpan>
+              <HoveredSpan fontSize={"1.2rem"}>자세히 보기</HoveredSpan>
             </Col>
           </HoveredContainer>
         </Stack>

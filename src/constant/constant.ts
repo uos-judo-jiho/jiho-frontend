@@ -24,6 +24,13 @@ export const Constants = {
   DESCRIPTION_FONT_SIZE: "1.8rem",
   DEFAULT_FONT_SIZE: "1.6rem",
   TINY_FONT_SIZE: "1.2rem",
+
+  // Line Height
+  TITLE_LINE_HEIGHT: "50px",
+  SUB_TITLE_LINE_HEIGHT: "45px",
+  DESCRIPTION_LINE_HEIGHT: "28px",
+  DEFAULT_LINE_HEIGHT: "24px",
+  TINY_LINE_HEIGHT: "18px",
 } as const;
 
 type T = typeof Constants;

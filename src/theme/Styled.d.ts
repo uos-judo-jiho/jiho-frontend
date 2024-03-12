@@ -14,5 +14,10 @@ declare module "styled-components" {
     descriptionFontSize: string;
     defaultFontSize: string;
     tinyFontSize: string;
+    titleLineHeight: string;
+    subTitleLineHeight: string;
+    descriptionLineHeight: string;
+    defaultLineHeight: string;
+    tinyLineHeight: string;
   }
 }
