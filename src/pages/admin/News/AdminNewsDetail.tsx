@@ -8,7 +8,7 @@ import { useEffect } from "react";
 function AdminNewsDetail() {
   const { id } = useParams();
 
-  const { news, fetch } = useNews();
+  const { news, refreshNew } = useNews();
   const article = news
     .find((newsData) =>
       newsData.articles.find((item) => item.id.toString() === id)
@@ -16,10 +16,7 @@ function AdminNewsDetail() {
     ?.articles.find((item) => item.id.toString() === id);
 
   useEffect(() => {
-    (async () => {
-      await fetch("2022");
-      await fetch("2024");
-    })();
+    refreshNew();
   }, []);
 
   if (!news || !article) return null;

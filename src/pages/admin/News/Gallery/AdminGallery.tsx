@@ -6,6 +6,7 @@ import Carousel from "../../../../layouts/Carousel";
 import Col from "../../../../layouts/Col";
 import Row from "../../../../layouts/Row";
 import { useNews } from "../../../../recoills/news";
+import { ReactComponent as LeftArrow } from "../../../../assets/svgs/arrow_forward_ios.svg";
 
 const YearTitle = styled.h3`
   font-size: 3.2rem;
@@ -24,13 +25,19 @@ const EmptyImageText = styled.div`
   text-align: center;
 `;
 
+const ForwardArrow = styled(LeftArrow)`
+  width: 2rem;
+`;
+
 const AdminGallery = () => {
   const { news, refreshNew } = useNews();
-  const galleries = news.map((newsData) => ({
-    year: newsData.year,
+  const galleries = news
+    .map((newsData) => ({
+      year: newsData.year,
 
-    images: newsData.images,
-  }));
+      images: newsData.images,
+    }))
+    .sort((a, b) => (a.year > b.year ? -1 : 1));
 
   useEffect(() => {
     refreshNew();
@@ -45,6 +52,7 @@ const AdminGallery = () => {
               <Row gap={4} alignItems="flex-end">
                 <YearTitle>{gallery.year}</YearTitle>
                 <LinkHelpText>년 갤러리 수정하기</LinkHelpText>
+                <ForwardArrow />
               </Row>
             </Link>
             {gallery.images.length ? (
