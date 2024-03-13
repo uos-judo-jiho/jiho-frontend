@@ -343,7 +343,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
             confirmText={"확인"}
             cancelText={"취소"}
             description={`${
-              isNew ? "변경사항" : "작성한 글"
+              !isNew ? "변경사항" : "작성한 글"
             }을 저장하시겠습니까?`}
             open={isSubmitOpen}
             setOpen={setIsSubmitOpen}

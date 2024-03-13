@@ -2,7 +2,7 @@ import { Cookies } from "react-cookie";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import axiosInstance from "../config";
 
-const METHOD_URL = "api/admin/board/";
+const METHOD_URL = "api/admin/board";
 
 /**
  * Create board
@@ -78,7 +78,7 @@ export const updateBoard = async (
   const cookies = new Cookies();
   try {
     const res = await axiosInstance({
-      url: METHOD_URL,
+      url: `${METHOD_URL}/${articleInfo.id}`,
       method: "PUT",
       headers: {
         Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
@@ -117,7 +117,7 @@ export const deleteBoard = async (id: string) => {
   const cookies = new Cookies();
   try {
     const res = await axiosInstance({
-      url: `${METHOD_URL}${id}`,
+      url: `${METHOD_URL}/${id}`,
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${cookies.get("JSESSIONID")}`,

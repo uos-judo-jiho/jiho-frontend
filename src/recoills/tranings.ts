@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
 import { getTrainings } from "../api/training";
 import { ArticleInfoType } from "../types/ArticleInfoType";
@@ -7,10 +7,14 @@ const TrainingList = atom<ArticleInfoType[]>({
   key: "trainingObject",
   default: [],
 });
+const isTrainingFecthed = atom<boolean>({
+  key: "isTrainingFecthed",
+  default: false,
+});
 
 export const useTrainings = () => {
   const [trainings, setTrainings] = useRecoilState(TrainingList);
-  const [isLoad, setIsLoad] = useState(false);
+  const [isLoad, setIsLoad] = useRecoilState(isTrainingFecthed);
 
   const fetch = useCallback(async () => {
     if (isLoad) {
@@ -25,12 +29,12 @@ export const useTrainings = () => {
       newTrainingList.sort((a, b) => (a.dateTime > b.dateTime ? -1 : 1))
     );
     setIsLoad(true);
-  }, [isLoad, setTrainings]);
+  }, [isLoad, setIsLoad, setTrainings]);
 
   const refreshTraining = useCallback(() => {
     setIsLoad(false);
     fetch();
-  }, [fetch]);
+  }, [fetch, setIsLoad]);
 
   return { fetch, refreshTraining, trainings };
 };

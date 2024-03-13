@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
 import { getNotices } from "../api/notice";
 import { ArticleInfoType } from "../types/ArticleInfoType";
@@ -8,9 +8,14 @@ const NoticeList = atom<ArticleInfoType[]>({
   default: [],
 });
 
+const isNoticeFecthed = atom<boolean>({
+  key: "isNoticeFecthed",
+  default: false,
+});
+
 export const useNotices = () => {
   const [notices, setNotices] = useRecoilState(NoticeList);
-  const [isLoad, setIsLoad] = useState(false);
+  const [isLoad, setIsLoad] = useRecoilState(isNoticeFecthed);
 
   const fetch = useCallback(async () => {
     if (isLoad) {
@@ -23,12 +28,12 @@ export const useNotices = () => {
 
     setNotices(newNoticeList);
     setIsLoad(true);
-  }, [isLoad, setNotices]);
+  }, [isLoad, setIsLoad, setNotices]);
 
   const refreshNotice = useCallback(() => {
     setIsLoad(false);
     fetch();
-  }, [fetch]);
+  }, [fetch, setIsLoad]);
 
   return { fetch, refreshNotice, notices };
 };

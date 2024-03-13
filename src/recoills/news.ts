@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
 import { getNews } from "../api/news";
 import { NewsType } from "../types/NewsType";
