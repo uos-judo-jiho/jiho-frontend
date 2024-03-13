@@ -76,7 +76,7 @@ const Container = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10000;
+  z-index: 1;
   background-color: rgba(0, 0, 0, 0.6);
 
   animation-duration: 0.25s;
@@ -118,7 +118,7 @@ const ArrowWrapper = styled.div<ArrowWrapperProps>`
 
 const CloseBtn = styled.button`
   position: absolute;
-  z-index: 999;
+  z-index: 1;
   top: 1rem;
   right: 1rem;
   width: 2rem;

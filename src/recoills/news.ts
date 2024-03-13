@@ -1,35 +1,67 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
-import { getNews } from "../api/newsApi";
+import { getNews } from "../api/news";
 import { NewsType } from "../types/NewsType";
 
-const NewList = atom<NewsType>({
+const NewList = atom<NewsType[]>({
   key: "newObject",
-  default: { year: "2022", images: [], articles: [] },
+  default: [],
+});
+
+const isNewFetched = atom<boolean>({
+  key: "isNewFetched",
+  default: false,
 });
 
 export const useNews = () => {
   const [news, setNews] = useRecoilState(NewList);
-  const [isLoad, setIsLoad] = useState(false);
+  const [isLoad, setIsLoad] = useRecoilState(isNewFetched);
 
-  const fetch = useCallback(async () => {
-    if (isLoad) {
-      return;
-    }
-    const newNewList = await getNews("2022");
+  const _filterNews = useCallback(
+    (news: NewsType[]) => {
+      const filteredNews = news.filter(
+        (v, i, a) => a.findIndex((v2) => v2.year === v.year) === i
+      );
+      setNews(filteredNews);
+    },
+    [setNews]
+  );
 
-    if (!newNewList) {
-      return;
-    }
+  const fetch = useCallback(
+    async (year: "2022" | "2023" | "2024" = "2022") => {
+      _filterNews(news);
+      if (isLoad) {
+        return;
+      }
 
-    setNews(newNewList);
-    setIsLoad(true);
-  }, [isLoad, setNews]);
+      if (
+        news.some((newsData) => newsData.year.toString() === year.toString())
+      ) {
+        return;
+      }
+
+      const newNewList = await getNews(year);
+
+      if (!newNewList) {
+        return;
+      }
+
+      setNews((prev) => [...prev, newNewList]);
+      setIsLoad(true);
+    },
+    [_filterNews, isLoad, news, setIsLoad, setNews]
+  );
 
   const refreshNew = useCallback(() => {
+    _filterNews(news);
     setIsLoad(false);
-    fetch();
-  }, [fetch]);
+
+    ["2022", "2023", "2024"].forEach(async (year) => {
+      await fetch(year as "2022" | "2023" | "2024");
+    });
+
+    _filterNews(news);
+  }, [_filterNews, fetch, news, setIsLoad]);
 
   return { fetch, refreshNew, news };
 };

@@ -7,7 +7,7 @@ import { Constants } from "../constant/constant";
 import { ArticleInfoType } from "../types/ArticleInfoType";
 
 type ListContainerProps = {
-  datas: ArticleInfoType[];
+  datas: Partial<ArticleInfoType>[];
   targetUrl: string;
   additionalTitle?: boolean;
 };
@@ -46,7 +46,7 @@ const TagWrapper = styled.div`
   flex: 10%;
 `;
 function ListContainer({
-  datas,
+  datas: data,
   targetUrl,
   additionalTitle = false,
 }: ListContainerProps) {
@@ -60,28 +60,23 @@ function ListContainer({
         </Item>
         <Line borderColor={Constants.LIGHT_GREY_COLOR} borderWidth="1px" />
 
-        {datas.map((data) => {
-          return (
-            <div key={data.title + data.id}>
-              <Item>
-                <TagWrapper>{parseInt(data.id) + 1}</TagWrapper>
-                <DescriptionWrapper>
-                  <Link to={targetUrl + data.id}>
-                    <LinkWrapper>
-                      {data.title}
-                      {additionalTitle ? " " + data.author : ""}
-                    </LinkWrapper>
-                  </Link>
-                </DescriptionWrapper>
-                <DateTimeWrapper>{data.dateTime}</DateTimeWrapper>
-              </Item>
-              <Line
-                borderColor={Constants.LIGHT_GREY_COLOR}
-                borderWidth="1px"
-              />
-            </div>
-          );
-        })}
+        {data.map((data) => (
+          <div key={data?.id}>
+            <Item>
+              <TagWrapper>{parseInt(data?.id ?? "") + 1}</TagWrapper>
+              <DescriptionWrapper>
+                <Link to={targetUrl + data.id}>
+                  <LinkWrapper>
+                    {data.title}
+                    {additionalTitle ? " " + data.author : ""}
+                  </LinkWrapper>
+                </Link>
+              </DescriptionWrapper>
+              <DateTimeWrapper>{data.dateTime}</DateTimeWrapper>
+            </Item>
+            <Line borderColor={Constants.LIGHT_GREY_COLOR} borderWidth="1px" />
+          </div>
+        ))}
       </ItemList>
     </Container>
   );

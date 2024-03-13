@@ -23,7 +23,7 @@ const BackDescription = styled.div`
 function NotFound() {
   return (
     <>
-      <MyHelmet helmet="NotFound" />
+      <MyHelmet title="NotFound" />
       <DefaultLayout>
         {/* <SheetWrapper> */}
         <Container>

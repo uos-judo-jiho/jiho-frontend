@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
-import demoNotice from "../../../assets/jsons/tmpNotice.json";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import Title from "../../../layouts/Title";
-import { Constants } from "../../../constant/constant";
 import NoticeForm from "../../../components/admin/form/NoticeForm";
+import { Constants } from "../../../constant/constant";
+import Title from "../../../layouts/Title";
+import { useNotices } from "../../../recoills/notices";
 
 function AdminNoticeDetail() {
   const { id } = useParams();
-  const [article, setArticle] = useState<ArticleInfoType>();
+  const { notices, refreshNotice } = useNotices();
+
   useEffect(() => {
-    const targetArticle = demoNotice?.find((item) => item.id.toString() === id);
-    setArticle(targetArticle);
+    refreshNotice();
   }, []);
+
+  const targetArticle = notices.find((item) => item.id.toString() === id);
+
   return (
     <>
-      <Title title={"공지사항 수항"} color={Constants.BLACK_COLOR} />
-      <NoticeForm data={article} />
+      <Title title={"공지사항 작성"} color={Constants.BLACK_COLOR} />
+      <NoticeForm data={targetArticle} />
     </>
   );
 }

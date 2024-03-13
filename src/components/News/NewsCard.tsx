@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 import PhotoModal from "../Modals/PhotoModal";
@@ -123,8 +123,6 @@ const MoreButton = styled.button`
 `;
 
 function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
-  const escKey = useKeyEscClose(closeSeeMore);
-  // const { imgRef, isLoading } = useLazyImage();
   const [isLoading, setIsLoading] = useState(false);
   const { lockScroll, openScroll } = useBodyScrollLock();
   const comment = datas[index].description;
@@ -132,11 +130,26 @@ function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
   const [isMore, setIsMore] = useState<boolean>(false);
   const textLimit = useRef<number>(250);
 
-  const commenter = useMemo(() => {
-    const shortText: string = comment.slice(0, textLimit.current);
+  const commenter = useMemo(
+    () => comment.slice(0, textLimit.current),
+    [comment]
+  );
 
-    return shortText;
-  }, []);
+  const openSeeMore = useCallback(() => {
+    setIsMore(true);
+    lockScroll();
+  }, [lockScroll]);
+
+  const closeSeeMore = () => {
+    setIsMore(false);
+    openScroll();
+  };
+
+  const handleLoding = () => {
+    setIsLoading(true);
+  };
+
+  const escKey = useKeyEscClose(closeSeeMore);
 
   useEffect(() => {
     if (selectedIndex === index) {
@@ -144,19 +157,7 @@ function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
     } else {
       redirect("./news/2022");
     }
-  }, [selectedIndex]);
-
-  function openSeeMore() {
-    setIsMore(true);
-    lockScroll();
-  }
-  function closeSeeMore() {
-    setIsMore(false);
-    openScroll();
-  }
-  function handleLoding() {
-    setIsLoading(true);
-  }
+  }, [index, openSeeMore, selectedIndex]);
 
   return (
     <>

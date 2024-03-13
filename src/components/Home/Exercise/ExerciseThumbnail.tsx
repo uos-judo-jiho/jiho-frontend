@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { getTrainings } from "../../../api/trainingApi";
+import { getTrainings } from "../../../api/training";
 import useFetchData from "../../../Hooks/useFetchData";
 import Col from "../../../layouts/Col";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
@@ -76,13 +76,9 @@ const Thumbnail = styled.img`
 `;
 
 function ExerciseThumbnail() {
-  const { trainings, fetch } = useTrainings();
+  const { trainings } = useTrainings();
 
-  const lastTraningData = trainings[trainings.length - 1];
-
-  useEffect(() => {
-    fetch();
-  }, []);
+  const lastTraningData = trainings[0];
 
   return (
     <Container>
@@ -93,7 +89,7 @@ function ExerciseThumbnail() {
             <Col justifyContent="center" alignItems="center">
               <HoveredSpan>훈련 일지</HoveredSpan>
               <HoveredSpan>{lastTraningData?.dateTime}</HoveredSpan>
-              <HoveredSpan fontSize={"0.5rem"}>자세히 보기</HoveredSpan>
+              <HoveredSpan fontSize={"1.2rem"}>자세히 보기</HoveredSpan>
             </Col>
           </HoveredContainer>
         </Stack>

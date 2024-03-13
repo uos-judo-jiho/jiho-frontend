@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, redirect, useParams } from "react-router-dom";
+import styled from "styled-components";
+import NoticeDescription from "../../components/Notice/NoticeDetail/NoticeDescription";
+import NoticeFooter from "../../components/Notice/NoticeDetail/NoticeFooter";
+import NoticeTitle from "../../components/Notice/NoticeDetail/NoticeTitle";
+import { Constants } from "../../constant/constant";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import SheetWrapper from "../../layouts/SheetWrapper";
 import Title from "../../layouts/Title";
-import { Constants } from "../../constant/constant";
-import demoNotice from "../../assets/jsons/tmpNotice.json";
-import { ArticleInfoType } from "../../types/ArticleInfoType";
-import NoticeTitle from "../../components/Notice/NoticeDetail/NoticeTitle";
-import NoticeDescription from "../../components/Notice/NoticeDetail/NoticeDescription";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import NoticeFooter from "../../components/Notice/NoticeDetail/NoticeFooter";
+import { useNotices } from "../../recoills/notices";
 
 const TitleWrapper = styled.div`
   width: min-content;
@@ -23,19 +21,32 @@ const TitleWrapper = styled.div`
 
 function NoticeDetail() {
   const { id } = useParams();
-  const [data, setData] = useState<ArticleInfoType>();
-  useEffect(() => {
-    if (id) {
-      const fetchData = demoNotice.find((value) => value.id === id);
-      setData(fetchData);
-    }
-  }, [id]);
+  const { notices, fetch } = useNotices();
 
-  if (!data) return <></>;
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  const data = notices.find((value) => value.id.toString() === id?.toString());
+
+  if (!data) {
+    redirect("/notice");
+    return <></>;
+  }
+
+  const metaDescription = [data.title, data.description.slice(0, 80)].join(
+    " | "
+  );
+
+  const metaImgUrl = data.imgSrcs[0];
 
   return (
     <>
-      <MyHelmet helmet="Notice" />
+      <MyHelmet
+        title="Notice"
+        description={metaDescription}
+        imgUrl={metaImgUrl}
+      />
       <DefaultLayout>
         <SheetWrapper>
           <TitleWrapper>

@@ -57,27 +57,36 @@ function Photo() {
     }
   }, [id, lockScroll, modalOpen, trainings]);
 
+  const metaDescription = [
+    trainings[0].title,
+    trainings[0].description.slice(0, 80),
+  ].join(" | ");
+
+  const metaImgUrl = trainings[0].imgSrcs[0];
+
   return (
     <>
-      <MyHelmet helmet="Photo" />
+      <MyHelmet
+        title="Photo"
+        description={metaDescription}
+        imgUrl={metaImgUrl}
+      />
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />
           <PhotoCardContainer>
-            {trainings.map((trainingLog, index) => {
-              return (
-                <ThumbnailCard
-                  key={trainingLog.id}
-                  imgSrc={trainingLog?.imgSrcs[0] ?? ""}
-                  dateTime={trainingLog.dateTime}
-                  handleClickCard={handleClickCard}
-                  index={index}
-                />
-              );
-            })}
+            {trainings.map((trainingLog, index) => (
+              <ThumbnailCard
+                key={trainingLog.id}
+                imgSrc={trainingLog?.imgSrcs[0] ?? ""}
+                dateTime={trainingLog.dateTime}
+                handleClickCard={handleClickCard}
+                index={index}
+              />
+            ))}
           </PhotoCardContainer>
 
-          {modalOpen ? (
+          {modalOpen && (
             <PhotoModal
               open={modalOpen}
               close={closeModal}
@@ -85,8 +94,6 @@ function Photo() {
               index={photoIdx}
               titles={["작성자", "참여 인원", "훈련 날짜"]}
             />
-          ) : (
-            <></>
           )}
         </SheetWrapper>
       </DefaultLayout>

@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { postBoard } from "../../../api/postBoard";
+import { redirect, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import {
+  deleteBoard,
+  updateBoard,
+  uploadBoard,
+} from "../../../api/admin/board";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import { getImageFileFromSrc } from "../../../utils/Utils";
+import { getImageFileFromSrc, toBase64 } from "../../../utils/Utils";
 import SubmitModal from "../../Modals/AlertModals/SubmitModal";
+import Loading from "../../Skeletons/Loading";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
   CancelButton,
   FormContainer,
   InputContainer,
+  NewArticleButton,
   StyledInput,
   StyledLabel,
   StyledTextArea,
@@ -18,12 +25,12 @@ import {
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 import { ArticleType } from "./Type/ArticleType";
-import Loading from "../../Skeletons/Loading";
-import styled from "styled-components";
+import { uploadPicture } from "../../../api/admin/pictures";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
   type: "news" | "training" | "notice";
+  gallery?: boolean;
 };
 
 const initValues = {
@@ -41,7 +48,7 @@ const LoadingWrapper = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10000;
+  z-index: 1;
   background-color: rgba(0, 0, 0, 0.6);
 `;
 
@@ -52,11 +59,14 @@ const LoadingContainer = styled.div`
   height: 100%;
 `;
 
-function ArticleForm({ data, type }: ArticleFormProps) {
+function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [values, setValues] = useState<ArticleType>(initValues);
-  const [open, setOpen] = useState<boolean>(false);
+  const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
   const naviagate = useNavigate();
+
+  const isNew = !data;
 
   useEffect(() => {
     if (!data) return;
@@ -87,17 +97,71 @@ function ArticleForm({ data, type }: ArticleFormProps) {
     setValues(defaultValues);
   }, [data]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (open) {
-      // TODO API CALL
-      setIsSubmited(true);
-      const res = await postBoard(type, values);
-      setIsSubmited(false);
-      naviagate(-1);
+  const handelSubmitOpen = () => setIsSubmitOpen(true);
+
+  const handleDelete = async (
+    id: string,
+    type: "news" | "training" | "notice"
+  ) => {
+    const res = await deleteBoard(id);
+    if (res) {
+      alert("게시물을 삭제하였습니다!");
+      redirect(`/admin/${type}`);
     } else {
-      setOpen(true);
+      alert("게시물을 삭제에 실패하였습니다!");
     }
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmited(true);
+
+    const images: string[] = [];
+    for await (const imgs of values.images) {
+      const imgBase64 = await toBase64(imgs);
+      if (typeof imgBase64 === "string") {
+        images.push(imgBase64);
+      }
+    }
+    let res;
+    if (gallery) {
+      res = await uploadPicture(values.dateTime.slice(0, 4), images);
+    } else {
+      if (isNew) {
+        res = await uploadBoard(
+          {
+            title: values.title,
+            author: values.author,
+            description: values.description,
+            dateTime: values.dateTime,
+            tags: values.tags,
+            imgSrcs: images,
+          },
+          type
+        );
+      } else {
+        res = await updateBoard(
+          {
+            id: data.id,
+            title: values.title,
+            author: values.author,
+            description: values.description,
+            dateTime: values.dateTime,
+            tags: values.tags,
+            imgSrcs: images,
+          },
+          type
+        );
+      }
+    }
+
+    if (!res) {
+      console.error("upload error");
+      alert("업로드에 실패하였습니다.");
+    }
+
+    setIsSubmited(false);
+    naviagate(`/admin/${type}/${gallery ? "gallery" : ""}`);
+    alert("업로드에 성공하였습니다.");
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,20 +227,25 @@ function ArticleForm({ data, type }: ArticleFormProps) {
   };
 
   const handleCancelSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // TODO 취소 모달 만들기
     event.preventDefault();
     naviagate(-1);
+  };
+
+  const handleDeleteSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setIsDeleteOpen(true);
   };
 
   return (
     <>
       <FormContainer>
-        <form onSubmit={handleSubmit} method="post">
+        <div>
           <InputContainer>
             <StyledLabel htmlFor="author" aria-required="true">
               작성자
             </StyledLabel>
             <StyledInput
+              disabled={gallery}
               id="author"
               type="text"
               name="author"
@@ -190,6 +259,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               제목
             </StyledLabel>
             <StyledInput
+              disabled={gallery}
               id="title"
               type="text"
               name="title"
@@ -207,6 +277,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
                 <TagsContainer key={"tag" + index}>
                   {index + 1}
                   <StyledInput
+                    disabled={gallery}
                     id={"tag" + index}
                     name={"tag" + index}
                     onChange={(event) => handleTagsChange(event, index)}
@@ -221,7 +292,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
                 </TagsContainer>
               );
             })}
-            <TagAddButton onClick={handleAddTagsClick}>
+            <TagAddButton onClick={handleAddTagsClick} disabled={gallery}>
               {type === "training" ? "참여 인원" : "태그"} +
             </TagAddButton>
           </InputContainer>
@@ -230,6 +301,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               날짜
             </StyledLabel>
             <StyledInput
+              disabled={gallery}
               id="date"
               type="date"
               name="date"
@@ -243,6 +315,7 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               본문
             </StyledLabel>
             <StyledTextArea
+              disabled={gallery}
               id="description"
               name="description"
               onChange={handleDescriptionChange}
@@ -250,19 +323,43 @@ function ArticleForm({ data, type }: ArticleFormProps) {
               value={values.description}
             />
           </InputContainer>
-          <ImageUploader setValues={setValues} data={data?.imgSrcs} />
+          <ImageUploader
+            setValues={setValues}
+            data={data?.imgSrcs}
+            imageLimit={gallery ? 20 : 10}
+          />
           <ButtonContainer>
-            <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
-            <StyledInput type="submit" />
+            {!isNew && !gallery && (
+              <CancelButton onClick={handleDeleteSubmit}>삭제</CancelButton>
+            )}
+            <>
+              <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
+              <NewArticleButton onClick={handelSubmitOpen}>
+                제출
+              </NewArticleButton>
+            </>
           </ButtonContainer>
           <SubmitModal
             confirmText={"확인"}
             cancelText={"취소"}
-            description={"변경사항을 저장하시겠습니까?"}
-            open={open}
-            setOpen={setOpen}
+            description={`${
+              !isNew ? "변경사항" : "작성한 글"
+            }을 저장하시겠습니까?`}
+            open={isSubmitOpen}
+            setOpen={setIsSubmitOpen}
+            onSubmit={async () => await handleSubmit()}
           />
-        </form>
+        </div>
+        {!isNew && (
+          <SubmitModal
+            confirmText={"삭제"}
+            cancelText={"취소"}
+            description={"게시물을 삭제하기겠습니까?"}
+            open={isDeleteOpen}
+            setOpen={setIsDeleteOpen}
+            onSubmit={async () => handleDelete(data.id, type)}
+          />
+        )}
       </FormContainer>
       {isSubmited && (
         <LoadingWrapper>

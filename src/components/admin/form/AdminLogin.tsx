@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { loginApi } from "../../../api/loginApi";
+import { login } from "../../../api/admin/login";
 import {
   ButtonContainer,
   FormContainer,
@@ -51,12 +51,12 @@ function AdminLogin({ setIsLogin }: AdminLoginProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const res = await loginApi(loginValue);
+    const res = await login(loginValue);
 
-    if (res === "Accept Login") {
-      setIsLogin(true);
-    } else {
+    if (!res || res?.message) {
       alert("로그인에 실패하였습니다.");
+    } else {
+      setIsLogin(true);
     }
   }
   return (

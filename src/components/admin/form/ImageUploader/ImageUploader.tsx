@@ -15,9 +15,14 @@ import { getImageFileFromSrc } from "../../../../utils/Utils";
 type ImageUploaderProps = {
   setValues: React.Dispatch<React.SetStateAction<ArticleType>>;
   data?: string[];
+  imageLimit?: number;
 };
 
-function ImageUploader({ setValues, data }: ImageUploaderProps) {
+function ImageUploader({
+  setValues,
+  data,
+  imageLimit = 10,
+}: ImageUploaderProps) {
   const [img, setImg] = useState<File[]>([]);
   const [previewImg, setPreviewImg] = useState<string[]>(data || []);
   const [isFull, setIsFull] = useState<boolean>(false);
@@ -41,9 +46,9 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
 
   function insertImg(event: React.ChangeEvent<HTMLInputElement>) {
     if (isFull) {
-      alert("사진은 최대 10장까지 추가할 수 있습니다.");
+      alert(`사진은 최대 ${imageLimit}장까지 추가할 수 있습니다.`);
       return;
-    } else if (img.length > 10) {
+    } else if (img.length > imageLimit) {
       setIsFull(true);
       return;
     }
@@ -58,15 +63,15 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
         urlList.push(currentImageUrl);
       }
 
-      if (urlList.length > 10) {
-        urlList = urlList.slice(0, 10);
+      if (urlList.length > imageLimit) {
+        urlList = urlList.slice(0, imageLimit);
       }
       setPreviewImg(urlList);
 
       let newImgs = [...img, ...files];
 
-      if (newImgs.length > 10) {
-        newImgs = newImgs.slice(0, 10);
+      if (newImgs.length > imageLimit) {
+        newImgs = newImgs.slice(0, imageLimit);
       }
 
       setImg(newImgs);
@@ -96,7 +101,7 @@ function ImageUploader({ setValues, data }: ImageUploaderProps) {
   return (
     <InputContainer>
       <StyledLabel htmlFor="file" aria-required="true">
-        사진 올리기 (최대 10장)
+        사진 올리기 (최대 {imageLimit}장)
       </StyledLabel>
       <StyledInput
         id="file"

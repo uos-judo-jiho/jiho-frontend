@@ -9,10 +9,12 @@ import { formaAwardsType } from "../../../utils/Utils";
 const AwardsItem = styled.li`
   margin: 1rem 0;
   font-size: ${(props) => props.theme.descriptionFontSize};
+  line-height: ${(props) => props.theme.descriptionLineHeight};
 `;
 
 const SubTitle = styled.h3`
   font-size: ${(props) => props.theme.subTitleFontSize};
+  line-height: ${(props) => props.theme.subTitleLineHeight};
   margin-bottom: 1.2rem;
 `;
 
@@ -23,11 +25,9 @@ function HomeAwards() {
     <Col>
       <SubTitle>수상 이력</SubTitle>
       <ul>
-        {awards.map((award) => {
-          return (
-            <AwardsItem key={award.title}>{formaAwardsType(award)}</AwardsItem>
-          );
-        })}
+        {awards.map((award) => (
+          <AwardsItem key={award.title}>{formaAwardsType(award)}</AwardsItem>
+        ))}
       </ul>
     </Col>
   );

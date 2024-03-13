@@ -13,12 +13,12 @@ type SideBarProps = {
 };
 
 const Container = styled.div`
-  z-index: 999;
-  padding: 50px;
+  z-index: 1;
+  padding: 50px 20px 20px 20px;
   background-color: ${(props) => props.theme.bgColor};
   box-shadow: 0.4rem 1rem 1rem rgba(0, 0, 0, 0.2);
   height: 100%;
-  width: 25%;
+  min-width: 200px;
   left: -55%;
   top: 0;
   position: fixed;
@@ -40,7 +40,7 @@ const StyledClose = styled(CloseSvg)`
   left: 1rem;
   width: 20px;
   height: 20px;
-  z-index: 1000;
+  z-index: 1;
   cursor: pointer;
 `;
 

@@ -3,7 +3,6 @@ import Line from "../../../layouts/Line";
 
 const ContainerWrapper = styled.div`
   display: flex;
-  width: 30vw;
   height: 30vw;
   min-width: 35rem;
   min-height: 35rem;
@@ -20,7 +19,7 @@ const Container = styled.div`
   padding: 3rem;
   position: relative;
   flex: 1;
-  max-width: 100%;
+  min-width: 340px;
   border: 0.2rem solid ${(props) => props.theme.lightGreyColor};
 `;
 
@@ -48,7 +47,8 @@ function HomeTitle() {
     <ContainerWrapper>
       <Container>
         <SubTitle>
-          서울시립대학교 <br />
+          서울시립대학교
+          <br />
           유도부
         </SubTitle>
         <Title>지호</Title>
