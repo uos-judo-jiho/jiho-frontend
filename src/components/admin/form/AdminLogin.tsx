@@ -1,24 +1,16 @@
 import React, { useState } from "react";
-import { login } from "../../../api/admin/login";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { LoginValuesType } from "../../../api/admin/login";
+import { Constants } from "../../../constant/constant";
+import Title from "../../../layouts/Title";
+import useSession from "../../../recoills/session";
 import {
   ButtonContainer,
   FormContainer,
   InputContainer,
   StyledInput,
 } from "./StyledComponent/FormContainer";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import Title from "../../../layouts/Title";
-import { Constants } from "../../../constant/constant";
-
-type AdminLoginProps = {
-  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-type LoginValuesType = {
-  username: string;
-  password: string;
-};
 
 const BackDescription = styled.div`
   font-size: ${(props) => props.theme.defaultFontSize};
@@ -31,7 +23,8 @@ const BackDescription = styled.div`
   }
 `;
 
-function AdminLogin({ setIsLogin }: AdminLoginProps) {
+function AdminLogin() {
+  const { login } = useSession();
   const [loginValue, setloginValue] = useState<LoginValuesType>({
     username: "",
     password: "",
@@ -51,13 +44,7 @@ function AdminLogin({ setIsLogin }: AdminLoginProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const res = await login(loginValue);
-
-    if (!res || res?.message) {
-      alert("로그인에 실패하였습니다.");
-    } else {
-      setIsLogin(true);
-    }
+    await login(loginValue);
   }
   return (
     <>
