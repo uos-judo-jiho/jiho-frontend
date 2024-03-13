@@ -1,19 +1,19 @@
-import { useState } from "react";
 import AdminLogin from "../../components/admin/form/AdminLogin";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import SheetWrapper from "../../layouts/SheetWrapper";
+import useSession from "../../recoills/session";
 import AdminRouter from "../../routers/AdminRouter";
 
 function AdminHomePage() {
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const { session } = useSession();
 
   return (
     <>
       <MyHelmet title="Admin" />
       <DefaultLayout>
         <SheetWrapper>
-          {isLogin ? <AdminRouter /> : <AdminLogin setIsLogin={setIsLogin} />}
+          {session.isLogin ? <AdminRouter /> : <AdminLogin />}
         </SheetWrapper>
       </DefaultLayout>
     </>
