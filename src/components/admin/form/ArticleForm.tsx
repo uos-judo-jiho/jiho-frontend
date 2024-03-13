@@ -47,7 +47,7 @@ const LoadingWrapper = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10000;
+  z-index: 1;
   background-color: rgba(0, 0, 0, 0.6);
 `;
 
@@ -146,8 +146,8 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
       }
 
       setIsSubmited(false);
-      alert("업로드에 성공하였습니다.");
       redirect(`/admin/${type}/${gallery ? "gallery" : ""}`);
+      alert("업로드에 성공하였습니다.");
     } else {
       setIsSubmitOpen(true);
     }
@@ -216,7 +216,6 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   };
 
   const handleCancelSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // TODO 취소 모달 만들기
     event.preventDefault();
     naviagate(-1);
   };
@@ -282,7 +281,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                 </TagsContainer>
               );
             })}
-            <TagAddButton onClick={handleAddTagsClick}>
+            <TagAddButton onClick={handleAddTagsClick} disabled={gallery}>
               {type === "training" ? "참여 인원" : "태그"} +
             </TagAddButton>
           </InputContainer>
