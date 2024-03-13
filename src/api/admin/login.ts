@@ -1,6 +1,11 @@
 import axiosInstance from "../config";
 
-export async function login(values: any) {
+export type LoginValuesType = {
+  username: string;
+  password: string;
+};
+
+export const login = async (values: LoginValuesType) => {
   const METHOD_URL = "api/admin/login/";
 
   try {
@@ -20,4 +25,4 @@ export async function login(values: any) {
     console.error(error);
     return false;
   }
-}
+};
