@@ -1,25 +1,20 @@
-import axios from "axios";
-import { Constants } from "../../constant/constant";
+import axiosInstance from "../config";
 
 export async function login(values: any) {
-  const methodUrl = "api/admin/login/";
+  const METHOD_URL = "api/admin/login/";
 
   try {
-    const res = await axios
-      .post(
-        Constants.BASE_URL + methodUrl,
-        {
-          email: values.username,
-          password: values.password,
-        },
-        {
-          headers: {},
-          withCredentials: true,
-        }
-      )
+    const res = await axiosInstance({
+      url: METHOD_URL,
+      method: "POST",
+      headers: {},
+      data: {
+        email: values.username,
+        password: values.password,
+      },
+    })
       .then((response) => response.data)
       .catch((error) => error);
-
     return res;
   } catch (error) {
     console.error(error);

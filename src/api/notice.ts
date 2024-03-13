@@ -1,11 +1,12 @@
-import axios from "axios";
-import { Constants } from "../constant/constant";
 import { ArticleInfoType } from "../types/ArticleInfoType";
+import axiosInstance from "./config";
 
-const methodUrl = "api/notices";
+const METHOD_URL = "api/notices";
 
 export const getNotices = async (): Promise<ArticleInfoType[]> => {
-  return await axios
-    .get<{ noticeLogs: ArticleInfoType[] }>(`${Constants.BASE_URL}${methodUrl}`)
-    .then((response) => response.data.noticeLogs);
+  return await axiosInstance<{ noticeLogs: ArticleInfoType[] }>({
+    url: METHOD_URL,
+    method: "GET",
+    withCredentials: true,
+  }).then((response) => response.data.noticeLogs);
 };

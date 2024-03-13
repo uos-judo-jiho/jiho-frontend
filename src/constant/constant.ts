@@ -1,6 +1,9 @@
 export const Constants = {
   // base url
-  BASE_URL: "https://uosjudo.com/",
+  BASE_URL:
+    process.env.NODE_ENV === "production"
+      ? "https://uosjudo.com"
+      : "http://localhost:3000",
 
   // 이미지
   LOGO_BLACK: require("../assets/images/logo/logo-removebg.png"),
