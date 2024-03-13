@@ -5,7 +5,7 @@ module.exports = function (app) {
     createProxyMiddleware(["**/api"], {
       target: "https://uosjudo.com",
       changeOrigin: true,
-      pathRewrite: (path, _req) => path.replace("news/", "api/"),
+      pathRewrite: (path, _req) => path.replace(/.+\/api\//, "api/"),
     })
   );
 };

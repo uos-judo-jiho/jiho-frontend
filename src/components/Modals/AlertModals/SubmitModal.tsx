@@ -9,7 +9,7 @@ type SubmitModalProps = {
   description: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onSubmit?: () => void;
+  onSubmit: () => void;
 };
 const Container = styled.div`
   position: fixed;
@@ -73,12 +73,9 @@ function SubmitModal({
   setOpen,
   onSubmit,
 }: SubmitModalProps) {
-  function handleCancel() {
-    setOpen(false);
-  }
-  function handleConfirm() {
-    onSubmit && onSubmit();
-  }
+  const handleCancel = () => setOpen(false);
+
+  const handleConfirm = () => onSubmit();
 
   if (!open) return <></>;
 
