@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
 import { getNews } from "../api/news";
 import { NewsType } from "../types/NewsType";
@@ -8,9 +8,14 @@ const NewList = atom<NewsType[]>({
   default: [],
 });
 
+const isNewFetched = atom<boolean>({
+  key: "isNewFetched",
+  default: false,
+});
+
 export const useNews = () => {
   const [news, setNews] = useRecoilState(NewList);
-  const [isLoad, setIsLoad] = useState(false);
+  const [isLoad, setIsLoad] = useRecoilState(isNewFetched);
 
   const _filterNews = useCallback(
     (news: NewsType[]) => {
@@ -44,16 +49,19 @@ export const useNews = () => {
       setNews((prev) => [...prev, newNewList]);
       setIsLoad(true);
     },
-    [_filterNews, isLoad, news, setNews]
+    [_filterNews, isLoad, news, setIsLoad, setNews]
   );
 
   const refreshNew = useCallback(() => {
     _filterNews(news);
     setIsLoad(false);
+
     ["2022", "2023", "2024"].forEach(async (year) => {
       await fetch(year as "2022" | "2023" | "2024");
     });
-  }, [_filterNews, fetch, news]);
+
+    _filterNews(news);
+  }, [_filterNews, fetch, news, setIsLoad]);
 
   return { fetch, refreshNew, news };
 };

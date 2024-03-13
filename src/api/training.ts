@@ -1,15 +1,14 @@
-import axios from "axios";
-import { Constants } from "../constant/constant";
 import { ArticleInfoType } from "../types/ArticleInfoType";
+import axiosInstance from "./config";
 
-const methodUrl = "api/trainings";
+const METHOD_URL = "api/trainings";
 
 export const getTrainings = async (
   year?: string
 ): Promise<ArticleInfoType[]> => {
-  return await axios
-    .get<{ trainingLogs: ArticleInfoType[] }>(
-      `${Constants.BASE_URL}${methodUrl}?year=${year ?? ""}`
-    )
-    .then((response) => response.data.trainingLogs);
+  return await axiosInstance<{ trainingLogs: ArticleInfoType[] }>({
+    url: `${METHOD_URL}?year=${year ?? ""}`,
+    method: "GET",
+    withCredentials: true,
+  }).then((response) => response.data.trainingLogs);
 };

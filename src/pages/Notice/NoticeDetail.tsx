@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, redirect, useParams } from "react-router-dom";
 import styled from "styled-components";
 import NoticeDescription from "../../components/Notice/NoticeDetail/NoticeDescription";
 import NoticeFooter from "../../components/Notice/NoticeDetail/NoticeFooter";
@@ -27,9 +27,12 @@ function NoticeDetail() {
     fetch();
   }, []);
 
-  const data = notices.find((value) => value.id === id);
+  const data = notices.find((value) => value.id.toString() === id?.toString());
 
-  if (!data) return <></>;
+  if (!data) {
+    redirect("/notice");
+    return <></>;
+  }
 
   const metaDescription = [data.title, data.description.slice(0, 80)].join(
     " | "

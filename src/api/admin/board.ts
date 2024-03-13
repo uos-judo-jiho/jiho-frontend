@@ -1,9 +1,8 @@
-import axios from "axios";
-import { Constants } from "../../constant/constant";
-import { ArticleInfoType } from "../../types/ArticleInfoType";
 import { Cookies } from "react-cookie";
+import { ArticleInfoType } from "../../types/ArticleInfoType";
+import axiosInstance from "../config";
 
-const methodUrl = "api/admin/board/";
+const METHOD_URL = "api/admin/board";
 
 /**
  * Create board
@@ -29,9 +28,13 @@ export const uploadBoard = async (
   const cookies = new Cookies();
 
   try {
-    const res = await axios.post(
-      `${Constants.BASE_URL}${methodUrl}`,
-      {
+    const res = await axiosInstance({
+      url: METHOD_URL,
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
+      },
+      data: {
         title: articleInfo.title,
         author: articleInfo.author,
         boardType,
@@ -40,13 +43,7 @@ export const uploadBoard = async (
         tags: articleInfo.tags,
         base64Imgs: articleInfo.imgSrcs,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
-        },
-        withCredentials: true,
-      }
-    );
+    });
     if (res) {
       return true;
     }
@@ -80,9 +77,13 @@ export const updateBoard = async (
 ) => {
   const cookies = new Cookies();
   try {
-    const res = await axios.put(
-      `${Constants.BASE_URL}${methodUrl}${articleInfo.id}`,
-      {
+    const res = await axiosInstance({
+      url: `${METHOD_URL}/${articleInfo.id}`,
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
+      },
+      data: {
         id: articleInfo.id,
         title: articleInfo.title,
         author: articleInfo.author,
@@ -92,13 +93,8 @@ export const updateBoard = async (
         tags: articleInfo.tags,
         base64Imgs: articleInfo.imgSrcs,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
-        },
-        withCredentials: true,
-      }
-    );
+    });
+
     if (res) {
       return true;
     }
@@ -120,12 +116,14 @@ export const updateBoard = async (
 export const deleteBoard = async (id: string) => {
   const cookies = new Cookies();
   try {
-    const res = await axios.delete(`${Constants.BASE_URL}${methodUrl}${id}`, {
+    const res = await axiosInstance({
+      url: `${METHOD_URL}/${id}`,
+      method: "DELETE",
       headers: {
         Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
       },
-      withCredentials: true,
     });
+
     if (res) {
       return true;
     }

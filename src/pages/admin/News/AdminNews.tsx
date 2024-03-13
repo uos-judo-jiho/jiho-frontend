@@ -19,13 +19,18 @@ function AdminNews() {
 
   return (
     <FormContainer title="지호지 관리">
-      <Row gap={12}>
-        <Link to="/admin/news/write">
-          <NewArticleButton>새 글쓰기</NewArticleButton>
-        </Link>
-        <Link to="/admin/news/gallery">
-          <NewArticleButton>년도별 갤러리 보기</NewArticleButton>
-        </Link>
+      <Row justifyContent="space-between">
+        <Row gap={12} style={{ width: "auto" }}>
+          <Link to="/admin/news/write">
+            <NewArticleButton>새 글쓰기</NewArticleButton>
+          </Link>
+          <Link to="/admin/news/gallery">
+            <NewArticleButton>년도별 갤러리 보기</NewArticleButton>
+          </Link>
+        </Row>
+        <NewArticleButton onClick={() => refreshNew()}>
+          새로고침
+        </NewArticleButton>
       </Row>
       <ListContainer
         datas={articles}

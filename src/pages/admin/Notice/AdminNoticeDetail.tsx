@@ -17,7 +17,7 @@ function AdminNoticeDetail() {
 
   return (
     <>
-      <Title title={"공지사항 수항"} color={Constants.BLACK_COLOR} />
+      <Title title={"공지사항 작성"} color={Constants.BLACK_COLOR} />
       <NoticeForm data={targetArticle} />
     </>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   deleteBoard,
@@ -16,6 +16,7 @@ import {
   CancelButton,
   FormContainer,
   InputContainer,
+  NewArticleButton,
   StyledInput,
   StyledLabel,
   StyledTextArea,
@@ -47,7 +48,7 @@ const LoadingWrapper = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 10000;
+  z-index: 1;
   background-color: rgba(0, 0, 0, 0.6);
 `;
 
@@ -96,60 +97,71 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     setValues(defaultValues);
   }, [data]);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isSubmitOpen) {
-      setIsSubmited(true);
+  const handelSubmitOpen = () => setIsSubmitOpen(true);
 
-      const images: string[] = [];
-      for await (const imgs of values.images) {
-        const imgBase64 = await toBase64(imgs);
-        if (typeof imgBase64 === "string") {
-          images.push(imgBase64);
-        }
-      }
-      let res;
-      if (gallery) {
-        res = await uploadPicture(values.dateTime.slice(0, 4), images);
-      } else {
-        if (isNew) {
-          res = await uploadBoard(
-            {
-              title: values.title,
-              author: values.author,
-              description: values.description,
-              dateTime: values.dateTime,
-              tags: values.tags,
-              imgSrcs: images,
-            },
-            type
-          );
-        } else {
-          res = await updateBoard(
-            {
-              id: data.id,
-              title: values.title,
-              author: values.author,
-              description: values.description,
-              dateTime: values.dateTime,
-              tags: values.tags,
-              imgSrcs: images,
-            },
-            type
-          );
-        }
-      }
-
-      if (!res) {
-        console.error("upload error");
-        alert("업로드에 실패하였습니다.");
-      }
-
-      setIsSubmited(false);
-      naviagate(-1);
+  const handleDelete = async (
+    id: string,
+    type: "news" | "training" | "notice"
+  ) => {
+    const res = await deleteBoard(id);
+    if (res) {
+      alert("게시물을 삭제하였습니다!");
+      redirect(`/admin/${type}`);
     } else {
-      setIsSubmitOpen(true);
+      alert("게시물을 삭제에 실패하였습니다!");
     }
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmited(true);
+
+    const images: string[] = [];
+    for await (const imgs of values.images) {
+      const imgBase64 = await toBase64(imgs);
+      if (typeof imgBase64 === "string") {
+        images.push(imgBase64);
+      }
+    }
+    let res;
+    if (gallery) {
+      res = await uploadPicture(values.dateTime.slice(0, 4), images);
+    } else {
+      if (isNew) {
+        res = await uploadBoard(
+          {
+            title: values.title,
+            author: values.author,
+            description: values.description,
+            dateTime: values.dateTime,
+            tags: values.tags,
+            imgSrcs: images,
+          },
+          type
+        );
+      } else {
+        res = await updateBoard(
+          {
+            id: data.id,
+            title: values.title,
+            author: values.author,
+            description: values.description,
+            dateTime: values.dateTime,
+            tags: values.tags,
+            imgSrcs: images,
+          },
+          type
+        );
+      }
+    }
+
+    if (!res) {
+      console.error("upload error");
+      alert("업로드에 실패하였습니다.");
+    }
+
+    setIsSubmited(false);
+    naviagate(`/admin/${type}/${gallery ? "gallery" : ""}`);
+    alert("업로드에 성공하였습니다.");
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,7 +227,6 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   };
 
   const handleCancelSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // TODO 취소 모달 만들기
     event.preventDefault();
     naviagate(-1);
   };
@@ -228,7 +239,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   return (
     <>
       <FormContainer>
-        <form onSubmit={handleSubmit} method="post">
+        <div>
           <InputContainer>
             <StyledLabel htmlFor="author" aria-required="true">
               작성자
@@ -281,7 +292,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                 </TagsContainer>
               );
             })}
-            <TagAddButton onClick={handleAddTagsClick}>
+            <TagAddButton onClick={handleAddTagsClick} disabled={gallery}>
               {type === "training" ? "참여 인원" : "태그"} +
             </TagAddButton>
           </InputContainer>
@@ -318,22 +329,27 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
             imageLimit={gallery ? 20 : 10}
           />
           <ButtonContainer>
-            {!isNew && (
+            {!isNew && !gallery && (
               <CancelButton onClick={handleDeleteSubmit}>삭제</CancelButton>
             )}
             <>
               <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
-              <StyledInput type="submit" />
+              <NewArticleButton onClick={handelSubmitOpen}>
+                제출
+              </NewArticleButton>
             </>
           </ButtonContainer>
           <SubmitModal
             confirmText={"확인"}
             cancelText={"취소"}
-            description={"변경사항을 저장하시겠습니까?"}
+            description={`${
+              !isNew ? "변경사항" : "작성한 글"
+            }을 저장하시겠습니까?`}
             open={isSubmitOpen}
             setOpen={setIsSubmitOpen}
+            onSubmit={async () => await handleSubmit()}
           />
-        </form>
+        </div>
         {!isNew && (
           <SubmitModal
             confirmText={"삭제"}
@@ -341,14 +357,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
             description={"게시물을 삭제하기겠습니까?"}
             open={isDeleteOpen}
             setOpen={setIsDeleteOpen}
-            onSubmit={async () => {
-              const res = await deleteBoard(data.id);
-              if (res) {
-                alert("게시물을 삭제하였습니다!");
-              } else {
-                alert("게시물을 삭제에 실패하였습니다!");
-              }
-            }}
+            onSubmit={async () => handleDelete(data.id, type)}
           />
         )}
       </FormContainer>

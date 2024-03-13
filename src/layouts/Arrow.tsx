@@ -15,7 +15,7 @@ type ArrowProps = {
 
 const ArrowCss = css`
   position: absolute;
-  z-index: 10;
+  z-index: 1;
   top: 50%;
   transform: translate(0, -50%);
   user-select: none;

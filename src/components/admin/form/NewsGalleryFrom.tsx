@@ -17,7 +17,7 @@ const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
       title: "",
       author: "",
       dateTime: year,
-      tags: [""],
+      tags: [],
       description: "",
     }))
     .at(0);

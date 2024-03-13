@@ -1,4 +1,5 @@
 import { createGlobalStyle, css } from "styled-components";
+import "../assets/fonts/font.css";
 
 export const MediaLayout = css`
   @media (min-width: 1200px) {
@@ -17,11 +18,16 @@ export const MediaLayout = css`
 
 export const GlobalStyle = createGlobalStyle`  
 
-html{
+html {
     font-size: 62.5%;
   @media (max-width: 859px) {
     font-size: 50%;
   }
+
+}
+
+body {
+  font-family: 'Pretendard';
 }
     
 html, body, div, span, applet, object, iframe,

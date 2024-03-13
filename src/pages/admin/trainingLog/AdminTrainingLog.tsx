@@ -4,23 +4,29 @@ import { NewArticleButton } from "../../../components/admin/form/StyledComponent
 import ListContainer from "../../../layouts/ListContainer";
 import { useTrainings } from "../../../recoills/tranings";
 import { useEffect } from "react";
+import Row from "../../../layouts/Row";
 
 function AdminTrainingLog() {
-  const { trainings, fetch } = useTrainings();
+  const { trainings, refreshTraining } = useTrainings();
 
   useEffect(() => {
-    fetch();
+    refreshTraining();
   }, []);
 
   const handleNewArticle = (event: React.MouseEvent<HTMLButtonElement>) => {};
 
   return (
     <FormContainer title="훈련일지 관리">
-      <Link to="/admin/training/write">
-        <NewArticleButton onClick={handleNewArticle}>
-          새 글쓰기
+      <Row justifyContent="space-between">
+        <Link to="/admin/training/write">
+          <NewArticleButton onClick={handleNewArticle}>
+            새 글쓰기
+          </NewArticleButton>
+        </Link>
+        <NewArticleButton onClick={() => refreshTraining()}>
+          새로고침
         </NewArticleButton>
-      </Link>
+      </Row>
       <ListContainer
         datas={trainings}
         targetUrl={"/admin/training/"}

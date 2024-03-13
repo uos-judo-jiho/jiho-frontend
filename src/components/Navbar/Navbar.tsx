@@ -11,7 +11,7 @@ import SideBar from "../SideBar/SideBar";
 
 const Header = styled.header`
   position: fixed;
-  z-index: 1000;
+  z-index: 1;
   top: 0;
 `;
 const Container = styled.div`
