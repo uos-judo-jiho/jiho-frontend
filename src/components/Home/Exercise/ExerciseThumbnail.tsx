@@ -1,10 +1,6 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { getTrainings } from "../../../api/training";
-import useFetchData from "../../../Hooks/useFetchData";
 import Col from "../../../layouts/Col";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
 import { useTrainings } from "../../../recoills/tranings";
 
 const Stack = styled.div`
@@ -82,7 +78,7 @@ function ExerciseThumbnail() {
 
   return (
     <Container>
-      <Link to={"/Photo"}>
+      <Link to={"/photo"}>
         <Stack>
           <Thumbnail src={lastTraningData?.imgSrcs[0]} />
           <HoveredContainer>

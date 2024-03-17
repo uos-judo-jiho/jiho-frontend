@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
 import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
@@ -66,6 +66,9 @@ const DescriptionTitle = styled.h3`
 const Description = styled.p`
   font-size: ${(props) => props.theme.defaultFontSize};
   text-indent: 0.4em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: keep-all;
 `;
 
 const DescriptionFooter = styled.div`
@@ -162,16 +165,7 @@ function ModalDescriptionSection({
       </DescriptionHeader>
       <DescriptionWrapper>
         <DescriptionTitle>{article.title}</DescriptionTitle>
-        <Description>
-          {article.description.split("\n").map((line, index) => {
-            return (
-              <>
-                {line}
-                <br key={line + index.toString()} />
-              </>
-            );
-          })}
-        </Description>
+        <Description>{article.description}</Description>
       </DescriptionWrapper>
       <DescriptionFooter>
         <Line margin={"10px 0"} borderWidth={"1px"} />

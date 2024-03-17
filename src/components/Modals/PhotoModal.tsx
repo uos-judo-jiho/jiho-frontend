@@ -9,7 +9,7 @@ import ModalArticleContainer from "./ModalArticleContainer";
 
 type PhotoModalProps = {
   open: boolean;
-  close: React.MouseEventHandler<HTMLButtonElement>;
+  close: (event?: MouseEvent) => void;
   infos: ArticleInfoType[];
   index: number;
   titles: string[];
@@ -147,11 +147,11 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
   useEffect(() => {
     const infosLength = infos.length;
     setLength(infosLength);
-  }, []);
+  }, [infos.length]);
 
   useEffect(() => {
     setInfo(infos[current]);
-  }, [current]);
+  }, [current, infos]);
 
   useEffect(() => {
     if (visible && !open) {
@@ -169,7 +169,7 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
     setCurrent(current - 1);
   }
 
-  if (!animate && !visible) return null;
+  if (!animate && !visible) return <></>;
 
   return (
     <Container className={open ? "openModal" : "closeModal"}>
@@ -188,7 +188,7 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
         />
       </ArrowWrapper>
       <MobileModalLayout>
-        <CloseBtn onClick={close}>
+        <CloseBtn onClick={() => close()}>
           <StyledClose />
         </CloseBtn>
         <ModalArticleContainer info={info} titles={titles} />

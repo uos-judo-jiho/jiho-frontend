@@ -34,7 +34,7 @@ function Photo() {
   const { id } = useParams<string>();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [photoIdx, setPhotoIdx] = useState<number>(0);
-  const escKey = useKeyEscClose(closeModal);
+  useKeyEscClose(closeModal);
   const { lockScroll, openScroll } = useBodyScrollLock();
 
   const { trainings, fetch } = useTrainings();
