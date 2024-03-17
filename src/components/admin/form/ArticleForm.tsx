@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -6,8 +6,8 @@ import {
   updateBoard,
   uploadBoard,
 } from "../../../api/admin/board";
+import { uploadPicture } from "../../../api/admin/pictures";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import { getImageFileFromSrc, toBase64 } from "../../../utils/Utils";
 import SubmitModal from "../../Modals/AlertModals/SubmitModal";
 import Loading from "../../Skeletons/Loading";
 import ImageUploader from "./ImageUploader/ImageUploader";
@@ -24,8 +24,6 @@ import {
   TagDeleteButton,
   TagsContainer,
 } from "./StyledComponent/FormContainer";
-import { ArticleType } from "./Type/ArticleType";
-import { uploadPicture } from "../../../api/admin/pictures";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -33,13 +31,13 @@ type ArticleFormProps = {
   gallery?: boolean;
 };
 
-const initValues = {
+const initValues: Omit<ArticleInfoType, "id"> = {
   author: "",
   title: "",
   tags: [],
   description: "",
   dateTime: "",
-  images: [],
+  imgSrcs: [],
 };
 
 const LoadingWrapper = styled.div`
@@ -60,7 +58,9 @@ const LoadingContainer = styled.div`
 `;
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
-  const [values, setValues] = useState<ArticleType>(initValues);
+  const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
+    data ?? initValues
+  );
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
@@ -68,35 +68,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const isNew = !data;
 
-  useEffect(() => {
-    if (!data) return;
-    let defaultValues: ArticleType = {
-      author: data.author,
-      title: data.title,
-      tags: data.tags,
-      description: data.description,
-      dateTime: data.dateTime,
-      images: [],
-    };
-
-    async function _convertFileFromSrc() {
-      let defaultFiles: File[] = [];
-      data?.imgSrcs.map(async (previewImgsrc, index) => {
-        const imgSrc = previewImgsrc;
-        const file = await getImageFileFromSrc(imgSrc, index.toString());
-        if (file) {
-          defaultFiles.push(file);
-        }
-      });
-      if (defaultFiles) {
-        defaultValues = { ...defaultValues, images: defaultFiles };
-      }
-    }
-    _convertFileFromSrc();
-
-    setValues(defaultValues);
-  }, [data]);
-
+  console.log(values);
   const handelSubmitOpen = () => setIsSubmitOpen(true);
 
   const handleDelete = async (
@@ -115,16 +87,9 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const handleSubmit = async () => {
     setIsSubmited(true);
 
-    const images: string[] = [];
-    for await (const imgs of values.images) {
-      const imgBase64 = await toBase64(imgs);
-      if (typeof imgBase64 === "string") {
-        images.push(imgBase64);
-      }
-    }
     let res;
     if (gallery) {
-      res = await uploadPicture(values.dateTime.slice(0, 4), images);
+      res = await uploadPicture(values.dateTime.slice(0, 4), values.imgSrcs);
     } else {
       if (isNew) {
         res = await uploadBoard(
@@ -134,7 +99,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
             description: values.description,
             dateTime: values.dateTime,
             tags: values.tags,
-            imgSrcs: images,
+            imgSrcs: values.imgSrcs,
           },
           type
         );
@@ -147,7 +112,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
             description: values.description,
             dateTime: values.dateTime,
             tags: values.tags,
-            imgSrcs: images,
+            imgSrcs: values.imgSrcs,
           },
           type
         );
@@ -234,6 +199,10 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const handleDeleteSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     setIsDeleteOpen(true);
+  };
+
+  const handleUploadImages = (images: string[]) => {
+    setValues((prev) => ({ ...prev, imgSrcs: [...images] }));
   };
 
   return (
@@ -324,7 +293,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
             />
           </InputContainer>
           <ImageUploader
-            setValues={setValues}
+            setValues={handleUploadImages}
             data={data?.imgSrcs}
             imageLimit={gallery ? 20 : 10}
           />

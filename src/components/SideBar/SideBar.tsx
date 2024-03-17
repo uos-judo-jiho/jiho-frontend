@@ -6,6 +6,7 @@ import { ReactComponent as CloseSvg } from "../../assets/svgs/close.svg";
 
 import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
+import { createPortal } from "react-dom";
 
 type SideBarProps = {
   isOpen: boolean;
@@ -78,19 +79,18 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
     setIsOpen(false);
   };
 
-  return (
-    <>
-      <Container id="sidebar" ref={outside} className={isOpen ? "open" : ""}>
-        <StyledClose onClick={toggleSide} />
-        <NavWrapper>
-          {isClient ? (
-            <ClientMenu selected={selected} setSelected={setSelected} />
-          ) : (
-            <AdminMenu />
-          )}
-        </NavWrapper>
-      </Container>
-    </>
+  return createPortal(
+    <Container id="sidebar" ref={outside} className={isOpen ? "open" : ""}>
+      <StyledClose onClick={toggleSide} />
+      <NavWrapper>
+        {isClient ? (
+          <ClientMenu selected={selected} setSelected={setSelected} />
+        ) : (
+          <AdminMenu />
+        )}
+      </NavWrapper>
+    </Container>,
+    document.body
   );
 };
 
