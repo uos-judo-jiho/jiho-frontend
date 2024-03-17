@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import PhotoModal from "../Modals/PhotoModal";
@@ -20,11 +20,12 @@ type NewsCardProps = {
 
 const Container = styled.div`
   width: 100%;
-
+  max-height: 320px;
   font-size: ${(props) => props.theme.descriptionFontSize};
   line-height: ${(props) => props.theme.descriptionLineHeight};
 
   display: flex;
+
   border-radius: 10px;
   padding: 2rem 0rem;
 
@@ -44,6 +45,7 @@ const Container = styled.div`
 `;
 
 const ImgWrapper = styled.div`
+  flex: 1 1 0;
   width: 50%;
   padding: 0rem 1rem;
   @media (max-width: 539px) {
@@ -108,6 +110,7 @@ const DescriptionSubTitle = styled.span`
   padding-right: 0.5rem;
 `;
 const DescriptionWrapper = styled.div`
+  flex: 1 1 0;
   font-size: ${(props) => props.theme.defaultFontSize};
   line-height: ${(props) => props.theme.descriptionLineHeight};
   width: 100%;
@@ -136,15 +139,10 @@ const MoreButton = styled.button`
 function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { lockScroll, openScroll } = useBodyScrollLock();
-  const comment = datas[index].description;
 
   const [isMore, setIsMore] = useState<boolean>(false);
-  const textLimit = useRef<number>(250);
 
-  const commenter = useMemo(
-    () => comment.slice(0, textLimit.current),
-    [comment]
-  );
+  const commenter = datas[index].description.slice(0, 100);
 
   const openSeeMore = useCallback(() => {
     setIsMore(true);
@@ -215,14 +213,14 @@ function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
                 <DescriptionSubTitle>{datas[index].tags}</DescriptionSubTitle>
               </Row>
             </Col>
-            <div>{commenter}</div>
-            <SeeMore>
-              <MoreButton>...자세히 보기</MoreButton>
-            </SeeMore>
           </DescriptionTitleWrapper>
+          <div>{commenter}</div>
+          <SeeMore>
+            <MoreButton>...자세히 보기</MoreButton>
+          </SeeMore>
         </DescriptionWrapper>
       </Container>
-      {isMore ? (
+      {isMore && (
         <PhotoModal
           open={isMore}
           close={closeSeeMore}
@@ -230,8 +228,6 @@ function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
           index={index}
           titles={["작성자", "태그", "작성 일자"]}
         />
-      ) : (
-        <></>
       )}
     </>
   );

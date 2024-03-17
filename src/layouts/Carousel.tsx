@@ -135,7 +135,14 @@ function Carousel({ datas }: CarouselProps) {
         });
       };
     }
-  }, [scrollContainer, leftArrow, rightArrow, containerWidth]);
+  }, [
+    scrollContainer,
+    leftArrow,
+    rightArrow,
+    containerWidth,
+    carouselEl,
+    datas.length,
+  ]);
 
   if (datas.length === 0) return null;
 
