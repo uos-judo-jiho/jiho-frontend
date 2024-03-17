@@ -13,7 +13,7 @@ import { ArticleType } from "../Type/ArticleType";
 import { getImageFileFromSrc } from "../../../../utils/Utils";
 
 type ImageUploaderProps = {
-  setValues: React.Dispatch<React.SetStateAction<ArticleType>>;
+  setValues: (images: string[]) => void;
   data?: string[];
   imageLimit?: number;
 };
@@ -61,12 +61,14 @@ function ImageUploader({
       for (let i = 0; i < files.length; i++) {
         const currentImageUrl = URL.createObjectURL(files[i]);
         urlList.push(currentImageUrl);
+        console.log(currentImageUrl);
       }
 
       if (urlList.length > imageLimit) {
         urlList = urlList.slice(0, imageLimit);
       }
       setPreviewImg(urlList);
+      setValues(urlList);
 
       let newImgs = [...img, ...files];
 
@@ -75,10 +77,6 @@ function ImageUploader({
       }
 
       setImg(newImgs);
-
-      setValues((prev) => {
-        return { ...prev, images: newImgs };
-      });
     }
   }
 
@@ -87,15 +85,13 @@ function ImageUploader({
     index: number
   ) {
     event.preventDefault();
-    const imgArr = img.filter((el, idx) => idx !== index);
-    const imgNameArr = previewImg.filter((el, idx) => idx !== index);
+    const imgArr = img.filter((_el, idx) => idx !== index);
+    const imgNameArr = previewImg.filter((_el, idx) => idx !== index);
 
     setImg([...imgArr]);
     setPreviewImg([...imgNameArr]);
 
-    setValues((prev) => {
-      return { ...prev, images: [...imgArr] };
-    });
+    setValues([...imgNameArr]);
   }
 
   return (
