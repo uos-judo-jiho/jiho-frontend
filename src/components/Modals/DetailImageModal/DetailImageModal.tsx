@@ -4,6 +4,7 @@ import { ReactComponent as Close } from "../../../assets/svgs/close.svg";
 import useBodyScrollLock from "../../../Hooks/useBodyScrollLock";
 import { useEffect, useRef } from "react";
 import useClickOutside from "../../../Hooks/useClickOutside";
+import useKeyEscClose from "../../../Hooks/useKeyEscClose";
 
 type DetailImageModalProps = {
   image: string;
@@ -61,6 +62,7 @@ const DetailImageModal = ({
   const modalRef = useRef<HTMLImageElement>(null);
   const { lockScroll, openScroll } = useBodyScrollLock();
   useClickOutside(modalRef, onClose);
+  useKeyEscClose(onClose);
 
   useEffect(() => {
     if (isOpen) {
