@@ -12,7 +12,7 @@ type DetailImageModalProps = {
 };
 
 const Container = styled.div<{ open: boolean }>`
-  ${(props) => !props.open && `display:none`}
+  display: ${(props) => !props.open && "none"};
   position: fixed;
   width: 100vw;
   height: 100vh;
