@@ -67,7 +67,6 @@ function Navbar() {
 
   return (
     <Header>
-      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
       <Container>
         <Row justifyContent="space-between">
           <NavDropDown onClick={handleClick}>
@@ -83,6 +82,7 @@ function Navbar() {
           </LogoWrapper>
         </Row>
       </Container>
+      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
     </Header>
   );
 }
