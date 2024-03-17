@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import PhotoModal from "../Modals/PhotoModal";
@@ -20,12 +20,13 @@ type NewsCardProps = {
 
 const Container = styled.div`
   width: 100%;
-  max-height: 30rem;
-
+  max-height: 320px;
   font-size: ${(props) => props.theme.descriptionFontSize};
+  line-height: ${(props) => props.theme.descriptionLineHeight};
 
   display: flex;
-  border-radius: 1rem;
+
+  border-radius: 10px;
   padding: 2rem 0rem;
 
   transition: all 0.5s;
@@ -37,9 +38,14 @@ const Container = styled.div`
       box-shadow: 0.2rem 0.4rem 1.6rem rgb(0 0 0 / 16%);
     }
   }
+  @media (max-width: 540px) {
+    border: 1px solid ${(props) => props.theme.lightGreyColor};
+    padding: 8px;
+  }
 `;
 
 const ImgWrapper = styled.div`
+  flex: 1 1 0;
   width: 50%;
   padding: 0rem 1rem;
   @media (max-width: 539px) {
@@ -50,6 +56,7 @@ const ImgWrapper = styled.div`
 
 const ImgSubTitle = styled.div`
   font-size: ${(props) => props.theme.tinyFontSize};
+  line-height: ${(props) => props.theme.tinyLineHeight};
   color: ${(props) => props.theme.greyColor};
   padding-top: 0.5rem;
   display: none;
@@ -59,6 +66,8 @@ const ImgSubTitle = styled.div`
 `;
 const ImgTitle = styled.div`
   font-size: ${(props) => props.theme.descriptionFontSize};
+  line-height: ${(props) => props.theme.descriptionLineHeight};
+
   font-weight: bold;
   padding-top: 0.5rem;
   display: none;
@@ -73,7 +82,7 @@ const ImgTitle = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
-  border-radius: 0.5rem;
+  border-radius: 5px;
   object-fit: cover;
 
   @media (max-width: 539px) {
@@ -89,17 +98,21 @@ const DescriptionTitleWrapper = styled.div`
 const DescriptionTitle = styled.h3`
   text-indent: 0;
   font-size: ${(props) => props.theme.descriptionFontSize};
+  line-height: ${(props) => props.theme.descriptionLineHeight};
   font-weight: bold;
 `;
 
 const DescriptionSubTitle = styled.span`
   text-indent: 0;
   font-size: ${(props) => props.theme.tinyFontSize};
+  line-height: ${(props) => props.theme.tinyLineHeight};
   color: ${(props) => props.theme.greyColor};
   padding-right: 0.5rem;
 `;
 const DescriptionWrapper = styled.div`
+  flex: 1 1 0;
   font-size: ${(props) => props.theme.defaultFontSize};
+  line-height: ${(props) => props.theme.descriptionLineHeight};
   width: 100%;
   padding: 0 1rem;
   line-height: normal;
@@ -111,10 +124,11 @@ const DescriptionWrapper = styled.div`
 `;
 
 const SeeMore = styled.span``;
+
 const MoreButton = styled.button`
   margin-top: 2px;
   font-size: ${(props) => props.theme.tinyFontSize};
-
+  line-height: ${(props) => props.theme.tinyLineHeight};
   color: ${(props) => props.theme.textColor};
 
   &:hover {
@@ -125,15 +139,10 @@ const MoreButton = styled.button`
 function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { lockScroll, openScroll } = useBodyScrollLock();
-  const comment = datas[index].description;
 
   const [isMore, setIsMore] = useState<boolean>(false);
-  const textLimit = useRef<number>(250);
 
-  const commenter = useMemo(
-    () => comment.slice(0, textLimit.current),
-    [comment]
-  );
+  const commenter = datas[index].description.slice(0, 100);
 
   const openSeeMore = useCallback(() => {
     setIsMore(true);
@@ -205,14 +214,13 @@ function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
               </Row>
             </Col>
           </DescriptionTitleWrapper>
-          {commenter}
+          <div>{commenter}</div>
           <SeeMore>
-            <br />
             <MoreButton>...자세히 보기</MoreButton>
           </SeeMore>
         </DescriptionWrapper>
       </Container>
-      {isMore ? (
+      {isMore && (
         <PhotoModal
           open={isMore}
           close={closeSeeMore}
@@ -220,8 +228,6 @@ function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
           index={index}
           titles={["작성자", "태그", "작성 일자"]}
         />
-      ) : (
-        <></>
       )}
     </>
   );

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import useWindowResize from "../Hooks/useWindowResize";
 
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
+import DetailImageModal from "../components/Modals/DetailImageModal/DetailImageModal";
 
 type CarouselProps = {
   datas: string[];
@@ -88,8 +89,19 @@ function Carousel({ datas }: CarouselProps) {
   const [carouselEl, setCarouselEl] = useState<HTMLElement | undefined>();
   const [leftArrow, setLeftArrow] = useState<HTMLElement | undefined>();
   const [rightArrow, setRightArrow] = useState<HTMLElement | undefined>();
+  const [detailIsOpen, setDetailIsOpen] = useState(false);
+  const [selectedDetailImage, setSelectedDetailImage] = useState("");
 
-  const TargetContanier = useRef<HTMLDivElement | null>(null);
+  const handleItemClick = (image: string) => {
+    setSelectedDetailImage(image);
+    setDetailIsOpen(true);
+  };
+  const handleDetailClose = () => {
+    setSelectedDetailImage("");
+    setDetailIsOpen(false);
+  };
+
+  const targetContanier = useRef<HTMLDivElement | null>(null);
   const containerWidth = useWindowResize(scrollContainer);
 
   useEffect(() => {
@@ -135,7 +147,14 @@ function Carousel({ datas }: CarouselProps) {
         });
       };
     }
-  }, [scrollContainer, leftArrow, rightArrow, containerWidth]);
+  }, [
+    scrollContainer,
+    leftArrow,
+    rightArrow,
+    containerWidth,
+    carouselEl,
+    datas.length,
+  ]);
 
   if (datas.length === 0) return null;
 
@@ -157,12 +176,12 @@ function Carousel({ datas }: CarouselProps) {
         isBackGround={true}
         isMobileVisible={false}
       />
-      <ScrollWrapper id={"scroll"} ref={TargetContanier}>
+      <ScrollWrapper id={"scroll"} ref={targetContanier}>
         <CarouselWrapper id={"carousel"}>
-          {datas.map((img, index) => (
+          {datas.map((img) => (
             <CarouselItem
-              id={"carousel-item" + index}
-              key={"CarouselItem" + index}
+              key={"CarouselItem" + img}
+              onClick={() => handleItemClick(img)}
             >
               <ImgWrapper>
                 <Img src={img} />
@@ -171,6 +190,11 @@ function Carousel({ datas }: CarouselProps) {
           ))}
         </CarouselWrapper>
       </ScrollWrapper>
+      <DetailImageModal
+        image={selectedDetailImage}
+        isOpen={detailIsOpen}
+        onClose={handleDetailClose}
+      />
     </Window>
   );
 }
