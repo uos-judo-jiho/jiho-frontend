@@ -7,14 +7,22 @@ import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
 import Title from "../layouts/Title";
 
-import { redirect, useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import useBodyScrollLock from "../Hooks/useBodyScrollLock";
 import useKeyEscClose from "../Hooks/useKeyEscClose";
 import MyHelmet from "../helmet/MyHelmet";
 import { useTrainings } from "../recoills/tranings";
 
-// TODO 무한 스크롤 구현
-function Photo() {
+const Photo = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const id = searchParams.get("p") || "";
+  const { lockScroll, openScroll } = useBodyScrollLock();
+
+  const { trainings, fetch } = useTrainings();
+
+  const metaImgUrl = trainings[0].imgSrcs[0];
+
   const openModal = () => {
     setModalOpen(true);
     lockScroll();
@@ -24,20 +32,15 @@ function Photo() {
     setModalOpen(false);
     openScroll();
   };
-  const handleClickCard = (index: number) => {
+
+  const handleClickCard = (id: number | string) => {
     if (!modalOpen) {
       openModal();
-      setPhotoIdx(index);
+      setSearchParams({ p: id.toString() });
     }
   };
 
-  const { id } = useParams<string>();
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [photoIdx, setPhotoIdx] = useState<number>(0);
   useKeyEscClose(closeModal);
-  const { lockScroll, openScroll } = useBodyScrollLock();
-
-  const { trainings, fetch } = useTrainings();
 
   useEffect(() => {
     fetch();
@@ -45,24 +48,15 @@ function Photo() {
 
   useEffect(() => {
     if (trainings && id) {
-      if (parseInt(id) < trainings.length) {
-        if (!modalOpen) {
-          setModalOpen(true);
-          lockScroll();
-          setPhotoIdx(parseInt(id));
-        }
-      }
-    } else {
-      redirect("./photo");
+      setModalOpen(true);
+      lockScroll();
     }
-  }, [id, lockScroll, modalOpen, trainings]);
+  }, [id, lockScroll, trainings]);
 
   const metaDescription = [
     trainings[0].title,
     trainings[0].description.slice(0, 80),
   ].join(" | ");
-
-  const metaImgUrl = trainings[0].imgSrcs[0];
 
   return (
     <>
@@ -75,30 +69,29 @@ function Photo() {
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />
           <PhotoCardContainer>
-            {trainings.map((trainingLog, index) => (
+            {trainings.map((trainingLog) => (
               <ThumbnailCard
                 key={trainingLog.id}
                 imgSrc={trainingLog?.imgSrcs[0] ?? ""}
                 dateTime={trainingLog.dateTime}
                 handleClickCard={handleClickCard}
-                index={index}
+                id={trainingLog.id}
               />
             ))}
           </PhotoCardContainer>
-
-          {modalOpen && (
-            <PhotoModal
-              open={modalOpen}
-              close={closeModal}
-              infos={trainings}
-              index={photoIdx}
-              titles={["작성자", "참여 인원", "훈련 날짜"]}
-            />
-          )}
         </SheetWrapper>
       </DefaultLayout>
+      {modalOpen && (
+        <PhotoModal
+          open={modalOpen}
+          close={closeModal}
+          infos={trainings}
+          id={id}
+          titles={["작성자", "참여 인원", "훈련 날짜"]}
+        />
+      )}
     </>
   );
-}
+};
 
 export default Photo;

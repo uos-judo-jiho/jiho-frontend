@@ -1,11 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
-import PhotoModal from "../Modals/PhotoModal";
-
-import { redirect } from "react-router-dom";
-import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
-import useKeyEscClose from "../../Hooks/useKeyEscClose";
 import { Constants } from "../../constant/constant";
 import Col from "../../layouts/Col";
 import Row from "../../layouts/Row";
@@ -16,6 +11,7 @@ type NewsCardProps = {
   index: number;
   datas: ArticleInfoType[];
   selectedIndex?: number;
+  handleClickCard: (index: string) => void;
 };
 
 const Container = styled.div`
@@ -42,6 +38,10 @@ const Container = styled.div`
     border: 1px solid ${(props) => props.theme.lightGreyColor};
     padding: 8px;
   }
+`;
+
+const AnchoreContainer = styled.a`
+  display: flex;
 `;
 
 const ImgWrapper = styled.div`
@@ -136,81 +136,57 @@ const MoreButton = styled.button`
   }
 `;
 
-function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
+function NewsCard({ index, datas, handleClickCard }: NewsCardProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { lockScroll, openScroll } = useBodyScrollLock();
 
-  const [isMore, setIsMore] = useState<boolean>(false);
-
+  const newsData = datas[index];
   const commenter = datas[index].description.slice(0, 100);
-
-  const openSeeMore = useCallback(() => {
-    setIsMore(true);
-    lockScroll();
-  }, [lockScroll]);
-
-  const closeSeeMore = () => {
-    setIsMore(false);
-    openScroll();
-  };
 
   const handleLoding = () => {
     setIsLoading(true);
   };
 
-  const escKey = useKeyEscClose(closeSeeMore);
-
-  useEffect(() => {
-    if (selectedIndex === index) {
-      openSeeMore();
-    } else {
-      redirect("./news/2022");
-    }
-  }, [index, openSeeMore, selectedIndex]);
-
   return (
-    <>
-      {/* <Container onClick={openSeeMore} ref={imgRef}> */}
-      <Container onClick={openSeeMore}>
+    <Container onClick={() => handleClickCard(newsData.id)}>
+      <AnchoreContainer
+        href={`news/2022?p=${newsData.id}`}
+        onClick={(e) => e.preventDefault()}
+      >
         <ImgWrapper>
           {isLoading ? (
             <Img
               loading="lazy"
-              alt={datas[index].title + datas[index].author}
+              alt={newsData.title + newsData.author}
               src={
-                datas[index].imgSrcs[0]
-                  ? datas[index].imgSrcs[0]
-                  : Constants.LOGO_BLACK
+                newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK
               }
             />
           ) : (
             <SkeletonThumbnail />
           )}
           <img
-            alt={datas[index].title + datas[index].author}
+            alt={newsData.title + newsData.author}
             src={
-              datas[index].imgSrcs[0]
-                ? datas[index].imgSrcs[0]
-                : Constants.LOGO_BLACK
+              newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK
             }
             style={{ display: "none" }}
             onLoad={handleLoding}
           />
 
           <Col>
-            <ImgTitle>{datas[index].title}</ImgTitle>
-            <ImgSubTitle>{datas[index].author}</ImgSubTitle>
-            <ImgSubTitle>{datas[index].tags}</ImgSubTitle>
+            <ImgTitle>{newsData.title}</ImgTitle>
+            <ImgSubTitle>{newsData.author}</ImgSubTitle>
+            <ImgSubTitle>{newsData.tags}</ImgSubTitle>
           </Col>
         </ImgWrapper>
 
         <DescriptionWrapper>
           <DescriptionTitleWrapper>
             <Col>
-              <DescriptionTitle>{datas[index].title}</DescriptionTitle>
+              <DescriptionTitle>{newsData.title}</DescriptionTitle>
               <Row>
-                <DescriptionSubTitle>{datas[index].author}</DescriptionSubTitle>
-                <DescriptionSubTitle>{datas[index].tags}</DescriptionSubTitle>
+                <DescriptionSubTitle>{newsData.author}</DescriptionSubTitle>
+                <DescriptionSubTitle>{newsData.tags}</DescriptionSubTitle>
               </Row>
             </Col>
           </DescriptionTitleWrapper>
@@ -219,17 +195,8 @@ function NewsCard({ index, datas, selectedIndex }: NewsCardProps) {
             <MoreButton>...자세히 보기</MoreButton>
           </SeeMore>
         </DescriptionWrapper>
-      </Container>
-      {isMore && (
-        <PhotoModal
-          open={isMore}
-          close={closeSeeMore}
-          infos={datas}
-          index={index}
-          titles={["작성자", "태그", "작성 일자"]}
-        />
-      )}
-    </>
+      </AnchoreContainer>
+    </Container>
   );
 }
 

@@ -7,6 +7,7 @@ type MoreCardProps = {
   title: string;
   data: ArticleInfoType[];
   linkTo: string;
+  isLinkToQuery?: boolean;
 };
 
 const DATA_LEN = 8;
@@ -59,7 +60,12 @@ const More = styled.p`
   }
 `;
 
-function MoreCard({ title, linkTo, data }: MoreCardProps) {
+const MoreCard = ({
+  title,
+  linkTo,
+  data,
+  isLinkToQuery = false,
+}: MoreCardProps) => {
   const boardData = data.slice(0, DATA_LEN);
   return (
     <Card>
@@ -74,7 +80,7 @@ function MoreCard({ title, linkTo, data }: MoreCardProps) {
           {boardData.map((item, index) => {
             return (
               <Item key={title + index}>
-                <Link to={linkTo + "/" + item.id}>
+                <Link to={`${linkTo}${isLinkToQuery ? "?p=" : "/"}${item.id}`}>
                   <ItemWrapper>{`[${item.author}] ${item.description}`}</ItemWrapper>
                 </Link>
               </Item>
@@ -84,6 +90,6 @@ function MoreCard({ title, linkTo, data }: MoreCardProps) {
       </Container>
     </Card>
   );
-}
+};
 
 export default MoreCard;
