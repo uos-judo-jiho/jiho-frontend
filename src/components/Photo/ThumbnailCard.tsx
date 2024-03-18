@@ -5,8 +5,8 @@ import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
 type ThumbnailCardProps = {
   imgSrc: string;
   dateTime: string;
-  index: number;
-  handleClickCard: (index: number) => void;
+  id: string;
+  handleClickCard: (index: string) => void;
 };
 
 const ImgWrapper = styled.li`
@@ -51,40 +51,41 @@ const Thumbnail = styled.img`
     }
   }
 `;
-function ThumbnailCard({
+const ThumbnailCard = ({
   imgSrc,
   dateTime,
-  index,
+  id,
   handleClickCard,
-}: ThumbnailCardProps) {
+}: ThumbnailCardProps) => {
   // const { imgRef, isLoading, setIsLoading } = useLazyImage();
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleClick() {
-    handleClickCard(index);
-  }
+  const handleClick = () => handleClickCard(id);
 
-  function handleLoad() {
-    setIsLoading(true);
-  }
+  const handleLoad = () => setIsLoading(true);
 
   return (
     <ImgWrapper onClick={handleClick}>
-      {isLoading ? (
-        <Thumbnail loading="lazy" src={imgSrc} alt={"훈련 일지: " + dateTime} />
-      ) : (
-        <SkeletonThumbnail />
-      )}
-      <img
-        src={imgSrc}
-        alt={"훈련 일지: " + dateTime}
-        style={{ display: "none" }}
-        onLoad={handleLoad}
-      />
-
-      <HoveredContainer>{dateTime}</HoveredContainer>
+      <a href={`/photo?p=${id}`} onClick={(e) => e.preventDefault()}>
+        {isLoading ? (
+          <Thumbnail
+            loading="lazy"
+            src={imgSrc}
+            alt={"훈련 일지: " + dateTime}
+          />
+        ) : (
+          <SkeletonThumbnail />
+        )}
+        <img
+          src={imgSrc}
+          alt={"훈련 일지: " + dateTime}
+          style={{ display: "none" }}
+          onLoad={handleLoad}
+        />
+        <HoveredContainer>{dateTime}</HoveredContainer>
+      </a>
     </ImgWrapper>
   );
-}
+};
 
 export default ThumbnailCard;

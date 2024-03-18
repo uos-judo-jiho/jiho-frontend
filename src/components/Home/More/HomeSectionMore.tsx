@@ -2,11 +2,10 @@ import styled from "styled-components";
 import { Constants } from "../../../constant/constant";
 import SheetWrapper from "../../../layouts/SheetWrapper";
 import Title from "../../../layouts/Title";
-import MoreCard from "./MoreCard";
 import { useNews } from "../../../recoills/news";
-import { useTrainings } from "../../../recoills/tranings";
-import { useEffect } from "react";
 import { useNotices } from "../../../recoills/notices";
+import { useTrainings } from "../../../recoills/tranings";
+import MoreCard from "./MoreCard";
 
 const Container = styled.div``;
 
@@ -24,7 +23,7 @@ const GridContainer = styled.div`
   }
 `;
 
-function HomeSectionMore() {
+const HomeSectionMore = () => {
   const { news } = useNews();
   const { trainings } = useTrainings();
   const { notices } = useNotices();
@@ -35,16 +34,22 @@ function HomeSectionMore() {
         <Title title={"게시글 전체보기"} color={Constants.LOGO_BLACK} />
         <GridContainer>
           <MoreCard title="공지사항" linkTo="/notice" data={notices} />
-          <MoreCard title="훈련일지" linkTo="/photo" data={trainings} />
+          <MoreCard
+            title="훈련일지"
+            linkTo="/photo"
+            data={trainings}
+            isLinkToQuery
+          />
           <MoreCard
             title="지호지"
             linkTo="/news/2022"
             data={news[0]?.articles || []}
+            isLinkToQuery
           />
         </GridContainer>
       </Container>
     </SheetWrapper>
   );
-}
+};
 
 export default HomeSectionMore;

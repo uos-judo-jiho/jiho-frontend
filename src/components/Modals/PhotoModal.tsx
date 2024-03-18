@@ -4,6 +4,8 @@ import styled, { keyframes } from "styled-components";
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 
+import { createPortal } from "react-dom";
+import { useSearchParams } from "react-router-dom";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ModalArticleContainer from "./ModalArticleContainer";
 
@@ -11,7 +13,7 @@ type PhotoModalProps = {
   open: boolean;
   close: (event?: MouseEvent) => void;
   infos: ArticleInfoType[];
-  index: number;
+  id: string;
   titles: string[];
 };
 
@@ -137,21 +139,23 @@ const CloseBtn = styled.button`
   }
 `;
 
-function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
-  const [animate, setAnimate] = useState<boolean>(false);
-  const [visible, setVisible] = useState<boolean>(open);
-  const [current, setCurrent] = useState<number>(index);
-  const [info, setInfo] = useState<ArticleInfoType>(infos[index]);
-  const [length, setLength] = useState<number>(0);
+const PhotoModal = ({ open, close, infos, id, titles }: PhotoModalProps) => {
+  const [, setSearchParams] = useSearchParams();
+  const [animate, setAnimate] = useState(false);
+  const [visible, setVisible] = useState(open);
 
-  useEffect(() => {
-    const infosLength = infos.length;
-    setLength(infosLength);
-  }, [infos.length]);
+  const current = infos.findIndex(
+    (infoItem) => infoItem.id.toString() === id.toString()
+  );
 
-  useEffect(() => {
-    setInfo(infos[current]);
-  }, [current, infos]);
+  const info = infos.find(
+    (infoItem) => infoItem.id.toString() === id.toString()
+  );
+  console.log(id);
+  console.log(infos);
+  console.log(info);
+
+  const length = infos.length;
 
   useEffect(() => {
     if (visible && !open) {
@@ -161,17 +165,22 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
     setAnimate(open);
   }, [visible, open]);
 
-  function nextSlider() {
-    setCurrent(current + 1);
-  }
+  const nextSlider = () => {
+    setSearchParams({ p: `${infos[current + 1].id}` });
+  };
 
-  function prevSlider() {
-    setCurrent(current - 1);
-  }
+  const prevSlider = () => {
+    setSearchParams({ p: `${infos[current - 1].id}` });
+  };
 
   if (!animate && !visible) return <></>;
 
-  return (
+  if (!info) {
+    // redirect("/photo");
+    return <></>;
+  }
+
+  return createPortal(
     <Container className={open ? "openModal" : "closeModal"}>
       <ArrowWrapper isMobileVisible={false} isDesktopVisible={true}>
         <StyledBackArrow
@@ -212,8 +221,9 @@ function PhotoModal({ open, close, infos, index, titles }: PhotoModalProps) {
           <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
         </IndexContainer>
       </MobileModalLayout>
-    </Container>
+    </Container>,
+    document.body
   );
-}
+};
 
 export default PhotoModal;
