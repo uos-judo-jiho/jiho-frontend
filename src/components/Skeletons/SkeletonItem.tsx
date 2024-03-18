@@ -36,8 +36,8 @@ const SkeletonItemStyle = styled.div`
   }
 `;
 
-function SkeletonItem({ children }: SkeletonItemProps) {
+const SkeletonItem = ({ children }: SkeletonItemProps) => {
   return <SkeletonItemStyle>{children}</SkeletonItemStyle>;
-}
+};
 
 export default SkeletonItem;
