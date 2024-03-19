@@ -25,6 +25,8 @@ function NoticeDetail() {
 
   useEffect(() => {
     fetch();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const data = notices.find((value) => value.id.toString() === id?.toString());

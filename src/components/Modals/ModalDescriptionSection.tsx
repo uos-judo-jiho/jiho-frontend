@@ -1,3 +1,5 @@
+// TODO:
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Fragment, useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
@@ -119,7 +121,7 @@ function ModalDescriptionSection({
     if (titles[1] === "태그") {
       setIsDisplay(false);
     }
-  }, []);
+  }, [titles]);
 
   function handleHeart() {
     if (!clickedHeart) {

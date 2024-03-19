@@ -11,6 +11,8 @@ function AdminNoticeDetail() {
 
   useEffect(() => {
     refreshNotice();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const targetArticle = notices.find((item) => item.id.toString() === id);

@@ -13,6 +13,7 @@ import useKeyEscClose from "../Hooks/useKeyEscClose";
 import SkeletonThumbnail from "../components/Skeletons/SkeletonThumbnail";
 import MyHelmet from "../helmet/MyHelmet";
 import { useTrainings } from "../recoills/tranings";
+import { StorageKey } from "../constant/storageKey";
 
 const Photo = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,12 +31,20 @@ const Photo = () => {
   const closeModal = () => {
     setModalOpen(false);
     openScroll();
+    sessionStorage.setItem(
+      StorageKey.sessionStorage.modal_open.training,
+      "false"
+    );
   };
 
   const handleClickCard = (id: number | string) => {
     if (!modalOpen) {
       openModal();
       setSearchParams({ p: id.toString() });
+      sessionStorage.setItem(
+        StorageKey.sessionStorage.modal_open.training,
+        "true"
+      );
     }
   };
 
@@ -43,10 +52,22 @@ const Photo = () => {
 
   useEffect(() => {
     fetch();
+
+    return () => {
+      sessionStorage.setItem(
+        StorageKey.sessionStorage.modal_open.training,
+        "true"
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (trainings && id) {
+    const sessionModalOpen =
+      sessionStorage.getItem(StorageKey.sessionStorage.modal_open.training) ===
+      "true";
+
+    if (trainings && id && sessionModalOpen) {
       setModalOpen(true);
       lockScroll();
     }

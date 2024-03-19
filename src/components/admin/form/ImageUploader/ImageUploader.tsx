@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { getImageFileFromSrc } from "../../../../utils/Utils";
 import {
   InputContainer,
   PreviewContainer,
@@ -9,8 +10,6 @@ import {
   StyledLabel,
   TagDeleteButton,
 } from "../StyledComponent/FormContainer";
-import { ArticleType } from "../Type/ArticleType";
-import { getImageFileFromSrc } from "../../../../utils/Utils";
 
 type ImageUploaderProps = {
   setValues: (images: string[]) => void;

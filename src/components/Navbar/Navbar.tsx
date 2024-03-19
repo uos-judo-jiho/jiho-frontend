@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Row from "../../layouts/Row";
 
-import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import { ReactComponent as Menu } from "../../assets/svgs/menu.svg";
 
 import Logo from "../Logo";
@@ -33,14 +32,7 @@ const StyledMenu = styled(Menu)<StyledMenuProps>`
     opacity: 0.6;
   }
 `;
-const StyledClose = styled(Close)`
-  margin-top: 20px;
 
-  cursor: pointer;
-  &:hover {
-    opacity: 0.6;
-  }
-`;
 const NavDropDown = styled.nav`
   margin: auto 0;
 `;
