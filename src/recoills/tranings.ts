@@ -36,5 +36,5 @@ export const useTrainings = () => {
     fetch();
   }, [fetch, setIsLoad]);
 
-  return { fetch, refreshTraining, trainings };
+  return { fetch, refreshTraining, trainings, isLoad };
 };
