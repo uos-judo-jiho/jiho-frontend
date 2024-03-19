@@ -20,6 +20,8 @@ function Home() {
     fetchNotices();
     fetchrainings();
     fetchNews();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

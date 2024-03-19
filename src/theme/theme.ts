@@ -4,14 +4,11 @@ import { Constants } from "../constant/constant";
 // Color
 const blackColor: string = Constants.BLACK_COLOR;
 const yellowColor: string = Constants.YELLOW_COLOR;
-const pinkColor: string = Constants.PINK_COLOR;
 const whiteColor: string = Constants.WHITE_COLOR;
 const primaryColor: string = Constants.PRIMARY_COLOR;
 const darkGreyColor: string = Constants.DARK_GREY_COLOR;
 const greyColor: string = Constants.GREY_COLOR;
 const lightGreyColor: string = Constants.LIGHT_GREY_COLOR;
-
-const darkHeaderColor: string = Constants.DARK_HEADER_COLOR;
 
 // Font
 const titleFontSize: string = Constants.TITLE_FONT_SIZE; // 36px

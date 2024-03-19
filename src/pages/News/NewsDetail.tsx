@@ -18,6 +18,8 @@ function NewsDetail() {
       const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
       fetch(year ?? "2022");
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentPageNews = news.find(

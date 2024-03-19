@@ -6,7 +6,8 @@ import { GlobalStyle } from "./theme/GlobalStyle";
 import { darkTheme, lightTheme } from "./theme/theme";
 import { RecoilRoot } from "recoil";
 function App() {
-  const [isDark, setIsDart] = useState(false);
+  // TODO: dark mode
+  const [isDark] = useState(false);
 
   return (
     <RecoilRoot>

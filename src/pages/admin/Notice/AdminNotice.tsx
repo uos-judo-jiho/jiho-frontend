@@ -10,6 +10,8 @@ function AdminNotice() {
   const { notices, refreshNotice } = useNotices();
   useEffect(() => {
     refreshNotice();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleNewArticle(event: React.MouseEvent<HTMLButtonElement>) {}

@@ -24,6 +24,8 @@ const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
 
   useEffect(() => {
     refreshNew();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <ArticleForm data={galleryData} type={"news"} gallery />;

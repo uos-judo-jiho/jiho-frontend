@@ -52,6 +52,14 @@ const Photo = () => {
 
   useEffect(() => {
     fetch();
+
+    return () => {
+      sessionStorage.setItem(
+        StorageKey.sessionStorage.modal_open.training,
+        "true"
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -63,13 +71,6 @@ const Photo = () => {
       setModalOpen(true);
       lockScroll();
     }
-
-    return () => {
-      sessionStorage.setItem(
-        StorageKey.sessionStorage.modal_open.training,
-        "true"
-      );
-    };
   }, [id, lockScroll, trainings]);
 
   const metaDescription = [
