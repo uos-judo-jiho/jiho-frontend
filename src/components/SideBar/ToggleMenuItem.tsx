@@ -1,11 +1,10 @@
-import React from "react";
-import { MenuItemTitle, MenuToggle } from "./MenuStyledComponents";
 import Row from "../../layouts/Row";
-import MENUID from "../../types/menuIdType";
+import { menuIdType } from "../../types/menuIdType";
+import { MenuItemTitle, MenuToggle } from "./MenuStyledComponents";
 import SlideSubMenu from "./SlideSubMenu";
 
 type ToggleMenuItemProps = {
-  handleClickMenu(id: MENUID): void;
+  handleClickMenu(id: menuIdType): void;
   selected: boolean;
   parentTitle: string;
   targetMenu: string;

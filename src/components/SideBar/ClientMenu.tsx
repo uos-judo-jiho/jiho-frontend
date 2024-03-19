@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import MENUID from "../../types/menuIdType";
+import { MENU_ID, menuIdType } from "../../types/menuIdType";
 
 import {
   MenuItem,
@@ -10,14 +10,14 @@ import {
 import ToggleMenuItem from "./ToggleMenuItem";
 
 const ClientMenu = ({ selected, setSelected }: MenuProps) => {
-  const handleClickMenu = (id: MENUID) => {
+  const handleClickMenu = (id: menuIdType) => {
     let current;
     switch (id) {
-      case MENUID.newsToggleMenu:
+      case MENU_ID.newsToggleMenu:
         current = selected[0];
         setSelected([!current, false]);
         break;
-      case MENUID.trainingToggleMenu:
+      case MENU_ID.trainingToggleMenu:
         current = selected[1];
         setSelected([false, !current]);
         break;
@@ -37,7 +37,7 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
           handleClickMenu={handleClickMenu}
           selected={selected[0]}
           parentTitle={"지호지"}
-          targetMenu={MENUID.newsToggleMenu}
+          targetMenu={MENU_ID.newsToggleMenu}
           subMenuItemList={[
             { href: "/news/2022", title: "2022 지호지" },
             // { href: "/news/2023", title: "2023 지호지" },
@@ -50,7 +50,7 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
           handleClickMenu={handleClickMenu}
           selected={selected[1]}
           parentTitle={"지호운동"}
-          targetMenu={MENUID.trainingToggleMenu}
+          targetMenu={MENU_ID.trainingToggleMenu}
           subMenuItemList={[{ href: "/photo", title: "훈련일지" }]}
         />
       </MenuItem>

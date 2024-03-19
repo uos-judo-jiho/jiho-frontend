@@ -1,8 +1,6 @@
-const MENUID = {
+export const MENU_ID = {
   newsToggleMenu: "newsToggleMenu",
   trainingToggleMenu: "trainingToggleMenu",
 };
 
-type MENUID = typeof MENUID[keyof typeof MENUID];
-
-export default MENUID;
+export type menuIdType = (typeof MENU_ID)[keyof typeof MENU_ID];
