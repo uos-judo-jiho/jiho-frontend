@@ -11,6 +11,7 @@ function AdminTrainingLog() {
 
   useEffect(() => {
     refreshTraining();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleNewArticle = (event: React.MouseEvent<HTMLButtonElement>) => {};

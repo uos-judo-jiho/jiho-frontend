@@ -13,6 +13,7 @@ function AdminTrainingLogDetail() {
 
   useEffect(() => {
     refreshTraining();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

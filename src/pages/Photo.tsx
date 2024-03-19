@@ -10,8 +10,10 @@ import Title from "../layouts/Title";
 import { useSearchParams } from "react-router-dom";
 import useBodyScrollLock from "../Hooks/useBodyScrollLock";
 import useKeyEscClose from "../Hooks/useKeyEscClose";
+import SkeletonThumbnail from "../components/Skeletons/SkeletonThumbnail";
 import MyHelmet from "../helmet/MyHelmet";
 import { useTrainings } from "../recoills/tranings";
+import { StorageKey } from "../constant/storageKey";
 
 const Photo = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -19,9 +21,7 @@ const Photo = () => {
   const id = searchParams.get("p") || "";
   const { lockScroll, openScroll } = useBodyScrollLock();
 
-  const { trainings, fetch } = useTrainings();
-
-  const metaImgUrl = trainings[0].imgSrcs[0];
+  const { trainings, fetch, isLoad } = useTrainings();
 
   const openModal = () => {
     setModalOpen(true);
@@ -31,12 +31,20 @@ const Photo = () => {
   const closeModal = () => {
     setModalOpen(false);
     openScroll();
+    sessionStorage.setItem(
+      StorageKey.sessionStorage.modal_open.training,
+      "false"
+    );
   };
 
   const handleClickCard = (id: number | string) => {
     if (!modalOpen) {
       openModal();
       setSearchParams({ p: id.toString() });
+      sessionStorage.setItem(
+        StorageKey.sessionStorage.modal_open.training,
+        "true"
+      );
     }
   };
 
@@ -44,19 +52,33 @@ const Photo = () => {
 
   useEffect(() => {
     fetch();
+
+    return () => {
+      sessionStorage.setItem(
+        StorageKey.sessionStorage.modal_open.training,
+        "true"
+      );
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (trainings && id) {
+    const sessionModalOpen =
+      sessionStorage.getItem(StorageKey.sessionStorage.modal_open.training) ===
+      "true";
+
+    if (trainings && id && sessionModalOpen) {
       setModalOpen(true);
       lockScroll();
     }
   }, [id, lockScroll, trainings]);
 
   const metaDescription = [
-    trainings[0].title,
-    trainings[0].description.slice(0, 80),
+    trainings[0]?.title,
+    trainings[0]?.description.slice(0, 80),
   ].join(" | ");
+
+  const metaImgUrl = trainings[0]?.imgSrcs[0];
 
   return (
     <>
@@ -69,15 +91,19 @@ const Photo = () => {
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />
           <PhotoCardContainer>
-            {trainings.map((trainingLog) => (
-              <ThumbnailCard
-                key={trainingLog.id}
-                imgSrc={trainingLog?.imgSrcs[0] ?? ""}
-                dateTime={trainingLog.dateTime}
-                handleClickCard={handleClickCard}
-                id={trainingLog.id}
-              />
-            ))}
+            {isLoad
+              ? trainings.map((trainingLog) => (
+                  <ThumbnailCard
+                    key={trainingLog.id}
+                    imgSrc={trainingLog?.imgSrcs[0] ?? ""}
+                    dateTime={trainingLog.dateTime}
+                    handleClickCard={handleClickCard}
+                    id={trainingLog.id}
+                  />
+                ))
+              : Array.from({ length: 9 }).map((_, index) => (
+                  <SkeletonThumbnail key={index} />
+                ))}
           </PhotoCardContainer>
         </SheetWrapper>
       </DefaultLayout>

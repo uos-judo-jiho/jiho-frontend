@@ -7,6 +7,7 @@ import Title from "../../layouts/Title";
 import { useNews } from "../../recoills/news";
 import { TNewsParams } from "../../types/TNewsParams";
 import { useEffect } from "react";
+import Loading from "../../components/Skeletons/Loading";
 
 function NewsDetail() {
   const { id, index } = useParams<TNewsParams>();
@@ -17,19 +18,25 @@ function NewsDetail() {
       const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
       fetch(year ?? "2022");
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentPageNews = news.find(
     (newsData) => newsData.year.toString() === id?.toString()
   );
 
+  if (!news) {
+    return <Loading />;
+  }
+
   const metaDescription = [
     currentPageNews?.year,
-    currentPageNews?.articles[0].title,
-    currentPageNews?.articles[0].description.slice(0, 80),
+    currentPageNews?.articles[0]?.title,
+    currentPageNews?.articles[0]?.description.slice(0, 80),
   ].join(" | ");
 
-  const metaImgUrl = currentPageNews?.articles[0].imgSrcs[0];
+  const metaImgUrl = currentPageNews?.articles[0]?.imgSrcs[0];
 
   return (
     <>

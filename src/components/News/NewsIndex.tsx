@@ -8,6 +8,7 @@ import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 import useKeyEscClose from "../../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import PhotoModal from "../Modals/PhotoModal";
+import { StorageKey } from "../../constant/storageKey";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];
@@ -21,26 +22,38 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
 
   const { lockScroll, openScroll } = useBodyScrollLock();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+
   const handleClickCard = (id: string) => {
-    setIsModalOpen(true);
+    setModalOpen(true);
     setSearchParams({ p: id });
+    sessionStorage.setItem(StorageKey.sessionStorage.modal_open.news, "true");
     lockScroll();
   };
 
   const closeSeeMore = () => {
-    setIsModalOpen(false);
+    setModalOpen(false);
     openScroll();
+
+    sessionStorage.setItem(StorageKey.sessionStorage.modal_open.news, "false");
   };
 
   useKeyEscClose(closeSeeMore);
 
   useEffect(() => {
-    if (id) {
-      setIsModalOpen(true);
+    const sessionModalOpen =
+      sessionStorage.getItem(StorageKey.sessionStorage.modal_open.news) ===
+      "true";
+    if (articles && id && sessionModalOpen) {
+      setModalOpen(true);
       lockScroll();
     }
-  }, [id, lockScroll]);
+
+    return () => {
+      sessionStorage.setItem(StorageKey.sessionStorage.modal_open.news, "true");
+    };
+  }, [articles, id, lockScroll]);
+
   return (
     <>
       <Carousel datas={images}></Carousel>
@@ -57,9 +70,9 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
           );
         })}
       </NewsCardContainer>
-      {isModalOpen && (
+      {modalOpen && (
         <PhotoModal
-          open={isModalOpen}
+          open={modalOpen}
           close={closeSeeMore}
           infos={articles}
           id={id}

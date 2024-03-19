@@ -41,6 +41,8 @@ const AdminGallery = () => {
 
   useEffect(() => {
     refreshNew();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

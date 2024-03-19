@@ -35,6 +35,8 @@ const FadeIn = keyframes`
     }
 `;
 
+// TODO:
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SlideUp = keyframes`
   from {
     transform: translateY(-10.0rem);
@@ -42,8 +44,10 @@ const SlideUp = keyframes`
   to {
     transform: translateY(0px);
   }
-`;
+  `;
 
+// TODO:
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SlideDown = keyframes`  
   from {
     transform: translateY(0px);
@@ -142,7 +146,7 @@ const CloseBtn = styled.button`
 const PhotoModal = ({ open, close, infos, id, titles }: PhotoModalProps) => {
   const [, setSearchParams] = useSearchParams();
   const [animate, setAnimate] = useState(false);
-  const [visible, setVisible] = useState(open);
+  const [visible] = useState(open);
 
   const current = infos.findIndex(
     (infoItem) => infoItem.id.toString() === id.toString()

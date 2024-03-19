@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import BGImage from "../../../assets/images/background-img-event.jpg";
 import MobileRowColLayout from "../../../layouts/MobileRowColLayout";
-import Row from "../../../layouts/Row";
 import SheetWrapper from "../../../layouts/SheetWrapper";
 import HomeSectionBG from "../HomeSectionBG";
 import HomeAwards from "./HomeAwards";

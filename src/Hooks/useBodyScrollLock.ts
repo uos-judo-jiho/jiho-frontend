@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// TODO: deprecated
 import { useCallback } from "react";
 
 const useBodyScrollLock = () => {

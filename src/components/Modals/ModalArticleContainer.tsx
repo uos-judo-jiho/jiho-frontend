@@ -1,5 +1,4 @@
 import styled, { keyframes } from "styled-components";
-import ImgSlider from "../../layouts/ImgSlider";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
 import Slider from "../../layouts/Slider";
 import { ArticleInfoType } from "../../types/ArticleInfoType";

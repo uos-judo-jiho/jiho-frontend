@@ -17,6 +17,8 @@ function AdminNewsDetail() {
 
   useEffect(() => {
     refreshNew();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!news || !article) return null;

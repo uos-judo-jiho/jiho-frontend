@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO:
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import FooterInfo from "../../assets/jsons/footerData.json";
