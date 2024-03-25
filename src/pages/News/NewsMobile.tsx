@@ -1,11 +1,11 @@
-import styled from "styled-components";
-import { ReactComponent as RightArrow } from "../../assets/svgs/arrow_back_ios.svg";
-import { useTrainings } from "../../recoills/tranings";
 import { useEffect } from "react";
-import Loading from "../../components/Skeletons/Loading";
 import { useLocation } from "react-router-dom";
-import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
+import styled from "styled-components";
 import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
+import { ReactComponent as RightArrow } from "../../assets/svgs/arrow_back_ios.svg";
+import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
+import Loading from "../../components/Skeletons/Loading";
+import { useNews } from "../../recoills/news";
 
 const MobileHeader = styled.header`
   position: sticky;
@@ -59,8 +59,8 @@ const Feed = styled.div`
   }
 `;
 
-const PhotoMobile = () => {
-  const { trainings, fetch, isLoad } = useTrainings();
+const NewsMobile = () => {
+  const { news, fetch } = useNews();
 
   const { openScroll } = useBodyScrollLock();
   const location = useLocation();
@@ -73,21 +73,20 @@ const PhotoMobile = () => {
   }, [openScroll]);
 
   useEffect(() => {
-    if (!id || !trainings) {
+    if (!id || !news) {
       return;
     }
-    document.getElementById(`training-mobile-card-${id}`)?.scrollIntoView();
-  }, [id, trainings]);
+    document.getElementById(`news-mobile-card-${id}`)?.scrollIntoView();
+  }, [id, news]);
 
-  if (!trainings || !isLoad) {
+  if (!news) {
     return <Loading />;
   }
-
   return (
     <div>
       <MobileHeader>
         <div className="nav-icon">
-          <a href="/photo">
+          <a href="/news/2022">
             <RightArrow />
           </a>
         </div>
@@ -95,23 +94,25 @@ const PhotoMobile = () => {
           <a href="/">
             <h1 className="title">{"서울시립대학교 유도부 지호"}</h1>
           </a>
-          <a href="/photo">
-            <h2 className="sub-title">{"훈련일지"}</h2>
+          <a href="/news/2022">
+            <h2 className="sub-title">{"지호지"}</h2>
           </a>
         </HeaderContainer>
         <div className="nav-icon" />
       </MobileHeader>
       <Feed>
-        {trainings.map((trainingInfo) => (
-          <MobilePhotoCard
-            key={trainingInfo.id}
-            articleInfo={trainingInfo}
-            id={`training-mobile-card-${trainingInfo.id}`}
-          />
-        ))}
+        {news.map((newsByYear) =>
+          newsByYear.articles.map((newsInfo) => (
+            <MobilePhotoCard
+              key={newsInfo.id}
+              articleInfo={newsInfo}
+              id={`news-mobile-card-${newsInfo.id}`}
+            />
+          ))
+        )}
       </Feed>
     </div>
   );
 };
 
-export default PhotoMobile;
+export default NewsMobile;

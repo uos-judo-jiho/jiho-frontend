@@ -39,7 +39,7 @@ function NewsDetail() {
   const metaImgUrl = currentPageNews?.articles.at(0)?.imgSrcs.at(0);
 
   return (
-    <>
+    <div>
       <MyHelmet
         title="News"
         description={metaDescription}
@@ -55,7 +55,7 @@ function NewsDetail() {
           />
         </SheetWrapper>
       </DefaultLayout>
-    </>
+    </div>
   );
 }
 

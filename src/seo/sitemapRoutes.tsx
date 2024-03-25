@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import About from "../pages/About";
 import Home from "../pages/Home";
+import NewsPage from "../pages/News";
 import News from "../pages/News/News";
 import NewsDetail from "../pages/News/NewsDetail";
 import NotFound from "../pages/NotFound";
@@ -16,7 +17,7 @@ export default (
     <Route path="/" element={<Home />} />
     <Route path="/news" element={<News />} />
     <Route path="/news/:id" element={<NewsDetail />} />
-    <Route path="/news/:id/:index" element={<NewsDetail />} />
+    <Route path="/news/:id/:index" element={<NewsPage />} />
     <Route path="/about" element={<About />} />
     <Route path="/photo" element={<PhotoPC />} />
     <Route path="/photo/:id" element={<PhotoPage />} />
