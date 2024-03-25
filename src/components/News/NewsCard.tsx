@@ -83,7 +83,7 @@ const Img = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 5px;
-  object-fit: cover;
+  object-fit: contain;
 
   @media (max-width: 539px) {
     height: inherit;
