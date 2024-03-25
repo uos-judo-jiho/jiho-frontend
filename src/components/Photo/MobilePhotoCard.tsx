@@ -5,7 +5,7 @@ import { useState } from "react";
 
 type MobilePhotoCardProps = {
   id: string;
-  trainingInfo: ArticleInfoType;
+  articleInfo: ArticleInfoType;
 };
 
 const MobilePhotoCardContainer = styled.div`
@@ -92,30 +92,30 @@ const MoreButton = styled.button`
   cursor: pointer;
 `;
 
-const MobilePhotoCard = ({ trainingInfo, id }: MobilePhotoCardProps) => {
+const MobilePhotoCard = ({ articleInfo, id }: MobilePhotoCardProps) => {
   const [isMore, setIsMore] = useState(false);
   return (
     <MobilePhotoCardContainer id={id}>
       <CardHeader>
-        <h3>{trainingInfo.title}</h3>
+        <h3>{articleInfo.title}</h3>
         <div className="sub-info">
-          <span>{trainingInfo.author}</span>
-          <span className="datetime">{trainingInfo.dateTime}</span>
+          <span>{articleInfo.author}</span>
+          <span className="datetime">{articleInfo.dateTime}</span>
         </div>
       </CardHeader>
       <SliderContainer>
-        <Slider datas={trainingInfo.imgSrcs} />
+        <Slider datas={articleInfo.imgSrcs} />
       </SliderContainer>
       <Content>
         <div className="participants">
-          {trainingInfo.tags.map((tag) => (
+          {articleInfo.tags.map((tag) => (
             <span key={tag}>{tag}</span>
           ))}
         </div>
         <p className="description">
           {isMore
-            ? trainingInfo.description
-            : trainingInfo.description.slice(0, 20)}
+            ? articleInfo.description
+            : articleInfo.description.slice(0, 20)}
           {!isMore && (
             <MoreButton onClick={() => setIsMore(true)}>...더보기</MoreButton>
           )}
