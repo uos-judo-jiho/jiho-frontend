@@ -5,11 +5,12 @@ import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 
 import { createPortal } from "react-dom";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ModalArticleContainer from "./ModalArticleContainer";
 
 type PhotoModalProps = {
+  baseurl: string;
   open: boolean;
   close: (event?: MouseEvent) => void;
   infos: ArticleInfoType[];
@@ -143,8 +144,15 @@ const CloseBtn = styled.button`
   }
 `;
 
-const PhotoModal = ({ open, close, infos, id, titles }: PhotoModalProps) => {
-  const [, setSearchParams] = useSearchParams();
+const PhotoModal = ({
+  baseurl,
+  open,
+  close,
+  infos,
+  id,
+  titles,
+}: PhotoModalProps) => {
+  const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
   const [visible] = useState(open);
 
@@ -155,9 +163,6 @@ const PhotoModal = ({ open, close, infos, id, titles }: PhotoModalProps) => {
   const info = infos.find(
     (infoItem) => infoItem.id.toString() === id.toString()
   );
-  console.log(id);
-  console.log(infos);
-  console.log(info);
 
   const length = infos.length;
 
@@ -170,17 +175,16 @@ const PhotoModal = ({ open, close, infos, id, titles }: PhotoModalProps) => {
   }, [visible, open]);
 
   const nextSlider = () => {
-    setSearchParams({ p: `${infos[current + 1].id}` });
+    navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
   };
 
   const prevSlider = () => {
-    setSearchParams({ p: `${infos[current - 1].id}` });
+    navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
   };
 
   if (!animate && !visible) return <></>;
 
   if (!info) {
-    // redirect("/photo");
     return <></>;
   }
 

@@ -149,7 +149,7 @@ function NewsCard({ index, datas, handleClickCard }: NewsCardProps) {
   return (
     <Container onClick={() => handleClickCard(newsData.id)}>
       <AnchoreContainer
-        href={`news/2022?p=${newsData.id}`}
+        href={`/news/2022/${newsData.id}`}
         onClick={(e) => e.preventDefault()}
       >
         <ImgWrapper>

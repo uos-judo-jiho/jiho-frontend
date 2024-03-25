@@ -7,19 +7,19 @@ import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
 import SheetWrapper from "../layouts/SheetWrapper";
 import Title from "../layouts/Title";
 
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useBodyScrollLock from "../Hooks/useBodyScrollLock";
 import useKeyEscClose from "../Hooks/useKeyEscClose";
 import Loading from "../components/Skeletons/Loading";
 import SkeletonThumbnail from "../components/Skeletons/SkeletonThumbnail";
-import { StorageKey } from "../constant/storageKey";
 import MyHelmet from "../helmet/MyHelmet";
 import { useTrainings } from "../recoills/tranings";
 
 const Photo = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const id = location.pathname.replace("photo", "").split("/").at(-1) ?? "";
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const id = searchParams.get("p") || "";
   const { lockScroll, openScroll } = useBodyScrollLock();
 
   const { trainings, fetch, isLoad } = useTrainings();
@@ -32,21 +32,11 @@ const Photo = () => {
   const closeModal = () => {
     setModalOpen(false);
     openScroll();
-    sessionStorage.setItem(
-      StorageKey.sessionStorage.modal_open.training,
-      "false"
-    );
   };
 
   const handleClickCard = (id: number | string) => {
-    if (!modalOpen) {
-      openModal();
-      setSearchParams({ p: id.toString() });
-      sessionStorage.setItem(
-        StorageKey.sessionStorage.modal_open.training,
-        "true"
-      );
-    }
+    openModal();
+    navigate(`/photo/${id}`, { replace: true });
   };
 
   useKeyEscClose(closeModal);
@@ -54,21 +44,11 @@ const Photo = () => {
   useEffect(() => {
     fetch();
 
-    return () => {
-      sessionStorage.setItem(
-        StorageKey.sessionStorage.modal_open.training,
-        "true"
-      );
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    const sessionModalOpen =
-      sessionStorage.getItem(StorageKey.sessionStorage.modal_open.training) ===
-      "true";
-
-    if (trainings && id && sessionModalOpen) {
+    if (trainings && id) {
       setModalOpen(true);
       lockScroll();
     }
@@ -114,6 +94,7 @@ const Photo = () => {
       </DefaultLayout>
       {modalOpen && (
         <PhotoModal
+          baseurl={"photo"}
           open={modalOpen}
           close={closeModal}
           infos={trainings}
