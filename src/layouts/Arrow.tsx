@@ -29,8 +29,8 @@ const ArrowCss = css`
 
 const StyledBackArrow = styled(BackArrow)<ArrowProps>`
   display: ${(props) => (props.current === 0 ? "none" : "flex")} !important;
-  width: ${(props) => (props.size ? props.size : "2rem")};
-  height: ${(props) => (props.size ? props.size : "2rem")};
+  width: ${(props) => (props.size ? props.size : "24px")};
+  height: ${(props) => (props.size ? props.size : "24px")};
 
   left: ${(props) =>
     props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
@@ -47,8 +47,8 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
       : ``}
 
   @media (max-width: 539px) {
-    width: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
-    height: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
+    width: ${(props) => (props.mobileSize ? props.mobileSize : "24px")};
+    height: ${(props) => (props.mobileSize ? props.mobileSize : "24px")};
     display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
   }
 `;
@@ -56,8 +56,8 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
 const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
   display: ${(props) =>
     props.current < props.length - 1 ? "flex" : "none"} !important;
-  width: ${(props) => (props.size ? props.size : "2rem")};
-  height: ${(props) => (props.size ? props.size : "2rem")};
+  width: ${(props) => (props.size ? props.size : "24px")};
+  height: ${(props) => (props.size ? props.size : "24px")};
 
   right: ${(props) =>
     props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
@@ -73,8 +73,8 @@ const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
       : ``}
 
   @media (max-width: 539px) {
-    width: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
-    height: ${(props) => (props.mobileSize ? props.mobileSize : "2rem")};
+    width: ${(props) => (props.mobileSize ? props.mobileSize : "24px")};
+    height: ${(props) => (props.mobileSize ? props.mobileSize : "24px")};
     display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
   }
 `;

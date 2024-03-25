@@ -1,33 +1,33 @@
-import { useEffect, useState } from "react";
-import ThumbnailCard from "../components/Photo/ThumbnailCard";
-import DefaultLayout from "../layouts/DefaultLayout";
+import { useCallback, useEffect, useState } from "react";
+import ThumbnailCard from "../../components/Photo/ThumbnailCard";
+import DefaultLayout from "../../layouts/DefaultLayout";
 
-import PhotoModal from "../components/Modals/PhotoModal";
-import PhotoCardContainer from "../components/Photo/PhotoCardContainer";
-import SheetWrapper from "../layouts/SheetWrapper";
-import Title from "../layouts/Title";
+import PhotoModal from "../../components/Modals/PhotoModal";
+import PhotoCardContainer from "../../components/Photo/PhotoCardContainer";
+import SheetWrapper from "../../layouts/SheetWrapper";
+import Title from "../../layouts/Title";
 
 import { useLocation, useNavigate } from "react-router-dom";
-import useBodyScrollLock from "../Hooks/useBodyScrollLock";
-import useKeyEscClose from "../Hooks/useKeyEscClose";
-import Loading from "../components/Skeletons/Loading";
-import SkeletonThumbnail from "../components/Skeletons/SkeletonThumbnail";
-import MyHelmet from "../helmet/MyHelmet";
-import { useTrainings } from "../recoills/tranings";
+import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
+import useKeyEscClose from "../../Hooks/useKeyEscClose";
+import Loading from "../../components/Skeletons/Loading";
+import SkeletonThumbnail from "../../components/Skeletons/SkeletonThumbnail";
+import MyHelmet from "../../helmet/MyHelmet";
+import { useTrainings } from "../../recoills/tranings";
 
-const Photo = () => {
+const PhotoPC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const id = location.pathname.replace("photo", "").split("/").at(-1) ?? "";
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const { lockScroll, openScroll } = useBodyScrollLock();
+  const { openScroll, lockScroll } = useBodyScrollLock();
 
   const { trainings, fetch, isLoad } = useTrainings();
 
-  const openModal = () => {
+  const openModal = useCallback(() => {
     setModalOpen(true);
     lockScroll();
-  };
+  }, [lockScroll]);
 
   const closeModal = () => {
     setModalOpen(false);
@@ -49,10 +49,9 @@ const Photo = () => {
 
   useEffect(() => {
     if (trainings && id) {
-      setModalOpen(true);
-      lockScroll();
+      openModal();
     }
-  }, [id, lockScroll, trainings]);
+  }, [id, openModal, trainings]);
 
   if (!trainings) {
     return <Loading />;
@@ -66,7 +65,7 @@ const Photo = () => {
   const metaImgUrl = trainings.at(0)?.imgSrcs.at(0);
 
   return (
-    <>
+    <div>
       <MyHelmet
         title="Photo"
         description={metaDescription}
@@ -102,8 +101,8 @@ const Photo = () => {
           titles={["작성자", "참여 인원", "훈련 날짜"]}
         />
       )}
-    </>
+    </div>
   );
 };
 
-export default Photo;
+export default PhotoPC;

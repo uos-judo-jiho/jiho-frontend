@@ -8,6 +8,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ModalArticleContainer from "./ModalArticleContainer";
+import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 
 type PhotoModalProps = {
   baseurl: string;
@@ -98,6 +99,10 @@ const Container = styled.div`
   &.closeModal {
     animation-name: ${FadeOut};
   }
+
+  @media (max-width: 539px) {
+    display: none;
+  }
 `;
 
 const MobileModalLayout = styled.div`
@@ -154,7 +159,6 @@ const PhotoModal = ({
 }: PhotoModalProps) => {
   const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
-  const [visible] = useState(open);
 
   const current = infos.findIndex(
     (infoItem) => infoItem.id.toString() === id.toString()
@@ -167,12 +171,12 @@ const PhotoModal = ({
   const length = infos.length;
 
   useEffect(() => {
-    if (visible && !open) {
+    if (!open) {
       setAnimate(true);
       setTimeout(() => setAnimate(false), 250);
     }
     setAnimate(open);
-  }, [visible, open]);
+  }, [open]);
 
   const nextSlider = () => {
     navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
@@ -182,11 +186,7 @@ const PhotoModal = ({
     navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
   };
 
-  if (!animate && !visible) return <></>;
-
-  if (!info) {
-    return <></>;
-  }
+  if (!animate || !info) return <></>;
 
   return createPortal(
     <Container className={open ? "openModal" : "closeModal"}>

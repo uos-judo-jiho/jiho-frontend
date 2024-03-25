@@ -11,7 +11,7 @@ import { useNews } from "../recoills/news";
 import { useNotices } from "../recoills/notices";
 import { useTrainings } from "../recoills/tranings";
 
-function Home() {
+const Home = () => {
   const { fetch: fetchNotices } = useNotices();
   const { fetch: fetchrainings } = useTrainings();
   const { fetch: fetchNews } = useNews();
@@ -38,6 +38,6 @@ function Home() {
       </ScrollSnap>
     </>
   );
-}
+};
 
 export default Home;
