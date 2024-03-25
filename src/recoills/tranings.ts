@@ -16,20 +16,23 @@ export const useTrainings = () => {
   const [trainings, setTrainings] = useRecoilState(TrainingList);
   const [isLoad, setIsLoad] = useRecoilState(isTrainingFecthed);
 
-  const fetch = useCallback(async () => {
-    if (isLoad) {
-      return;
-    }
-    const newTrainingList = await getTrainings("2022");
-    if (!newTrainingList) {
-      return;
-    }
+  const fetch = useCallback(
+    async (year?: string) => {
+      if (isLoad) {
+        return;
+      }
+      const newTrainingList = await getTrainings(year);
+      if (!newTrainingList) {
+        return;
+      }
 
-    setTrainings(
-      newTrainingList.sort((a, b) => (a.dateTime > b.dateTime ? -1 : 1))
-    );
-    setIsLoad(true);
-  }, [isLoad, setIsLoad, setTrainings]);
+      setTrainings(
+        newTrainingList.sort((a, b) => (a.dateTime > b.dateTime ? -1 : 1))
+      );
+      setIsLoad(true);
+    },
+    [isLoad, setIsLoad, setTrainings]
+  );
 
   const refreshTraining = useCallback(() => {
     setIsLoad(false);

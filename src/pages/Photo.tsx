@@ -11,9 +11,9 @@ import { useSearchParams } from "react-router-dom";
 import useBodyScrollLock from "../Hooks/useBodyScrollLock";
 import useKeyEscClose from "../Hooks/useKeyEscClose";
 import SkeletonThumbnail from "../components/Skeletons/SkeletonThumbnail";
+import { StorageKey } from "../constant/storageKey";
 import MyHelmet from "../helmet/MyHelmet";
 import { useTrainings } from "../recoills/tranings";
-import { StorageKey } from "../constant/storageKey";
 
 const Photo = () => {
   const [searchParams, setSearchParams] = useSearchParams();
