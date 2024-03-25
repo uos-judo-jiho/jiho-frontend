@@ -10,6 +10,7 @@ import Title from "../layouts/Title";
 import { useSearchParams } from "react-router-dom";
 import useBodyScrollLock from "../Hooks/useBodyScrollLock";
 import useKeyEscClose from "../Hooks/useKeyEscClose";
+import Loading from "../components/Skeletons/Loading";
 import SkeletonThumbnail from "../components/Skeletons/SkeletonThumbnail";
 import { StorageKey } from "../constant/storageKey";
 import MyHelmet from "../helmet/MyHelmet";
@@ -73,12 +74,16 @@ const Photo = () => {
     }
   }, [id, lockScroll, trainings]);
 
+  if (!trainings) {
+    return <Loading />;
+  }
+
   const metaDescription = [
-    trainings[0]?.title,
-    trainings[0]?.description.slice(0, 80),
+    trainings.at(0)?.title,
+    trainings.at(0)?.description.slice(0, 80),
   ].join(" | ");
 
-  const metaImgUrl = trainings[0]?.imgSrcs[0];
+  const metaImgUrl = trainings.at(0)?.imgSrcs.at(0);
 
   return (
     <>
@@ -95,7 +100,7 @@ const Photo = () => {
               ? trainings.map((trainingLog) => (
                   <ThumbnailCard
                     key={trainingLog.id}
-                    imgSrc={trainingLog?.imgSrcs[0] ?? ""}
+                    imgSrc={trainingLog?.imgSrcs.at(0) ?? ""}
                     dateTime={trainingLog.dateTime}
                     handleClickCard={handleClickCard}
                     id={trainingLog.id}
