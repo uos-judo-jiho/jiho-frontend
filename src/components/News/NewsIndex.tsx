@@ -3,12 +3,11 @@ import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 import useKeyEscClose from "../../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import PhotoModal from "../Modals/PhotoModal";
-import { StorageKey } from "../../constant/storageKey";
+import { useLocation, useNavigate } from "react-router-dom";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];
@@ -17,8 +16,9 @@ type NewsIndexProps = {
 };
 
 function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const id = searchParams.get("p") || "";
+  const navigate = useNavigate();
+  const location = useLocation();
+  const id = location.pathname.replace("news", "").split("/").at(-1) ?? "";
 
   const { lockScroll, openScroll } = useBodyScrollLock();
 
@@ -26,32 +26,22 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
 
   const handleClickCard = (id: string) => {
     setModalOpen(true);
-    setSearchParams({ p: id });
-    sessionStorage.setItem(StorageKey.sessionStorage.modal_open.news, "true");
     lockScroll();
+    navigate(`/news/2022/${id}`, { replace: true });
   };
 
   const closeSeeMore = () => {
     setModalOpen(false);
     openScroll();
-
-    sessionStorage.setItem(StorageKey.sessionStorage.modal_open.news, "false");
   };
 
   useKeyEscClose(closeSeeMore);
 
   useEffect(() => {
-    const sessionModalOpen =
-      sessionStorage.getItem(StorageKey.sessionStorage.modal_open.news) ===
-      "true";
-    if (articles && id && sessionModalOpen) {
+    if (articles && id) {
       setModalOpen(true);
       lockScroll();
     }
-
-    return () => {
-      sessionStorage.setItem(StorageKey.sessionStorage.modal_open.news, "true");
-    };
   }, [articles, id, lockScroll]);
 
   return (
@@ -72,6 +62,7 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
       </NewsCardContainer>
       {modalOpen && (
         <PhotoModal
+          baseurl={"news/2022"}
           open={modalOpen}
           close={closeSeeMore}
           infos={articles}

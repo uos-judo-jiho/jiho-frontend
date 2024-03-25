@@ -1,7 +1,8 @@
 export const Constants = {
   // base url
   BASE_URL:
-    process.env.NODE_ENV === "production"
+    process.env.NODE_ENV === "production" &&
+    window.location.hostname !== "localhost"
       ? "https://uosjudo.com"
       : "http://localhost:3000",
 

@@ -26,6 +26,7 @@ const IMG = styled.img<IMGProps>`
 
   @media (max-width: 539px) {
     width: 100%;
+    height: inherit;
   }
 `;
 
@@ -38,17 +39,21 @@ const Container = styled.section`
   align-items: center;
   @media (max-width: 539px) {
     width: 100%;
+
+    height: inherit;
   }
 `;
 
 const SliderContainer = styled.div`
   width: 100%;
+  height: inherit;
   position: relative;
   display: flex;
 `;
 
 const SliderWrapper = styled.div`
   width: 100%;
+  height: inherit;
   display: block;
 `;
 
@@ -82,7 +87,7 @@ const CurrentCircle = styled.div`
 
 function Slider({ datas }: SliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [length, setLength] = useState<number>(0);
+  const [length, setLength] = useState<number>(datas.length);
 
   const slideRef = useRef<any>(null);
 

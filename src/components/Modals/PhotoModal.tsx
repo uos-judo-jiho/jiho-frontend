@@ -5,11 +5,13 @@ import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 
 import { createPortal } from "react-dom";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ModalArticleContainer from "./ModalArticleContainer";
+import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 
 type PhotoModalProps = {
+  baseurl: string;
   open: boolean;
   close: (event?: MouseEvent) => void;
   infos: ArticleInfoType[];
@@ -97,6 +99,10 @@ const Container = styled.div`
   &.closeModal {
     animation-name: ${FadeOut};
   }
+
+  @media (max-width: 539px) {
+    display: none;
+  }
 `;
 
 const MobileModalLayout = styled.div`
@@ -143,10 +149,16 @@ const CloseBtn = styled.button`
   }
 `;
 
-const PhotoModal = ({ open, close, infos, id, titles }: PhotoModalProps) => {
-  const [, setSearchParams] = useSearchParams();
+const PhotoModal = ({
+  baseurl,
+  open,
+  close,
+  infos,
+  id,
+  titles,
+}: PhotoModalProps) => {
+  const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
-  const [visible] = useState(open);
 
   const current = infos.findIndex(
     (infoItem) => infoItem.id.toString() === id.toString()
@@ -155,34 +167,26 @@ const PhotoModal = ({ open, close, infos, id, titles }: PhotoModalProps) => {
   const info = infos.find(
     (infoItem) => infoItem.id.toString() === id.toString()
   );
-  console.log(id);
-  console.log(infos);
-  console.log(info);
 
   const length = infos.length;
 
   useEffect(() => {
-    if (visible && !open) {
+    if (!open) {
       setAnimate(true);
       setTimeout(() => setAnimate(false), 250);
     }
     setAnimate(open);
-  }, [visible, open]);
+  }, [open]);
 
   const nextSlider = () => {
-    setSearchParams({ p: `${infos[current + 1].id}` });
+    navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
   };
 
   const prevSlider = () => {
-    setSearchParams({ p: `${infos[current - 1].id}` });
+    navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
   };
 
-  if (!animate && !visible) return <></>;
-
-  if (!info) {
-    // redirect("/photo");
-    return <></>;
-  }
+  if (!animate || !info) return <></>;
 
   return createPortal(
     <Container className={open ? "openModal" : "closeModal"}>

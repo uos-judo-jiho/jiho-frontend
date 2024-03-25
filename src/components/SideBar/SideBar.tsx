@@ -13,6 +13,7 @@ type SideBarProps = {
   setIsOpen: Function;
 };
 
+const sidebarAnimationDuration = 500;
 const Container = styled.div`
   z-index: 1;
   padding: 50px 20px 20px 20px;
@@ -23,10 +24,13 @@ const Container = styled.div`
   left: -55%;
   top: 0;
   position: fixed;
-  transition: 0.5s;
+  transition: ${sidebarAnimationDuration}ms;
   &.open {
     left: 0;
-    transition: 0.5s;
+    transition: ${sidebarAnimationDuration}ms;
+  }
+  &.animationed {
+    display: none;
   }
   @media (max-width: 539px) {
     width: 100%;
@@ -52,6 +56,25 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   const [selected, setSelected] = useState(initSelected);
   const [isClient, setIsClient] = useState(false);
   const location = useLocation();
+  const [isAnimationed, setIsAnimationed] = useState(true);
+  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> =
+    useRef(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      timer.current = setTimeout(() => {
+        setIsAnimationed(true);
+      }, sidebarAnimationDuration);
+    } else {
+      setIsAnimationed(false);
+    }
+
+    return () => {
+      if (timer && timer.current) {
+        clearTimeout(timer.current);
+      }
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (location.pathname.includes("/admin")) {
@@ -80,7 +103,13 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   };
 
   return createPortal(
-    <Container id="sidebar" ref={outside} className={isOpen ? "open" : ""}>
+    <Container
+      id="sidebar"
+      ref={outside}
+      className={`${isOpen ? "open" : ""} ${
+        isAnimationed ? " animationed" : ""
+      }`}
+    >
       <StyledClose onClick={toggleSide} />
       <NavWrapper>
         {isClient ? (

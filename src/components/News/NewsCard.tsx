@@ -83,7 +83,7 @@ const Img = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 5px;
-  object-fit: cover;
+  object-fit: contain;
 
   @media (max-width: 539px) {
     height: inherit;
@@ -149,7 +149,7 @@ function NewsCard({ index, datas, handleClickCard }: NewsCardProps) {
   return (
     <Container onClick={() => handleClickCard(newsData.id)}>
       <AnchoreContainer
-        href={`news/2022?p=${newsData.id}`}
+        href={`/news/2022/${newsData.id}`}
         onClick={(e) => e.preventDefault()}
       >
         <ImgWrapper>

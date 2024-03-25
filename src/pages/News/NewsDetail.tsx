@@ -32,11 +32,11 @@ function NewsDetail() {
 
   const metaDescription = [
     currentPageNews?.year,
-    currentPageNews?.articles[0]?.title,
-    currentPageNews?.articles[0]?.description.slice(0, 80),
+    currentPageNews?.articles.at(0)?.title,
+    currentPageNews?.articles.at(0)?.description.slice(0, 80),
   ].join(" | ");
 
-  const metaImgUrl = currentPageNews?.articles[0]?.imgSrcs[0];
+  const metaImgUrl = currentPageNews?.articles.at(0)?.imgSrcs.at(0);
 
   return (
     <>

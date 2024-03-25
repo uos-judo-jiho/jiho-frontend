@@ -57,7 +57,6 @@ const ThumbnailCard = ({
   id,
   handleClickCard,
 }: ThumbnailCardProps) => {
-  // const { imgRef, isLoading, setIsLoading } = useLazyImage();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = () => handleClickCard(id);
@@ -66,7 +65,7 @@ const ThumbnailCard = ({
 
   return (
     <ImgWrapper onClick={handleClick}>
-      <a href={`/photo?p=${id}`} onClick={(e) => e.preventDefault()}>
+      <a href={`/photo/${id}`} onClick={(e) => e.preventDefault()}>
         {isLoading ? (
           <Thumbnail
             loading="lazy"
