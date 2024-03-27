@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ModalArticleContainer from "./ModalArticleContainer";
+import Loading from "../Skeletons/Loading";
 
 type PhotoModalProps = {
   baseurl: string;
@@ -149,91 +150,60 @@ const CloseBtn = styled.button`
   }
 `;
 
-const PhotoModal = ({
-  baseurl,
-  open,
-  close,
-  infos,
-  id,
-  titles,
-}: PhotoModalProps) => {
+const PhotoModal = ({ baseurl, open, close, infos, id, titles }: PhotoModalProps) => {
   const navigate = useNavigate();
-  const [animate, setAnimate] = useState(false);
 
   const { lockScroll, openScroll } = useBodyScrollLock();
 
-  const nextSlider = () => {
+  const current = infos.findIndex((infoItem) => infoItem.id.toString() === id.toString());
+
+  const nextSlider = useCallback(() => {
     navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
-  };
+  }, [baseurl, current, infos, navigate]);
 
-  const prevSlider = () => {
+  const prevSlider = useCallback(() => {
     navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
-  };
+  }, [baseurl, current, infos, navigate]);
 
-  const current = infos.findIndex(
-    (infoItem) => infoItem.id.toString() === id.toString()
-  );
-
-  const info = infos.find(
-    (infoItem) => infoItem.id.toString() === id.toString()
-  );
+  const info = infos.find((infoItem) => infoItem.id.toString() === id.toString());
 
   const length = infos.length;
 
   useEffect(() => {
-    if (!open) {
-      setAnimate(true);
-      setTimeout(() => setAnimate(false), 250);
+    if (open) {
+      lockScroll();
+    } else {
+      openScroll();
     }
-    lockScroll();
-    setAnimate(open);
-  }, [lockScroll, open]);
-
-  useEffect(() => {
     return () => {
       openScroll();
     };
-  }, [openScroll]);
-
-  if (!animate || !info) return <></>;
+  }, []);
+  if (!info) {
+    openScroll();
+    return <Loading />;
+  }
 
   return createPortal(
     <Container className={open ? "openModal" : "closeModal"}>
       <ArrowWrapper isMobileVisible={false} isDesktopVisible={true}>
-        <StyledBackArrow
-          size={"4rem"}
-          onClick={prevSlider}
-          current={current}
-          length={length}
-        />
-        <StyledForwardArrow
-          size={"4rem"}
-          onClick={nextSlider}
-          current={current}
-          length={length}
-        />
+        <StyledBackArrow size={"4rem"} onClick={prevSlider} current={current} length={length} />
+        <StyledForwardArrow size={"4rem"} onClick={nextSlider} current={current} length={length} />
       </ArrowWrapper>
       <MobileModalLayout>
-        <CloseBtn onClick={() => close()}>
+        <CloseBtn
+          onClick={() => {
+            openScroll();
+            close();
+          }}
+        >
           <StyledClose />
         </CloseBtn>
         <ModalArticleContainer info={info} titles={titles} />
         <IndexContainer>
           <ArrowWrapper isMobileVisible={true} isDesktopVisible={false}>
-            <StyledBackArrow
-              size={"4rem"}
-              onClick={prevSlider}
-              current={current}
-              length={length}
-              isMobileVisible={true}
-            />
-            <StyledForwardArrow
-              size={"4rem"}
-              onClick={nextSlider}
-              current={current}
-              length={length}
-              isMobileVisible={true}
-            />
+            <StyledBackArrow size={"4rem"} onClick={prevSlider} current={current} length={length} isMobileVisible={true} />
+            <StyledForwardArrow size={"4rem"} onClick={nextSlider} current={current} length={length} isMobileVisible={true} />
           </ArrowWrapper>
           <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
         </IndexContainer>

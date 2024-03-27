@@ -49,50 +49,26 @@ const PhotoPC = () => {
     return <Loading />;
   }
 
-  const metaDescription = [
-    trainings.at(0)?.title,
-    trainings.at(0)?.description.slice(0, 80),
-  ].join(" | ");
+  const metaDescription = [trainings.at(0)?.title, trainings.at(0)?.description.slice(0, 80)].join(" | ");
 
   const metaImgUrl = trainings.at(0)?.imgSrcs.at(0);
 
   return (
     <div>
-      <MyHelmet
-        title="Photo"
-        description={metaDescription}
-        imgUrl={metaImgUrl}
-      />
+      <MyHelmet title="Photo" description={metaDescription} imgUrl={metaImgUrl} />
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />
           <PhotoCardContainer>
             {isLoad
               ? trainings.map((trainingLog) => (
-                  <ThumbnailCard
-                    key={trainingLog.id}
-                    imgSrc={trainingLog?.imgSrcs.at(0) ?? ""}
-                    dateTime={trainingLog.dateTime}
-                    handleClickCard={handleClickCard}
-                    id={trainingLog.id}
-                  />
+                  <ThumbnailCard key={trainingLog.id} imgSrc={trainingLog?.imgSrcs.at(0) ?? ""} dateTime={trainingLog.dateTime} handleClickCard={handleClickCard} id={trainingLog.id} />
                 ))
-              : Array.from({ length: 9 }).map((_, index) => (
-                  <SkeletonThumbnail key={index} />
-                ))}
+              : Array.from({ length: 9 }).map((_, index) => <SkeletonThumbnail key={index} />)}
           </PhotoCardContainer>
         </SheetWrapper>
       </DefaultLayout>
-      {modalOpen && (
-        <PhotoModal
-          baseurl={"photo"}
-          open={modalOpen}
-          close={closeModal}
-          infos={trainings}
-          id={id}
-          titles={["작성자", "참여 인원", "훈련 날짜"]}
-        />
-      )}
+      {modalOpen && <PhotoModal baseurl={"photo"} open={modalOpen} close={closeModal} infos={trainings} id={id} titles={["작성자", "참여 인원", "훈련 날짜"]} />}
     </div>
   );
 };

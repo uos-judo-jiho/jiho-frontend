@@ -68,9 +68,8 @@ const NewsMobile = () => {
 
   useEffect(() => {
     fetch();
-    openScroll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openScroll]);
+  }, []);
 
   useEffect(() => {
     if (!id || !news) {
@@ -78,6 +77,8 @@ const NewsMobile = () => {
     }
     document.getElementById(`news-mobile-card-${id}`)?.scrollIntoView();
   }, [id, news]);
+
+  openScroll();
 
   if (!news) {
     return <Loading />;
@@ -100,17 +101,7 @@ const NewsMobile = () => {
         </HeaderContainer>
         <div className="nav-icon" />
       </MobileHeader>
-      <Feed>
-        {news.map((newsByYear) =>
-          newsByYear.articles.map((newsInfo) => (
-            <MobilePhotoCard
-              key={newsInfo.id}
-              articleInfo={newsInfo}
-              id={`news-mobile-card-${newsInfo.id}`}
-            />
-          ))
-        )}
-      </Feed>
+      <Feed>{news.map((newsByYear) => newsByYear.articles.map((newsInfo) => <MobilePhotoCard key={newsInfo.id} articleInfo={newsInfo} id={`news-mobile-card-${newsInfo.id}`} />))}</Feed>
     </div>
   );
 };
