@@ -1,10 +1,9 @@
+import { useRef } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
-import { ReactComponent as Close } from "../../../assets/svgs/close.svg";
-import useBodyScrollLock from "../../../Hooks/useBodyScrollLock";
-import { useEffect, useRef } from "react";
 import useClickOutside from "../../../Hooks/useClickOutside";
 import useKeyEscClose from "../../../Hooks/useKeyEscClose";
+import { ReactComponent as Close } from "../../../assets/svgs/close.svg";
 
 type DetailImageModalProps = {
   image: string;
@@ -60,29 +59,12 @@ const DetailImageModal = ({
   onClose,
 }: DetailImageModalProps) => {
   const modalRef = useRef<HTMLImageElement>(null);
-  const { lockScroll, openScroll } = useBodyScrollLock();
   useClickOutside(modalRef, onClose);
   useKeyEscClose(onClose);
 
-  useEffect(() => {
-    if (isOpen) {
-      lockScroll();
-    } else {
-      openScroll();
-    }
-    return () => {
-      openScroll();
-    };
-  }, [isOpen, lockScroll, openScroll]);
-
   return createPortal(
     <Container id={`detail-image-${image}`} open={isOpen}>
-      <CloseButton
-        onClick={() => {
-          openScroll();
-          onClose();
-        }}
-      />
+      <CloseButton onClick={onClose} />
       <Inner>
         <Img src={image} ref={modalRef} />
       </Inner>

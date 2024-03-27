@@ -1,25 +1,17 @@
 import { Link } from "react-router-dom";
 import { MENU_ID, menuIdType } from "../../types/menuIdType";
 
-import {
-  MenuItem,
-  MenuItemTitle,
-  MenuList,
-  MenuProps,
-} from "./MenuStyledComponents";
+import { MenuItem, MenuItemTitle, MenuList, MenuProps } from "./MenuStyledComponents";
 import ToggleMenuItem from "./ToggleMenuItem";
 
 const ClientMenu = ({ selected, setSelected }: MenuProps) => {
   const handleClickMenu = (id: menuIdType) => {
-    let current;
     switch (id) {
       case MENU_ID.newsToggleMenu:
-        current = selected[0];
-        setSelected([!current, false]);
+        setSelected((prev) => [prev[0] === "selected" ? "animate" : "selected", prev[1] === "closed" ? "closed" : "animate"]);
         break;
       case MENU_ID.trainingToggleMenu:
-        current = selected[1];
-        setSelected([false, !current]);
+        setSelected((prev) => [prev[0] === "closed" ? "closed" : "animate", prev[1] === "selected" ? "animate" : "selected"]);
         break;
       default:
         break;

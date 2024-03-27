@@ -6,9 +6,9 @@ import { ArticleInfoType } from "../../types/ArticleInfoType";
 
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
 import ModalArticleContainer from "./ModalArticleContainer";
-import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 
 type PhotoModalProps = {
   baseurl: string;
@@ -160,6 +160,16 @@ const PhotoModal = ({
   const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
 
+  const { lockScroll, openScroll } = useBodyScrollLock();
+
+  const nextSlider = () => {
+    navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
+  };
+
+  const prevSlider = () => {
+    navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
+  };
+
   const current = infos.findIndex(
     (infoItem) => infoItem.id.toString() === id.toString()
   );
@@ -175,16 +185,15 @@ const PhotoModal = ({
       setAnimate(true);
       setTimeout(() => setAnimate(false), 250);
     }
+    lockScroll();
     setAnimate(open);
-  }, [open]);
+  }, [lockScroll, open]);
 
-  const nextSlider = () => {
-    navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
-  };
-
-  const prevSlider = () => {
-    navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
-  };
+  useEffect(() => {
+    return () => {
+      openScroll();
+    };
+  }, [openScroll]);
 
   if (!animate || !info) return <></>;
 

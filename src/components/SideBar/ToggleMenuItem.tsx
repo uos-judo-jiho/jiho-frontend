@@ -1,11 +1,11 @@
 import Row from "../../layouts/Row";
 import { menuIdType } from "../../types/menuIdType";
-import { MenuItemTitle, MenuToggle } from "./MenuStyledComponents";
+import { MenuItemTitle, MenuToggle, SelectedType } from "./MenuStyledComponents";
 import SlideSubMenu from "./SlideSubMenu";
 
 type ToggleMenuItemProps = {
   handleClickMenu(id: menuIdType): void;
-  selected: boolean;
+  selected: SelectedType;
   parentTitle: string;
   targetMenu: string;
   subMenuItemList: {
@@ -13,30 +13,21 @@ type ToggleMenuItemProps = {
     title: string;
   }[];
 };
-function ToggleMenuItem({
-  handleClickMenu,
-  selected,
-  parentTitle,
-  subMenuItemList,
-  targetMenu,
-}: ToggleMenuItemProps) {
+
+const ToggleMenuItem = ({ handleClickMenu, selected, parentTitle, subMenuItemList, targetMenu }: ToggleMenuItemProps) => {
   return (
     <>
       <MenuToggle onClick={() => handleClickMenu(targetMenu)}>
         <Row justifyContent="space-between" alignItems="center">
           <MenuItemTitle>{parentTitle}</MenuItemTitle>
-          {selected ? <>-</> : <>+</>}
+          <span>{selected === "selected" ? "-" : "+"}</span>
         </Row>
       </MenuToggle>
       {/* TODO classify itemsInfo Object  */}
       {/* TODO routing 조절 */}
-      <SlideSubMenu
-        selected={selected}
-        menuId={targetMenu}
-        itemsInfo={subMenuItemList}
-      />
+      <SlideSubMenu selected={selected} menuId={targetMenu} itemsInfo={subMenuItemList} />
     </>
   );
-}
+};
 
 export default ToggleMenuItem;

@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-
 import { ReactComponent as CloseSvg } from "../../assets/svgs/close.svg";
-
 import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
-import { createPortal } from "react-dom";
+import { SelectedType } from "./MenuStyledComponents";
 
 type SideBarProps = {
   isOpen: boolean;
   setIsOpen: Function;
 };
 
-const sidebarAnimationDuration = 500;
+const SIDEBAR_ANIMATION_DURATION = 500;
 const Container = styled.div`
   z-index: 1;
   padding: 50px 20px 20px 20px;
@@ -24,12 +23,12 @@ const Container = styled.div`
   left: -55%;
   top: 0;
   position: fixed;
-  transition: ${sidebarAnimationDuration}ms;
+  transition: ${SIDEBAR_ANIMATION_DURATION}ms;
   &.open {
     left: 0;
-    transition: ${sidebarAnimationDuration}ms;
+    transition: ${SIDEBAR_ANIMATION_DURATION}ms;
   }
-  &.animationed {
+  &.animated {
     display: none;
   }
   @media (max-width: 539px) {
@@ -52,21 +51,24 @@ const StyledClose = styled(CloseSvg)`
 const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   const outside = useRef<any>();
 
-  const initSelected = [false, false];
-  const [selected, setSelected] = useState(initSelected);
-  const [isClient, setIsClient] = useState(false);
   const location = useLocation();
-  const [isAnimationed, setIsAnimationed] = useState(true);
-  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> =
-    useRef(null);
+
+  const [selected, setSelected] = useState<SelectedType[]>(["closed", "closed"]);
+  const [isanimated, setIsanimated] = useState(true);
+  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> = useRef(null);
+
+  const toggleSide = () => {
+    setSelected(["closed", "closed"]);
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     if (!isOpen) {
       timer.current = setTimeout(() => {
-        setIsAnimationed(true);
-      }, sidebarAnimationDuration);
+        setIsanimated(true);
+      }, SIDEBAR_ANIMATION_DURATION);
     } else {
-      setIsAnimationed(false);
+      setIsanimated(false);
     }
 
     return () => {
@@ -77,47 +79,22 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   }, [isOpen]);
 
   useEffect(() => {
-    if (location.pathname.includes("/admin")) {
-      setIsClient(false);
-    } else {
-      setIsClient(true);
-    }
-  }, [location]);
-
-  useEffect(() => {
+    const handlerOutside = (e: any) => {
+      if (!outside.current.contains(e.target)) {
+        setSelected(["closed", "closed"]);
+        setIsOpen(false);
+      }
+    };
     document.addEventListener("mousedown", handlerOutside);
     return () => {
       document.removeEventListener("mousedown", handlerOutside);
     };
-  });
-
-  const handlerOutside = (e: any) => {
-    if (!outside.current.contains(e.target)) {
-      toggleSide();
-    }
-  };
-
-  const toggleSide = () => {
-    setSelected(initSelected);
-    setIsOpen(false);
-  };
+  }, [setIsOpen]);
 
   return createPortal(
-    <Container
-      id="sidebar"
-      ref={outside}
-      className={`${isOpen ? "open" : ""} ${
-        isAnimationed ? " animationed" : ""
-      }`}
-    >
+    <Container id="sidebar" ref={outside} className={`${[isOpen ? "open" : "", isanimated ? "animated" : ""].filter((_) => _).join(" ")}`}>
       <StyledClose onClick={toggleSide} />
-      <NavWrapper>
-        {isClient ? (
-          <ClientMenu selected={selected} setSelected={setSelected} />
-        ) : (
-          <AdminMenu />
-        )}
-      </NavWrapper>
+      <NavWrapper>{location.pathname.includes("/admin") ? <AdminMenu /> : <ClientMenu selected={selected} setSelected={setSelected} />}</NavWrapper>
     </Container>,
     document.body
   );
