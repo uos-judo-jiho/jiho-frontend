@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { MenuItemInfoType } from "../../types/menuItemInfoType";
+import { SelectedType } from "./MenuStyledComponents";
 
 type SlideSubMenuProps = {
-  selected: boolean;
+  selected: SelectedType;
   menuId: string;
   itemsInfo: MenuItemInfoType[];
 };
@@ -16,6 +17,7 @@ const slideDown = (count: number) => keyframes`
       height: ${count * 2 * 1.6}rem;
     }
 `;
+
 const slideUp = (count: number) => keyframes`
     from {
         height: ${count * 2 * 1.6}rem;
@@ -36,7 +38,14 @@ const ToggleMenuList = styled.ul<{ count: number }>`
     animation: ${(props) => slideDown(props.count)} 1s;
   }
 
-  animation: ${(props) => slideUp(props.count)} 1s forwards;
+  &.animate {
+    animation: ${(props) => slideUp(props.count)} 1s forwards;
+  }
+
+  &.closed {
+    height: 0;
+    display: none;
+  }
 `;
 
 const MenuItem = styled.li`
@@ -44,23 +53,16 @@ const MenuItem = styled.li`
   line-height: 200%;
 `;
 
-function SlideSubMenu({ selected, itemsInfo, menuId }: SlideSubMenuProps) {
-  const itemCount = itemsInfo.length;
+const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
   return (
-    <ToggleMenuList
-      id={menuId}
-      className={selected ? "selected" : ""}
-      count={itemCount}
-    >
-      {itemsInfo.map((itemInfo) => {
-        return (
-          <MenuItem key={itemInfo.title}>
-            <Link to={itemInfo.href}>{itemInfo.title}</Link>
-          </MenuItem>
-        );
-      })}
+    <ToggleMenuList id={menuId} className={selected} count={itemsInfo.length}>
+      {itemsInfo.map((itemInfo) => (
+        <MenuItem key={itemInfo.title}>
+          <Link to={itemInfo.href}>{itemInfo.title}</Link>
+        </MenuItem>
+      ))}
     </ToggleMenuList>
   );
-}
+};
 
 export default SlideSubMenu;
