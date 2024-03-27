@@ -67,8 +67,8 @@ const Content = styled.div`
     flex-wrap: wrap;
     gap: 8px;
 
-    font-size: ${(props) => props.theme.tinyFontSize};
-    line-height: ${(props) => props.theme.tinyLineHeight};
+    font-size: ${(props) => props.theme.defaultFontSize};
+    line-height: ${(props) => props.theme.defaultLineHeight};
     letter-spacing: 0.14px;
   }
 
@@ -109,7 +109,7 @@ const MobilePhotoCard = ({ articleInfo, id }: MobilePhotoCardProps) => {
       <Content>
         <div className="participants">
           {articleInfo.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
+            <span key={tag}>{`#${tag}`}</span>
           ))}
         </div>
         <p className="description">

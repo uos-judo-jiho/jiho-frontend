@@ -42,7 +42,17 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
       setModalOpen(true);
       lockScroll();
     }
-  }, [articles, id, lockScroll]);
+  }, [articles, id, lockScroll, openScroll]);
+
+  useEffect(() => {
+    if (!modalOpen || !id) {
+      openScroll();
+    }
+    return () => {
+      openScroll();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

@@ -53,6 +53,16 @@ const PhotoPC = () => {
     }
   }, [id, openModal, trainings]);
 
+  useEffect(() => {
+    if (!modalOpen || !id) {
+      openScroll();
+    }
+    return () => {
+      openScroll();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (!trainings) {
     return <Loading />;
   }
