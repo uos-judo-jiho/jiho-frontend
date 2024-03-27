@@ -17,11 +17,9 @@ export const useNews = () => {
   const [news, setNews] = useRecoilState(NewList);
   const [isLoad, setIsLoad] = useRecoilState(isNewFetched);
 
-  const _filterNews = useCallback(
+  const filterNews = useCallback(
     (news: NewsType[]) => {
-      const filteredNews = news.filter(
-        (v, i, a) => a.findIndex((v2) => v2.year === v.year) === i
-      );
+      const filteredNews = news.filter((v, i, a) => a.findIndex((v2) => v2.year === v.year) === i);
       setNews(filteredNews);
     },
     [setNews]
@@ -29,14 +27,12 @@ export const useNews = () => {
 
   const fetch = useCallback(
     async (year: "2022" | "2023" | "2024" = "2022") => {
-      _filterNews(news);
+      filterNews(news);
       if (isLoad) {
         return;
       }
 
-      if (
-        news.some((newsData) => newsData.year.toString() === year.toString())
-      ) {
+      if (news.some((newsData) => newsData.year.toString() === year.toString())) {
         return;
       }
 
@@ -49,19 +45,19 @@ export const useNews = () => {
       setNews((prev) => [...prev, newNewList]);
       setIsLoad(true);
     },
-    [_filterNews, isLoad, news, setIsLoad, setNews]
+    [filterNews, isLoad, news, setIsLoad, setNews]
   );
 
   const refreshNew = useCallback(() => {
-    _filterNews(news);
+    filterNews(news);
     setIsLoad(false);
 
     ["2022", "2023", "2024"].forEach(async (year) => {
       await fetch(year as "2022" | "2023" | "2024");
     });
 
-    _filterNews(news);
-  }, [_filterNews, fetch, news, setIsLoad]);
+    filterNews(news);
+  }, [filterNews, fetch, news, setIsLoad]);
 
   return { fetch, refreshNew, news };
 };

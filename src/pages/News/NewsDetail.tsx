@@ -8,51 +8,41 @@ import { useNews } from "../../recoills/news";
 import { TNewsParams } from "../../types/TNewsParams";
 import { useEffect } from "react";
 import Loading from "../../components/Skeletons/Loading";
+import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 
 function NewsDetail() {
   const { id, index } = useParams<TNewsParams>();
   const { news, fetch } = useNews();
+
+  const { openScroll } = useBodyScrollLock();
 
   useEffect(() => {
     if (["2022", "2023", "2024"].includes(id?.toString() ?? "")) {
       const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
       fetch(year ?? "2022");
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const currentPageNews = news.find(
-    (newsData) => newsData.year.toString() === id?.toString()
-  );
+  const currentPageNews = news.find((newsData) => newsData.year.toString() === id?.toString());
+
+  openScroll();
 
   if (!news) {
     return <Loading />;
   }
 
-  const metaDescription = [
-    currentPageNews?.year,
-    currentPageNews?.articles.at(0)?.title,
-    currentPageNews?.articles.at(0)?.description.slice(0, 80),
-  ].join(" | ");
+  const metaDescription = [currentPageNews?.year, currentPageNews?.articles.at(0)?.title, currentPageNews?.articles.at(0)?.description.slice(0, 80)].join(" | ");
 
   const metaImgUrl = currentPageNews?.articles.at(0)?.imgSrcs.at(0);
 
   return (
     <div>
-      <MyHelmet
-        title="News"
-        description={metaDescription}
-        imgUrl={metaImgUrl}
-      />
+      <MyHelmet title="News" description={metaDescription} imgUrl={metaImgUrl} />
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"지호지"} color="black" />
-          <NewsIndex
-            articles={currentPageNews?.articles || []}
-            images={currentPageNews?.images || []}
-            selectedIndex={parseInt(index as string)}
-          />
+          <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} />
         </SheetWrapper>
       </DefaultLayout>
     </div>

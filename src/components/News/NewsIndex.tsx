@@ -17,7 +17,7 @@ type NewsIndexProps = {
 function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const id = location.pathname.replace("news", "").split("/").at(-1) ?? "";
+  const id = location.pathname.replace(/^\/news\/20[0-9]{2}/gm, "").replace("/", "") ?? "";
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -33,37 +33,20 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
   useKeyEscClose(closeSeeMore);
 
   useEffect(() => {
-    if (articles && id) {
+    if (id) {
       setModalOpen(true);
     }
-  }, [articles, id]);
+  }, [id]);
 
   return (
     <>
       <Carousel datas={images}></Carousel>
       <NewsCardContainer>
-        {articles.map((item, index) => {
-          return (
-            <NewsCard
-              key={item.id}
-              index={index}
-              datas={articles}
-              selectedIndex={selectedIndex}
-              handleClickCard={handleClickCard}
-            />
-          );
-        })}
+        {articles.map((item, index) => (
+          <NewsCard key={item.id} index={index} datas={articles} selectedIndex={selectedIndex} handleClickCard={handleClickCard} />
+        ))}
       </NewsCardContainer>
-      {modalOpen && (
-        <PhotoModal
-          baseurl={"news/2022"}
-          open={modalOpen}
-          close={closeSeeMore}
-          infos={articles}
-          id={id}
-          titles={["작성자", "태그", "작성 일자"]}
-        />
-      )}
+      {modalOpen && <PhotoModal baseurl={"news/2022"} open={modalOpen} close={closeSeeMore} infos={articles} id={id} titles={["작성자", "태그", "작성 일자"]} />}
     </>
   );
 }
