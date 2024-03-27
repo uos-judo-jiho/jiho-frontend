@@ -3,11 +3,10 @@ import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
 import { useEffect, useState } from "react";
-import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
+import { useLocation, useNavigate } from "react-router-dom";
 import useKeyEscClose from "../../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import PhotoModal from "../Modals/PhotoModal";
-import { useLocation, useNavigate } from "react-router-dom";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];
@@ -20,19 +19,15 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
   const location = useLocation();
   const id = location.pathname.replace("news", "").split("/").at(-1) ?? "";
 
-  const { lockScroll, openScroll } = useBodyScrollLock();
-
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleClickCard = (id: string) => {
     setModalOpen(true);
-    lockScroll();
     navigate(`/news/2022/${id}`, { replace: true });
   };
 
   const closeSeeMore = () => {
     setModalOpen(false);
-    openScroll();
   };
 
   useKeyEscClose(closeSeeMore);
@@ -40,19 +35,8 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
   useEffect(() => {
     if (articles && id) {
       setModalOpen(true);
-      lockScroll();
     }
-  }, [articles, id, lockScroll, openScroll]);
-
-  useEffect(() => {
-    if (!modalOpen || !id) {
-      openScroll();
-    }
-    return () => {
-      openScroll();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [articles, id]);
 
   return (
     <>

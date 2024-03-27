@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ThumbnailCard from "../../components/Photo/ThumbnailCard";
 import DefaultLayout from "../../layouts/DefaultLayout";
 
@@ -8,7 +8,6 @@ import SheetWrapper from "../../layouts/SheetWrapper";
 import Title from "../../layouts/Title";
 
 import { useLocation, useNavigate } from "react-router-dom";
-import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 import useKeyEscClose from "../../Hooks/useKeyEscClose";
 import Loading from "../../components/Skeletons/Loading";
 import SkeletonThumbnail from "../../components/Skeletons/SkeletonThumbnail";
@@ -20,19 +19,12 @@ const PhotoPC = () => {
   const location = useLocation();
   const id = location.pathname.replace("photo", "").split("/").at(-1) ?? "";
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const { openScroll, lockScroll } = useBodyScrollLock();
 
   const { trainings, fetch, isLoad } = useTrainings();
 
-  const openModal = useCallback(() => {
-    setModalOpen(true);
-    lockScroll();
-  }, [lockScroll]);
+  const openModal = () => setModalOpen(true);
 
-  const closeModal = () => {
-    setModalOpen(false);
-    openScroll();
-  };
+  const closeModal = () => setModalOpen(false);
 
   const handleClickCard = (id: number | string) => {
     openModal();
@@ -49,19 +41,9 @@ const PhotoPC = () => {
 
   useEffect(() => {
     if (trainings && id) {
-      openModal();
+      setModalOpen(true);
     }
-  }, [id, openModal, trainings]);
-
-  useEffect(() => {
-    if (!modalOpen || !id) {
-      openScroll();
-    }
-    return () => {
-      openScroll();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id, trainings]);
 
   if (!trainings) {
     return <Loading />;
