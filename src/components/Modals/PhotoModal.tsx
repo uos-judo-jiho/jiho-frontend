@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import styled, { keyframes } from "styled-components";
 
 import { StyledBackArrow, StyledForwardArrow } from "../../layouts/Arrow";
@@ -6,10 +6,9 @@ import { ArticleInfoType } from "../../types/ArticleInfoType";
 
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 import { ReactComponent as Close } from "../../assets/svgs/close.svg";
-import ModalArticleContainer from "./ModalArticleContainer";
 import Loading from "../Skeletons/Loading";
+import ModalArticleContainer from "./ModalArticleContainer";
 
 type PhotoModalProps = {
   baseurl: string;
@@ -88,6 +87,9 @@ const Container = styled.div`
   z-index: 1;
   background-color: rgba(0, 0, 0, 0.6);
 
+  height: 100vh;
+  width: 100vw;
+
   animation-duration: 0.25s;
   animation-name: ${FadeIn};
   animation-timing-function: ease-out;
@@ -103,6 +105,15 @@ const Container = styled.div`
 
   @media (max-width: 539px) {
     display: none;
+  }
+
+  & .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    width: 100%;
+    max-width: 1200px;
   }
 `;
 
@@ -153,8 +164,6 @@ const CloseBtn = styled.button`
 const PhotoModal = ({ baseurl, open, close, infos, id, titles }: PhotoModalProps) => {
   const navigate = useNavigate();
 
-  const { lockScroll, openScroll } = useBodyScrollLock();
-
   const current = infos.findIndex((infoItem) => infoItem.id.toString() === id.toString());
 
   const nextSlider = useCallback(() => {
@@ -169,18 +178,7 @@ const PhotoModal = ({ baseurl, open, close, infos, id, titles }: PhotoModalProps
 
   const length = infos.length;
 
-  useEffect(() => {
-    if (open) {
-      lockScroll();
-    } else {
-      openScroll();
-    }
-    return () => {
-      openScroll();
-    };
-  }, []);
   if (!info) {
-    openScroll();
     return <Loading />;
   }
 
@@ -193,7 +191,6 @@ const PhotoModal = ({ baseurl, open, close, infos, id, titles }: PhotoModalProps
       <MobileModalLayout>
         <CloseBtn
           onClick={() => {
-            openScroll();
             close();
           }}
         >
