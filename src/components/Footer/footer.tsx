@@ -62,7 +62,7 @@ const HyperLink = styled.a`
   }
 `;
 
-function Footer() {
+const Footer = () => {
   return (
     <FooterWrapper>
       <MobileRowColLayout rowJustifyContent="start">
@@ -92,39 +92,28 @@ function Footer() {
         </DescriptionList>
         {/* 지호 이름 */}
         <DescriptionList>
-          <DescriptionItemTitle>
-            {FooterInfo.title.krTitle}
-          </DescriptionItemTitle>
+          <DescriptionItemTitle>{FooterInfo.title.krTitle}</DescriptionItemTitle>
           <DescriptionItem>{FooterInfo.title.enTitle}</DescriptionItem>
           <DescriptionItem>{FooterInfo.title.since}</DescriptionItem>
         </DescriptionList>
         {/* 정규 운동 */}
         <DescriptionList>
-          <DescriptionItemTitle>
-            {FooterInfo.exercise.title}
-          </DescriptionItemTitle>
+          <DescriptionItemTitle>{FooterInfo.exercise.title}</DescriptionItemTitle>
           <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
         </DescriptionList>
         {/* Connect Us */}
         <DescriptionList>
-          <DescriptionItemTitle>
-            {FooterInfo.connetUs.title}
-          </DescriptionItemTitle>
+          <DescriptionItemTitle>{FooterInfo.connetUs.title}</DescriptionItemTitle>
           <DescriptionItem>
             {FooterInfo.connetUs.instagram.title}
-            <HyperLink
-              href="https://www.instagram.com/uos_judo/"
-              target="_blank"
-            >
+            <HyperLink href="https://www.instagram.com/uos_judo/" target="_blank">
               {FooterInfo.connetUs.instagram.href}
             </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
             {FooterInfo.connetUs.email.title}
-            <HyperLink href="mailto: uosjudojiho@gmail.com">
-              {FooterInfo.connetUs.email.href}
-            </HyperLink>
+            <HyperLink href="mailto: uosjudojiho@gmail.com">{FooterInfo.connetUs.email.href}</HyperLink>
           </DescriptionItem>
           {/* TODO 연락처 추가하면 주석 해제 */}
           {/* <DescriptionItem>
@@ -133,9 +122,7 @@ function Footer() {
             </DescriptionItem> */}
           <DescriptionItem>
             {FooterInfo.connetUs.dev.title}
-            <HyperLink href="mailto: min390@uos.ac.kr">
-              {FooterInfo.connetUs.dev.href}
-            </HyperLink>
+            <HyperLink href="mailto: min390@uos.ac.kr">{FooterInfo.connetUs.dev.href}</HyperLink>
           </DescriptionItem>
         </DescriptionList>
 
@@ -154,6 +141,6 @@ function Footer() {
       </MobileRowColLayout>
     </FooterWrapper>
   );
-}
+};
 
 export default Footer;

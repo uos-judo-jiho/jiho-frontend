@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
-function News() {
+const News = () => {
   return <Navigate to={"/news/2022"} />;
-}
+};
 
 export default News;

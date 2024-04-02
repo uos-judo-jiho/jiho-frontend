@@ -1,7 +1,7 @@
 import SitemapRoutes from "../seo/sitemapRoutes";
 
-function AppRouter() {
+const AppRouter = () => {
   return <>{SitemapRoutes}</>;
-}
+};
 
 export default AppRouter;

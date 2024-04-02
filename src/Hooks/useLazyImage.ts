@@ -7,17 +7,13 @@ export default function useLazyImage() {
 
   useEffect(() => {
     // IntersectionObserver 설정
-    const intersectionOberserver = (
-      entries: IntersectionObserverEntry[],
-      io: IntersectionObserver
-    ) => {
+    const intersectionOberserver = (entries: IntersectionObserverEntry[], io: IntersectionObserver) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           // 관찰되고 있는 entry가 보여지게 된 다면
           io.unobserve(entry.target); // 관찰 종료
           setIsLoading(true); // 로딩 체크
           if (isLoading) {
-            console.log(imgRef);
           }
         }
       });

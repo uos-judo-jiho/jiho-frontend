@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getImageFileFromSrc } from "../../../../utils/Utils";
-import {
-  InputContainer,
-  PreviewContainer,
-  PreviewImg,
-  PreviewImgContainer,
-  PreviewName,
-  StyledInput,
-  StyledLabel,
-  TagDeleteButton,
-} from "../StyledComponent/FormContainer";
+import { getImageFileFromSrc, toBase64 } from "../../../../utils/Utils";
+import { InputContainer, PreviewContainer, PreviewImg, PreviewImgContainer, PreviewName, StyledInput, StyledLabel, TagDeleteButton } from "../StyledComponent/FormContainer";
 
 type ImageUploaderProps = {
   setValues: (images: string[]) => void;
@@ -17,17 +8,13 @@ type ImageUploaderProps = {
   imageLimit?: number;
 };
 
-function ImageUploader({
-  setValues,
-  data,
-  imageLimit = 10,
-}: ImageUploaderProps) {
+const ImageUploader = ({ setValues, data, imageLimit = 10 }: ImageUploaderProps) => {
   const [img, setImg] = useState<File[]>([]);
   const [previewImg, setPreviewImg] = useState<string[]>(data || []);
   const [isFull, setIsFull] = useState<boolean>(false);
 
   useEffect(() => {
-    async function _convertFileFromSrc() {
+    const _convertFileFromSrc = async () => {
       let defaultFiles: File[] = [];
       [...previewImg].map(async (previewImgsrc, index) => {
         const imgSrc = previewImgsrc;
@@ -39,50 +26,42 @@ function ImageUploader({
       if (defaultFiles) {
         setImg(defaultFiles);
       }
-    }
-    _convertFileFromSrc();
+    };
+    (async () => await _convertFileFromSrc())();
   }, [data, previewImg]);
 
-  function insertImg(event: React.ChangeEvent<HTMLInputElement>) {
+  const insertImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isFull) {
       alert(`사진은 최대 ${imageLimit}장까지 추가할 수 있습니다.`);
       return;
-    } else if (img.length > imageLimit) {
+    }
+
+    if (img.length > imageLimit) {
       setIsFull(true);
       return;
     }
 
-    let urlList = [...previewImg];
-
-    if (event.target.files) {
-      const files = Array.from(event.target.files);
-
-      for (let i = 0; i < files.length; i++) {
-        const currentImageUrl = URL.createObjectURL(files[i]);
-        urlList.push(currentImageUrl);
-        console.log(currentImageUrl);
-      }
-
-      if (urlList.length > imageLimit) {
-        urlList = urlList.slice(0, imageLimit);
-      }
-      setPreviewImg(urlList);
-      setValues(urlList);
-
-      let newImgs = [...img, ...files];
-
-      if (newImgs.length > imageLimit) {
-        newImgs = newImgs.slice(0, imageLimit);
-      }
-
-      setImg(newImgs);
+    if (!event.target.files) {
+      return;
     }
-  }
 
-  function deleteImg(
-    event: React.MouseEvent<HTMLButtonElement>,
-    index: number
-  ) {
+    setImg([...img, ...Array.from(event.target.files)].slice(0, imageLimit));
+
+    const fileList = Array.from(event.target.files).slice(0, imageLimit);
+
+    const base64Promises: Promise<string>[] = fileList.map((file) => toBase64(file));
+
+    Promise.all(base64Promises)
+      .then((urlList: string[]) => {
+        setPreviewImg(urlList);
+        setValues(urlList);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const deleteImg = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
     event.preventDefault();
     const imgArr = img.filter((_el, idx) => idx !== index);
     const imgNameArr = previewImg.filter((_el, idx) => idx !== index);
@@ -91,36 +70,27 @@ function ImageUploader({
     setPreviewImg([...imgNameArr]);
 
     setValues([...imgNameArr]);
-  }
+  };
 
   return (
     <InputContainer>
       <StyledLabel htmlFor="file" aria-required="true">
         사진 올리기 (최대 {imageLimit}장)
       </StyledLabel>
-      <StyledInput
-        id="file"
-        accept="image/*"
-        type="file"
-        name="file"
-        onChange={insertImg}
-        multiple
-      />
+      <StyledInput id="file" accept="image/*" type="file" name="file" onChange={insertImg} multiple />
       <PreviewContainer>
-        {previewImg.map((el, index) => {
-          return (
-            <PreviewImgContainer key={el}>
-              {index + 1}
-              <PreviewImg src={el} />
-              <TagDeleteButton onClick={(event) => deleteImg(event, index)}>
-                <PreviewName>❌</PreviewName>
-              </TagDeleteButton>
-            </PreviewImgContainer>
-          );
-        })}
+        {previewImg.map((el, index) => (
+          <PreviewImgContainer key={el}>
+            {index + 1}
+            <PreviewImg src={el} />
+            <TagDeleteButton onClick={(event) => deleteImg(event, index)}>
+              <PreviewName>❌</PreviewName>
+            </TagDeleteButton>
+          </PreviewImgContainer>
+        ))}
       </PreviewContainer>
     </InputContainer>
   );
-}
+};
 
 export default ImageUploader;

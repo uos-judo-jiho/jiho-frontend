@@ -8,13 +8,10 @@ import { useNews } from "../../recoills/news";
 import { TNewsParams } from "../../types/TNewsParams";
 import { useEffect } from "react";
 import Loading from "../../components/Skeletons/Loading";
-import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 
-function NewsDetail() {
+const NewsDetail = () => {
   const { id, index } = useParams<TNewsParams>();
   const { news, fetch } = useNews();
-
-  const { openScroll } = useBodyScrollLock();
 
   useEffect(() => {
     if (["2022", "2023", "2024"].includes(id?.toString() ?? "")) {
@@ -25,8 +22,6 @@ function NewsDetail() {
   }, []);
 
   const currentPageNews = news.find((newsData) => newsData.year.toString() === id?.toString());
-
-  openScroll();
 
   if (!news) {
     return <Loading />;
@@ -47,6 +42,6 @@ function NewsDetail() {
       </DefaultLayout>
     </div>
   );
-}
+};
 
 export default NewsDetail;

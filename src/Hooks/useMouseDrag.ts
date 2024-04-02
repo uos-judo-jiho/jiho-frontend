@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export function useMouseDrag(action: Function) {
+export const useMouseDrag = (action: Function) => {
   const [mouseDownClientX, setMouseDownClientX] = useState(0);
   const [mouseDownClientY, setMouseDownClientY] = useState(0);
   const [mouseUpClientX, setMouseUpClientX] = useState(0);
@@ -21,12 +21,6 @@ export function useMouseDrag(action: Function) {
     if (dragSpaceY > 100) {
       action();
     }
-  }, [
-    action,
-    mouseDownClientX,
-    mouseDownClientY,
-    mouseUpClientX,
-    mouseUpClientY,
-  ]);
+  }, [action, mouseDownClientX, mouseDownClientY, mouseUpClientX, mouseUpClientY]);
   return { onMouseDown, onMouseUp };
-}
+};

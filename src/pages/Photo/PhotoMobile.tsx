@@ -1,11 +1,10 @@
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as RightArrow } from "../../assets/svgs/arrow_back_ios.svg";
-import { useTrainings } from "../../recoills/tranings";
-import { useEffect } from "react";
-import Loading from "../../components/Skeletons/Loading";
-import { useLocation } from "react-router-dom";
 import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
-import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
+import Loading from "../../components/Skeletons/Loading";
+import { useTrainings } from "../../recoills/tranings";
 
 const MobileHeader = styled.header`
   position: sticky;
@@ -62,15 +61,13 @@ const Feed = styled.div`
 const PhotoMobile = () => {
   const { trainings, fetch, isLoad } = useTrainings();
 
-  const { openScroll } = useBodyScrollLock();
   const location = useLocation();
   const id = location.pathname.replace("photo", "").split("/").at(-1) ?? "";
 
   useEffect(() => {
     fetch();
-    openScroll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openScroll]);
+  }, []);
 
   useEffect(() => {
     if (!id || !trainings) {
@@ -103,11 +100,7 @@ const PhotoMobile = () => {
       </MobileHeader>
       <Feed>
         {trainings.map((trainingInfo) => (
-          <MobilePhotoCard
-            key={trainingInfo.id}
-            articleInfo={trainingInfo}
-            id={`training-mobile-card-${trainingInfo.id}`}
-          />
+          <MobilePhotoCard key={trainingInfo.id} articleInfo={trainingInfo} id={`training-mobile-card-${trainingInfo.id}`} />
         ))}
       </Feed>
     </div>

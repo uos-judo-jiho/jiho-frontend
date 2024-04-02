@@ -9,7 +9,7 @@ import WriteArticlePage from "../pages/admin/WriteArticlePage";
 import AdminTrainingLog from "../pages/admin/trainingLog/AdminTrainingLog";
 import AdminTrainingLogDetail from "../pages/admin/trainingLog/AdminTrainingLogDetail";
 
-function AdminRouter() {
+const AdminRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<AdminNavPage />} />
@@ -27,6 +27,6 @@ function AdminRouter() {
       <Route path="notice/write" element={<WriteArticlePage />} />
     </Routes>
   );
-}
+};
 
 export default AdminRouter;

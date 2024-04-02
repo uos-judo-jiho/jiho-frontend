@@ -7,10 +7,10 @@ import { AwardsType } from "../types/TAwards";
  * 예시] 매개변수 : ["a", "b", "c"]
  * 반환값 : "a b c "
  */
-export function formatStringArray(stringArray: string[]): string {
+export const formatStringArray = (stringArray: string[]): string => {
   var resultStringArray = stringArray.join(" ");
   return resultStringArray;
-}
+};
 
 /**
  *
@@ -18,7 +18,7 @@ export function formatStringArray(stringArray: string[]): string {
  * @returns string.
  * 수상이력을 AwardsType type으로 받아서 string으로 포멧팅한다.
  */
-export function formaAwardsType(award: AwardsType): string {
+export const formaAwardsType = (award: AwardsType): string => {
   let result: string = award.title + " | ";
 
   if (award.gold > 0) {
@@ -50,7 +50,7 @@ export function formaAwardsType(award: AwardsType): string {
   }
 
   return result;
-}
+};
 
 /**
  * @param dateTimeObj
@@ -59,15 +59,15 @@ export function formaAwardsType(award: AwardsType): string {
  *
  * 리턴값 예시 2023.02.28.화
  */
-export function formatDateTime(dateTimeString: string): string {
+export const formatDateTime = (dateTimeString: string): string => {
   var result = dateTimeString;
   result = result.replaceAll(".", "");
   var resultList = result.split(" ");
 
   return resultList.join("-");
-}
+};
 
-export async function getImageFileFromSrc(src: string, filename: string) {
+export const getImageFileFromSrc = async (src: string, filename: string) => {
   try {
     const response = await fetch(src);
     const blob = await response.blob();
@@ -79,19 +79,23 @@ export async function getImageFileFromSrc(src: string, filename: string) {
     console.error("Error converting image source to File:", error);
     return null;
   }
-}
+};
 
-export const toBase64 = async (file: File): Promise<string | unknown> => {
+/**
+ * @description File 객체를 받아서 base64 인코딩된 Promise<string> 반환
+ */
+export const toBase64 = async (file: File): Promise<string> => {
   try {
-    const data = await new Promise((resolve, reject) => {
+    const data: string = await new Promise((resolve: (value: string) => void, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
+      reader.onload = () => resolve(reader.result as string);
       reader.onerror = reject;
     });
 
     return data;
   } catch (error) {
     console.error(error);
+    return "";
   }
 };

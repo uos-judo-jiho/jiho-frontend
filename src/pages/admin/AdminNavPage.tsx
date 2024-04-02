@@ -1,6 +1,6 @@
 import AdminNavItem from "../../components/admin/Main/AdminNavItem";
 
-function AdminNavPage() {
+const AdminNavPage = () => {
   return (
     <>
       <AdminNavItem linkTo={"/"} title={"uosjudo.com"} />
@@ -9,6 +9,6 @@ function AdminNavPage() {
       <AdminNavItem linkTo={"/admin/notice"} title={"공지사항 관리"} />
     </>
   );
-}
+};
 
 export default AdminNavPage;

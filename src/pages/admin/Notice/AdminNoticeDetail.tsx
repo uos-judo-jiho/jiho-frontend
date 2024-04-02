@@ -5,7 +5,7 @@ import { Constants } from "../../../constant/constant";
 import Title from "../../../layouts/Title";
 import { useNotices } from "../../../recoills/notices";
 
-function AdminNoticeDetail() {
+const AdminNoticeDetail = () => {
   const { id } = useParams();
   const { notices, refreshNotice } = useNotices();
 
@@ -23,6 +23,6 @@ function AdminNoticeDetail() {
       <NoticeForm data={targetArticle} />
     </>
   );
-}
+};
 
 export default AdminNoticeDetail;
