@@ -20,7 +20,8 @@ const BackDescription = styled.div`
     opacity: 0.6;
   }
 `;
-function NotFound() {
+
+const NotFound = () => {
   return (
     <>
       <MyHelmet title="NotFound" />
@@ -38,6 +39,6 @@ function NotFound() {
       </DefaultLayout>
     </>
   );
-}
+};
 
 export default NotFound;

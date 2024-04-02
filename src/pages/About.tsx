@@ -5,7 +5,7 @@ import DefaultLayout from "../layouts/DefaultLayout";
 import MobileRowColLayout from "../layouts/MobileRowColLayout";
 import SheetWrapper from "../layouts/SheetWrapper";
 
-function About() {
+const About = () => {
   return (
     <>
       <MyHelmet title="About" />
@@ -19,6 +19,6 @@ function About() {
       </DefaultLayout>
     </>
   );
-}
+};
 
 export default About;

@@ -6,7 +6,7 @@ import { useNews } from "../../../recoills/news";
 import { useEffect } from "react";
 import Row from "../../../layouts/Row";
 
-function AdminNews() {
+const AdminNews = () => {
   const { news, refreshNew } = useNews();
   const articles = news
     .map((newsData) => newsData.articles)
@@ -30,17 +30,11 @@ function AdminNews() {
             <NewArticleButton>년도별 갤러리 보기</NewArticleButton>
           </Link>
         </Row>
-        <NewArticleButton onClick={() => refreshNew()}>
-          새로고침
-        </NewArticleButton>
+        <NewArticleButton onClick={() => refreshNew()}>새로고침</NewArticleButton>
       </Row>
-      <ListContainer
-        datas={articles}
-        targetUrl={"/admin/news/"}
-        additionalTitle={true}
-      ></ListContainer>
+      <ListContainer datas={articles} targetUrl={"/admin/news/"} additionalTitle={true}></ListContainer>
     </FormContainer>
   );
-}
+};
 
 export default AdminNews;

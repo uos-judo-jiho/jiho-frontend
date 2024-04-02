@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-// TODO: deprecated
 import { useCallback } from "react";
 
+/**
+ * @deprecated
+ *
+ * */
 const useBodyScrollLock = () => {
   let scrollPosition = 0;
   const lockScroll = useCallback(() => {

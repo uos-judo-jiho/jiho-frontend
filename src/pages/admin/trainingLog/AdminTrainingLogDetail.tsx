@@ -5,7 +5,7 @@ import Title from "../../../layouts/Title";
 import { useTrainings } from "../../../recoills/tranings";
 import { useEffect } from "react";
 
-function AdminTrainingLogDetail() {
+const AdminTrainingLogDetail = () => {
   const { id } = useParams();
 
   const { trainings, refreshTraining } = useTrainings();
@@ -22,6 +22,6 @@ function AdminTrainingLogDetail() {
       <TrainingLogForm data={trainingLog} />
     </>
   );
-}
+};
 
 export default AdminTrainingLogDetail;

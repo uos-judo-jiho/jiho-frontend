@@ -5,7 +5,7 @@ import TrainingLogForm from "../../components/admin/form/TrainingLogForm";
 import { Constants } from "../../constant/constant";
 import Title from "../../layouts/Title";
 
-function WriteArticlePage() {
+const WriteArticlePage = () => {
   const pathname = window.location.pathname;
   const params = new URLSearchParams(document.location.search);
 
@@ -24,10 +24,7 @@ function WriteArticlePage() {
     case "news":
       return path.length > 3 && path[3] === "gallery" ? (
         <>
-          <Title
-            title={`${year.slice(0, 4)}년 갤러리 쓰기`}
-            color={Constants.BLACK_COLOR}
-          />
+          <Title title={`${year.slice(0, 4)}년 갤러리 쓰기`} color={Constants.BLACK_COLOR} />
           <NewsGalleryFrom year={year} />
         </>
       ) : (
@@ -47,6 +44,6 @@ function WriteArticlePage() {
     default:
       return <></>;
   }
-}
+};
 
 export default WriteArticlePage;

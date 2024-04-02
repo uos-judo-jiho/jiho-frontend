@@ -81,6 +81,9 @@ export const getImageFileFromSrc = async (src: string, filename: string) => {
   }
 };
 
+/**
+ * @description File 객체를 받아서 base64 인코딩된 Promise<string> 반환
+ */
 export const toBase64 = async (file: File): Promise<string> => {
   try {
     const data: string = await new Promise((resolve: (value: string) => void, reject) => {

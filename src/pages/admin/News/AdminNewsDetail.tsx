@@ -5,15 +5,11 @@ import Title from "../../../layouts/Title";
 import { useNews } from "../../../recoills/news";
 import { useEffect } from "react";
 
-function AdminNewsDetail() {
+const AdminNewsDetail = () => {
   const { id } = useParams();
 
   const { news, refreshNew } = useNews();
-  const article = news
-    .find((newsData) =>
-      newsData.articles.find((item) => item.id.toString() === id)
-    )
-    ?.articles.find((item) => item.id.toString() === id);
+  const article = news.find((newsData) => newsData.articles.find((item) => item.id.toString() === id))?.articles.find((item) => item.id.toString() === id);
 
   useEffect(() => {
     refreshNew();
@@ -29,6 +25,6 @@ function AdminNewsDetail() {
       <NewsForm data={article} />;
     </>
   );
-}
+};
 
 export default AdminNewsDetail;

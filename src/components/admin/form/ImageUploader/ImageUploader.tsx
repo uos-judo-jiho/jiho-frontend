@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getImageFileFromSrc, toBase64 } from "../../../../utils/Utils";
 import { InputContainer, PreviewContainer, PreviewImg, PreviewImgContainer, PreviewName, StyledInput, StyledLabel, TagDeleteButton } from "../StyledComponent/FormContainer";
-import Loading from "../../../Skeletons/Loading";
 
 type ImageUploaderProps = {
   setValues: (images: string[]) => void;

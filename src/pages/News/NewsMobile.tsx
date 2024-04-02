@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import useBodyScrollLock from "../../Hooks/useBodyScrollLock";
 import { ReactComponent as RightArrow } from "../../assets/svgs/arrow_back_ios.svg";
 import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
 import Loading from "../../components/Skeletons/Loading";
@@ -62,7 +61,6 @@ const Feed = styled.div`
 const NewsMobile = () => {
   const { news, fetch } = useNews();
 
-  const { openScroll } = useBodyScrollLock();
   const location = useLocation();
   const id = location.pathname.replace("photo", "").split("/").at(-1) ?? "";
 
@@ -77,8 +75,6 @@ const NewsMobile = () => {
     }
     document.getElementById(`news-mobile-card-${id}`)?.scrollIntoView();
   }, [id, news]);
-
-  openScroll();
 
   if (!news) {
     return <Loading />;
