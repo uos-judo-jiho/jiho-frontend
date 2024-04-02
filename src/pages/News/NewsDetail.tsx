@@ -37,7 +37,7 @@ const NewsDetail = () => {
       <DefaultLayout>
         <SheetWrapper>
           <Title title={`${id ?? "2022"}년 지호지`} color="black" />
-          <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} />
+          <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} index={index ?? ""} year={id ?? "2023"} />
         </SheetWrapper>
       </DefaultLayout>
     </div>

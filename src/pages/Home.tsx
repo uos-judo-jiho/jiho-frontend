@@ -19,7 +19,7 @@ const Home = () => {
   useEffect(() => {
     fetchNotices();
     fetchrainings();
-    fetchNews();
+    fetchNews("2023");
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

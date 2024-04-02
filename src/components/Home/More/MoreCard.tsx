@@ -60,12 +60,7 @@ const More = styled.p`
   }
 `;
 
-const MoreCard = ({
-  title,
-  linkTo,
-  data,
-  isLinkToQuery = false,
-}: MoreCardProps) => {
+const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
   const boardData = data.slice(0, DATA_LEN);
   return (
     <Card>
@@ -80,7 +75,7 @@ const MoreCard = ({
           {boardData.map((item, index) => {
             return (
               <Item key={title + index}>
-                <Link to={`${linkTo}${isLinkToQuery ? "?p=" : "/"}${item.id}`}>
+                <Link to={`${linkTo}/${item.id}`}>
                   <ItemWrapper>{`[${item.author}] ${item.description}`}</ItemWrapper>
                 </Link>
               </Item>

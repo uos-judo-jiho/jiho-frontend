@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { ReactComponent as RightArrow } from "../../assets/svgs/arrow_back_ios.svg";
 import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
 import Loading from "../../components/Skeletons/Loading";
 import { useNews } from "../../recoills/news";
+import { TNewsParams } from "../../types/TNewsParams";
 
 const MobileHeader = styled.header`
   position: sticky;
@@ -61,29 +62,32 @@ const Feed = styled.div`
 const NewsMobile = () => {
   const { news, fetch } = useNews();
 
-  const location = useLocation();
-  const id = location.pathname.replace("photo", "").split("/").at(-1) ?? "";
+  const { id, index } = useParams<TNewsParams>();
 
   useEffect(() => {
-    fetch();
+    if (["2022", "2023", "2024"].includes(id?.toString() ?? "")) {
+      const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
+      fetch(year ?? "2022");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (!id || !news) {
+    if (!index || !news) {
       return;
     }
-    document.getElementById(`news-mobile-card-${id}`)?.scrollIntoView();
-  }, [id, news]);
+    document.getElementById(`news-mobile-card-${index}`)?.scrollIntoView();
+  }, [index, news]);
 
   if (!news) {
     return <Loading />;
   }
+
   return (
     <div>
       <MobileHeader>
         <div className="nav-icon">
-          <a href="/news/2022">
+          <a href={`/news/${id}`}>
             <RightArrow />
           </a>
         </div>
@@ -91,7 +95,7 @@ const NewsMobile = () => {
           <a href="/">
             <h1 className="title">{"서울시립대학교 유도부 지호"}</h1>
           </a>
-          <a href="/news/2022">
+          <a href={`/news/${id}`}>
             <h2 className="sub-title">{"지호지"}</h2>
           </a>
         </HeaderContainer>

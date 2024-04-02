@@ -9,6 +9,7 @@ import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
 
 type NewsCardProps = {
   index: number;
+  year: string;
   datas: ArticleInfoType[];
   selectedIndex?: number;
   handleClickCard: (index: string) => void;
@@ -142,7 +143,7 @@ const MoreButton = styled.button`
   }
 `;
 
-const NewsCard = ({ index, datas, handleClickCard }: NewsCardProps) => {
+const NewsCard = ({ index, datas, handleClickCard, year }: NewsCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const newsData = datas[index];
@@ -154,7 +155,7 @@ const NewsCard = ({ index, datas, handleClickCard }: NewsCardProps) => {
 
   return (
     <Container onClick={() => handleClickCard(newsData.id)}>
-      <AnchoreContainer href={`/news/2022/${newsData.id}`} onClick={(e) => e.preventDefault()}>
+      <AnchoreContainer href={`/news/${year}/${newsData.id}`} onClick={(e) => e.preventDefault()}>
         <ImgWrapper>
           {isLoading ? <Img loading="lazy" alt={newsData.title + newsData.author} src={newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK} /> : <SkeletonThumbnail />}
           <img alt={newsData.title + newsData.author} src={newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK} style={{ display: "none" }} onLoad={handleLoding} />

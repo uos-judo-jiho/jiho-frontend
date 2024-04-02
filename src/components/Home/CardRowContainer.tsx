@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import Col from "../../layouts/Col";
 import Row from "../../layouts/Row";
-import NewsCard from "./News/NewsCard";
 
 type CardRowContainerProps = {
   title: string;
@@ -19,11 +18,7 @@ const Title = styled.h3`
   font-size: ${(props) => props.theme.subTitleFontSize};
 `;
 
-function CardRowContainer({
-  title,
-  isRow = true,
-  children,
-}: CardRowContainerProps) {
+function CardRowContainer({ title, isRow = true, children }: CardRowContainerProps) {
   return (
     <Container>
       <Col>
