@@ -10,11 +10,10 @@ const Container = styled.div`
   position: relative;
 `;
 
-function HomeSectionExercise() {
+const HomeSectionExercise = () => {
   return (
     <HomeSectionBG bgImageSrc={BGImage} id="sectionExercise">
       <SheetWrapper>
-        {/* <Title title={"지호 운동"} /> */}
         <Container>
           <ExerciseThumbnail />
           {/* <ExerciseVideo /> */}
@@ -22,6 +21,6 @@ function HomeSectionExercise() {
       </SheetWrapper>
     </HomeSectionBG>
   );
-}
+};
 
 export default HomeSectionExercise;

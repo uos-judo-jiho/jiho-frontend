@@ -14,12 +14,12 @@ const NewsDetail = () => {
   const { news, fetch } = useNews();
 
   useEffect(() => {
-    if (["2022", "2023", "2024"].includes(id?.toString() ?? "")) {
+    if (["2022", "2023", "2024"].includes(id?.toString() ?? "") && (news.length === 0 || news.some((newsData) => newsData.year.toString() !== id))) {
       const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
       fetch(year ?? "2022");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   const currentPageNews = news.find((newsData) => newsData.year.toString() === id?.toString());
 

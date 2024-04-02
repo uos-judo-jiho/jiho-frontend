@@ -50,8 +50,7 @@ type HoveredSpanProps = {
 };
 
 const HoveredSpan = styled.span<HoveredSpanProps>`
-  font-size: ${(props) =>
-    props.fontSize ? props.fontSize : props.theme.descriptionFontSize};
+  font-size: ${(props) => (props.fontSize ? props.fontSize : props.theme.descriptionFontSize)};
 
   &:not(:last-child) {
     margin-bottom: 0.5rem;
@@ -71,7 +70,7 @@ const Thumbnail = styled.img`
   }
 `;
 
-function ExerciseThumbnail() {
+const ExerciseThumbnail = () => {
   const { trainings } = useTrainings();
 
   const lastTraningData = trainings[0];
@@ -92,6 +91,6 @@ function ExerciseThumbnail() {
       </Link>
     </Container>
   );
-}
+};
 
 export default ExerciseThumbnail;
