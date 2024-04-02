@@ -32,7 +32,7 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
           targetMenu={MENU_ID.newsToggleMenu}
           subMenuItemList={[
             { href: "/news/2022", title: "2022 지호지" },
-            // { href: "/news/2023", title: "2023 지호지" },
+            { href: "/news/2023", title: "2023 지호지" },
             // { href: "/news/2024", title: "2024 지호지" },
           ]}
         />

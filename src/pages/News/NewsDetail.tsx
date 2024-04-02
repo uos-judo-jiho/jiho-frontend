@@ -36,7 +36,7 @@ const NewsDetail = () => {
       <MyHelmet title="News" description={metaDescription} imgUrl={metaImgUrl} />
       <DefaultLayout>
         <SheetWrapper>
-          <Title title={"지호지"} color="black" />
+          <Title title={`${id ?? "2022"}년 지호지`} color="black" />
           <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} />
         </SheetWrapper>
       </DefaultLayout>

@@ -14,24 +14,26 @@ const GridWrapper = styled.div`
 
   @media (min-width: 1200px) {
     grid-template-columns: 1fr 1fr;
-    grid-gap: 2rem;
+    grid-gap: 24px;
   }
 
   @media (max-width: 1199px) {
     grid-template-columns: 1fr;
+    grid-gap: 24px;
   }
+
   @media (max-width: 539px) {
     grid-template-columns: 1fr 1fr;
-    grid-gap: 1rem;
+    grid-gap: 16px;
   }
 `;
 
-function NewsCardContainer({ children }: NewsCardContainerProps) {
+const NewsCardContainer = ({ children }: NewsCardContainerProps) => {
   return (
     <Container>
       <GridWrapper>{children}</GridWrapper>
     </Container>
   );
-}
+};
 
 export default NewsCardContainer;

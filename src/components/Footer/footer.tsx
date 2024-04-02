@@ -80,7 +80,7 @@ const Footer = () => {
           </DescriptionItem>
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/news/2022"}>2022 지호지로 바로가기</Link>
+              <Link to={"/news/2023"}>2023 지호지로 바로가기</Link>
             </LinkWrapper>
           </DescriptionItem>
           {/* 관리자 페이지로 */}
