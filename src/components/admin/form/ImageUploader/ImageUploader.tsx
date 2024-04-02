@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { getImageFileFromSrc } from "../../../../utils/Utils";
+import { getImageFileFromSrc, toBase64 } from "../../../../utils/Utils";
 import { InputContainer, PreviewContainer, PreviewImg, PreviewImgContainer, PreviewName, StyledInput, StyledLabel, TagDeleteButton } from "../StyledComponent/FormContainer";
+import Loading from "../../../Skeletons/Loading";
 
 type ImageUploaderProps = {
   setValues: (images: string[]) => void;
@@ -8,7 +9,7 @@ type ImageUploaderProps = {
   imageLimit?: number;
 };
 
-function ImageUploader({ setValues, data, imageLimit = 10 }: ImageUploaderProps) {
+const ImageUploader = ({ setValues, data, imageLimit = 10 }: ImageUploaderProps) => {
   const [img, setImg] = useState<File[]>([]);
   const [previewImg, setPreviewImg] = useState<string[]>(data || []);
   const [isFull, setIsFull] = useState<boolean>(false);
@@ -35,35 +36,30 @@ function ImageUploader({ setValues, data, imageLimit = 10 }: ImageUploaderProps)
       alert(`사진은 최대 ${imageLimit}장까지 추가할 수 있습니다.`);
       return;
     }
+
     if (img.length > imageLimit) {
       setIsFull(true);
       return;
     }
 
-    let urlList = [...previewImg];
-
-    if (event.target.files) {
-      const files = Array.from(event.target.files);
-
-      for (let i = 0; i < files.length; i++) {
-        const currentImageUrl = URL.createObjectURL(files[i]);
-        urlList.push(currentImageUrl);
-      }
-
-      if (urlList.length > imageLimit) {
-        urlList = urlList.slice(0, imageLimit);
-      }
-      setPreviewImg(urlList);
-      setValues(urlList);
-
-      let newImgs = [...img, ...files];
-
-      if (newImgs.length > imageLimit) {
-        newImgs = newImgs.slice(0, imageLimit);
-      }
-
-      setImg(newImgs);
+    if (!event.target.files) {
+      return;
     }
+
+    setImg([...img, ...Array.from(event.target.files)].slice(0, imageLimit));
+
+    const fileList = Array.from(event.target.files).slice(0, imageLimit);
+
+    const base64Promises: Promise<string>[] = fileList.map((file) => toBase64(file));
+
+    Promise.all(base64Promises)
+      .then((urlList: string[]) => {
+        setPreviewImg(urlList);
+        setValues(urlList);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   const deleteImg = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
@@ -96,6 +92,6 @@ function ImageUploader({ setValues, data, imageLimit = 10 }: ImageUploaderProps)
       </PreviewContainer>
     </InputContainer>
   );
-}
+};
 
 export default ImageUploader;
