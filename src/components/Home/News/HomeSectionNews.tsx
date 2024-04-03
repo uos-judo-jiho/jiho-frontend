@@ -22,7 +22,7 @@ const TextWrapper = styled.div`
 const SeeMore = styled.p`
   color: ${(props) => props.theme.greyColor};
   font-size: ${(props) => props.theme.defaultFontSize};
-  margin-top: 0.5rem;
+  margin-top: 4px;
   opacity: 0.6;
 
   &:hover {
