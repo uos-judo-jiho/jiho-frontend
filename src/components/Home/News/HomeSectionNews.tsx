@@ -22,7 +22,7 @@ const TextWrapper = styled.div`
 const SeeMore = styled.p`
   color: ${(props) => props.theme.greyColor};
   font-size: ${(props) => props.theme.defaultFontSize};
-  margin-top: 0.5rem;
+  margin-top: 4px;
   opacity: 0.6;
 
   &:hover {
@@ -34,18 +34,14 @@ const SeeMore = styled.p`
   }
 `;
 
-function HomeSectionNews() {
+const HomeSectionNews = () => {
   return (
     <Container>
-      <Link to={"/news/2022"}>
-        <HomeSectionBG
-          bgImageSrc={BGImage}
-          id="sectionNews"
-          backgroundCover={false}
-        >
+      <Link to={"/news/2023"}>
+        <HomeSectionBG bgImageSrc={BGImage} id="sectionNews" backgroundCover={false}>
           <SheetWrapper>
             <TextWrapper>
-              <Title title={"2022년 지호지"} />
+              <Title title={"2023년 지호지"} />
               <SeeMore>자세히 보기</SeeMore>
             </TextWrapper>
           </SheetWrapper>
@@ -53,6 +49,6 @@ function HomeSectionNews() {
       </Link>
     </Container>
   );
-}
+};
 
 export default HomeSectionNews;

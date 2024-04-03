@@ -3,38 +3,19 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import FooterInfo from "../../assets/jsons/footerData.json";
-import { ReactComponent as InstargramIcon } from "../../assets/svgs/icons8-instargram-500.svg";
-import { ReactComponent as YoutubeIcon } from "../../assets/svgs/icons8-youtube-500.svg";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
 
 const FooterWrapper = styled.footer`
-  margin: 8rem auto 4rem auto;
+  margin: 80px auto 40px auto;
 
   @media (max-width: 539px) {
-    margin: 8rem auto 2rem auto;
+    margin: 80px auto 20px auto;
   }
 `;
 
-const SNSLink = styled.a``;
-
-const IconWrapper = styled.span`
-  width: 5.4rem;
-  height: 5.4rem;
-`;
-
-const StyledInstargramIcon = styled(InstargramIcon)`
-  width: inherit;
-  height: inherit;
-`;
-
-const StyledYoutubeIcon = styled(YoutubeIcon)`
-  width: inherit;
-  height: inherit;
-`;
-
 const DescriptionList = styled.ul`
-  margin-right: 2rem;
-  margin-bottom: 0.5rem;
+  margin-right: 20px;
+  margin-bottom: 5px;
 `;
 
 const DescriptionItem = styled.li`
@@ -80,7 +61,7 @@ const Footer = () => {
           </DescriptionItem>
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/news/2022"}>2022 지호지로 바로가기</Link>
+              <Link to={"/news/2023"}>2023 지호지로 바로가기</Link>
             </LinkWrapper>
           </DescriptionItem>
           {/* 관리자 페이지로 */}
@@ -125,19 +106,6 @@ const Footer = () => {
             <HyperLink href="mailto: min390@uos.ac.kr">{FooterInfo.connetUs.dev.href}</HyperLink>
           </DescriptionItem>
         </DescriptionList>
-
-        {/* <Row alignItems="center" justifyContent="center">
-          <SNSLink href="https://www.instagram.com/uos_judo/" target="_blank">
-            <IconWrapper>
-              <StyledInstargramIcon />
-            </IconWrapper>
-          </SNSLink>
-          <SNSLink href="https://www.youtube.com/" target="_blank">
-            <IconWrapper>
-              <StyledYoutubeIcon />
-            </IconWrapper>
-          </SNSLink>
-        </Row> */}
       </MobileRowColLayout>
     </FooterWrapper>
   );

@@ -8,14 +8,8 @@ const NewList = atom<NewsType[]>({
   default: [],
 });
 
-const isNewFetched = atom<boolean>({
-  key: "isNewFetched",
-  default: false,
-});
-
 export const useNews = () => {
   const [news, setNews] = useRecoilState(NewList);
-  const [isLoad, setIsLoad] = useRecoilState(isNewFetched);
 
   const filterNews = useCallback(
     (news: NewsType[]) => {
@@ -28,9 +22,6 @@ export const useNews = () => {
   const fetch = useCallback(
     async (year: "2022" | "2023" | "2024" = "2022") => {
       filterNews(news);
-      if (isLoad) {
-        return;
-      }
 
       if (news.some((newsData) => newsData.year.toString() === year.toString())) {
         return;
@@ -43,21 +34,19 @@ export const useNews = () => {
       }
 
       setNews((prev) => [...prev, newNewList]);
-      setIsLoad(true);
     },
-    [filterNews, isLoad, news, setIsLoad, setNews]
+    [filterNews, news, setNews]
   );
 
   const refreshNew = useCallback(() => {
     filterNews(news);
-    setIsLoad(false);
 
     ["2022", "2023", "2024"].forEach(async (year) => {
       await fetch(year as "2022" | "2023" | "2024");
     });
 
     filterNews(news);
-  }, [filterNews, fetch, news, setIsLoad]);
+  }, [filterNews, fetch, news]);
 
   return { fetch, refreshNew, news };
 };

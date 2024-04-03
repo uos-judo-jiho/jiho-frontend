@@ -3,7 +3,7 @@ import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useKeyEscClose from "../../Hooks/useKeyEscClose";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import PhotoModal from "../Modals/PhotoModal";
@@ -12,18 +12,18 @@ type NewsIndexProps = {
   articles: ArticleInfoType[];
   images: string[];
   selectedIndex?: number;
+  index: string;
+  year: string;
 };
 
-function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
+const NewsIndex = ({ articles, images, selectedIndex, index, year }: NewsIndexProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const id = location.pathname.replace(/^\/news\/20[0-9]{2}/gm, "").replace("/", "") ?? "";
 
   const [modalOpen, setModalOpen] = useState(false);
 
-  const handleClickCard = (id: string) => {
+  const handleClickCard = (index: string) => {
     setModalOpen(true);
-    navigate(`/news/2022/${id}`, { replace: true });
+    navigate(`/news/${year}/${index}`, { replace: true });
   };
 
   const closeSeeMore = () => {
@@ -33,22 +33,22 @@ function NewsIndex({ articles, images, selectedIndex }: NewsIndexProps) {
   useKeyEscClose(closeSeeMore);
 
   useEffect(() => {
-    if (id) {
+    if (index) {
       setModalOpen(true);
     }
-  }, [id]);
+  }, [index]);
 
   return (
     <>
       <Carousel datas={images}></Carousel>
       <NewsCardContainer>
         {articles.map((item, index) => (
-          <NewsCard key={item.id} index={index} datas={articles} selectedIndex={selectedIndex} handleClickCard={handleClickCard} />
+          <NewsCard key={item.id} index={index} year={year} datas={articles} selectedIndex={selectedIndex} handleClickCard={handleClickCard} />
         ))}
       </NewsCardContainer>
-      {modalOpen && <PhotoModal baseurl={"news/2022"} open={modalOpen} close={closeSeeMore} infos={articles} id={id} titles={["작성자", "태그", "작성 일자"]} />}
+      {modalOpen && <PhotoModal baseurl={`news/${year}`} open={modalOpen} close={closeSeeMore} infos={articles} id={index} titles={["작성자", "태그", "작성 일자"]} />}
     </>
   );
-}
+};
 
 export default NewsIndex;

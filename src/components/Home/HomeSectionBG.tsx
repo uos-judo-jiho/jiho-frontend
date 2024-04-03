@@ -29,11 +29,7 @@ const Container = styled.section<ContainerProps>`
 
   &::before {
     content: "";
-    background: radial-gradient(
-      circle at 10% 20%,
-      rgba(0, 0, 0, 0) 0%,
-      #121212 90.2%
-    );
+    background: radial-gradient(circle at 10% 20%, rgba(0, 0, 0, 0) 0%, #121212 90.2%);
 
     height: 100%;
     position: absolute;
@@ -43,21 +39,12 @@ const Container = styled.section<ContainerProps>`
   }
 `;
 
-function HomeSectionBG({
-  bgImageSrc,
-  children,
-  id,
-  backgroundCover = true,
-}: HomeSectionBGProps) {
+const HomeSectionBG = ({ bgImageSrc, children, id, backgroundCover = true }: HomeSectionBGProps) => {
   return (
-    <Container
-      bgImageSrc={bgImageSrc}
-      id={id}
-      backgroundCover={backgroundCover}
-    >
+    <Container bgImageSrc={bgImageSrc} id={id} backgroundCover={backgroundCover}>
       {children}
     </Container>
   );
-}
+};
 
 export default HomeSectionBG;

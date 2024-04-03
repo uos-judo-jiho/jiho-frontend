@@ -1,30 +1,63 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import useWindowResize from "../Hooks/useWindowResize";
 
-import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 import DetailImageModal from "../components/Modals/DetailImageModal/DetailImageModal";
+import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 type CarouselProps = {
   datas: string[];
 };
 
 const Window = styled.div`
-  height: 20vmax;
+  height: 240px;
+  box-sizing: border-box;
+
+  margin-bottom: 24px;
 
   overflow: hidden;
   position: relative;
+
+  & .filter {
+    position: absolute;
+
+    &.right,
+    &.left {
+      top: 12px;
+      bottom: 0;
+
+      width: 32px;
+      height: calc(240px - 12 * 2px);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    &.right {
+      background: linear-gradient(0.25turn, rgba(33, 33, 33, 0), rgb(33, 33, 33));
+      right: 0;
+    }
+
+    &.left {
+      background: linear-gradient(0.75turn, rgba(33, 33, 33, 0), rgb(33, 33, 33));
+      left: 0;
+    }
+  }
 `;
 
 const CarouselWrapper = styled.div`
   display: inline-flex;
-  padding: 1rem 0;
   height: inherit;
+
+  padding: 12px 0;
 `;
 
 const ScrollWrapper = styled.div`
+  position: relative;
+
   height: inherit;
   overflow-x: scroll;
+
+  white-space: nowrap;
 
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
@@ -32,9 +65,6 @@ const ScrollWrapper = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-
-  position: relative;
-  white-space: nowrap;
   // TODO snap은 컨테이너의 크기를 조절한 후 활성화
   /* scroll-snap-type: mandatory;
   scroll-snap-type: x mandatory;
@@ -64,7 +94,7 @@ const ImgWrapper = styled.div`
 `;
 
 const Img = styled.img`
-  width: 20vw;
+  aspect-ratio: 1 / 1;
   height: 100%;
   object-fit: contain;
   flex: none;
@@ -80,12 +110,10 @@ const Img = styled.img`
   }
 `;
 
-function Carousel({ datas }: CarouselProps) {
+const Carousel = ({ datas }: CarouselProps) => {
   const [page, setPage] = useState<number>(0);
 
-  const [scrollContainer, setScrollContainer] = useState<
-    HTMLElement | undefined
-  >();
+  const [scrollContainer, setScrollContainer] = useState<HTMLElement | undefined>();
   const [carouselEl, setCarouselEl] = useState<HTMLElement | undefined>();
   const [leftArrow, setLeftArrow] = useState<HTMLElement | undefined>();
   const [rightArrow, setRightArrow] = useState<HTMLElement | undefined>();
@@ -96,13 +124,15 @@ function Carousel({ datas }: CarouselProps) {
     setSelectedDetailImage(image);
     setDetailIsOpen(true);
   };
+
   const handleDetailClose = () => {
     setSelectedDetailImage("");
     setDetailIsOpen(false);
   };
 
   const targetContanier = useRef<HTMLDivElement | null>(null);
-  const containerWidth = useWindowResize(scrollContainer);
+  const isLeft = page === 0;
+  const isRight = page === datas.length;
 
   useEffect(() => {
     setLeftArrow(document.getElementById("leftArrow") as HTMLElement);
@@ -111,78 +141,52 @@ function Carousel({ datas }: CarouselProps) {
     setCarouselEl(document.getElementById("carousel") as HTMLElement);
 
     if (!leftArrow || !rightArrow || !scrollContainer || !carouselEl) {
-      // console.error("dom id isnt exist");
-    } else {
-      const carouselElWidth = carouselEl.clientWidth;
-      const scrollDistance = scrollContainer.clientWidth;
-
-      scrollContainer.addEventListener("scroll", () => {
-        if (scrollContainer.scrollLeft === 0) {
-          setPage(0);
-        } else if (
-          scrollContainer.scrollLeft > 0 &&
-          scrollDistance < carouselElWidth - scrollContainer.scrollLeft - 1
-        ) {
-          setPage(1);
-        } else if (
-          scrollDistance >=
-          carouselElWidth - scrollContainer.scrollLeft - 1
-        ) {
-          setPage(datas.length);
-        }
-      });
-
-      leftArrow.onclick = function () {
-        scrollContainer.scrollBy({
-          top: 0,
-          left: -scrollDistance,
-          behavior: "smooth",
-        });
-      };
-      rightArrow.onclick = function () {
-        scrollContainer.scrollBy({
-          top: 0,
-          left: +scrollDistance,
-          behavior: "smooth",
-        });
-      };
+      return;
     }
-  }, [
-    scrollContainer,
-    leftArrow,
-    rightArrow,
-    containerWidth,
-    carouselEl,
-    datas.length,
-  ]);
+    const carouselElWidth = carouselEl.clientWidth;
+    const scrollDistance = scrollContainer.clientWidth;
+
+    scrollContainer.addEventListener("scroll", () => {
+      if (scrollContainer.scrollLeft === 0) {
+        setPage(0);
+        return;
+      }
+      if (scrollContainer.scrollLeft > 0 && scrollDistance < carouselElWidth - scrollContainer.scrollLeft - 1) {
+        setPage(1);
+        return;
+      }
+      if (scrollDistance >= carouselElWidth - scrollContainer.scrollLeft - 1) {
+        setPage(datas.length);
+        return;
+      }
+    });
+
+    leftArrow.onclick = () => {
+      scrollContainer.scrollBy({
+        top: 0,
+        left: -scrollDistance,
+        behavior: "smooth",
+      });
+    };
+    rightArrow.onclick = () => {
+      scrollContainer.scrollBy({
+        top: 0,
+        left: +scrollDistance,
+        behavior: "smooth",
+      });
+    };
+  }, [carouselEl, datas.length, leftArrow, rightArrow, scrollContainer]);
 
   if (datas.length === 0) return null;
 
   return (
     <Window>
-      <StyledBackArrow
-        id="leftArrow"
-        current={page}
-        length={datas.length}
-        size={"3rem"}
-        isBackGround={true}
-        isMobileVisible={false}
-      />
-      <StyledForwardArrow
-        id="rightArrow"
-        current={page}
-        length={datas.length}
-        size={"3rem"}
-        isBackGround={true}
-        isMobileVisible={false}
-      />
+      <StyledBackArrow id="leftArrow" current={page} length={datas.length} size={"3rem"} isBackGround={true} isMobileVisible={false} />
+      <StyledForwardArrow id="rightArrow" current={page} length={datas.length} size={"3rem"} isBackGround={true} isMobileVisible={false} />
       <ScrollWrapper id={"scroll"} ref={targetContanier}>
         <CarouselWrapper id={"carousel"}>
           {datas.map((img) => (
-            <CarouselItem
-              key={"CarouselItem" + img}
-              onClick={() => handleItemClick(img)}
-            >
+            <CarouselItem key={img} onClick={() => handleItemClick(img)}>
               <ImgWrapper>
                 <Img src={img} />
               </ImgWrapper>
@@ -190,13 +194,11 @@ function Carousel({ datas }: CarouselProps) {
           ))}
         </CarouselWrapper>
       </ScrollWrapper>
-      <DetailImageModal
-        image={selectedDetailImage}
-        isOpen={detailIsOpen}
-        onClose={handleDetailClose}
-      />
+      <DetailImageModal image={selectedDetailImage} isOpen={detailIsOpen} onClose={handleDetailClose} />
+      <div className={`filter ${!isLeft ? "left" : ""}`} />
+      <div className={`filter ${!isRight ? "right" : ""}`} />
     </Window>
   );
-}
+};
 
 export default Carousel;

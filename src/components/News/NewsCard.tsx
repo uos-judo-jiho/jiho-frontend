@@ -9,6 +9,7 @@ import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
 
 type NewsCardProps = {
   index: number;
+  year: string;
   datas: ArticleInfoType[];
   selectedIndex?: number;
   handleClickCard: (index: string) => void;
@@ -22,10 +23,11 @@ const Container = styled.div`
 
   display: flex;
 
+  border: 1px solid ${(props) => props.theme.lightGreyColor};
   border-radius: 10px;
   padding: 2rem 0rem;
 
-  transition: all 0.5s;
+  transition: all 500ms;
   cursor: pointer;
 
   @media (min-width: 540px) {
@@ -35,12 +37,12 @@ const Container = styled.div`
     }
   }
   @media (max-width: 540px) {
-    border: 1px solid ${(props) => props.theme.lightGreyColor};
     padding: 8px;
   }
 `;
 
 const AnchoreContainer = styled.a`
+  width: 100%;
   display: flex;
 `;
 
@@ -48,6 +50,9 @@ const ImgWrapper = styled.div`
   flex: 1 1 0;
   width: 50%;
   padding: 0rem 1rem;
+
+  border-radius: 5px;
+
   @media (max-width: 539px) {
     width: 100%;
     padding: 0rem;
@@ -82,8 +87,10 @@ const ImgTitle = styled.div`
 const Img = styled.img`
   width: 100%;
   height: 100%;
-  border-radius: 5px;
+  border-radius: inherit;
   object-fit: contain;
+
+  background-color: ${(props) => props.theme.bgColor};
 
   @media (max-width: 539px) {
     height: inherit;
@@ -136,7 +143,7 @@ const MoreButton = styled.button`
   }
 `;
 
-function NewsCard({ index, datas, handleClickCard }: NewsCardProps) {
+const NewsCard = ({ index, datas, handleClickCard, year }: NewsCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const newsData = datas[index];
@@ -148,30 +155,10 @@ function NewsCard({ index, datas, handleClickCard }: NewsCardProps) {
 
   return (
     <Container onClick={() => handleClickCard(newsData.id)}>
-      <AnchoreContainer
-        href={`/news/2022/${newsData.id}`}
-        onClick={(e) => e.preventDefault()}
-      >
+      <AnchoreContainer href={`/news/${year}/${newsData.id}`} onClick={(e) => e.preventDefault()}>
         <ImgWrapper>
-          {isLoading ? (
-            <Img
-              loading="lazy"
-              alt={newsData.title + newsData.author}
-              src={
-                newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK
-              }
-            />
-          ) : (
-            <SkeletonThumbnail />
-          )}
-          <img
-            alt={newsData.title + newsData.author}
-            src={
-              newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK
-            }
-            style={{ display: "none" }}
-            onLoad={handleLoding}
-          />
+          {isLoading ? <Img loading="lazy" alt={newsData.title + newsData.author} src={newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK} /> : <SkeletonThumbnail />}
+          <img alt={newsData.title + newsData.author} src={newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK} style={{ display: "none" }} onLoad={handleLoding} />
 
           <Col>
             <ImgTitle>{newsData.title}</ImgTitle>
@@ -198,6 +185,6 @@ function NewsCard({ index, datas, handleClickCard }: NewsCardProps) {
       </AnchoreContainer>
     </Container>
   );
-}
+};
 
 export default NewsCard;

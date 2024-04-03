@@ -14,12 +14,12 @@ const NewsDetail = () => {
   const { news, fetch } = useNews();
 
   useEffect(() => {
-    if (["2022", "2023", "2024"].includes(id?.toString() ?? "")) {
+    if (["2022", "2023", "2024"].includes(id?.toString() ?? "") && (news.length === 0 || news.some((newsData) => newsData.year.toString() !== id))) {
       const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
       fetch(year ?? "2022");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   const currentPageNews = news.find((newsData) => newsData.year.toString() === id?.toString());
 
@@ -36,8 +36,8 @@ const NewsDetail = () => {
       <MyHelmet title="News" description={metaDescription} imgUrl={metaImgUrl} />
       <DefaultLayout>
         <SheetWrapper>
-          <Title title={"지호지"} color="black" />
-          <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} />
+          <Title title={`${id ?? "2022"}년 지호지`} color="black" />
+          <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} index={index ?? ""} year={id ?? "2023"} />
         </SheetWrapper>
       </DefaultLayout>
     </div>
