@@ -38,18 +38,6 @@ const getHtml = (req, res) => {
             currentData.title
           }: ${currentData.description.slice(0, 100)}"/>`
         )
-        .replace(
-          `<meta name="google-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다."/>`,
-          `<meta name="google-site-verification" content="서울시립대학교 유도부 지호 ${currentData.dateTime} 훈련일지 | 참여 인원: ${currentData.tags.join(", ")} ${
-            currentData.title
-          }: ${currentData.description.slice(0, 100)}"/>`
-        )
-        .replace(
-          `<meta name="naver-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다."/>`,
-          `<meta name="naver-site-verification" content="서울시립대학교 유도부 지호 ${currentData.dateTime} 훈련일지 | 참여 인원: ${currentData.tags.join(", ")} ${
-            currentData.title
-          }: ${currentData.description.slice(0, 100)}"/>`
-        )
         .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/apple-icon-180x180.png"}"/>`);
     } else if (/\/news?(\/[0-9]+4)?(\/[0-9]+)?/.test(req.url)) {
       const newsRes = await getNews(req.params.year);
@@ -65,20 +53,7 @@ const getHtml = (req, res) => {
           `<meta name="description" content="서울시립대학교 유도부 지호"/>`,
           `<meta name="description" content="서울시립대학교 유도부 지호 ${req.params.year}년 | ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
         )
-        .replace(
-          `<meta name="google-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다."/>`,
-          `<meta name="google-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다. ${req.params.year}년도 지호지입니다. ${currentData.title}: ${currentData.description.slice(
-            0,
-            100
-          )}"/>`
-        )
-        .replace(
-          `<meta name="naver-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다."/>`,
-          `<meta name="naver-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다. ${req.params.year}년도 지호지입니다. ${currentData.title}: ${currentData.description.slice(
-            0,
-            100
-          )}"/>`
-        );
+        .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/apple-icon-180x180.png"}"/>`);
     } else if (/\/notice?(\/[0-9]+)?/.test(req.url)) {
       const noticesData = await getNotices();
       const currentData = noticesData.find((noticeData) => noticeData.id === req.params.id) || noticesData[0];
@@ -96,14 +71,7 @@ const getHtml = (req, res) => {
           `<meta name="description" content="서울시립대학교 유도부 지호"/>`,
           `<meta name="description" content="서울시립대학교 유도부 지호 공지사항 | ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
         )
-        .replace(
-          `<meta name="google-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다."/>`,
-          `<meta name="google-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다. 공지사항입니다. ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
-        )
-        .replace(
-          `<meta name="naver-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다."/>`,
-          `<meta name="naver-site-verification" content="서울시립대학교 중앙 동아리 유도부 지호입니다. 공지사항입니다. ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
-        );
+        .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/apple-icon-180x180.png"}"/>`);
     }
     const html = ReactDOMServer.renderToString(<StaticRouter location={req.url}></StaticRouter>);
 
