@@ -1,6 +1,6 @@
 {
   "name": "jiho",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "private": true,
   "dependencies": {
     "@babel/preset-env": "^7.24.4",

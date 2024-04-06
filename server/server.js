@@ -19,10 +19,18 @@ const getHtml = (req, res) => {
 
     let ssrData = data.replace(`<meta property="og:url" content="http://uosjudo.com"/>`, `<meta property="og:url" content="http://uosjudo.com${req.url}"/>`);
 
+    const html = ReactDOMServer.renderToString(<StaticRouter location={req.url}></StaticRouter>);
+
+    ssrData.replace('<div id="root"></div>', `<div id="root">${html}</div>`);
+
     if (req.url === "/") {
     } else if (/\/photo?(\/[0-9]+)?/.test(req.url)) {
       const photoRes = await getTrainings();
-      const currentData = photoRes.find((trainingData) => trainingData.id === req.params.id) || photoRes[0];
+      const currentData = photoRes.find((trainingData) => trainingData.id?.toString() === req.params.id?.toString()) || photoRes.at(-1);
+
+      if (!currentData) {
+        return res.send(ssrData);
+      }
 
       ssrData = ssrData
         .replace(`<meta property="og:title" content="Uos Judo Team Jiho"/>`, `<meta property="og:title" content="서울시립대학교 유도부 지호 | 훈련일지"/>`)
@@ -38,10 +46,14 @@ const getHtml = (req, res) => {
             currentData.title
           }: ${currentData.description.slice(0, 100)}"/>`
         )
-        .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/apple-icon-180x180.png"}"/>`);
+        .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/ms-icon-310x310.png"}"/>`);
     } else if (/\/news?(\/[0-9]+4)?(\/[0-9]+)?/.test(req.url)) {
       const newsRes = await getNews(req.params.year);
-      const currentData = newsRes.articles.find((newsData) => newsData.id === req.params.id) || newsRes.articles[0];
+      const currentData = newsRes.articles.find((newsData) => newsData.id?.toString() === req.params.id?.toString()) || newsRes.articles[0];
+
+      if (!currentData) {
+        return res.send(ssrData);
+      }
 
       ssrData = ssrData
         .replace(`<meta property="og:title" content="Uos Judo Team Jiho"/>`, `<meta property="og:title" content="서울시립대학교 유도부 지호 | ${req.params.year}년 | ${currentData.title}"/>`)
@@ -53,10 +65,14 @@ const getHtml = (req, res) => {
           `<meta name="description" content="서울시립대학교 유도부 지호"/>`,
           `<meta name="description" content="서울시립대학교 유도부 지호 ${req.params.year}년 | ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
         )
-        .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/apple-icon-180x180.png"}"/>`);
+        .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/ms-icon-310x310.png"}"/>`);
     } else if (/\/notice?(\/[0-9]+)?/.test(req.url)) {
       const noticesData = await getNotices();
-      const currentData = noticesData.find((noticeData) => noticeData.id === req.params.id) || noticesData[0];
+      const currentData = noticesData.find((noticeData) => noticeData.id?.toString() === req.params.id?.toString()) || noticesData[0];
+
+      if (!currentData) {
+        return res.send(ssrData);
+      }
 
       ssrData = ssrData
         .replace(
@@ -71,11 +87,8 @@ const getHtml = (req, res) => {
           `<meta name="description" content="서울시립대학교 유도부 지호"/>`,
           `<meta name="description" content="서울시립대학교 유도부 지호 공지사항 | ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
         )
-        .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/apple-icon-180x180.png"}"/>`);
+        .replace(`<meta property="og:image" content="/favicon-96x96.png"/>`, `<meta property="og:image" content="${currentData.imgSrcs[0] || "/ms-icon-310x310.png"}"/>`);
     }
-    const html = ReactDOMServer.renderToString(<StaticRouter location={req.url}></StaticRouter>);
-
-    ssrData.replace('<div id="root"></div>', `<div id="root">${html}</div>`);
 
     return res.send(ssrData);
   });
