@@ -94,8 +94,6 @@ const getHtml = (req, res) => {
   });
 };
 
-app.use(express.static(path.resolve(__dirname, "..", "build")));
-
 app.get("/", getHtml);
 
 app.get("/notice", getHtml);
@@ -107,7 +105,11 @@ app.get("/photo/:id", getHtml);
 app.get("/news/:year", getHtml);
 app.get("/news/:year/:id", getHtml);
 
-app.get("/sitemap.xml", (req, res) => res.sendFile(".build/sitemap.xml"));
+app.use(express.static(path.resolve(__dirname, "..", "build")));
+
+app.get("/", (req, res) => {
+  return res.send("ExpressJS running successfully");
+});
 
 app.listen(3000, () => {
   console.log("App is launched! on port 3000");
