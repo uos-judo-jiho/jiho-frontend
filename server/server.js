@@ -105,6 +105,8 @@ app.get("/photo/:id", getHtml);
 app.get("/news/:year", getHtml);
 app.get("/news/:year/:id", getHtml);
 
+app.get("/sitemap.xml", `${process.env.PWD}/public/sitemap.xml`);
+
 app.use(express.static(path.resolve(__dirname, "..", "build")));
 
 app.get("/", (req, res) => {
