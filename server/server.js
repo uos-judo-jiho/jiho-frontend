@@ -105,7 +105,17 @@ app.get("/photo/:id", getHtml);
 app.get("/news/:year", getHtml);
 app.get("/news/:year/:id", getHtml);
 
-app.get("/sitemap.xml", `${process.env.PWD}/public/sitemap.xml`);
+app.get("/sitemap.xml", (req, res) => {
+  fs.readFile(
+    path.resolve(`./build/sitemap.xml`, "utf-8", async (err, data) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("Sitemap Error Happended!");
+      }
+      return res.send(data);
+    })
+  );
+});
 
 app.use(express.static(path.resolve(__dirname, "..", "build")));
 
