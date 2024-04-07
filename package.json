@@ -34,7 +34,6 @@
     "start:prod": "export PORT=3005 && npm run build && serve -s build",
     "start:prod:ssr": "npm run build && npm run build:ssr",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
-    "prebuild": "node server/sitemap",
     "wbuild": "set\"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
