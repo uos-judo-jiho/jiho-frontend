@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
 import { getNews } from "../api/news";
 import { NewsType } from "../types/NewsType";
+import { vaildNewsYearList } from "../utils/Utils";
 
 const NewList = atom<NewsType[]>({
   key: "newObject",
@@ -11,22 +12,13 @@ const NewList = atom<NewsType[]>({
 export const useNews = () => {
   const [news, setNews] = useRecoilState(NewList);
 
-  const filterNews = useCallback(
-    (news: NewsType[]) => {
-      const filteredNews = news.filter((v, i, a) => a.findIndex((v2) => v2.year === v.year) === i);
-      setNews(filteredNews);
-    },
-    [setNews]
-  );
+  const filterNews = useCallback((news: NewsType[]) => {
+    const filteredNews = news.filter((v, i, a) => a.findIndex((v2) => v2.year === v.year) === i);
+    return filteredNews;
+  }, []);
 
   const fetch = useCallback(
-    async (year: "2022" | "2023" | "2024" = "2022") => {
-      filterNews(news);
-
-      if (news.some((newsData) => newsData.year.toString() === year.toString())) {
-        return;
-      }
-
+    async (year: string = "2022") => {
       const newNewList = await getNews(year);
 
       if (!newNewList) {
@@ -35,18 +27,16 @@ export const useNews = () => {
 
       setNews((prev) => [...prev, newNewList]);
     },
-    [filterNews, news, setNews]
+    [setNews]
   );
 
-  const refreshNew = useCallback(() => {
-    filterNews(news);
+  const refreshNew = useCallback(async () => {
+    await Promise.all(
+      vaildNewsYearList().map(async (year) => {
+        await fetch(year);
+      })
+    );
+  }, [fetch]);
 
-    ["2022", "2023", "2024"].forEach(async (year) => {
-      await fetch(year as "2022" | "2023" | "2024");
-    });
-
-    filterNews(news);
-  }, [filterNews, fetch, news]);
-
-  return { fetch, refreshNew, news };
+  return { fetch, refreshNew, news: filterNews(news) };
 };

@@ -29,12 +29,12 @@ const GridContainer = styled.ul`
   }
 `;
 
-function PhotoCardContainer({ children }: PhotoCardContainerProps) {
+const PhotoCardContainer = ({ children }: PhotoCardContainerProps) => {
   return (
     <FeedContainer>
       <GridContainer>{children}</GridContainer>
     </FeedContainer>
   );
-}
+};
 
 export default PhotoCardContainer;

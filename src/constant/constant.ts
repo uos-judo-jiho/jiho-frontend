@@ -1,10 +1,6 @@
 export const Constants = {
   // base url
-  BASE_URL:
-    process.env.NODE_ENV === "production" &&
-    window.location.hostname !== "localhost"
-      ? "https://uosjudo.com"
-      : "http://localhost:3000",
+  BASE_URL: process.env.NODE_ENV === "production" && window.location.hostname !== "localhost" ? "https://uosjudo.com" : "http://localhost:3000",
 
   // 이미지
   LOGO_BLACK: require("../assets/images/logo/logo-removebg.png"),
@@ -35,6 +31,9 @@ export const Constants = {
   DESCRIPTION_LINE_HEIGHT: "28px",
   DEFAULT_LINE_HEIGHT: "24px",
   TINY_LINE_HEIGHT: "18px",
+
+  // lastest news
+  LATEST_NEWS_YEAR: "2023",
 } as const;
 
 type T = typeof Constants;

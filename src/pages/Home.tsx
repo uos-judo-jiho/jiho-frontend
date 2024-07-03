@@ -10,19 +10,24 @@ import ScrollSnap from "../layouts/ScrollSnap";
 import { useNews } from "../recoills/news";
 import { useNotices } from "../recoills/notices";
 import { useTrainings } from "../recoills/tranings";
+import { Constants } from "../constant/constant";
 
 const Home = () => {
   const { fetch: fetchNotices } = useNotices();
-  const { fetch: fetchrainings } = useTrainings();
+  const { fetch: fetchTrainings } = useTrainings();
   const { fetch: fetchNews } = useNews();
 
   useEffect(() => {
-    fetchNotices();
-    fetchrainings();
-    fetchNews("2023");
+    fetchNews(Constants.LATEST_NEWS_YEAR);
+  }, [fetchNews]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => {
+    fetchNotices();
+  }, [fetchNotices]);
+
+  useEffect(() => {
+    fetchTrainings();
+  }, [fetchTrainings]);
 
   return (
     <>

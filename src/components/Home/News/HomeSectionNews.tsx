@@ -4,6 +4,7 @@ import Title from "../../../layouts/Title";
 import HomeSectionBG from "../HomeSectionBG";
 
 import { Link } from "react-router-dom";
+import { Constants } from "../../../constant/constant";
 import SheetWrapper from "../../../layouts/SheetWrapper";
 
 const Container = styled.div`
@@ -37,11 +38,11 @@ const SeeMore = styled.p`
 const HomeSectionNews = () => {
   return (
     <Container>
-      <Link to={"/news/2023"}>
+      <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>
         <HomeSectionBG bgImageSrc={BGImage} id="sectionNews" backgroundCover={false}>
           <SheetWrapper>
             <TextWrapper>
-              <Title title={"2023년 지호지"} />
+              <Title title={`${Constants.LATEST_NEWS_YEAR}년 지호지`} />
               <SeeMore>자세히 보기</SeeMore>
             </TextWrapper>
           </SheetWrapper>

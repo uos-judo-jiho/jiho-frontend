@@ -8,6 +8,8 @@ import FooterInfo from "../../../assets/jsons/footerData.json";
 const Container = styled.div`
   line-height: normal;
   margin-bottom: 1rem;
+
+  flex: 1;
 `;
 
 const MobileInvisible = css`
@@ -60,25 +62,6 @@ function HomeInfo() {
           </DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
-          {/* <DescriptionItem>
-            <DescriptionTitle>{FooterInfo.connetUs.title}</DescriptionTitle>
-          </DescriptionItem>
-          <DescriptionItem>
-            {FooterInfo.connetUs.instagram.title}
-            <a href="https://www.instagram.com/uos_judo/" target="_blank">
-              {FooterInfo.connetUs.instagram.href}
-            </a>
-          </DescriptionItem>
-          <DescriptionItem>
-            {FooterInfo.connetUs.email.title}
-            <a href="mailto: uosjudojiho@gmail.com">
-              {FooterInfo.connetUs.email.href}
-            </a>
-          </DescriptionItem>
-          <DescriptionItem>
-            {FooterInfo.connetUs.tel.title}
-            <a href="tel: 010-2222-3333">{FooterInfo.connetUs.tel.href}</a>
-          </DescriptionItem> */}
         </DescriptionContainer>
       </Col>
     </Container>

@@ -19,7 +19,7 @@ export const formatStringArray = (stringArray: string[]): string => {
  * 수상이력을 AwardsType type으로 받아서 string으로 포멧팅한다.
  */
 export const formaAwardsType = (award: AwardsType): string => {
-  let result: string = award.title + " | ";
+  let result: string = "";
 
   if (award.gold > 0) {
     result += " 금 ";
@@ -98,4 +98,15 @@ export const toBase64 = async (file: File): Promise<string> => {
     console.error(error);
     return "";
   }
+};
+
+/**
+ * @description 년도 리스트를 반환 2022 ~ 현재 년도까지
+ * @returns string[]
+ * @example ["2022", "2023", "2024", ...]
+ */
+export const vaildNewsYearList = () => {
+  const currentYear = new Date().getFullYear();
+  const yearList = Array.from({ length: currentYear - 2021 }, (_, i) => String(2022 + i));
+  return yearList;
 };

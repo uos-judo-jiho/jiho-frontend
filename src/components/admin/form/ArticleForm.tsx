@@ -53,6 +53,10 @@ const LoadingContainer = styled.div`
   height: 100%;
 `;
 
+const InputValueLength = styled.span`
+  text-align: right;
+`;
+
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(data ?? initValues);
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
@@ -67,7 +71,6 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const handleDelete = async (id: string, type: "news" | "training" | "notice") => {
     const res = await deleteBoard(id);
     if (res) {
-      alert("게시물을 삭제하였습니다!");
       redirect(`/admin/${type}`);
     } else {
       alert("게시물을 삭제에 실패하였습니다!");
@@ -228,6 +231,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               본문
             </StyledLabel>
             <StyledTextArea disabled={gallery} id="description" name="description" onChange={handleDescriptionChange} required value={values.description} />
+            <InputValueLength>{values.description.length}</InputValueLength>
           </InputContainer>
           <ImageUploader setValues={handleUploadImages} data={data?.imgSrcs} imageLimit={gallery ? 20 : 10} />
           <ButtonContainer>

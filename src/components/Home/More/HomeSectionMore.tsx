@@ -35,7 +35,7 @@ const HomeSectionMore = () => {
         <GridContainer>
           <MoreCard title="공지사항" linkTo="/notice" data={notices} />
           <MoreCard title="훈련일지" linkTo="/photo" data={trainings} />
-          <MoreCard title="지호지" linkTo="/news/2023" data={news[0]?.articles || []} />
+          <MoreCard title="지호지" linkTo={`/news/${Constants.LATEST_NEWS_YEAR}`} data={news[0]?.articles || []} />
         </GridContainer>
       </Container>
     </SheetWrapper>

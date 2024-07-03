@@ -11,6 +11,7 @@ const generateSitemap = async () => {
     { loc: "https://uosjudo.com/news", changefreq: "yearly" },
     { loc: "https://uosjudo.com/news/2022", changefreq: "never" },
     { loc: "https://uosjudo.com/news/2023", changefreq: "never" },
+    { loc: "https://uosjudo.com/news/2024", changefreq: "never" },
     { loc: "https://uosjudo.com/notice" },
   ];
 

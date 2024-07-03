@@ -19,6 +19,10 @@
 		<changefreq>never</changefreq>
   </url>
  <url>
+    <loc>https://uosjudo.com/news/2024</loc>
+		<changefreq>never</changefreq>
+  </url>
+ <url>
     <loc>https://uosjudo.com/notice</loc>
   </url>
 </urlset>

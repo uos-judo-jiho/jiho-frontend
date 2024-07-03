@@ -1,25 +1,27 @@
-import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import NewsIndex from "../../components/News/NewsIndex";
+import Loading from "../../components/Skeletons/Loading";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import SheetWrapper from "../../layouts/SheetWrapper";
 import Title from "../../layouts/Title";
 import { useNews } from "../../recoills/news";
 import { TNewsParams } from "../../types/TNewsParams";
-import { useEffect } from "react";
-import Loading from "../../components/Skeletons/Loading";
+import { vaildNewsYearList } from "../../utils/Utils";
 
 const NewsDetail = () => {
   const { id, index } = useParams<TNewsParams>();
   const { news, fetch } = useNews();
 
+  const naviagate = useNavigate();
+
   useEffect(() => {
-    if (["2022", "2023", "2024"].includes(id?.toString() ?? "") && (news.length === 0 || news.some((newsData) => newsData.year.toString() !== id))) {
-      const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
-      fetch(year ?? "2022");
+    if (news.some((newsData) => newsData.year.toString() === id?.toString())) {
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+    fetch(id);
+  }, [fetch, id, news]);
 
   const currentPageNews = news.find((newsData) => newsData.year.toString() === id?.toString());
 
@@ -31,13 +33,18 @@ const NewsDetail = () => {
 
   const metaImgUrl = currentPageNews?.articles.at(0)?.imgSrcs.at(0);
 
+  if (!id || !vaildNewsYearList().includes(id)) {
+    naviagate(`/news/${vaildNewsYearList().at(-1)}`);
+    return <></>;
+  }
+
   return (
     <div>
       <MyHelmet title="News" description={metaDescription} imgUrl={metaImgUrl} />
       <DefaultLayout>
         <SheetWrapper>
-          <Title title={`${id ?? "2022"}년 지호지`} color="black" />
-          <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} index={index ?? ""} year={id ?? "2023"} />
+          <Title title={`${id}년 지호지`} color="black" />
+          <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} index={index ?? ""} year={id} />
         </SheetWrapper>
       </DefaultLayout>
     </div>

@@ -7,6 +7,8 @@ import Loading from "../../components/Skeletons/Loading";
 import { useNews } from "../../recoills/news";
 import { TNewsParams } from "../../types/TNewsParams";
 
+// TODO: 모바일 헤더 높이 44px 고정 상수화
+
 const MobileHeader = styled.header`
   position: sticky;
   top: 0;
@@ -65,12 +67,11 @@ const NewsMobile = () => {
   const { id, index } = useParams<TNewsParams>();
 
   useEffect(() => {
-    if (["2022", "2023", "2024"].includes(id?.toString() ?? "")) {
-      const year = id?.toString() as "2022" | "2023" | "2024" | undefined;
-      fetch(year ?? "2022");
+    if (news.some((newsData) => newsData.year.toString() === id?.toString())) {
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    fetch(id);
+  }, [fetch, id, news]);
 
   useEffect(() => {
     if (!index || !news) {
