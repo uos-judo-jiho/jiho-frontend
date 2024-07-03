@@ -53,6 +53,24 @@
       "menGroup": 0,
       "womenGroup": 0,
       "group": 0
+    },
+    {
+      "title": "제 5회 강서구회장배 유도대회",
+      "gold": 0,
+      "silver": 1,
+      "bronze": 1,
+      "menGroup": 0,
+      "womenGroup": 0,
+      "group": 0
+    },
+    {
+      "title": "제40회 서울시회장배유도대회",
+      "gold": 1,
+      "silver": 0,
+      "bronze": 0,
+      "menGroup": 0,
+      "womenGroup": 0,
+      "group": 0
     }
   ]
 }

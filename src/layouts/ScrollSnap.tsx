@@ -21,8 +21,8 @@ const Container = styled.div`
   }
 `;
 
-function ScrollSnap({ children }: ScrollSnapProps) {
+const ScrollSnap = ({ children }: ScrollSnapProps) => {
   return <Container>{children}</Container>;
-}
+};
 
 export default ScrollSnap;

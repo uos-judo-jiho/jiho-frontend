@@ -7,6 +7,8 @@ import Loading from "../../components/Skeletons/Loading";
 import { useNews } from "../../recoills/news";
 import { TNewsParams } from "../../types/TNewsParams";
 
+// TODO: 모바일 헤더 높이 44px 고정 상수화
+
 const MobileHeader = styled.header`
   position: sticky;
   top: 0;

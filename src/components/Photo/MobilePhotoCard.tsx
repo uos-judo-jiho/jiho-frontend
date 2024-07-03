@@ -12,7 +12,8 @@ const MobilePhotoCardContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  padding: 18px 0;
+  height: calc(100% - 44px);
+
   margin: 4px 0;
 
   border-top: 1px solid ${(props) => props.theme.lightGreyColor};
@@ -113,12 +114,8 @@ const MobilePhotoCard = ({ articleInfo, id }: MobilePhotoCardProps) => {
           ))}
         </div>
         <p className="description">
-          {isMore
-            ? articleInfo.description
-            : articleInfo.description.slice(0, 20)}
-          {!isMore && (
-            <MoreButton onClick={() => setIsMore(true)}>...더보기</MoreButton>
-          )}
+          {isMore ? articleInfo.description : articleInfo.description.slice(0, 20)}
+          {!isMore && <MoreButton onClick={() => setIsMore(true)}>...더보기</MoreButton>}
         </p>
       </Content>
     </MobilePhotoCardContainer>

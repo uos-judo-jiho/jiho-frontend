@@ -1,15 +1,29 @@
-import React from "react";
 import Col from "../../../layouts/Col";
 
-import Awards from "../../../assets/jsons/awards.json";
 import styled from "styled-components";
+import Awards from "../../../assets/jsons/awards.json";
 import { AwardsType } from "../../../types/TAwards";
 import { formaAwardsType } from "../../../utils/Utils";
 
+const AwardsConatiner = styled.div`
+  flex: 1 0 0;
+`;
+
 const AwardsItem = styled.li`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
   margin: 1rem 0;
+
   font-size: ${(props) => props.theme.descriptionFontSize};
-  line-height: ${(props) => props.theme.descriptionLineHeight};
+  line-height: 100%;
+
+  span {
+    font-size: ${(props) => props.theme.defaultFontSize};
+    line-height: ${(props) => props.theme.defaultLineHeight};
+    color: ${(props) => props.theme.lightGreyColor};
+  }
 `;
 
 const SubTitle = styled.h3`
@@ -18,19 +32,30 @@ const SubTitle = styled.h3`
   margin-bottom: 1.2rem;
 `;
 
-function HomeAwards() {
+const AwardItem = ({ award }: { award: AwardsType }) => {
+  return (
+    <AwardsItem>
+      <b>{award.title}</b>
+      <span>{formaAwardsType(award)}</span>
+    </AwardsItem>
+  );
+};
+
+const HomeAwards = () => {
   const awards: AwardsType[] = Awards.awards;
 
   return (
-    <Col>
-      <SubTitle>수상 이력</SubTitle>
-      <ul>
-        {awards.map((award) => (
-          <AwardsItem key={award.title}>{formaAwardsType(award)}</AwardsItem>
-        ))}
-      </ul>
-    </Col>
+    <AwardsConatiner>
+      <Col>
+        <SubTitle>수상 이력</SubTitle>
+        <ul>
+          {awards.map((award) => (
+            <AwardItem key={award.title} award={award} />
+          ))}
+        </ul>
+      </Col>
+    </AwardsConatiner>
   );
-}
+};
 
 export default HomeAwards;
