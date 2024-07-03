@@ -19,7 +19,7 @@ export const formatStringArray = (stringArray: string[]): string => {
  * 수상이력을 AwardsType type으로 받아서 string으로 포멧팅한다.
  */
 export const formaAwardsType = (award: AwardsType): string => {
-  let result: string = award.title + " | ";
+  let result: string = "";
 
   if (award.gold > 0) {
     result += " 금 ";
