@@ -1,10 +1,10 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import FormContainer from "../../../components/admin/form/FormContainer";
 import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "../../../layouts/ListContainer";
-import { useNews } from "../../../recoills/news";
-import { useEffect } from "react";
 import Row from "../../../layouts/Row";
+import { useNews } from "../../../recoills/news";
 
 const AdminNews = () => {
   const { news, refreshNew } = useNews();
@@ -15,9 +15,7 @@ const AdminNews = () => {
 
   useEffect(() => {
     refreshNew();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refreshNew]);
 
   return (
     <FormContainer title="지호지 관리">
