@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MENU_ID, menuIdType } from "../../types/menuIdType";
 
+import { vaildNewsYearList } from "../../utils/Utils";
 import { MenuItem, MenuItemTitle, MenuList, MenuProps } from "./MenuStyledComponents";
 import ToggleMenuItem from "./ToggleMenuItem";
 
@@ -30,11 +31,7 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
           selected={selected[0]}
           parentTitle={"지호지"}
           targetMenu={MENU_ID.newsToggleMenu}
-          subMenuItemList={[
-            { href: "/news/2022", title: "2022 지호지" },
-            { href: "/news/2023", title: "2023 지호지" },
-            // { href: "/news/2024", title: "2024 지호지" },
-          ]}
+          subMenuItemList={vaildNewsYearList().map((year) => ({ href: `/news/${year}`, title: `${year} 지호지` }))}
         />
       </MenuItem>
       <MenuItem>

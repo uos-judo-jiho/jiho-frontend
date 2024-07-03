@@ -1,6 +1,6 @@
 {
   "name": "jiho",
-  "version": "1.9.4",
+  "version": "1.10.0",
   "private": true,
   "dependencies": {
     "@babel/preset-env": "^7.24.4",
@@ -30,14 +30,13 @@
     "web-vitals": "^3.3.0"
   },
   "scripts": {
-    "start": "export PORT=3005 && react-scripts start",
-    "start:prod": "export PORT=3005 && npm run build && serve -s build",
-    "start:prod:ssr": "npm run build && npm run build:ssr",
+    "start": "react-scripts start",
+    "start:prod": "npm run build && serve -s build",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "prebuild": "node script/sitemap.js",
     "wbuild": "set\"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build:ssr": "nodemon ./server"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
