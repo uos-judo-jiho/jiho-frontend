@@ -24,16 +24,25 @@ const ImgWrapper = styled.li`
 
 const HoveredContainer = styled.div`
   position: absolute;
-  display: none;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0;
+
   width: 100%;
   height: 100%;
+
   font-size: 3.2rem;
+
   color: ${(props) => props.theme.bgColor};
+
+  transition: opacity 0.287s;
+
   @media (min-width: 540px) {
     ${ImgWrapper}:hover & {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      opacity: 1;
     }
   }
 `;
@@ -42,21 +51,21 @@ const Thumbnail = styled.img`
   position: absolute;
   top: 0;
   right: 0;
+
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1/1;
+
   object-fit: cover;
+
+  transition: filter 0.287s;
+
   @media (min-width: 540px) {
     ${ImgWrapper}:hover & {
       filter: brightness(50%);
     }
   }
 `;
-const ThumbnailCard = ({
-  imgSrc,
-  dateTime,
-  id,
-  handleClickCard,
-}: ThumbnailCardProps) => {
+const ThumbnailCard = ({ imgSrc, dateTime, id, handleClickCard }: ThumbnailCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = () => handleClickCard(id);
@@ -66,21 +75,8 @@ const ThumbnailCard = ({
   return (
     <ImgWrapper onClick={handleClick}>
       <a href={`/photo/${id}`} onClick={(e) => e.preventDefault()}>
-        {isLoading ? (
-          <Thumbnail
-            loading="lazy"
-            src={imgSrc}
-            alt={"훈련 일지: " + dateTime}
-          />
-        ) : (
-          <SkeletonThumbnail />
-        )}
-        <img
-          src={imgSrc}
-          alt={"훈련 일지: " + dateTime}
-          style={{ display: "none" }}
-          onLoad={handleLoad}
-        />
+        {isLoading ? <Thumbnail loading="lazy" src={imgSrc} alt={"훈련 일지: " + dateTime} /> : <SkeletonThumbnail />}
+        <img src={imgSrc} alt={"훈련 일지: " + dateTime} style={{ display: "none" }} onLoad={handleLoad} />
         <HoveredContainer>{dateTime}</HoveredContainer>
       </a>
     </ImgWrapper>

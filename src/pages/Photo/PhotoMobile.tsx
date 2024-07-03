@@ -6,6 +6,8 @@ import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
 import Loading from "../../components/Skeletons/Loading";
 import { useTrainings } from "../../recoills/tranings";
 
+// TODO: 모바일 헤더 높이 44px 고정 상수화
+
 const MobileHeader = styled.header`
   position: sticky;
   top: 0;
