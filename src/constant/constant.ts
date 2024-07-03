@@ -33,7 +33,7 @@ export const Constants = {
   TINY_LINE_HEIGHT: "18px",
 
   // lastest news
-  LATEST_NEWS_YEAR: "2023",
+  LATEST_NEWS_YEAR: "2024",
 } as const;
 
 type T = typeof Constants;
