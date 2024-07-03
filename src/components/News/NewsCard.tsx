@@ -25,7 +25,7 @@ const Container = styled.div`
 
   border: 1px solid ${(props) => props.theme.lightGreyColor};
   border-radius: 10px;
-  padding: 2rem 0rem;
+  padding: 16px;
 
   transition: all 500ms;
   cursor: pointer;
@@ -44,18 +44,17 @@ const Container = styled.div`
 const AnchoreContainer = styled.a`
   width: 100%;
   display: flex;
+  gap: 24px;
 `;
 
 const ImgWrapper = styled.div`
   flex: 1 1 0;
   width: 50%;
-  padding: 0rem 1rem;
 
   border-radius: 5px;
 
   @media (max-width: 539px) {
     width: 100%;
-    padding: 0rem;
   }
 `;
 
@@ -63,7 +62,7 @@ const ImgSubTitle = styled.div`
   font-size: ${(props) => props.theme.tinyFontSize};
   line-height: ${(props) => props.theme.tinyLineHeight};
   color: ${(props) => props.theme.greyColor};
-  padding-top: 0.5rem;
+  padding-top: 8px;
   display: none;
   @media (max-width: 539px) {
     display: block;
@@ -74,7 +73,7 @@ const ImgTitle = styled.div`
   line-height: ${(props) => props.theme.descriptionLineHeight};
 
   font-weight: bold;
-  padding-top: 0.5rem;
+  padding-top: 8px;
   display: none;
   @media (max-width: 539px) {
     text-overflow: ellipsis;
@@ -114,14 +113,13 @@ const DescriptionSubTitle = styled.span`
   font-size: ${(props) => props.theme.tinyFontSize};
   line-height: ${(props) => props.theme.tinyLineHeight};
   color: ${(props) => props.theme.greyColor};
-  padding-right: 0.5rem;
+  padding-right: 8px;
 `;
 const DescriptionWrapper = styled.div`
   flex: 1 1 0;
   font-size: ${(props) => props.theme.defaultFontSize};
   line-height: ${(props) => props.theme.descriptionLineHeight};
   width: 100%;
-  padding: 0 1rem;
   line-height: normal;
   text-indent: 0.4rem;
 

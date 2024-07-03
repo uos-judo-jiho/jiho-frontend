@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import FooterInfo from "../../assets/jsons/footerData.json";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
+import { Constants } from "../../constant/constant";
 
 const FooterWrapper = styled.footer`
   margin: 80px auto 40px auto;
@@ -61,7 +62,7 @@ const Footer = () => {
           </DescriptionItem>
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/news/2023"}>2023 지호지로 바로가기</Link>
+              <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</Link>
             </LinkWrapper>
           </DescriptionItem>
           {/* 관리자 페이지로 */}

@@ -99,3 +99,14 @@ export const toBase64 = async (file: File): Promise<string> => {
     return "";
   }
 };
+
+/**
+ * @description 년도 리스트를 반환 2022 ~ 현재 년도까지
+ * @returns string[]
+ * @example ["2022", "2023", "2024", ...]
+ */
+export const vaildNewsYearList = () => {
+  const currentYear = new Date().getFullYear();
+  const yearList = Array.from({ length: currentYear - 2021 }, (_, i) => String(2022 + i));
+  return yearList;
+};
