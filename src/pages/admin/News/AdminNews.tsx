@@ -8,10 +8,7 @@ import { useNews } from "../../../recoills/news";
 
 const AdminNews = () => {
   const { news, refreshNew } = useNews();
-  const articles = news
-    .map((newsData) => newsData.articles)
-    .flat()
-    .sort((a, b) => (a.id > b.id ? -1 : 1));
+  const articles = news.flatMap((newsData) => newsData.articles).sort((a, b) => (a.id > b.id ? -1 : 1));
 
   useEffect(() => {
     refreshNew();

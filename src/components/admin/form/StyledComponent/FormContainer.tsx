@@ -40,6 +40,7 @@ export const StyledInput = styled.input`
   &[type="text"],
   &[type="password"] {
     height: 25px;
+    padding: 8px;
     border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
@@ -65,9 +66,10 @@ export const StyledInput = styled.input`
 `;
 
 export const StyledTextArea = styled.textarea`
-  height: 300px;
+  min-height: 300px;
+  padding: 8px;
   border: 1px solid rgba(0, 0, 0, 0.2);
-  resize: none;
+  resize: vertical;
   line-height: 160%;
 `;
 
