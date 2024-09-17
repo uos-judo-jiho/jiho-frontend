@@ -1,10 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-
 import { Link } from "react-router-dom";
-import Line from "./Line";
+import styled from "styled-components";
 import { Constants } from "../constant/constant";
 import { ArticleInfoType } from "../types/ArticleInfoType";
+import Line from "./Line";
 
 type ListContainerProps = {
   datas: Partial<ArticleInfoType>[];
@@ -45,11 +43,7 @@ const TagWrapper = styled.div`
   text-align: center;
   flex: 10%;
 `;
-function ListContainer({
-  datas: data,
-  targetUrl,
-  additionalTitle = false,
-}: ListContainerProps) {
+function ListContainer({ datas: data, targetUrl, additionalTitle = false }: ListContainerProps) {
   return (
     <Container>
       <ItemList>

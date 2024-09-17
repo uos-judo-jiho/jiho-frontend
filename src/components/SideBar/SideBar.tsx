@@ -13,6 +13,7 @@ type SideBarProps = {
 };
 
 const SIDEBAR_ANIMATION_DURATION = 500;
+
 const Container = styled.div`
   z-index: 1;
   padding: 50px 20px 20px 20px;
@@ -53,7 +54,7 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
 
   const location = useLocation();
 
-  const [selected, setSelected] = useState<SelectedType[]>(["closed", "closed"]);
+  const [selected, setSelected] = useState<[SelectedType, SelectedType]>(["closed", "closed"]);
   const [isanimated, setIsanimated] = useState(true);
   const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> = useRef(null);
 

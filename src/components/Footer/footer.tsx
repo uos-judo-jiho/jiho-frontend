@@ -5,8 +5,10 @@ import styled from "styled-components";
 import FooterInfo from "../../assets/jsons/footerData.json";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
 import { Constants } from "../../constant/constant";
+import { MediaLayout } from "../../theme/GlobalStyle";
 
 const FooterWrapper = styled.footer`
+  ${MediaLayout}
   margin: 80px auto 40px auto;
 
   @media (max-width: 539px) {
@@ -23,13 +25,17 @@ const DescriptionItem = styled.li`
   margin: 4px 0;
   color: ${(props) => props.theme.textColor};
   font-size: ${(props) => props.theme.tinyFontSize};
+
+  word-break: keep-all;
+  word-wrap: break-word;
 `;
 
 const DescriptionItemTitle = styled.li`
   margin: 4px 0;
+
   font-weight: bold;
-  color: ${(props) => props.theme.textColor};
   font-size: ${(props) => props.theme.tinyFontSize};
+  color: ${(props) => props.theme.textColor};
 `;
 
 const LinkWrapper = styled.div`

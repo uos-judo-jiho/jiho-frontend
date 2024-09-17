@@ -14,13 +14,13 @@ const slideDown = (count: number) => keyframes`
       height: 0;
     }
     to {
-      height: ${count * 2 * 1.6}rem;
+      height: ${count * 2 * 1}rem;
     }
 `;
 
 const slideUp = (count: number) => keyframes`
     from {
-        height: ${count * 2 * 1.6}rem;
+        height: ${count * 2 * 1}rem;
     }
     to {
       height: 0;
