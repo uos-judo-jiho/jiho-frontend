@@ -1,12 +1,11 @@
 // TODO:
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
 import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
 import Line from "../../layouts/Line";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
-import { formatStringArray } from "../../utils/Utils";
 
 type ModalDescriptionSectionProps = {
   article: ArticleInfoType;
@@ -141,7 +140,7 @@ function ModalDescriptionSection({ article, titles }: ModalDescriptionSectionPro
               <DescriptionHeaderTableTdTitle>{titles[1]}</DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
                 {/* TODO html space 처리하기 */}
-                {formatStringArray(article.tags)}
+                {article.tags.join(" ")}
               </DescriptionHeaderTdContent>
             </DescriptionHeaderTableTr>
             <DescriptionHeaderTableTr isDisplay={isDisplay}>

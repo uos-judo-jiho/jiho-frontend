@@ -85,10 +85,9 @@ const CurrentCircle = styled.div`
 
 function Slider({ datas }: SliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [length, setLength] = useState<number>(datas.length);
+  const [length, setLength] = useState(datas.length);
 
   const slideRef = useRef<any>(null);
-
   function nextSlide() {
     setCurrentSlide((prev) => {
       if (prev === length - 1) {
@@ -141,7 +140,7 @@ function Slider({ datas }: SliderProps) {
         <CircleWrapper>
           {datas.length === 1
             ? null
-            : datas.map((image, index) => {
+            : datas.map((_image, index) => {
                 return <CurrentCircle key={"circle" + index} className={index === currentSlide ? "active" : ""} />;
               })}
         </CircleWrapper>
