@@ -12,7 +12,7 @@ const MobilePhotoCardContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  height: calc(100% - 44px);
+  min-height: calc(100vh - 44px);
 
   margin: 4px 0;
 

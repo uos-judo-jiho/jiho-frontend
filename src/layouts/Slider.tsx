@@ -21,12 +21,10 @@ const IMG = styled.img<IMGProps>`
   min-width: 100%;
 
   object-fit: contain;
-  background-color: ${(props) =>
-    props.isImage ? props.theme.blackColor : props.theme.bgColor};
+  background-color: ${(props) => (props.isImage ? props.theme.blackColor : props.theme.bgColor)};
 
   @media (max-width: 539px) {
     width: 100%;
-    height: inherit;
   }
 `;
 
@@ -132,44 +130,19 @@ function Slider({ datas }: SliderProps) {
   }
   return (
     <Container>
-      <StyledBackArrow
-        onClick={prevSlide}
-        current={currentSlide}
-        length={length}
-        isBackGround={true}
-        isMobileVisible={true}
-      />
-      <StyledForwardArrow
-        onClick={nextSlide}
-        current={currentSlide}
-        length={length}
-        isBackGround={true}
-        isMobileVisible={true}
-      />
+      <StyledBackArrow onClick={prevSlide} current={currentSlide} length={length} isBackGround={true} isMobileVisible={true} />
+      <StyledForwardArrow onClick={nextSlide} current={currentSlide} length={length} isBackGround={true} isMobileVisible={true} />
       <SliderWrapper>
-        <SliderContainer
-          ref={slideRef}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
+        <SliderContainer ref={slideRef} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
           {datas.map((img, i) => (
-            <IMG
-              src={img ? img : Constants.LOGO_BLACK}
-              key={"thumbnail" + i}
-              isImage={img ? true : false}
-            />
+            <IMG src={img ? img : Constants.LOGO_BLACK} key={"thumbnail" + i} isImage={img ? true : false} />
           ))}
         </SliderContainer>
         <CircleWrapper>
           {datas.length === 1
             ? null
             : datas.map((image, index) => {
-                return (
-                  <CurrentCircle
-                    key={"circle" + index}
-                    className={index === currentSlide ? "active" : ""}
-                  />
-                );
+                return <CurrentCircle key={"circle" + index} className={index === currentSlide ? "active" : ""} />;
               })}
         </CircleWrapper>
       </SliderWrapper>

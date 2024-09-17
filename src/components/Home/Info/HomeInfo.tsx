@@ -6,7 +6,6 @@ import Logo from "../../Logo";
 import FooterInfo from "../../../assets/jsons/footerData.json";
 
 const Container = styled.div`
-  line-height: normal;
   margin-bottom: 1rem;
 
   flex: 1;

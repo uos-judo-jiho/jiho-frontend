@@ -102,7 +102,9 @@ const NewsMobile = () => {
         </HeaderContainer>
         <div className="nav-icon" />
       </MobileHeader>
-      <Feed>{news.map((newsByYear) => newsByYear.articles.map((newsInfo) => <MobilePhotoCard key={newsInfo.id} articleInfo={newsInfo} id={`news-mobile-card-${newsInfo.id}`} />))}</Feed>
+      <Feed>
+        {news.map((newsByYear) => newsByYear.articles.map((newsInfo) => <MobilePhotoCard key={newsInfo.id} articleInfo={newsInfo} id={`news-mobile-card-${newsInfo.id}`} />))}
+      </Feed>
     </div>
   );
 };
