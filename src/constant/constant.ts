@@ -19,11 +19,26 @@ export const Constants = {
   DARK_HEADER_COLOR: "#424242",
 
   // Font
-  TITLE_FONT_SIZE: "3.6rem",
-  SUB_TITLE_FONT_SIZE: "3rem",
-  DESCRIPTION_FONT_SIZE: "1.8rem",
-  DEFAULT_FONT_SIZE: "1.6rem",
-  TINY_FONT_SIZE: "1.2rem",
+  /**
+   * 32px
+   */
+  TITLE_FONT_SIZE: "2rem",
+  /**
+   * 24px
+   */
+  SUB_TITLE_FONT_SIZE: "1.5rem",
+  /**
+   * 18px
+   */
+  DESCRIPTION_FONT_SIZE: "1.125rem",
+  /**
+   * 16px
+   */
+  DEFAULT_FONT_SIZE: "1rem",
+  /**
+   * 12px
+   */
+  TINY_FONT_SIZE: "0.75rem",
 
   // Line Height
   TITLE_LINE_HEIGHT: "50px",

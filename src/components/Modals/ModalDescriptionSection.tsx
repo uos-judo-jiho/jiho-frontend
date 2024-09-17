@@ -1,12 +1,11 @@
 // TODO:
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import { ReactComponent as HeartFill } from "../../assets/svgs/heart-fill.svg";
 import { ReactComponent as HeartLine } from "../../assets/svgs/heart-line.svg";
 import Line from "../../layouts/Line";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
-import { formatStringArray } from "../../utils/Utils";
 
 type ModalDescriptionSectionProps = {
   article: ArticleInfoType;
@@ -24,7 +23,7 @@ const DescriptionSection = styled.section`
 
 const DescriptionHeader = styled.div`
   width: 100%;
-  line-height: normal;
+
   flex: 0 0 auto;
 `;
 const DescriptionHeaderTable = styled.table`
@@ -54,7 +53,7 @@ const DescriptionWrapper = styled.div`
   flex-direction: column;
   width: 100%;
   text-align: justify;
-  line-height: normal;
+
   overflow-y: auto;
   overflow-x: hidden;
 `;
@@ -109,10 +108,7 @@ const HeartCountSpan = styled.span`
   margin-left: 0.5em;
 `;
 
-function ModalDescriptionSection({
-  article,
-  titles,
-}: ModalDescriptionSectionProps) {
+function ModalDescriptionSection({ article, titles }: ModalDescriptionSectionProps) {
   const [clickedHeart, setClickedHeart] = useState(false);
   const [heartCount, setHeartCount] = useState(0);
   const [isDisplay, setIsDisplay] = useState<boolean>(true);
@@ -137,29 +133,19 @@ function ModalDescriptionSection({
         <DescriptionHeaderTable>
           <tbody>
             <DescriptionHeaderTableTr isDisplay={true}>
-              <DescriptionHeaderTableTdTitle>
-                {titles[0]}
-              </DescriptionHeaderTableTdTitle>
-              <DescriptionHeaderTdContent>
-                {article.author}
-              </DescriptionHeaderTdContent>
+              <DescriptionHeaderTableTdTitle>{titles[0]}</DescriptionHeaderTableTdTitle>
+              <DescriptionHeaderTdContent>{article.author}</DescriptionHeaderTdContent>
             </DescriptionHeaderTableTr>
             <DescriptionHeaderTableTr isDisplay={true}>
-              <DescriptionHeaderTableTdTitle>
-                {titles[1]}
-              </DescriptionHeaderTableTdTitle>
+              <DescriptionHeaderTableTdTitle>{titles[1]}</DescriptionHeaderTableTdTitle>
               <DescriptionHeaderTdContent>
                 {/* TODO html space 처리하기 */}
-                {formatStringArray(article.tags)}
+                {article.tags.join(" ")}
               </DescriptionHeaderTdContent>
             </DescriptionHeaderTableTr>
             <DescriptionHeaderTableTr isDisplay={isDisplay}>
-              <DescriptionHeaderTableTdTitle>
-                {titles[2]}
-              </DescriptionHeaderTableTdTitle>
-              <DescriptionHeaderTdContent>
-                {article.dateTime}
-              </DescriptionHeaderTdContent>
+              <DescriptionHeaderTableTdTitle>{titles[2]}</DescriptionHeaderTableTdTitle>
+              <DescriptionHeaderTdContent>{article.dateTime}</DescriptionHeaderTdContent>
             </DescriptionHeaderTableTr>
           </tbody>
         </DescriptionHeaderTable>

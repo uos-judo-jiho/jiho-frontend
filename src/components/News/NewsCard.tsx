@@ -122,7 +122,7 @@ const DescriptionWrapper = styled.div`
   font-size: ${(props) => props.theme.defaultFontSize};
   line-height: ${(props) => props.theme.descriptionLineHeight};
   width: 100%;
-  line-height: normal;
+
   text-indent: 0.4rem;
 
   @media (max-width: 539px) {

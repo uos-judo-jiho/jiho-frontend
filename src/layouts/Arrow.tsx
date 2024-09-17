@@ -11,6 +11,7 @@ type ArrowProps = {
   id?: string;
   isMobileVisible?: boolean;
   isBackGround?: boolean;
+  isVisble?: boolean;
 };
 
 const ArrowCss = css`
@@ -28,12 +29,11 @@ const ArrowCss = css`
 `;
 
 const StyledBackArrow = styled(BackArrow)<ArrowProps>`
-  display: ${(props) => (props.current === 0 ? "none" : "flex")} !important;
+  display: ${(props) => (props.current !== 0 || props.isVisble ? "flex" : "none")} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
   height: ${(props) => (props.size ? props.size : "24px")};
 
-  left: ${(props) =>
-    props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
+  left: ${(props) => (props.horizontalPosition ? props.horizontalPosition : "1.2rem")};
   ${ArrowCss}
 
   ${(props) =>
@@ -54,13 +54,11 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
 `;
 
 const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
-  display: ${(props) =>
-    props.current < props.length - 1 ? "flex" : "none"} !important;
+  display: ${(props) => (props.current < props.length - 1 || props.isVisble ? "flex" : "none")} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
   height: ${(props) => (props.size ? props.size : "24px")};
 
-  right: ${(props) =>
-    props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
+  right: ${(props) => (props.horizontalPosition ? props.horizontalPosition : "1.2rem")};
   ${ArrowCss}
 
   ${(props) =>
