@@ -17,9 +17,9 @@ const Container = styled.div`
   z-index: 1;
   padding: 50px 20px 20px 20px;
   background-color: ${(props) => props.theme.bgColor};
-  box-shadow: 0.4rem 1rem 1rem rgba(0, 0, 0, 0.2);
+  box-shadow: 4px 10px 10px rgba(0, 0, 0, 0.2);
   height: 100%;
-  min-width: 200px;
+  min-width: 420px;
   left: -55%;
   top: 0;
   position: fixed;
