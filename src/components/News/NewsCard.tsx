@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import { Constants } from "../../constant/constant";
 import Col from "../../layouts/Col";
-import Row from "../../layouts/Row";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
 
@@ -62,7 +61,7 @@ const ImgSubTitle = styled.div`
   font-size: ${(props) => props.theme.tinyFontSize};
   line-height: ${(props) => props.theme.tinyLineHeight};
   color: ${(props) => props.theme.greyColor};
-  padding-top: 8px;
+
   display: none;
   @media (max-width: 539px) {
     display: block;
@@ -116,11 +115,14 @@ const DescriptionSubTitle = styled.span`
   padding-right: 8px;
 `;
 const DescriptionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
   flex: 1 1 0;
   font-size: ${(props) => props.theme.defaultFontSize};
   line-height: ${(props) => props.theme.descriptionLineHeight};
   width: 100%;
-  line-height: normal;
+
   text-indent: 0.4rem;
 
   @media (max-width: 539px) {
@@ -128,7 +130,9 @@ const DescriptionWrapper = styled.div`
   }
 `;
 
-const SeeMore = styled.span``;
+const SeeMore = styled.span`
+  margin-left: 8px;
+`;
 
 const MoreButton = styled.button`
   margin-top: 2px;
@@ -145,7 +149,7 @@ const NewsCard = ({ index, datas, handleClickCard, year }: NewsCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const newsData = datas[index];
-  const commenter = datas[index].description.slice(0, 100);
+  const commenter = datas[index].description.slice(0, 150);
 
   const handleLoding = () => {
     setIsLoading(true);
@@ -157,28 +161,28 @@ const NewsCard = ({ index, datas, handleClickCard, year }: NewsCardProps) => {
         <ImgWrapper>
           {isLoading ? <Img loading="lazy" alt={newsData.title + newsData.author} src={newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK} /> : <SkeletonThumbnail />}
           <img alt={newsData.title + newsData.author} src={newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK} style={{ display: "none" }} onLoad={handleLoding} />
-
           <Col>
             <ImgTitle>{newsData.title}</ImgTitle>
             <ImgSubTitle>{newsData.author}</ImgSubTitle>
             <ImgSubTitle>{newsData.tags}</ImgSubTitle>
           </Col>
         </ImgWrapper>
-
         <DescriptionWrapper>
           <DescriptionTitleWrapper>
             <Col>
               <DescriptionTitle>{newsData.title}</DescriptionTitle>
-              <Row>
+              <Col>
                 <DescriptionSubTitle>{newsData.author}</DescriptionSubTitle>
                 <DescriptionSubTitle>{newsData.tags}</DescriptionSubTitle>
-              </Row>
+              </Col>
             </Col>
           </DescriptionTitleWrapper>
-          <div>{commenter}</div>
-          <SeeMore>
-            <MoreButton>...자세히 보기</MoreButton>
-          </SeeMore>
+          <div>
+            {commenter}
+            <SeeMore>
+              <MoreButton>...자세히 보기</MoreButton>
+            </SeeMore>
+          </div>
         </DescriptionWrapper>
       </AnchoreContainer>
     </Container>

@@ -19,11 +19,7 @@ export const MediaLayout = css`
 export const GlobalStyle = createGlobalStyle`  
 
 html {
-    font-size: 62.5%;
-  @media (max-width: 859px) {
-    font-size: 50%;
-  }
-
+  font-size: 100%;
 }
 
 body {
@@ -60,7 +56,7 @@ footer, header, hgroup, main, menu, nav, section {
     display: none;
 }
 body {
-  line-height: 1;
+  line-height: 1.4;
   overflow-x:hidden;
 }
 menu, ol, ul {
@@ -91,7 +87,7 @@ a{
 
 
 
-header,footer{
+header {
   width: 100%;
   padding: 0 1.6rem;
 }
