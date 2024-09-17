@@ -56,6 +56,8 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
 
   const [selected, setSelected] = useState<[SelectedType, SelectedType]>(["closed", "closed"]);
   const [isanimated, setIsanimated] = useState(true);
+  const [prevLocation, setPrevLocation] = useState(location.pathname);
+
   const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> = useRef(null);
 
   const toggleSide = () => {
@@ -91,6 +93,14 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
       document.removeEventListener("mousedown", handlerOutside);
     };
   }, [setIsOpen]);
+
+  useEffect(() => {
+    if (prevLocation !== location.pathname) {
+      setSelected(["closed", "closed"]);
+      setIsOpen(false);
+      setPrevLocation(location.pathname);
+    }
+  }, [location.pathname, prevLocation, setIsOpen]);
 
   return createPortal(
     <Container id="sidebar" ref={outside} className={`${[isOpen ? "open" : "", isanimated ? "animated" : ""].filter((_) => _).join(" ")}`}>
