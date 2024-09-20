@@ -34,7 +34,7 @@ const HoveredContainer = styled.div`
   width: 100%;
   height: 100%;
 
-  font-size: 3.2rem;
+  font-size: ${(props) => props.theme.titleFontSize};
 
   color: ${(props) => props.theme.bgColor};
 
