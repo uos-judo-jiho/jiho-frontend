@@ -16,7 +16,6 @@ type NewsCardProps = {
 
 const Container = styled.div`
   width: 100%;
-  max-height: 320px;
   font-size: ${(props) => props.theme.descriptionFontSize};
   line-height: ${(props) => props.theme.descriptionLineHeight};
 
@@ -130,9 +129,7 @@ const DescriptionWrapper = styled.div`
   }
 `;
 
-const SeeMore = styled.span`
-  margin-left: 8px;
-`;
+const SeeMore = styled.span``;
 
 const MoreButton = styled.button`
   margin-top: 2px;
@@ -149,7 +146,7 @@ const NewsCard = ({ index, datas, handleClickCard, year }: NewsCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const newsData = datas[index];
-  const commenter = datas[index].description.slice(0, 150);
+  const commenter = datas[index].description.slice(0, 100);
 
   const handleLoding = () => {
     setIsLoading(true);
@@ -178,9 +175,9 @@ const NewsCard = ({ index, datas, handleClickCard, year }: NewsCardProps) => {
             </Col>
           </DescriptionTitleWrapper>
           <div>
-            {commenter}
+            {`${commenter}...`}
             <SeeMore>
-              <MoreButton>...자세히 보기</MoreButton>
+              <MoreButton>자세히 보기</MoreButton>
             </SeeMore>
           </div>
         </DescriptionWrapper>

@@ -23,7 +23,6 @@ const GridWrapper = styled.div`
   }
 
   @media (max-width: 539px) {
-    grid-template-columns: 1fr 1fr;
     grid-gap: 16px;
   }
 `;
