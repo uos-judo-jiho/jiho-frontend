@@ -40,7 +40,7 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
     props.isBackGround
       ? css`
           border-radius: 50%;
-          padding: 0.5rem;
+          padding: 4px;
           background-color: ${(props) => props.theme.lightGreyColor};
           box-shadow: 0 0 0.2rem ${(props) => props.theme.blackColor};
         `
@@ -65,7 +65,7 @@ const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
     props.isBackGround
       ? css`
           border-radius: 50%;
-          padding: 0.5rem;
+          padding: 4px;
           background-color: ${(props) => props.theme.lightGreyColor};
         `
       : ``}

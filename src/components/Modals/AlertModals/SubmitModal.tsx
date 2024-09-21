@@ -28,7 +28,7 @@ const ModalContainer = styled.div`
   width: 50%;
   height: 20vw;
   text-align: center;
-  padding: 2rem 1rem;
+  padding: 20px 10px;
   background-color: ${(props) => props.theme.bgColor};
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 `;
@@ -41,7 +41,7 @@ const StyledButton = css`
   border: 1px solid ${(props) => props.theme.primaryColor};
   color: #fff;
   padding: 10px 20px;
-  margin-right: 1rem;
+  margin-right: 10px;
 
   &:hover {
     opacity: 0.6;
@@ -63,14 +63,7 @@ const Description = styled.span`
   height: 100%;
 `;
 
-function SubmitModal({
-  confirmText,
-  cancelText,
-  description,
-  open,
-  setOpen,
-  onSubmit,
-}: SubmitModalProps) {
+function SubmitModal({ confirmText, cancelText, description, open, setOpen, onSubmit }: SubmitModalProps) {
   const handleCancel = () => setOpen(false);
 
   const handleConfirm = () => onSubmit();
@@ -85,9 +78,7 @@ function SubmitModal({
           <div>
             <Row justifyContent="center">
               <CancelButton onClick={handleCancel}>{cancelText}</CancelButton>
-              <ConfirmButton onClick={handleConfirm}>
-                {confirmText}
-              </ConfirmButton>
+              <ConfirmButton onClick={handleConfirm}>{confirmText}</ConfirmButton>
             </Row>
           </div>
         </Col>

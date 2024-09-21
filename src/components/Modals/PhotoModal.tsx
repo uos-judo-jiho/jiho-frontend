@@ -65,7 +65,7 @@ const IndexContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 5%;
-  padding-top: 1rem;
+  padding-top: 10px;
   color: ${(props) => props.theme.lightGreyColor};
 
   @media (max-width: 539px) {
@@ -122,7 +122,7 @@ const MobileModalLayout = styled.div`
   @media (max-width: 539px) {
     width: 100%;
     height: 100%;
-    padding-top: 10rem;
+    padding-top: 100px;
   }
 `;
 
@@ -143,16 +143,16 @@ const ArrowWrapper = styled.div<ArrowWrapperProps>`
 const CloseBtn = styled.button`
   position: absolute;
   z-index: 1;
-  top: 1rem;
-  right: 1rem;
-  width: 2rem;
-  height: 2rem;
+  top: 16px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
   background-color: transparent;
 
   @media (max-width: 539px) {
     position: absolute;
-    top: 7rem;
-    right: 1rem;
+    top: 8px;
+    right: 16px;
 
     animation-duration: 0.5s;
     animation-timing-function: ease-out;

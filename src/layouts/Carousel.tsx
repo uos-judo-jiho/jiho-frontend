@@ -76,8 +76,8 @@ const CarouselItem = styled.div`
   display: inline-block;
   background: black;
   transition: all 0.5s;
-  border-radius: 0.5rem;
-  margin-right: 1rem;
+  border-radius: 4px;
+  margin-right: 12px;
 
   cursor: pointer;
 `;
@@ -85,7 +85,7 @@ const CarouselItem = styled.div`
 const ImgWrapper = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: 0.5rem;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;

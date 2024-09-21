@@ -49,7 +49,7 @@ const ToggleMenuList = styled.ul<{ count: number }>`
 `;
 
 const MenuItem = styled.li`
-  margin: 0 0.5rem;
+  margin: 0 4px;
   line-height: 200%;
 `;
 

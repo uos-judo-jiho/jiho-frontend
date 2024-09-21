@@ -17,7 +17,6 @@ const IMG = styled.img<IMGProps>`
   width: 30vw;
   height: 30vw;
 
-  min-height: 30rem;
   min-width: 100%;
 
   object-fit: contain;
@@ -25,6 +24,7 @@ const IMG = styled.img<IMGProps>`
 
   @media (max-width: 539px) {
     width: 100%;
+    height: 100%;
   }
 `;
 
@@ -59,16 +59,16 @@ const CircleWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translate(0, -2rem);
+  transform: translate(0, -20px);
   /* position: absolute;
-  bottom: 1.2rem;
+  bottom: 12px;
   right: 0;
   left: 0;*/
 `;
 
 const CurrentCircle = styled.div`
-  width: 0.4rem;
-  height: 0.4rem;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background-color: ${(props) => props.theme.lightGreyColor};
   opacity: 0.3;
@@ -77,8 +77,8 @@ const CurrentCircle = styled.div`
 
   &.active {
     background-color: ${(props) => props.theme.bgColor};
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 6px;
+    height: 6px;
     opacity: 1;
   }
 `;

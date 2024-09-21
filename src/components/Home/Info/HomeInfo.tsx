@@ -6,7 +6,7 @@ import Logo from "../../Logo";
 import FooterInfo from "../../../assets/jsons/footerData.json";
 
 const Container = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 
   flex: 1;
 `;
@@ -18,11 +18,11 @@ const MobileInvisible = css`
 `;
 
 const LogoWrapper = styled.div`
-  border: 0.2rem solid ${(props) => props.theme.textColor};
+  border: 2px solid ${(props) => props.theme.textColor};
   border-radius: 50%;
-  width: 14rem;
-  height: 14rem;
-  margin-bottom: 2rem;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
   background-color: ${(props) => props.theme.bgColor};
 
   display: flex;
@@ -39,7 +39,7 @@ const DescriptionItem = styled.li`
 
 const DescriptionTitle = styled.h3`
   font-size: ${(props) => props.theme.subTitleFontSize};
-  margin-bottom: 1.2rem;
+  margin-bottom: 12px;
 `;
 
 function HomeInfo() {

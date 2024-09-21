@@ -91,12 +91,12 @@ const Img = styled.img`
 
   @media (max-width: 539px) {
     height: inherit;
-    max-height: 20rem;
+    max-height: 200px;
   }
 `;
 
 const DescriptionTitleWrapper = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 `;
 
 const DescriptionTitle = styled.h3`
@@ -122,7 +122,7 @@ const DescriptionWrapper = styled.div`
   line-height: ${(props) => props.theme.descriptionLineHeight};
   width: 100%;
 
-  text-indent: 0.4rem;
+  text-indent: 4px;
 
   @media (max-width: 539px) {
     display: none;

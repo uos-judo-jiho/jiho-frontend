@@ -22,7 +22,7 @@ const ModalArticle = styled.article`
   width: 80vw;
   height: 80vh;
   margin: auto;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   background-color: ${(props) => props.theme.bgColor};
   overflow: auto;
 
@@ -45,7 +45,7 @@ const ModalArticle = styled.article`
 
 const Main = styled.main`
   position: relative;
-  padding: 1rem;
+  padding: 10px;
   width: 100%;
   height: 100%;
 `;

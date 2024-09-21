@@ -10,12 +10,12 @@ type SheetWrapperProps = {
 const Container = styled.div<SheetWrapperProps>`
   position: relative;
   margin: 0 auto;
-  padding-top: ${(props) => props.paddingTop}rem;
+  padding-top: ${(props) => props.paddingTop || 92}px;
 
   ${MediaLayout}
 `;
 
-function SheetWrapper({ children, paddingTop = 8 }: SheetWrapperProps) {
+function SheetWrapper({ children, paddingTop }: SheetWrapperProps) {
   return <Container paddingTop={paddingTop}>{children}</Container>;
 }
 

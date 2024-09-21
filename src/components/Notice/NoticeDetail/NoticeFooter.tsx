@@ -20,7 +20,7 @@ const Container = styled.div`
 `;
 
 const LinkWrapper = styled.div`
-  padding: 0.8rem 1.2rem;
+  padding: 8px 12px;
   &:hover {
     background-color: ${(props) => props.theme.lightGreyColor};
     color: ${(props) => props.theme.textColor};

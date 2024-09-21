@@ -12,6 +12,7 @@ const Header = styled.header`
   position: fixed;
   z-index: 1;
   top: 0;
+  height: 92px;
 `;
 const Container = styled.div`
   /* height: 10vh; */
@@ -66,10 +67,7 @@ function Navbar() {
           </NavDropDown>
           <LogoWrapper>
             <Link to={"/"}>
-              <Logo
-                size={"10vmin"}
-                isDark={currentPath === "/" ? false : true}
-              />
+              <Logo size={"10vmin"} isDark={currentPath === "/" ? false : true} />
             </Link>
           </LogoWrapper>
         </Row>
