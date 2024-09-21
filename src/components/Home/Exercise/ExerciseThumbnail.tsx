@@ -53,7 +53,7 @@ const HoveredSpan = styled.span<HoveredSpanProps>`
   font-size: ${(props) => (props.fontSize ? props.fontSize : props.theme.descriptionFontSize)};
 
   &:not(:last-child) {
-    margin-bottom: 0.5rem;
+    margin-bottom: 4px;
   }
 `;
 

@@ -24,12 +24,18 @@ const AwardsItem = styled.li`
     line-height: ${(props) => props.theme.defaultLineHeight};
     color: ${(props) => props.theme.lightGreyColor};
   }
+
+  @media (max-width: 859px) {
+    :nth-last-child(n + 3) {
+      display: none;
+    }
+  }
 `;
 
 const SubTitle = styled.h3`
   font-size: ${(props) => props.theme.subTitleFontSize};
   line-height: ${(props) => props.theme.subTitleLineHeight};
-  margin-bottom: 1.2rem;
+  margin-bottom: 12px;
 `;
 
 const AwardItem = ({ award }: { award: AwardsType }) => {

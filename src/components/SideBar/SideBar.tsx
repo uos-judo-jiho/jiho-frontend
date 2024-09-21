@@ -33,6 +33,7 @@ const Container = styled.div`
     display: none;
   }
   @media (max-width: 539px) {
+    min-width: auto;
     width: 100%;
     left: -100%;
   }
@@ -41,8 +42,8 @@ const NavWrapper = styled.nav``;
 
 const StyledClose = styled(CloseSvg)`
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 12px;
+  left: 12px;
   width: 20px;
   height: 20px;
   z-index: 1;

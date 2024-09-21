@@ -18,7 +18,7 @@ const DescriptionSection = styled.section`
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 20px;
 `;
 
 const DescriptionHeader = styled.div`
@@ -40,7 +40,7 @@ const DescriptionHeaderTableTr = styled.tr<DescriptionHeaderTableTrProps>`
 `;
 
 const DescriptionHeaderTableTdTitle = styled.td`
-  width: 10rem;
+  width: 100px;
 `;
 
 const DescriptionHeaderTdContent = styled.td`
@@ -61,7 +61,7 @@ const DescriptionWrapper = styled.div`
 const DescriptionTitle = styled.h3`
   font-weight: bold;
   font-size: ${(props) => props.theme.descriptionFontSize};
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 `;
 
 const Description = styled.p`
@@ -88,7 +88,7 @@ const HeartButton = styled.button`
 const HeartStyle = css`
   width: 1.5em;
   height: 1.5em;
-  vertical-align: -0.7rem;
+  vertical-align: -7px;
   background-color: transparent;
 `;
 

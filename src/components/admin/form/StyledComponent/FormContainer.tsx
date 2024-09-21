@@ -6,7 +6,7 @@ export const StyledLabel = styled.label`
 
 export const FormContainer = styled.div`
   background-color: ${(props) => props.theme.bgColor};
-  padding: 2rem;
+  padding: 20px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 `;
 
@@ -30,7 +30,7 @@ export const CancelButton = styled.button`
   border: 1px solid ${(props) => props.theme.accentColor};
   color: #fff;
   padding: 10px 20px;
-  margin-right: 1rem;
+  margin-right: 10px;
 
   &:hover {
     opacity: 0.6;
@@ -77,7 +77,7 @@ export const TagsContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 1rem;
+  gap: 10px;
 `;
 
 export const TagAddButton = styled.button``;
@@ -87,7 +87,7 @@ export const TagDeleteButton = styled.button``;
 export const PreviewContainer = styled.div`
   display: grid;
   grid-template-rows: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 10px;
   grid-template-columns: repeat(5, 1fr);
 `;
 export const PreviewImgContainer = styled.div`

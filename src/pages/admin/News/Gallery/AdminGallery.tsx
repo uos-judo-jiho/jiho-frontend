@@ -9,24 +9,27 @@ import { useNews } from "../../../../recoills/news";
 import { ReactComponent as LeftArrow } from "../../../../assets/svgs/arrow_forward_ios.svg";
 
 const YearTitle = styled.h3`
-  font-size: 3.2rem;
+  font-size: ${(props) => props.theme.subTitleFontSize};
+  line-height: ${(props) => props.theme.subTitleLineHeight};
 `;
 
 const LinkHelpText = styled.span`
-  font-size: 2rem;
+  font-size: ${(props) => props.theme.defaultFontSize};
+  line-height: ${(props) => props.theme.defaultLineHeight};
   color: ${(props) => props.theme.greyColor};
 `;
 
 const EmptyImageText = styled.div`
   padding: 16px;
 
-  font-size: 2rem;
+  font-size: ${(props) => props.theme.defaultFontSize};
+  line-height: ${(props) => props.theme.defaultLineHeight};
   font-weight: bold;
   text-align: center;
 `;
 
 const ForwardArrow = styled(LeftArrow)`
-  width: 2rem;
+  width: 20px;
 `;
 
 const AdminGallery = () => {
@@ -57,11 +60,7 @@ const AdminGallery = () => {
                 <ForwardArrow />
               </Row>
             </Link>
-            {gallery.images.length ? (
-              <Carousel datas={gallery.images} />
-            ) : (
-              <EmptyImageText>해당 년도 사진이 없습니다</EmptyImageText>
-            )}
+            {gallery.images.length ? <Carousel datas={gallery.images} /> : <EmptyImageText>해당 년도 사진이 없습니다</EmptyImageText>}
           </div>
         ))}
       </Col>

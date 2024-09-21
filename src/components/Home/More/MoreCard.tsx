@@ -14,11 +14,11 @@ const DATA_LEN = 8;
 
 const Card = styled.div`
   width: 100%;
-  box-shadow: 0 0.4rem 0.8rem 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   overflow: hidden;
   transition: 0.3s;
   &:hover {
-    box-shadow: 0 0.8rem 1.6rem 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -26,14 +26,14 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0.8rem 1.2rem;
+  padding: 8px 12px;
 `;
 
 const Title = styled.h1``;
 
 const ItemList = styled.ul`
   width: 100%;
-  margin: 0.8rem 0;
+  margin: 8px 0;
 `;
 
 const Item = styled.li`
@@ -53,7 +53,7 @@ const ItemWrapper = styled.div`
 `;
 
 const More = styled.p`
-  padding-left: 1rem;
+  padding-left: 10px;
   color: ${(props) => props.theme.greyColor};
   &:hover {
     color: ${(props) => props.theme.blackColor};

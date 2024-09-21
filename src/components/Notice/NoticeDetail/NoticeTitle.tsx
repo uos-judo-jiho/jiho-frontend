@@ -16,7 +16,7 @@ const NoticeTitleH3 = styled.h3`
 `;
 const SubTitleWrapper = styled.div`
   font-size: ${(props) => props.theme.defaultFontSize};
-  padding-top: 1rem;
+  padding-top: 10px;
   display: flex;
 `;
 const SubTitleItem = styled.span`
@@ -24,14 +24,14 @@ const SubTitleItem = styled.span`
   color: ${(props) => props.theme.blackColor};
   &:not(:last-child)::after {
     content: "|";
-    padding: 0 0.4rem;
+    padding: 0 4px;
   }
 `;
 
 const TagWrapper = styled.p`
   color: ${(props) => props.theme.greyColor};
   &:not(:last-child) {
-    padding-right: 0.4rem;
+    padding-right: 4px;
   }
 `;
 

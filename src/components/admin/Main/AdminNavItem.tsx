@@ -13,14 +13,14 @@ const TitleSpan = styled.span`
 `;
 
 const LinkWrapper = styled.div`
-  padding: 1rem;
+  padding: 10px;
   display: flex;
   align-items: center;
 `;
 
 const StyledArrow = styled(LeftArrow)`
-  width: 2rem;
-  margin-left: 1rem;
+  width: 20px;
+  margin-left: 10px;
 `;
 
 const ItemWrapper = styled.div`
