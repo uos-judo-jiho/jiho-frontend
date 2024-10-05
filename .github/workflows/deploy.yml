@@ -1,8 +1,8 @@
 name: React Deploy with Docker # Workflow 이름
 on: # Event 감지
-  pull_request:
-    branches: [main]
-    types: [closed]
+  push:
+    branches:
+      - main
 
 jobs: # Job 설정
   build:
