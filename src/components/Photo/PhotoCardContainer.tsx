@@ -15,18 +15,8 @@ const GridContainer = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 
-  @media (min-width: 1200px) {
-    grid-gap: 10px;
-    margin-bottom: 10px;
-  }
-  @media (min-width: 860px) and (max-width: 1199px) {
-    grid-gap: 6px;
-    margin-bottom: 6px;
-  }
-  @media (max-width: 859px) {
-    grid-gap: 4px;
-    margin-bottom: 4px;
-  }
+  grid-gap: 4px;
+  margin-bottom: 4px;
 `;
 
 const PhotoCardContainer = ({ children }: PhotoCardContainerProps) => {

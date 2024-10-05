@@ -10,7 +10,7 @@ type MoreCardProps = {
   isLinkToQuery?: boolean;
 };
 
-const DATA_LEN = 8;
+const DATA_LEN = 4;
 
 const Card = styled.div`
   width: 100%;
@@ -47,14 +47,26 @@ const Item = styled.li`
 const ItemWrapper = styled.div`
   display: block;
 
+  flex: 1;
+
   white-space: nowrap;
+  word-break: break-all;
   overflow: hidden;
   text-overflow: ellipsis;
+`;
+
+const TimeContent = styled.div`
+  min-width: 100px;
+
+  color: ${(props) => props.theme.greyColor};
+  text-align: right;
 `;
 
 const More = styled.p`
   padding-left: 10px;
   color: ${(props) => props.theme.greyColor};
+  line-height: ${(props) => props.theme.descriptionLineHeight};
+
   &:hover {
     color: ${(props) => props.theme.blackColor};
   }
@@ -65,18 +77,21 @@ const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
   return (
     <Card>
       <Container>
-        <Row alignItems="flex-end" justifyContent="space-between">
-          <Title>{title}</Title>
-          <Link to={linkTo}>
+        <Link to={linkTo}>
+          <Row alignItems="flex-end" justifyContent="space-">
+            <Title>{title}</Title>
             <More>+ 더보기</More>
-          </Link>
-        </Row>
+          </Row>
+        </Link>
         <ItemList>
           {boardData.map((item, index) => {
             return (
               <Item key={title + index}>
                 <Link to={`${linkTo}/${item.id}`}>
-                  <ItemWrapper>{`[${item.author}] ${item.description}`}</ItemWrapper>
+                  <Row justifyContent="space-between" gap={16}>
+                    <ItemWrapper>{`[${item.author}] ${item.description}`}</ItemWrapper>
+                    <TimeContent>{item.dateTime}</TimeContent>
+                  </Row>
                 </Link>
               </Item>
             );

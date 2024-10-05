@@ -1,3 +1,5 @@
+import { CSSProperties } from "styled-components";
+
 export type MergeTypes<T, U> = {
   [K in keyof T | keyof U]: K extends keyof T
     ? K extends keyof U
@@ -7,3 +9,7 @@ export type MergeTypes<T, U> = {
     ? U[K]
     : never;
 };
+
+export type PickCSSProperty<T extends keyof CSSProperties> = Partial<{
+  [K in T]: CSSProperties[K];
+}>;

@@ -10,17 +10,14 @@ import MoreCard from "./MoreCard";
 const Container = styled.div``;
 
 const GridContainer = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
+
+  gap: 24px;
+
   width: 100%;
 
   padding-top: 20px;
-
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 20px;
-  @media (max-width: 539px) {
-    grid-template-columns: none;
-    grid-template-rows: repeat(3, 1fr);
-  }
 `;
 
 const HomeSectionMore = () => {

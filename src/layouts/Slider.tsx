@@ -43,10 +43,13 @@ const Container = styled.section`
 `;
 
 const SliderContainer = styled.div`
+  position: relative;
+
   width: 100%;
   height: inherit;
-  position: relative;
+
   display: flex;
+  align-items: center;
 `;
 
 const SliderWrapper = styled.div`
