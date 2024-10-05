@@ -1,30 +1,30 @@
-import { DefaultTheme } from "styled-components";
 import { Constants } from "../constant/constant";
+import { MergeTypes } from "../utils/Type";
 
 // Color
-const blackColor: string = Constants.BLACK_COLOR;
-const yellowColor: string = Constants.YELLOW_COLOR;
-const whiteColor: string = Constants.WHITE_COLOR;
-const primaryColor: string = Constants.PRIMARY_COLOR;
-const darkGreyColor: string = Constants.DARK_GREY_COLOR;
-const greyColor: string = Constants.GREY_COLOR;
-const lightGreyColor: string = Constants.LIGHT_GREY_COLOR;
+const blackColor = Constants.BLACK_COLOR;
+const yellowColor = Constants.YELLOW_COLOR;
+const whiteColor = Constants.WHITE_COLOR;
+const primaryColor = Constants.PRIMARY_COLOR;
+const darkGreyColor = Constants.DARK_GREY_COLOR;
+const greyColor = Constants.GREY_COLOR;
+const lightGreyColor = Constants.LIGHT_GREY_COLOR;
 
 // Font
-const titleFontSize: string = Constants.TITLE_FONT_SIZE; // 36px
-const subTitleFontSize: string = Constants.SUB_TITLE_FONT_SIZE; // 30px
-const descriptionFontSize: string = Constants.DESCRIPTION_FONT_SIZE; // 18px
-const defaultFontSize: string = Constants.DEFAULT_FONT_SIZE; // 16px
-const tinyFontSize: string = Constants.TINY_FONT_SIZE; // 12px
+const titleFontSize = Constants.TITLE_FONT_SIZE; // 36px
+const subTitleFontSize = Constants.SUB_TITLE_FONT_SIZE; // 30px
+const descriptionFontSize = Constants.DESCRIPTION_FONT_SIZE; // 18px
+const defaultFontSize = Constants.DEFAULT_FONT_SIZE; // 16px
+const tinyFontSize = Constants.TINY_FONT_SIZE; // 12px
 
 // Line Height
-const titleLineHeight: string = Constants.TITLE_LINE_HEIGHT; // 36px
-const subTitleLineHeight: string = Constants.SUB_TITLE_LINE_HEIGHT; // 30px
-const descriptionLineHeight: string = Constants.DESCRIPTION_LINE_HEIGHT; // 18px
-const defaultLineHeight: string = Constants.DEFAULT_LINE_HEIGHT; // 16px
-const tinyLineHeight: string = Constants.TINY_LINE_HEIGHT; // 12px
+const titleLineHeight = Constants.TITLE_LINE_HEIGHT; // 36px
+const subTitleLineHeight = Constants.SUB_TITLE_LINE_HEIGHT; // 30px
+const descriptionLineHeight = Constants.DESCRIPTION_LINE_HEIGHT; // 18px
+const defaultLineHeight = Constants.DEFAULT_LINE_HEIGHT; // 16px
+const tinyLineHeight = Constants.TINY_LINE_HEIGHT; // 12px
 
-export const darkTheme: DefaultTheme = {
+export const darkTheme = {
   primaryColor: darkGreyColor,
   bgColor: darkGreyColor,
   textColor: whiteColor,
@@ -42,9 +42,9 @@ export const darkTheme: DefaultTheme = {
   descriptionLineHeight: descriptionLineHeight,
   defaultLineHeight: defaultLineHeight,
   tinyLineHeight: tinyLineHeight,
-};
+} as const;
 
-export const lightTheme: DefaultTheme = {
+export const lightTheme = {
   primaryColor: primaryColor,
   bgColor: whiteColor,
   textColor: darkGreyColor,
@@ -62,4 +62,6 @@ export const lightTheme: DefaultTheme = {
   descriptionLineHeight: descriptionLineHeight,
   defaultLineHeight: defaultLineHeight,
   tinyLineHeight: tinyLineHeight,
-};
+} as const;
+
+export type DefaultThemeType = MergeTypes<typeof lightTheme, typeof darkTheme>; // 수정된 부분

@@ -1,23 +1,6 @@
 import "styled-components";
+import { DefaultThemeType } from "./theme";
 
 declare module "styled-components" {
-  export interface DefaultTheme {
-    blackColor: string;
-    greyColor: string;
-    lightGreyColor: string;
-    primaryColor: string;
-    textColor: string;
-    bgColor: string;
-    accentColor: string;
-    titleFontSize: string;
-    subTitleFontSize: string;
-    descriptionFontSize: string;
-    defaultFontSize: string;
-    tinyFontSize: string;
-    titleLineHeight: string;
-    subTitleLineHeight: string;
-    descriptionLineHeight: string;
-    defaultLineHeight: string;
-    tinyLineHeight: string;
-  }
+  export interface DefaultTheme extends DefaultThemeType {}
 }
