@@ -10,15 +10,17 @@ type ThumbnailCardProps = {
 };
 
 const ImgWrapper = styled.li`
-  width: 100%;
   position: relative;
+
+  width: 100%;
+  aspect-ratio: 1/ 1;
+
   &:hover {
     cursor: pointer;
   }
   &:after {
     display: block;
     content: "";
-    padding-bottom: 100%;
   }
 `;
 

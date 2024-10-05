@@ -1,12 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { PickCSSProperty } from "../utils/Type";
 
 type RowProps = {
   children: React.ReactNode | React.ReactNode[];
-  alignItems?: string;
-  justifyContent?: string;
-  gap?: number;
-};
+} & PickCSSProperty<"alignItems" | "justifyContent" | "gap">;
 
 const Row = styled.div<Omit<RowProps, "children">>`
   display: flex;
