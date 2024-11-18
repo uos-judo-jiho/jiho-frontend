@@ -32,7 +32,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:prod": "npm run build && serve -s build",
+    "start:ssr": "node server/index.js",
+    "start:prod": "npm run build && npm run start:ssr",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "prebuild": "node script/sitemap.js",
     "wbuild": "set\"GENERATE_SOURCEMAP=false\" && react-scripts build",
