@@ -9,5 +9,10 @@ export const getTrainings = async (year?: string): Promise<ArticleInfoType[]> =>
     params: { year },
     method: "GET",
     withCredentials: true,
-  }).then((response) => response.data.trainingLogs);
+  })
+    .then((response) => response.data.trainingLogs)
+    .catch((err) => {
+      console.log(err);
+      return [];
+    });
 };

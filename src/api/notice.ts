@@ -8,5 +8,10 @@ export const getNotices = async (): Promise<ArticleInfoType[]> => {
     url: METHOD_URL,
     method: "GET",
     withCredentials: true,
-  }).then((response) => response.data.notices);
+  })
+    .then((response) => response.data.notices)
+    .catch((err) => {
+      console.log(err);
+      return [];
+    });
 };
