@@ -6,5 +6,10 @@ export const getNews = async (year = "2022") => {
     url: `${METHOD_URL}/${year}`,
     method: "GET",
     withCredentials: true,
-  }).then((response) => response.data);
+  })
+    .then((response) => response.data)
+    .catch((err) => {
+      console.error(err);
+      return null;
+    });
 };

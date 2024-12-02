@@ -10,5 +10,10 @@ export const getTrainings = async (year) => {
     },
     method: "GET",
     withCredentials: true,
-  }).then((response) => response.data.trainingLogs);
+  })
+    .then((response) => response.data.trainingLogs)
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
 };

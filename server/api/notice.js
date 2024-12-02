@@ -7,5 +7,10 @@ export const getNotices = async () => {
     url: METHOD_URL,
     method: "GET",
     withCredentials: true,
-  }).then((response) => response.data.notices);
+  })
+    .then((response) => response.data.notices)
+    .catch((err) => {
+      console.error(err);
+      return [];
+    });
 };
