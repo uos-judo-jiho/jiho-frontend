@@ -2,7 +2,7 @@ import Col from "../../../layouts/Col";
 
 import styled from "styled-components";
 import Awards from "../../../assets/jsons/awards.json";
-import { AwardsType } from "../../../types/TAwards";
+import { AwardType } from "../../../types/AwardType";
 import { formaAwardsType } from "../../../utils/Utils";
 
 const AwardsConatiner = styled.div`
@@ -38,7 +38,7 @@ const SubTitle = styled.h3`
   margin-bottom: 12px;
 `;
 
-const AwardItem = ({ award }: { award: AwardsType }) => {
+const AwardItem = ({ award }: { award: AwardType }) => {
   return (
     <AwardsItem>
       <b>{award.title}</b>
@@ -48,7 +48,7 @@ const AwardItem = ({ award }: { award: AwardsType }) => {
 };
 
 const HomeAwards = () => {
-  const awards: AwardsType[] = Awards.awards;
+  const awards: AwardType[] = Awards.awards;
 
   return (
     <AwardsConatiner>

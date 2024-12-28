@@ -1,5 +1,5 @@
 import Row from "../../layouts/Row";
-import { menuIdType } from "../../types/menuIdType";
+import { menuIdType } from "../../types/MenuIdType";
 import { MenuItemTitle, MenuToggle, SelectedType } from "./MenuStyledComponents";
 import SlideSubMenu from "./SlideSubMenu";
 
