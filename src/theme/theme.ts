@@ -1,4 +1,4 @@
-import { Constants } from "../constant/constant";
+import { Constants } from "../constant";
 import { MergeTypes } from "../utils/Type";
 
 // Color

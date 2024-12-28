@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { Constants } from "../../constant/constant";
+import { Constants } from "../../constant";
 import Col from "../../layouts/Col";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import styled from "styled-components";
 import useTouchScroll from "../Hooks/useTouchScroll";
-import { Constants } from "../constant/constant";
+import { Constants } from "../constant";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 // TODO 페이지 넘길 때 사진이 흘러가는 에니메이션 막기

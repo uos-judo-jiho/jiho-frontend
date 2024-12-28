@@ -17,14 +17,19 @@ const SIDEBAR_ANIMATION_DURATION = 500;
 const Container = styled.div`
   z-index: 1;
   padding: 50px 20px 20px 20px;
+
   background-color: ${(props) => props.theme.bgColor};
   box-shadow: 4px 10px 10px rgba(0, 0, 0, 0.2);
+
   height: 100%;
   min-width: 420px;
-  left: -55%;
-  top: 0;
+
   position: fixed;
+  left: -100%;
+  top: 0;
+
   transition: ${SIDEBAR_ANIMATION_DURATION}ms;
+
   &.open {
     left: 0;
     transition: ${SIDEBAR_ANIMATION_DURATION}ms;
@@ -32,7 +37,6 @@ const Container = styled.div`
   @media (max-width: 539px) {
     min-width: auto;
     width: 100%;
-    left: -100%;
   }
 `;
 const NavWrapper = styled.nav``;

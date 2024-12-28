@@ -2,7 +2,7 @@ import NewsForm from "../../components/admin/form/NewsForm";
 import NewsGalleryFrom from "../../components/admin/form/NewsGalleryFrom";
 import NoticeForm from "../../components/admin/form/NoticeForm";
 import TrainingLogForm from "../../components/admin/form/TrainingLogForm";
-import { Constants } from "../../constant/constant";
+import { Constants } from "../../constant";
 import Title from "../../layouts/Title";
 
 const WriteArticlePage = () => {

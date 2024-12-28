@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { Constants } from "../constant/constant";
+import { Constants } from "../constant";
 import useTouchScroll from "../Hooks/useTouchScroll";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 

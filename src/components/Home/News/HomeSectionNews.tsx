@@ -4,7 +4,7 @@ import Title from "../../../layouts/Title";
 import HomeSectionBG from "../HomeSectionBG";
 
 import { Link } from "react-router-dom";
-import { Constants } from "../../../constant/constant";
+import { Constants } from "../../../constant";
 import SheetWrapper from "../../../layouts/SheetWrapper";
 
 const Container = styled.div`

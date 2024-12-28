@@ -10,7 +10,7 @@ import ScrollSnap from "../layouts/ScrollSnap";
 import { useNews } from "../recoills/news";
 import { useNotices } from "../recoills/notices";
 import { useTrainings } from "../recoills/tranings";
-import { Constants } from "../constant/constant";
+import { Constants } from "../constant";
 
 const Home = () => {
   const { fetch: fetchNotices } = useNotices();
