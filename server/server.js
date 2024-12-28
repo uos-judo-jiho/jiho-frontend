@@ -33,9 +33,9 @@ const getHtml = (req, res) => {
       }
 
       ssrData = ssrData
-        .replace(`<meta property="og:title" content="Uos Judo Team Jiho"/>`, `<meta property="og:title" content="서울시립대학교 유도부 지호 | 훈련일지"/>`)
+        .replace(`<meta property="og:title" content="서울시립대학교 유도부 지호"/>`, `<meta property="og:title" content="서울시립대학교 유도부 지호 | 훈련일지"/>`)
         .replace(
-          `<meta property="og:description" content="Uos Judo Team Jiho"/>`,
+          `<meta property="og:description" content="서울시립대학교 유도부 지호"/>`,
           `<meta property="og:description" content="서울시립대학교 유도부 지호 ${currentData.dateTime} 훈련일지 | 참여 인원: ${currentData.tags.join(", ")} ${
             currentData.title
           }: ${currentData.description.slice(0, 100)}"/>`
@@ -56,9 +56,12 @@ const getHtml = (req, res) => {
       }
 
       ssrData = ssrData
-        .replace(`<meta property="og:title" content="Uos Judo Team Jiho"/>`, `<meta property="og:title" content="서울시립대학교 유도부 지호 | ${req.params.year}년 | ${currentData.title}"/>`)
         .replace(
-          `<meta property="og:description" content="Uos Judo Team Jiho"/>`,
+          `<meta property="og:title" content="서울시립대학교 유도부 지호"/>`,
+          `<meta property="og:title" content="서울시립대학교 유도부 지호 | ${req.params.year}년 | ${currentData.title}"/>`
+        )
+        .replace(
+          `<meta property="og:description" content="서울시립대학교 유도부 지호"/>`,
           `<meta property="og:description" content="서울시립대학교 유도부 지호 ${req.params.year}년 | ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
         )
         .replace(
@@ -76,11 +79,11 @@ const getHtml = (req, res) => {
 
       ssrData = ssrData
         .replace(
-          `<meta property="og:title" content="Uos Judo Team Jiho"/>`,
+          `<meta property="og:title" content="서울시립대학교 유도부 지호"/>`,
           `<meta property="og:title" content="서울시립대학교 유도부 지호 | 공지사항 | ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
         )
         .replace(
-          `<meta property="og:description" content="Uos Judo Team Jiho"/>`,
+          `<meta property="og:description" content="서울시립대학교 유도부 지호"/>`,
           `<meta property="og:description" content="서울시립대학교 유도부 지호 공지사항 | ${currentData.title}: ${currentData.description.slice(0, 100)}"/>`
         )
         .replace(
@@ -110,5 +113,6 @@ app.get("/news/:year/:id", getHtml);
 app.get("/sitemap.xml", (req, res) => res.sendFile(".build/sitemap.xml"));
 
 app.listen(3000, () => {
+  console.log(`${process.env.NODE_ENV} is running!`);
   console.log("App is launched! on port 3000");
 });

@@ -52,7 +52,6 @@ const DescriptionWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  text-align: justify;
 
   overflow-y: auto;
   overflow-x: hidden;
