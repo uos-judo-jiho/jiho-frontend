@@ -17,25 +17,26 @@ const SIDEBAR_ANIMATION_DURATION = 500;
 const Container = styled.div`
   z-index: 1;
   padding: 50px 20px 20px 20px;
+
   background-color: ${(props) => props.theme.bgColor};
   box-shadow: 4px 10px 10px rgba(0, 0, 0, 0.2);
+
   height: 100%;
   min-width: 420px;
-  left: -55%;
-  top: 0;
+
   position: fixed;
+  left: -100%;
+  top: 0;
+
   transition: ${SIDEBAR_ANIMATION_DURATION}ms;
+
   &.open {
     left: 0;
     transition: ${SIDEBAR_ANIMATION_DURATION}ms;
   }
-  &.animated {
-    display: none;
-  }
   @media (max-width: 539px) {
     min-width: auto;
     width: 100%;
-    left: -100%;
   }
 `;
 const NavWrapper = styled.nav``;
@@ -56,7 +57,7 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   const location = useLocation();
 
   const [selected, setSelected] = useState<[SelectedType, SelectedType]>(["closed", "closed"]);
-  const [isanimated, setIsanimated] = useState(true);
+
   const [prevLocation, setPrevLocation] = useState(location.pathname);
 
   const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> = useRef(null);
@@ -68,11 +69,8 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
 
   useEffect(() => {
     if (!isOpen) {
-      timer.current = setTimeout(() => {
-        setIsanimated(true);
-      }, SIDEBAR_ANIMATION_DURATION);
+      timer.current = setTimeout(() => {}, SIDEBAR_ANIMATION_DURATION);
     } else {
-      setIsanimated(false);
     }
 
     return () => {
@@ -104,7 +102,7 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   }, [location.pathname, prevLocation, setIsOpen]);
 
   return createPortal(
-    <Container id="sidebar" ref={outside} className={`${[isOpen ? "open" : "", isanimated ? "animated" : ""].filter((_) => _).join(" ")}`}>
+    <Container id="sidebar" ref={outside} className={isOpen ? "open" : undefined}>
       <StyledClose onClick={toggleSide} />
       <NavWrapper>{location.pathname.includes("/admin") ? <AdminMenu /> : <ClientMenu selected={selected} setSelected={setSelected} />}</NavWrapper>
     </Container>,

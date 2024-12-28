@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import FooterInfo from "../../assets/jsons/footerData.json";
 import MobileRowColLayout from "../../layouts/MobileRowColLayout";
-import { Constants } from "../../constant/constant";
+import { Constants } from "../../constant";
 import { MediaLayout } from "../../theme/GlobalStyle";
 
 const FooterWrapper = styled.footer`

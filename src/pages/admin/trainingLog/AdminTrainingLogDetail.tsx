@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import TrainingLogForm from "../../../components/admin/form/TrainingLogForm";
-import { Constants } from "../../../constant/constant";
+import { Constants } from "../../../constant";
 import Title from "../../../layouts/Title";
 import { useTrainings } from "../../../recoills/tranings";
 import { useEffect } from "react";

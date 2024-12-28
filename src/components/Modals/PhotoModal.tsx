@@ -149,6 +149,10 @@ const CloseBtn = styled.button`
   height: 24px;
   background-color: transparent;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   @media (max-width: 539px) {
     position: absolute;
     top: 8px;

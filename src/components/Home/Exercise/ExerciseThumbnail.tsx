@@ -14,7 +14,7 @@ const Stack = styled.div`
 `;
 
 const Container = styled.div`
-  width: 60%;
+  max-width: 640px;
   margin: auto;
   position: relative;
   box-shadow: 0 0.4rem 0.8rem 0 rgba(0, 0, 0, 0.2);

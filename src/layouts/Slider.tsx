@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import styled from "styled-components";
 import useTouchScroll from "../Hooks/useTouchScroll";
-import { Constants } from "../constant/constant";
+import { Constants } from "../constant";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 // TODO 페이지 넘길 때 사진이 흘러가는 에니메이션 막기
@@ -56,6 +56,8 @@ const SliderWrapper = styled.div`
   width: 100%;
   height: inherit;
   display: block;
+
+  background: linear-gradient(to bottom, #fc9857, #a56826, #fc9857);
 `;
 
 const CircleWrapper = styled.div`

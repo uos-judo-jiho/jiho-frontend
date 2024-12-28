@@ -28,7 +28,7 @@ const Container = styled.section<ContainerProps>`
 
   &::before {
     content: "";
-    background: radial-gradient(circle at 40% 20%, rgba(0, 0, 0, 0) 0%, #121212 90.2%);
+    background: radial-gradient(circle at 40% 20%, rgba(0, 0, 0, 0) 0%, rgb(18, 18, 18) 90.2%);
 
     height: 100%;
     position: absolute;

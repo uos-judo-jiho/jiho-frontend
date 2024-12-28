@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import NewsForm from "../../../components/admin/form/NewsForm";
-import { Constants } from "../../../constant/constant";
+import { Constants } from "../../../constant";
 import Title from "../../../layouts/Title";
 import { useNews } from "../../../recoills/news";
 import { useEffect } from "react";

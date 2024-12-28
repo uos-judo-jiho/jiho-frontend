@@ -77,7 +77,6 @@ const Content = styled.div`
     letter-spacing: 0.16px;
 
     word-wrap: break-word;
-    text-align: justify;
     white-space: pre-wrap;
   }
 `;

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Constants } from "../../constant/constant";
+import { Constants } from "../../constant";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import Line from "../../layouts/Line";

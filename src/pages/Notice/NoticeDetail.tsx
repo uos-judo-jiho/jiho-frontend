@@ -4,7 +4,7 @@ import styled from "styled-components";
 import NoticeDescription from "../../components/Notice/NoticeDetail/NoticeDescription";
 import NoticeFooter from "../../components/Notice/NoticeDetail/NoticeFooter";
 import NoticeTitle from "../../components/Notice/NoticeDetail/NoticeTitle";
-import { Constants } from "../../constant/constant";
+import { Constants } from "../../constant";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import SheetWrapper from "../../layouts/SheetWrapper";

@@ -17,5 +17,5 @@
     "jsx": "react-jsx"
   },
   "include": ["src"],
-  "exclude": ["src/setupProxy.js"]
+  "exclude": ["src/setupProxy.js", "node_modules"]
 }

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Constants } from "../../../constant/constant";
+import { Constants } from "../../../constant";
 import SheetWrapper from "../../../layouts/SheetWrapper";
 import Title from "../../../layouts/Title";
 import { useNews } from "../../../recoills/news";

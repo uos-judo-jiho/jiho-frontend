@@ -12,10 +12,10 @@ const Header = styled.header`
   position: fixed;
   z-index: 1;
   top: 0;
-  height: 92px;
+  height: 60px;
 `;
 const Container = styled.div`
-  /* height: 10vh; */
+  height: 100%;
 `;
 
 type StyledMenuProps = {
@@ -67,7 +67,7 @@ function Navbar() {
           </NavDropDown>
           <LogoWrapper>
             <Link to={"/"}>
-              <Logo size={"10vmin"} isDark={currentPath === "/" ? false : true} />
+              <Logo size={"48px"} isDark={currentPath === "/" ? false : true} />
             </Link>
           </LogoWrapper>
         </Row>
