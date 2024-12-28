@@ -56,6 +56,8 @@ const SliderWrapper = styled.div`
   width: 100%;
   height: inherit;
   display: block;
+
+  background: linear-gradient(to bottom, #fc9857, #a56826, #fc9857);
 `;
 
 const CircleWrapper = styled.div`

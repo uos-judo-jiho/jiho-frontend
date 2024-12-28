@@ -68,8 +68,7 @@ const PhotoMobile = () => {
 
   useEffect(() => {
     fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetch]);
 
   useEffect(() => {
     if (!id || !trainings) {
