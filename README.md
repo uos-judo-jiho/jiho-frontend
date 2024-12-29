@@ -74,7 +74,8 @@ npm run prod:start
   - ec2
   - s3
 - docker
-- git action
+- nginx
+- github action
 
 ## OAS
 
