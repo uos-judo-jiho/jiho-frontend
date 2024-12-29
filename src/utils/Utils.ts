@@ -1,4 +1,4 @@
-import { AwardsType } from "../types/TAwards";
+import { AwardType } from "../types/AwardType";
 
 /**
  *
@@ -6,7 +6,7 @@ import { AwardsType } from "../types/TAwards";
  * @returns string.
  * 수상이력을 AwardsType type으로 받아서 string으로 포멧팅한다.
  */
-export const formaAwardsType = (award: AwardsType): string => {
+export const formaAwardsType = (award: AwardType): string => {
   let result: string = "";
 
   if (award.gold > 0) {

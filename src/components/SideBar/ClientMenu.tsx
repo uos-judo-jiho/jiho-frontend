@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MENU_ID, menuIdType } from "../../types/menuIdType";
+import { MENU_ID, menuIdType } from "../../types/MenuIdType";
 
 import { vaildNewsYearList } from "../../utils/Utils";
 import { MenuItem, MenuItemTitle, MenuList, MenuProps } from "./MenuStyledComponents";

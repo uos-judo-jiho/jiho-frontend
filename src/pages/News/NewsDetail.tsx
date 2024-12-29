@@ -7,11 +7,11 @@ import DefaultLayout from "../../layouts/DefaultLayout";
 import SheetWrapper from "../../layouts/SheetWrapper";
 import Title from "../../layouts/Title";
 import { useNews } from "../../recoills/news";
-import { TNewsParams } from "../../types/TNewsParams";
+import { NewsParamsType } from "../../types/NewsParamsType";
 import { vaildNewsYearList } from "../../utils/Utils";
 
 const NewsDetail = () => {
-  const { id, index } = useParams<TNewsParams>();
+  const { id, index } = useParams<NewsParamsType>();
   const { news, fetch } = useNews();
 
   const naviagate = useNavigate();

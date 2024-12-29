@@ -5,7 +5,7 @@ import { ReactComponent as RightArrow } from "../../assets/svgs/arrow_back_ios.s
 import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
 import Loading from "../../components/Skeletons/Loading";
 import { useNews } from "../../recoills/news";
-import { TNewsParams } from "../../types/TNewsParams";
+import { NewsParamsType } from "../../types/NewsParamsType";
 
 // TODO: 모바일 헤더 높이 44px 고정 상수화
 
@@ -64,7 +64,7 @@ const Feed = styled.div`
 const NewsMobile = () => {
   const { news, fetch } = useNews();
 
-  const { id, index } = useParams<TNewsParams>();
+  const { id, index } = useParams<NewsParamsType>();
 
   useEffect(() => {
     if (news.some((newsData) => newsData.year.toString() === id?.toString())) {
