@@ -1,6 +1,0 @@
-{
-  "comlilerOptions": {
-    "baseUrl": "src"
-  },
-  "include": ["src"]
-}
