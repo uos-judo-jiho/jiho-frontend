@@ -1,6 +1,6 @@
 {
   "name": "jiho",
-  "version": "1.10.9",
+  "version": "1.10.10",
   "private": false,
   "homepage": "https://uosjudo.com",
   "repository": {
@@ -46,9 +46,9 @@
     "start:prod": "npm run build && serve -s build",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "prebuild": "node script/sitemap.js",
-    "wbuild": "set\"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "type-check": "tsc"
   },
   "eslintConfig": {
     "extends": [
