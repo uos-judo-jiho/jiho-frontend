@@ -11,7 +11,7 @@ const MyHelmet = ({ title, description, imgUrl }: MyHelmetProps) => {
     if (!document) {
       return;
     }
-    document.title = `서울시립대학교 유도부 지호 | ${title};`;
+    document.title = `서울시립대학교 유도부 지호 | ${title}`;
 
     document.querySelector('meta[property="og:description"]')?.setAttribute("content", description ?? "서울시립대학교 유도부 지호");
 
