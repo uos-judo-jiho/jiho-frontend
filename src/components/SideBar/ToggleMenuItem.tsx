@@ -1,10 +1,10 @@
 import Row from "../../layouts/Row";
-import { menuIdType } from "../../types/MenuIdType";
+import { MenuIdType } from "../../types/MenuIdType";
 import { MenuItemTitle, MenuToggle, SelectedType } from "./MenuStyledComponents";
 import SlideSubMenu from "./SlideSubMenu";
 
 type ToggleMenuItemProps = {
-  handleClickMenu(id: menuIdType): void;
+  handleClickMenu(id: MenuIdType): void;
   selected: SelectedType;
   parentTitle: string;
   targetMenu: string;

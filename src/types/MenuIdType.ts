@@ -3,4 +3,4 @@ export const MENU_ID = {
   trainingToggleMenu: "trainingToggleMenu",
 };
 
-export type menuIdType = (typeof MENU_ID)[keyof typeof MENU_ID];
+export type MenuIdType = (typeof MENU_ID)[keyof typeof MENU_ID];

@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { MENU_ID, menuIdType } from "../../types/MenuIdType";
+import { MENU_ID, MenuIdType } from "../../types/MenuIdType";
 
 import { vaildNewsYearList } from "../../utils/Utils";
 import { MenuItem, MenuItemTitle, MenuList, MenuProps } from "./MenuStyledComponents";
 import ToggleMenuItem from "./ToggleMenuItem";
 
 const ClientMenu = ({ selected, setSelected }: MenuProps) => {
-  const handleClickMenu = (id: menuIdType) => {
+  const handleClickMenu = (id: MenuIdType) => {
     switch (id) {
       case MENU_ID.newsToggleMenu:
         setSelected((prev) => [prev[0] === "selected" ? "animate" : "selected", prev[1] === "closed" ? "closed" : "animate"]);
