@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import styled from "styled-components";
 import useClickOutside from "../../../Hooks/useClickOutside";
 import useKeyEscClose from "../../../Hooks/useKeyEscClose";
-import { ReactComponent as Close } from "../../../assets/svgs/close.svg";
+import Close from "../../../assets/svgs/close.svg";
 
 type DetailImageModalProps = {
   image: string;
@@ -40,7 +40,7 @@ const Img = styled.img`
   object-fit: contain;
 `;
 
-const CloseButton = styled(Close)`
+const CloseButton = styled.img`
   position: absolute;
   top: 24px;
   right: 24px;
@@ -64,7 +64,7 @@ const DetailImageModal = ({
 
   return createPortal(
     <Container id={`detail-image-${image}`} open={isOpen}>
-      <CloseButton onClick={onClose} />
+      <CloseButton onClick={onClose} src={Close} />
       <Inner>
         <Img src={image} ref={modalRef} />
       </Inner>

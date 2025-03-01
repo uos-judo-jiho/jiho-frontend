@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
-import { ReactComponent as BackArrow } from "../assets/svgs/arrow_back_ios.svg";
-import { ReactComponent as ForwardArrow } from "../assets/svgs/arrow_forward_ios.svg";
+import BackArrow from "../assets/svgs/arrow_back_ios.svg";
+import ForwardArrow from "../assets/svgs/arrow_forward_ios.svg";
 
 type ArrowProps = {
   current: number;
@@ -28,12 +28,14 @@ const ArrowCss = css`
   }
 `;
 
-const StyledBackArrow = styled(BackArrow)<ArrowProps>`
-  display: ${(props) => (props.current !== 0 || props.isVisble ? "flex" : "none")} !important;
+const StyledBackArrowStyle = styled.img<ArrowProps>`
+  display: ${(props) =>
+    props.current !== 0 || props.isVisble ? "flex" : "none"} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
   height: ${(props) => (props.size ? props.size : "24px")};
 
-  left: ${(props) => (props.horizontalPosition ? props.horizontalPosition : "1.2rem")};
+  left: ${(props) =>
+    props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
   ${ArrowCss}
 
   ${(props) =>
@@ -53,12 +55,16 @@ const StyledBackArrow = styled(BackArrow)<ArrowProps>`
   }
 `;
 
-const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
-  display: ${(props) => (props.current < props.length - 1 || props.isVisble ? "flex" : "none")} !important;
+const StyledForwardArrowStyle = styled.img<ArrowProps>`
+  display: ${(props) =>
+    props.current < props.length - 1 || props.isVisble
+      ? "flex"
+      : "none"} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
   height: ${(props) => (props.size ? props.size : "24px")};
 
-  right: ${(props) => (props.horizontalPosition ? props.horizontalPosition : "1.2rem")};
+  right: ${(props) =>
+    props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
   ${ArrowCss}
 
   ${(props) =>
@@ -76,5 +82,79 @@ const StyledForwardArrow = styled(ForwardArrow)<ArrowProps>`
     display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
   }
 `;
+
+const StyledBackArrow = (
+  props: ArrowProps &
+    Omit<
+      React.DetailedHTMLProps<
+        React.ImgHTMLAttributes<HTMLImageElement>,
+        HTMLImageElement
+      >,
+      keyof ArrowProps
+    >
+) => {
+  const {
+    current,
+    length,
+    horizontalPosition,
+    size,
+    mobileSize,
+    id,
+    isMobileVisible,
+    isBackGround,
+    isVisble,
+    ...rest
+  } = props;
+  return (
+    <StyledBackArrowStyle
+      current={current}
+      length={length}
+      horizontalPosition={horizontalPosition}
+      size={size}
+      mobileSize={mobileSize}
+      id={id}
+      isMobileVisible={isMobileVisible}
+      isBackGround={isBackGround}
+      isVisble={isVisble}
+    />
+  );
+};
+
+const StyledForwardArrow = (
+  props: ArrowProps &
+    Omit<
+      React.DetailedHTMLProps<
+        React.ImgHTMLAttributes<HTMLImageElement>,
+        HTMLImageElement
+      >,
+      keyof ArrowProps
+    >
+) => {
+  const {
+    current,
+    length,
+    horizontalPosition,
+    size,
+    mobileSize,
+    id,
+    isMobileVisible,
+    isBackGround,
+    isVisble,
+    ...rest
+  } = props;
+  return (
+    <StyledForwardArrowStyle
+      current={current}
+      length={length}
+      horizontalPosition={horizontalPosition}
+      size={size}
+      mobileSize={mobileSize}
+      id={id}
+      isMobileVisible={isMobileVisible}
+      isBackGround={isBackGround}
+      isVisble={isVisble}
+    />
+  );
+};
 
 export { StyledBackArrow, StyledForwardArrow };

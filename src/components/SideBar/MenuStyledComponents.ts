@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { ReactComponent as PlusSvg } from "../../assets/svgs/plus.svg";
 
 const MenuList = styled.ul`
   font-size: ${(props) => props.theme.descriptionFontSize};
@@ -15,16 +14,13 @@ const MenuItem = styled.li`
   margin: 0 8px;
 `;
 
-const StyledPlus = styled(PlusSvg)`
-  cursor: pointer;
-  margin-top: -2px;
-`;
-
 export type SelectedType = "selected" | "animate" | "closed";
 
 export type MenuProps = {
   selected: [SelectedType, SelectedType];
-  setSelected: React.Dispatch<React.SetStateAction<[SelectedType, SelectedType]>>;
+  setSelected: React.Dispatch<
+    React.SetStateAction<[SelectedType, SelectedType]>
+  >;
 };
 
-export { MenuList, MenuToggle, MenuItemTitle, MenuItem, StyledPlus };
+export { MenuItem, MenuItemTitle, MenuList, MenuToggle };

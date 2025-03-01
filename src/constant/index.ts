@@ -1,10 +1,17 @@
+import LOGO_BLACK from "../assets/images/logo/logo-removebg.png";
+import LOGO_WHITE from "../assets/images/logo/logo-removebg-white.png";
+import BG_COLOR_808080 from "../assets/images/bg-color-808080.png";
+
 export const Constants = {
-  BASE_URL: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://uosjudo.com",
+  BASE_URL:
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://uosjudo.com",
 
   // 이미지
-  LOGO_BLACK: require("../assets/images/logo/logo-removebg.png"),
-  LOGO_WHIET: require("../assets/images/logo/logo-removebg-white.png"),
-  BG_COLOR_808080: require("../assets/images/bg-color-808080.png"),
+  LOGO_BLACK: LOGO_BLACK,
+  LOGO_WHIET: LOGO_WHITE,
+  BG_COLOR_808080: BG_COLOR_808080,
 
   BLACK_COLOR: "#0f0c0c",
   YELLOW_COLOR: "#ffb746",

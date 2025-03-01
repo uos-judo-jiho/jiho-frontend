@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as RightArrow } from "../../assets/svgs/arrow_back_ios.svg";
+import RightArrow from "../../assets/svgs/arrow_back_ios.svg";
 import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
 import Loading from "../../components/Skeletons/Loading";
 import { useNews } from "../../recoills/news";
@@ -89,7 +89,7 @@ const NewsMobile = () => {
       <MobileHeader>
         <div className="nav-icon">
           <a href={`/news/${id}`}>
-            <RightArrow />
+            <img src={RightArrow} alt="right" />
           </a>
         </div>
         <HeaderContainer>
@@ -103,7 +103,15 @@ const NewsMobile = () => {
         <div className="nav-icon" />
       </MobileHeader>
       <Feed>
-        {news.map((newsByYear) => newsByYear.articles.map((newsInfo) => <MobilePhotoCard key={newsInfo.id} articleInfo={newsInfo} id={`news-mobile-card-${newsInfo.id}`} />))}
+        {news.map((newsByYear) =>
+          newsByYear.articles.map((newsInfo) => (
+            <MobilePhotoCard
+              key={newsInfo.id}
+              articleInfo={newsInfo}
+              id={`news-mobile-card-${newsInfo.id}`}
+            />
+          ))
+        )}
       </Feed>
     </div>
   );

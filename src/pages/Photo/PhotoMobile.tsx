@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as RightArrow } from "../../assets/svgs/arrow_back_ios.svg";
+import RightArrow from "../../assets/svgs/arrow_back_ios.svg";
 import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
 import Loading from "../../components/Skeletons/Loading";
 import { useTrainings } from "../../recoills/tranings";
@@ -86,7 +86,7 @@ const PhotoMobile = () => {
       <MobileHeader>
         <div className="nav-icon">
           <a href="/photo">
-            <RightArrow />
+            <img src={RightArrow} alt="right" />
           </a>
         </div>
         <HeaderContainer>
@@ -101,7 +101,11 @@ const PhotoMobile = () => {
       </MobileHeader>
       <Feed>
         {trainings.map((trainingInfo) => (
-          <MobilePhotoCard key={trainingInfo.id} articleInfo={trainingInfo} id={`training-mobile-card-${trainingInfo.id}`} />
+          <MobilePhotoCard
+            key={trainingInfo.id}
+            articleInfo={trainingInfo}
+            id={`training-mobile-card-${trainingInfo.id}`}
+          />
         ))}
       </Feed>
     </div>
