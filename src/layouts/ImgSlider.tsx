@@ -22,10 +22,12 @@ type ThumbnailProps = {
 };
 
 const Thumbnail = styled.img<ThumbnailProps>`
-  width: 30vw;
-  height: 30vw;
+  max-width: 30vw;
+  max-height: 30vw;
+
   object-fit: contain;
-  background-color: ${(props) => (props.isImage ? props.theme.blackColor : props.theme.bgColor)};
+  background-color: ${(props) =>
+    props.isImage ? props.theme.blackColor : props.theme.bgColor};
 
   min-width: 30rem;
   min-height: 30rem;
@@ -37,7 +39,7 @@ const Thumbnail = styled.img<ThumbnailProps>`
     animation: ${SliderAnimation} 0.8s;
   }
   @media (max-width: 539px) {
-    width: 100%;
+    max-width: 100%;
   }
 `;
 
@@ -121,17 +123,41 @@ function ImgSlider({ datas }: ImgSliderProps) {
   return (
     <Slider>
       <ImgSliderWrapper onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <StyledBackArrow onClick={prevSlider} current={current} length={length} isBackGround={true} isMobileVisible={true} />
-        <StyledForwardArrow onClick={nextSlider} current={current} length={length} isBackGround={true} isMobileVisible={true} />
+        <StyledBackArrow
+          onClick={prevSlider}
+          current={current}
+          length={length}
+          isBackGround={true}
+          isMobileVisible={true}
+        />
+        <StyledForwardArrow
+          onClick={nextSlider}
+          current={current}
+          length={length}
+          isBackGround={true}
+          isMobileVisible={true}
+        />
         {datas.map((image, index) => {
-          return <Thumbnail isImage={image ? true : false} src={image ? image : Constants.LOGO_BLACK} key={"thumbnail" + index} className={index === current ? "active" : ""} />;
+          return (
+            <Thumbnail
+              isImage={image ? true : false}
+              src={image ? image : Constants.LOGO_BLACK}
+              key={"thumbnail" + index}
+              className={index === current ? "active" : ""}
+            />
+          );
         })}
 
         <CircleWrapper>
           {datas.length === 1
             ? null
             : datas.map((image, index) => {
-                return <CurrentCircle key={"circle" + index} className={index === current ? "active" : ""} />;
+                return (
+                  <CurrentCircle
+                    key={"circle" + index}
+                    className={index === current ? "active" : ""}
+                  />
+                );
               })}
         </CircleWrapper>
       </ImgSliderWrapper>
