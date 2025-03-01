@@ -1,5 +1,4 @@
-import Col from "../../../layouts/Col";
-
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import styled from "styled-components";
 import Awards from "../../../assets/jsons/awards.json";
 import { AwardType } from "../../../types/AwardType";
@@ -52,14 +51,20 @@ const HomeAwards = () => {
 
   return (
     <AwardsConatiner>
-      <Col>
-        <SubTitle>수상 이력</SubTitle>
-        <ul>
-          {awards.map((award) => (
-            <AwardItem key={award.title} award={award} />
-          ))}
-        </ul>
-      </Col>
+      <div className="flex flex-col">
+        <Card className="bg-white/30 shadow-md backdrop-blur-sm border-none">
+          <CardHeader>
+            <SubTitle>수상 이력</SubTitle>
+          </CardHeader>
+          <CardContent>
+            <ul>
+              {awards.map((award) => (
+                <AwardItem key={award.title} award={award} />
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
     </AwardsConatiner>
   );
 };

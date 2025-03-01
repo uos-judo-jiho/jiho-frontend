@@ -45,7 +45,7 @@ const DescriptionTitle = styled.h3`
 function HomeInfo() {
   return (
     <Container>
-      <Col>
+      <div className="flex flex-col">
         <LogoWrapper>
           <Logo size={"100px"} isDark={true} />
         </LogoWrapper>
@@ -62,7 +62,7 @@ function HomeInfo() {
           <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
         </DescriptionContainer>
-      </Col>
+      </div>
     </Container>
   );
 }

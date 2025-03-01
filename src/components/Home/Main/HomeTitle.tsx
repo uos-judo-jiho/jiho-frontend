@@ -1,5 +1,5 @@
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import styled from "styled-components";
-import Line from "../../../layouts/Line";
 
 const ContainerWrapper = styled.div`
   display: flex;
@@ -11,16 +11,15 @@ const ContainerWrapper = styled.div`
   }
 `;
 
-const Container = styled.div`
+const Container = styled(Card)`
   padding: 24px;
   position: relative;
   flex: 1;
-  border: 0.2rem solid ${(props) => props.theme.lightGreyColor};
 `;
 
 const SubTitle = styled.h4`
   font-size: ${(props) => props.theme.subTitleFontSize};
-  line-height: ${(props) => props.theme.subTitleLineHeight};
+
   letter-spacing: 7px;
   text-transform: none;
   line-height: 120%;
@@ -33,24 +32,28 @@ const Title = styled.h1`
   text-transform: uppercase;
   font-family: sans-serif;
   font-size: ${(props) => props.theme.titleFontSize};
-  line-height: ${(props) => props.theme.titleLineHeight};
+
   font-weight: 500;
-  margin: 10px 0 0;
+
   color: ${(props) => props.theme.lightGreyColor};
 `;
 
 function HomeTitle() {
   return (
     <ContainerWrapper>
-      <Container>
-        <SubTitle>
-          서울시립대학교
-          <br />
-          유도부
-        </SubTitle>
-        <Title>지호</Title>
-        <Line width={"100%"} margin={"1rem auto 1rem 0"} borderWidth={"0.2rem"} />
-        <SubTitle>Uos Judo Team Jiho</SubTitle>
+      <Container className="backdrop-blur-sm bg-white/30 border-none">
+        <CardTitle className="flex flex-col gap-4">
+          <SubTitle>서울시립대학교 유도부</SubTitle>
+          <div className="inline-flex gap-2 items-end">
+            <Title>지호</Title>
+            <h5 className="text-base">
+              {"University of Seoul. Judo Team Jiho"}
+            </h5>
+          </div>
+        </CardTitle>
+        <CardContent>
+          <div>Since 1985</div>
+        </CardContent>
       </Container>
     </ContainerWrapper>
   );

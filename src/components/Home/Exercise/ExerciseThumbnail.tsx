@@ -2,9 +2,12 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Col from "../../../layouts/Col";
 import { useTrainings } from "../../../recoills/tranings";
+import { Card } from "@/components/ui/card";
 
 const Stack = styled.div`
   width: 100%;
+
+  border-radius: inherit;
 
   position: relative;
 
@@ -13,11 +16,13 @@ const Stack = styled.div`
   }
 `;
 
-const Container = styled.div`
+const Container = styled(Card)`
   max-width: 640px;
   margin: auto;
   position: relative;
   box-shadow: 0 0.4rem 0.8rem 0 rgba(0, 0, 0, 0.2);
+  padding: 0;
+
   @media (max-width: 539px) {
     width: 100%;
   }
@@ -50,7 +55,8 @@ type HoveredSpanProps = {
 };
 
 const HoveredSpan = styled.span<HoveredSpanProps>`
-  font-size: ${(props) => (props.fontSize ? props.fontSize : props.theme.descriptionFontSize)};
+  font-size: ${(props) =>
+    props.fontSize ? props.fontSize : props.theme.descriptionFontSize};
 
   &:not(:last-child) {
     margin-bottom: 4px;
@@ -60,6 +66,8 @@ const HoveredSpan = styled.span<HoveredSpanProps>`
 const Thumbnail = styled.img`
   width: inherit;
   height: inherit;
+
+  border-radius: inherit;
 
   ${Container}:hover & {
     filter: brightness(50%);
@@ -76,8 +84,8 @@ const ExerciseThumbnail = () => {
   const lastTraningData = trainings[0];
 
   return (
-    <Container>
-      <Link to={"/photo"}>
+    <Container className="rounded-xl border-none">
+      <Link to={"/photo"} className="rounded-xl">
         <Stack>
           <Thumbnail src={lastTraningData?.imgSrcs[0]} />
           <HoveredContainer>
