@@ -6,7 +6,7 @@ import AppRouter from "./routers/AppRouter";
 import { GlobalStyle } from "./theme/GlobalStyle";
 import { darkTheme, lightTheme } from "./theme/theme";
 
-import "./styles/globals.css";
+import "./index.css";
 
 const App = () => {
   // TODO: dark mode

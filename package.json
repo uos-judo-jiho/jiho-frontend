@@ -12,9 +12,8 @@
     "dev": "vite --port=3000",
     "start": "vite preview --port=3000",
     "start:ssr": "node server/index.js",
-    "build": "vite build",
-    "tailwind:build": "tailwindcss -i ./src/styles/globals.css -o ./dist/output.css",
-    "start:prod": "npm run build && npm run tailwind:build && npm run start",
+    "build": "rm -rf dist && vite build",
+    "start:prod": "npm run build && npm run start",
     "prebuild": "node script/sitemap.js",
     "type-check": "tsc"
   },

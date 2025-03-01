@@ -18,9 +18,7 @@ export const MediaLayout = css`
 
 export const GlobalStyle = createGlobalStyle`  
 
-html {
-  font-size: 100%;
-}
+
 
 body {
   font-family: 'Pretendard';
@@ -40,7 +38,6 @@ figure, figcaption, footer, header, hgroup,
 main, menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
   margin: 0;
-  padding: 0;
   border: 0;
   /* font-size: 100%; */
   /* font: inherit; */
@@ -76,7 +73,6 @@ table {
 }
 *{
   box-sizing: border-box;
-  padding:0;
   margin:0;
 
 }
