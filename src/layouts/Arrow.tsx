@@ -90,7 +90,7 @@ const StyledBackArrow = (
         React.ImgHTMLAttributes<HTMLImageElement>,
         HTMLImageElement
       >,
-      keyof ArrowProps
+      keyof ArrowProps | "ref"
     >
 ) => {
   const {
@@ -105,6 +105,7 @@ const StyledBackArrow = (
     isVisble,
     ...rest
   } = props;
+
   return (
     <StyledBackArrowStyle
       current={current}
@@ -116,6 +117,8 @@ const StyledBackArrow = (
       isMobileVisible={isMobileVisible}
       isBackGround={isBackGround}
       isVisble={isVisble}
+      src={BackArrow}
+      {...rest}
     />
   );
 };
@@ -127,7 +130,7 @@ const StyledForwardArrow = (
         React.ImgHTMLAttributes<HTMLImageElement>,
         HTMLImageElement
       >,
-      keyof ArrowProps
+      keyof ArrowProps | "ref"
     >
 ) => {
   const {
@@ -153,6 +156,8 @@ const StyledForwardArrow = (
       isMobileVisible={isMobileVisible}
       isBackGround={isBackGround}
       isVisble={isVisble}
+      src={ForwardArrow}
+      {...rest}
     />
   );
 };

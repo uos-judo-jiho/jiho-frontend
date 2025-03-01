@@ -14,13 +14,6 @@ type MoreCardProps = {
 
 const DATA_LEN = 4;
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 8px 12px;
-`;
-
 const ItemList = styled.ul`
   width: 100%;
   margin: 8px 0;

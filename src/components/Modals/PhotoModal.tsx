@@ -37,28 +37,6 @@ const FadeIn = keyframes`
     }
 `;
 
-// TODO:
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SlideUp = keyframes`
-  from {
-    transform: translateY(-10.0rem);
-  }
-  to {
-    transform: translateY(0px);
-  }
-  `;
-
-// TODO:
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SlideDown = keyframes`  
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-100px);
-  }
-`;
-
 const IndexContainer = styled.div`
   position: relative;
   display: flex;
