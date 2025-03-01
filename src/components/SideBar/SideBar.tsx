@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { ReactComponent as CloseSvg } from "../../assets/svgs/close.svg";
+import CloseSvg from "../../assets/svgs/close.svg";
 import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
 import { SelectedType } from "./MenuStyledComponents";
@@ -41,7 +41,7 @@ const Container = styled.div`
 `;
 const NavWrapper = styled.nav``;
 
-const StyledClose = styled(CloseSvg)`
+const StyledClose = styled.img`
   position: absolute;
   top: 12px;
   left: 12px;
@@ -56,11 +56,15 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
 
   const location = useLocation();
 
-  const [selected, setSelected] = useState<[SelectedType, SelectedType]>(["closed", "closed"]);
+  const [selected, setSelected] = useState<[SelectedType, SelectedType]>([
+    "closed",
+    "closed",
+  ]);
 
   const [prevLocation, setPrevLocation] = useState(location.pathname);
 
-  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> = useRef(null);
+  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> =
+    useRef(null);
 
   const toggleSide = () => {
     setSelected(["closed", "closed"]);
@@ -102,9 +106,19 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
   }, [location.pathname, prevLocation, setIsOpen]);
 
   return createPortal(
-    <Container id="sidebar" ref={outside} className={isOpen ? "open" : undefined}>
-      <StyledClose onClick={toggleSide} />
-      <NavWrapper>{location.pathname.includes("/admin") ? <AdminMenu /> : <ClientMenu selected={selected} setSelected={setSelected} />}</NavWrapper>
+    <Container
+      id="sidebar"
+      ref={outside}
+      className={isOpen ? "open" : undefined}
+    >
+      <StyledClose onClick={toggleSide} src={CloseSvg} />
+      <NavWrapper>
+        {location.pathname.includes("/admin") ? (
+          <AdminMenu />
+        ) : (
+          <ClientMenu selected={selected} setSelected={setSelected} />
+        )}
+      </NavWrapper>
     </Container>,
     document.body
   );

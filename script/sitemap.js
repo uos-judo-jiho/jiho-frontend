@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 const filePath = `${process.env.PWD}/public/sitemap.xml`;
 
@@ -21,9 +21,21 @@ const generateSitemap = async () => {
         ` <url>
     ${[
       `<loc>${sitemapMetaData.loc}</loc>`,
-      `${sitemapMetaData?.lastmod ? `<lastmod>${sitemapMetaData.lastmod}</lastmod>` : ""}`,
-      `${sitemapMetaData?.changefreq ? `<changefreq>${sitemapMetaData.changefreq}</changefreq>` : ""}`,
-      `${sitemapMetaData?.priority ? `<priority>${sitemapMetaData.priority}</priority>` : ""}`,
+      `${
+        sitemapMetaData?.lastmod
+          ? `<lastmod>${sitemapMetaData.lastmod}</lastmod>`
+          : ""
+      }`,
+      `${
+        sitemapMetaData?.changefreq
+          ? `<changefreq>${sitemapMetaData.changefreq}</changefreq>`
+          : ""
+      }`,
+      `${
+        sitemapMetaData?.priority
+          ? `<priority>${sitemapMetaData.priority}</priority>`
+          : ""
+      }`,
     ]
       .filter((_) => _)
       .join("\n\t\t")}

@@ -2,16 +2,33 @@
   "name": "jiho",
   "version": "1.10.10",
   "private": false,
+  "type": "module",
   "homepage": "https://uosjudo.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/uos-judo-jiho"
   },
+  "scripts": {
+    "dev": "vite --port=3000",
+    "start": "vite preview --port=3000",
+    "start:ssr": "node server/index.js",
+    "build": "vite build",
+    "tailwind:build": "tailwindcss -i ./src/styles/globals.css -o ./dist/output.css",
+    "start:prod": "npm run build && npm run tailwind:build && npm run start",
+    "prebuild": "node script/sitemap.js",
+    "type-check": "tsc"
+  },
   "dependencies": {
+    "@tailwindcss/vite": "^4.0.9",
+    "@tanstack/react-query": "^5.66.9",
     "axios": "^1.3.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "http-proxy-middleware": "^2.0.7",
     "ignore-styles": "^5.0.1",
+    "lucide-react": "^0.477.0",
     "nodemon": "^3.1.0",
+    "postcss": "^8.5.1",
     "react": "^18.2.0",
     "react-cookie": "^7.1.0",
     "react-dom": "^18.2.0",
@@ -20,35 +37,30 @@
     "react-scripts": "5.0.1",
     "recoil": "^0.7.7",
     "styled-components": "^5.3.9",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss": "^4.0.9",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^4.9.5",
     "web-vitals": "^3.3.0"
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.26",
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
     "@babel/register": "^7.23.7",
+    "@tailwindcss/postcss": "^4.0.9",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.5.0",
-    "@types/node": "^18.15.8",
+    "@types/node": "^18.19.78",
     "@types/react": "^18.0.29",
     "@types/react-dom": "^18.0.11",
     "@types/react-router-dom": "^5.3.3",
+    "@types/styled-components": "^5.1.26",
+    "@vitejs/plugin-react": "^4.3.4",
     "babel-plugin-import": "^1.13.6",
-    "serve": "^14.2.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "start:ssr": "node server/index.js",
-    "start:ssr-prod": "NODE_ENV=production && npm run build && npm run start:ssr",
-    "start:prod": "npm run build && serve -s build",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
-    "prebuild": "node script/sitemap.js",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "type-check": "tsc"
+    "serve": "^14.2.1",
+    "vite": "^6.2.0"
   },
   "eslintConfig": {
     "extends": [

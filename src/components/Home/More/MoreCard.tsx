@@ -3,6 +3,8 @@ import styled from "styled-components";
 import Row from "../../../layouts/Row";
 import { ArticleInfoType } from "../../../types/ArticleInfoType";
 
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+
 type MoreCardProps = {
   title: string;
   data: ArticleInfoType[];
@@ -11,25 +13,6 @@ type MoreCardProps = {
 };
 
 const DATA_LEN = 4;
-
-const Card = styled.div`
-  width: 100%;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  transition: 0.3s;
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
-  }
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 8px 12px;
-`;
-
-const Title = styled.h1``;
 
 const ItemList = styled.ul`
   width: 100%;
@@ -75,14 +58,16 @@ const More = styled.p`
 const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
   const boardData = data.slice(0, DATA_LEN);
   return (
-    <Card>
-      <Container>
+    <Card className="w-full hover:shadow-md">
+      <CardHeader>
         <Link to={linkTo}>
-          <Row alignItems="flex-end" justifyContent="space-">
-            <Title>{title}</Title>
+          <div className="flex items-center justify-start">
+            <h3 className="text-base font-semibold">{title}</h3>
             <More>+ 더보기</More>
-          </Row>
+          </div>
         </Link>
+      </CardHeader>
+      <CardContent>
         <ItemList>
           {boardData.map((item, index) => {
             return (
@@ -97,7 +82,7 @@ const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
             );
           })}
         </ItemList>
-      </Container>
+      </CardContent>
     </Card>
   );
 };

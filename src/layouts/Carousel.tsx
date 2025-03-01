@@ -33,12 +33,20 @@ const Window = styled.div`
     }
 
     &.right {
-      background: linear-gradient(0.25turn, rgba(33, 33, 33, 0), rgb(33, 33, 33));
+      background: linear-gradient(
+        0.25turn,
+        rgba(33, 33, 33, 0),
+        rgb(33, 33, 33)
+      );
       right: 0;
     }
 
     &.left {
-      background: linear-gradient(0.75turn, rgba(33, 33, 33, 0), rgb(33, 33, 33));
+      background: linear-gradient(
+        0.75turn,
+        rgba(33, 33, 33, 0),
+        rgb(33, 33, 33)
+      );
       left: 0;
     }
   }
@@ -94,6 +102,7 @@ const ImgWrapper = styled.div`
 `;
 
 const Img = styled.img`
+  min-width: 216px;
   aspect-ratio: 1 / 1;
   height: 100%;
   object-fit: contain;
@@ -113,7 +122,9 @@ const Img = styled.img`
 const Carousel = ({ datas }: CarouselProps) => {
   const [page, setPage] = useState<number>(0);
 
-  const [scrollContainer, setScrollContainer] = useState<HTMLElement | undefined>();
+  const [scrollContainer, setScrollContainer] = useState<
+    HTMLElement | undefined
+  >();
   const [carouselEl, setCarouselEl] = useState<HTMLElement | undefined>();
   const [leftArrow, setLeftArrow] = useState<HTMLElement | undefined>();
   const [rightArrow, setRightArrow] = useState<HTMLElement | undefined>();
@@ -151,7 +162,10 @@ const Carousel = ({ datas }: CarouselProps) => {
         setPage(0);
         return;
       }
-      if (scrollContainer.scrollLeft > 0 && scrollDistance < carouselElWidth - scrollContainer.scrollLeft - 1) {
+      if (
+        scrollContainer.scrollLeft > 0 &&
+        scrollDistance < carouselElWidth - scrollContainer.scrollLeft - 1
+      ) {
         setPage(1);
         return;
       }
@@ -181,8 +195,22 @@ const Carousel = ({ datas }: CarouselProps) => {
 
   return (
     <Window>
-      <StyledBackArrow id="leftArrow" current={page} length={datas.length} size={"3rem"} isBackGround={true} isMobileVisible={false} />
-      <StyledForwardArrow id="rightArrow" current={page} length={datas.length} size={"3rem"} isBackGround={true} isMobileVisible={false} />
+      <StyledBackArrow
+        id="leftArrow"
+        current={page}
+        length={datas.length}
+        size={"3rem"}
+        isBackGround={true}
+        isMobileVisible={false}
+      />
+      <StyledForwardArrow
+        id="rightArrow"
+        current={page}
+        length={datas.length}
+        size={"3rem"}
+        isBackGround={true}
+        isMobileVisible={false}
+      />
       <ScrollWrapper id={"scroll"} ref={targetContanier}>
         <CarouselWrapper id={"carousel"}>
           {datas.map((img) => (
@@ -194,7 +222,11 @@ const Carousel = ({ datas }: CarouselProps) => {
           ))}
         </CarouselWrapper>
       </ScrollWrapper>
-      <DetailImageModal image={selectedDetailImage} isOpen={detailIsOpen} onClose={handleDetailClose} />
+      <DetailImageModal
+        image={selectedDetailImage}
+        isOpen={detailIsOpen}
+        onClose={handleDetailClose}
+      />
       <div className={`filter ${!isLeft ? "left" : ""}`} />
       <div className={`filter ${!isRight ? "right" : ""}`} />
     </Window>

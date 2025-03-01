@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Row from "../../layouts/Row";
 
-import { ReactComponent as Menu } from "../../assets/svgs/menu.svg";
+import Menu from "../../assets/svgs/menu.svg";
 
 import Logo from "../Logo";
 import SideBar from "../SideBar/SideBar";
@@ -22,7 +22,7 @@ type StyledMenuProps = {
   currentpath: string;
 };
 
-const StyledMenu = styled(Menu)<StyledMenuProps>`
+const StyledMenu = styled.img<StyledMenuProps>`
   filter: ${(props) =>
     props.currentpath === "/"
       ? `invert(100%) sepia(3%) saturate(607%) hue-rotate(209deg) brightness(116%) contrast(87%)` // #eee
@@ -63,7 +63,7 @@ function Navbar() {
       <Container>
         <Row justifyContent="space-between">
           <NavDropDown onClick={handleClick}>
-            <StyledMenu currentpath={currentPath} />
+            <StyledMenu currentpath={currentPath} src={Menu} />
           </NavDropDown>
           <LogoWrapper>
             <Link to={"/"}>

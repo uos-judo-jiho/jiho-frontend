@@ -6,7 +6,7 @@ import { ArticleInfoType } from "../../types/ArticleInfoType";
 
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as Close } from "../../assets/svgs/close.svg";
+import Close from "../../assets/svgs/close.svg";
 import Loading from "../Skeletons/Loading";
 import ModalArticleContainer from "./ModalArticleContainer";
 
@@ -35,28 +35,6 @@ const FadeIn = keyframes`
     to {
       opacity: 1;
     }
-`;
-
-// TODO:
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SlideUp = keyframes`
-  from {
-    transform: translateY(-10.0rem);
-  }
-  to {
-    transform: translateY(0px);
-  }
-  `;
-
-// TODO:
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SlideDown = keyframes`  
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-100px);
-  }
 `;
 
 const IndexContainer = styled.div`
@@ -126,7 +104,7 @@ const MobileModalLayout = styled.div`
   }
 `;
 
-const StyledClose = styled(Close)``;
+const StyledClose = styled.img``;
 
 type ArrowWrapperProps = {
   isMobileVisible: boolean;
@@ -165,10 +143,19 @@ const CloseBtn = styled.button`
   }
 `;
 
-const PhotoModal = ({ baseurl, open, close, infos, id, titles }: PhotoModalProps) => {
+const PhotoModal = ({
+  baseurl,
+  open,
+  close,
+  infos,
+  id,
+  titles,
+}: PhotoModalProps) => {
   const navigate = useNavigate();
 
-  const current = infos.findIndex((infoItem) => infoItem.id.toString() === id.toString());
+  const current = infos.findIndex(
+    (infoItem) => infoItem.id.toString() === id.toString()
+  );
 
   const nextSlider = useCallback(() => {
     navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
@@ -178,7 +165,9 @@ const PhotoModal = ({ baseurl, open, close, infos, id, titles }: PhotoModalProps
     navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
   }, [baseurl, current, infos, navigate]);
 
-  const info = infos.find((infoItem) => infoItem.id.toString() === id.toString());
+  const info = infos.find(
+    (infoItem) => infoItem.id.toString() === id.toString()
+  );
 
   const length = infos.length;
 
@@ -189,8 +178,18 @@ const PhotoModal = ({ baseurl, open, close, infos, id, titles }: PhotoModalProps
   return createPortal(
     <Container className={open ? "openModal" : "closeModal"}>
       <ArrowWrapper isMobileVisible={false} isDesktopVisible={true}>
-        <StyledBackArrow size={"4rem"} onClick={prevSlider} current={current} length={length} />
-        <StyledForwardArrow size={"4rem"} onClick={nextSlider} current={current} length={length} />
+        <StyledBackArrow
+          size={"4rem"}
+          onClick={prevSlider}
+          current={current}
+          length={length}
+        />
+        <StyledForwardArrow
+          size={"4rem"}
+          onClick={nextSlider}
+          current={current}
+          length={length}
+        />
       </ArrowWrapper>
       <MobileModalLayout>
         <CloseBtn
@@ -198,13 +197,25 @@ const PhotoModal = ({ baseurl, open, close, infos, id, titles }: PhotoModalProps
             close();
           }}
         >
-          <StyledClose />
+          <StyledClose src={Close} />
         </CloseBtn>
         <ModalArticleContainer info={info} titles={titles} />
         <IndexContainer>
           <ArrowWrapper isMobileVisible={true} isDesktopVisible={false}>
-            <StyledBackArrow size={"4rem"} onClick={prevSlider} current={current} length={length} isMobileVisible={true} />
-            <StyledForwardArrow size={"4rem"} onClick={nextSlider} current={current} length={length} isMobileVisible={true} />
+            <StyledBackArrow
+              size={"4rem"}
+              onClick={prevSlider}
+              current={current}
+              length={length}
+              isMobileVisible={true}
+            />
+            <StyledForwardArrow
+              size={"4rem"}
+              onClick={nextSlider}
+              current={current}
+              length={length}
+              isMobileVisible={true}
+            />
           </ArrowWrapper>
           <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
         </IndexContainer>

@@ -5,6 +5,7 @@ import { Constants } from "../../constant";
 import Col from "../../layouts/Col";
 import { ArticleInfoType } from "../../types/ArticleInfoType";
 import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
+import { Card } from "../ui/card";
 
 type NewsCardProps = {
   index: number;
@@ -14,7 +15,7 @@ type NewsCardProps = {
   handleClickCard: (index: string) => void;
 };
 
-const Container = styled.div`
+const Container = styled(Card)`
   width: 100%;
   font-size: ${(props) => props.theme.descriptionFontSize};
   line-height: ${(props) => props.theme.descriptionLineHeight};
@@ -154,10 +155,30 @@ const NewsCard = ({ index, datas, handleClickCard, year }: NewsCardProps) => {
 
   return (
     <Container onClick={() => handleClickCard(newsData.id)}>
-      <AnchoreContainer href={`/news/${year}/${newsData.id}`} onClick={(e) => e.preventDefault()}>
+      <AnchoreContainer
+        href={`/news/${year}/${newsData.id}`}
+        onClick={(e) => e.preventDefault()}
+      >
         <ImgWrapper>
-          {isLoading ? <Img loading="lazy" alt={newsData.title + newsData.author} src={newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK} /> : <SkeletonThumbnail />}
-          <img alt={newsData.title + newsData.author} src={newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK} style={{ display: "none" }} onLoad={handleLoding} />
+          {isLoading ? (
+            <Img
+              loading="lazy"
+              alt={newsData.title + newsData.author}
+              src={
+                newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK
+              }
+            />
+          ) : (
+            <SkeletonThumbnail />
+          )}
+          <img
+            alt={newsData.title + newsData.author}
+            src={
+              newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK
+            }
+            style={{ display: "none" }}
+            onLoad={handleLoding}
+          />
           <Col>
             <ImgTitle>{newsData.title}</ImgTitle>
             <ImgSubTitle>{newsData.author}</ImgSubTitle>
