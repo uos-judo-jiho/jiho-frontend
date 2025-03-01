@@ -1,8 +1,8 @@
+import { Card } from "@/components/ui/card";
+import { useTrainings } from "@/recoills/tranings";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Col from "../../../layouts/Col";
-import { useTrainings } from "../../../recoills/tranings";
-import { Card } from "@/components/ui/card";
 
 const Stack = styled.div`
   width: 100%;
@@ -83,15 +83,17 @@ const ExerciseThumbnail = () => {
 
   const lastTraningData = trainings[0];
 
+  if (!lastTraningData) return null;
+
   return (
     <Container className="rounded-xl border-none">
-      <Link to={"/photo"} className="rounded-xl">
+      <Link to={`/photo/${lastTraningData.id}`} className="rounded-xl">
         <Stack>
-          <Thumbnail src={lastTraningData?.imgSrcs[0]} />
+          <Thumbnail src={lastTraningData.imgSrcs[0]} />
           <HoveredContainer>
             <Col justifyContent="center" alignItems="center">
               <HoveredSpan>훈련 일지</HoveredSpan>
-              <HoveredSpan>{lastTraningData?.dateTime}</HoveredSpan>
+              <HoveredSpan>{lastTraningData.dateTime}</HoveredSpan>
               <HoveredSpan fontSize={"1.2rem"}>자세히 보기</HoveredSpan>
             </Col>
           </HoveredContainer>

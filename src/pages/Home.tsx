@@ -4,17 +4,16 @@ import HomeSectionInfo from "../components/Home/Info/HomeSectionInfo";
 import HomeSectionMain from "../components/Home/Main/HomeSectionMain";
 import HomeSectionMore from "../components/Home/More/HomeSectionMore";
 import HomeSectionNews from "../components/Home/News/HomeSectionNews";
+import { Constants } from "../constant";
 import MyHelmet from "../helmet/MyHelmet";
 import DefaultLayout from "../layouts/DefaultLayout";
 import ScrollSnap from "../layouts/ScrollSnap";
 import { useNews } from "../recoills/news";
 import { useNotices } from "../recoills/notices";
-import { useTrainings } from "../recoills/tranings";
-import { Constants } from "../constant";
 
 const Home = () => {
   const { fetch: fetchNotices } = useNotices();
-  const { fetch: fetchTrainings } = useTrainings();
+
   const { fetch: fetchNews } = useNews();
 
   useEffect(() => {
@@ -24,10 +23,6 @@ const Home = () => {
   useEffect(() => {
     fetchNotices();
   }, [fetchNotices]);
-
-  useEffect(() => {
-    fetchTrainings();
-  }, [fetchTrainings]);
 
   return (
     <>

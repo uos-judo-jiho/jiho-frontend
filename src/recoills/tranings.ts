@@ -1,43 +1,27 @@
-import { useCallback } from "react";
+import { useTrainingListQuery } from "@/api/tradings/query";
+import { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
-import { getTrainings } from "../api/training";
 import { ArticleInfoType } from "../types/ArticleInfoType";
 
 const TrainingList = atom<ArticleInfoType[]>({
   key: "trainingObject",
   default: [],
 });
-const isTrainingFecthed = atom<boolean>({
-  key: "isTrainingFecthed",
-  default: false,
-});
 
-export const useTrainings = () => {
+export const useTrainings = (year?: string) => {
   const [trainings, setTrainings] = useRecoilState(TrainingList);
-  const [isLoad, setIsLoad] = useRecoilState(isTrainingFecthed);
 
-  const fetch = useCallback(
-    async (year?: string) => {
-      if (isLoad) {
-        return;
-      }
-      const newTrainingList = await getTrainings(year);
-      if (!newTrainingList) {
-        return;
-      }
+  const { data, isLoading, refetch } = useTrainingListQuery(year);
 
-      setTrainings(
-        newTrainingList.sort((a, b) => (a.dateTime > b.dateTime ? -1 : 1))
+  useEffect(() => {
+    if (data) {
+      const sortedData = [...data].sort((a, b) =>
+        b.dateTime.localeCompare(a.dateTime)
       );
-      setIsLoad(true);
-    },
-    [isLoad, setIsLoad, setTrainings]
-  );
 
-  const refreshTraining = useCallback(() => {
-    setIsLoad(false);
-    fetch();
-  }, [fetch, setIsLoad]);
+      setTrainings(sortedData);
+    }
+  }, [data, setTrainings]);
 
-  return { fetch, refreshTraining, trainings, isLoad };
+  return { trainings, isLoading, refetch };
 };

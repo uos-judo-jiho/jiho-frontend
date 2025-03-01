@@ -40,21 +40,6 @@ export const formaAwardsType = (award: AwardType): string => {
   return result;
 };
 
-/**
- * @param dateTimeObj
- *
- * 매게변수 예시] Tue Feb 28 2023 19:41:04 GMT+0900 (한국 표준시)
- *
- * 리턴값 예시 2023.02.28.화
- */
-export const formatDateTime = (dateTimeString: string): string => {
-  var result = dateTimeString;
-  result = result.replaceAll(".", "");
-  var resultList = result.split(" ");
-
-  return resultList.join("-");
-};
-
 export const getImageFileFromSrc = async (src: string, filename: string) => {
   try {
     const response = await fetch(src);
@@ -74,12 +59,14 @@ export const getImageFileFromSrc = async (src: string, filename: string) => {
  */
 export const toBase64 = async (file: File): Promise<string> => {
   try {
-    const data: string = await new Promise((resolve: (value: string) => void, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-    });
+    const data: string = await new Promise(
+      (resolve: (value: string) => void, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+      }
+    );
 
     return data;
   } catch (error) {
@@ -95,6 +82,8 @@ export const toBase64 = async (file: File): Promise<string> => {
  */
 export const vaildNewsYearList = () => {
   const currentYear = new Date().getFullYear();
-  const yearList = Array.from({ length: currentYear - 2021 }, (_, i) => String(2022 + i));
+  const yearList = Array.from({ length: currentYear - 2021 }, (_, i) =>
+    String(2022 + i)
+  );
   return yearList;
 };

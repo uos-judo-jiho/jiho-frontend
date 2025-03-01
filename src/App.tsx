@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
@@ -8,19 +9,23 @@ import { darkTheme, lightTheme } from "./theme/theme";
 
 import "./index.css";
 
+const queryClient = new QueryClient();
+
 const App = () => {
   // TODO: dark mode
   const [isDark] = useState(false);
 
   return (
-    <RecoilRoot>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <GlobalStyle />
-        <BrowserRouter>
-          <AppRouter />
-        </BrowserRouter>
-      </ThemeProvider>
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+          <GlobalStyle />
+          <BrowserRouter>
+            <AppRouter />
+          </BrowserRouter>
+        </ThemeProvider>
+      </RecoilRoot>
+    </QueryClientProvider>
   );
 };
 

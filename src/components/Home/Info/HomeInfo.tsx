@@ -1,9 +1,7 @@
-import React from "react";
 import styled, { css } from "styled-components";
-import Col from "../../../layouts/Col";
+import FooterInfo from "../../../assets/jsons/footerData.json";
 import Title from "../../../layouts/Title";
 import Logo from "../../Logo";
-import FooterInfo from "../../../assets/jsons/footerData.json";
 
 const Container = styled.div`
   margin-bottom: 10px;

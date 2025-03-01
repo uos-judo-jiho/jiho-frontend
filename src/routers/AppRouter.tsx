@@ -9,7 +9,6 @@ import Notice from "../pages/Notice/Notice";
 import NoticeDetail from "../pages/Notice/NoticeDetail";
 import PhotoPage from "../pages/Photo";
 import PhotoPC from "../pages/Photo/PhotoPC";
-import Video from "../pages/Video";
 import AdminHomePage from "../pages/admin/AdminHomePage";
 
 const AppRouter = () => {
@@ -22,7 +21,6 @@ const AppRouter = () => {
       <Route path="/about" element={<About />} />
       <Route path="/photo" element={<PhotoPC />} />
       <Route path="/photo/:id" element={<PhotoPage />} />
-      <Route path="/video" element={<Video />} />
       <Route path="/notice" element={<Notice />} />
       <Route path="/notice/:id" element={<NoticeDetail />} />
       <Route path="*" element={<NotFound />} />

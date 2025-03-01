@@ -36,7 +36,7 @@ const HoveredContainer = styled.div`
   width: 100%;
   height: 100%;
 
-  font-size: ${(props) => props.theme.titleFontSize};
+  font-size: ${(props) => props.theme.subTitleFontSize};
 
   color: ${(props) => props.theme.bgColor};
 
@@ -67,7 +67,12 @@ const Thumbnail = styled.img`
     }
   }
 `;
-const ThumbnailCard = ({ imgSrc, dateTime, id, handleClickCard }: ThumbnailCardProps) => {
+const ThumbnailCard = ({
+  imgSrc,
+  dateTime,
+  id,
+  handleClickCard,
+}: ThumbnailCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = () => handleClickCard(id);
@@ -77,8 +82,21 @@ const ThumbnailCard = ({ imgSrc, dateTime, id, handleClickCard }: ThumbnailCardP
   return (
     <ImgWrapper onClick={handleClick}>
       <a href={`/photo/${id}`} onClick={(e) => e.preventDefault()}>
-        {isLoading ? <Thumbnail loading="lazy" src={imgSrc} alt={"훈련 일지: " + dateTime} /> : <SkeletonThumbnail />}
-        <img src={imgSrc} alt={"훈련 일지: " + dateTime} style={{ display: "none" }} onLoad={handleLoad} />
+        {isLoading ? (
+          <Thumbnail
+            loading="lazy"
+            src={imgSrc}
+            alt={"훈련 일지: " + dateTime}
+          />
+        ) : (
+          <SkeletonThumbnail />
+        )}
+        <img
+          src={imgSrc}
+          alt={"훈련 일지: " + dateTime}
+          style={{ display: "none" }}
+          onLoad={handleLoad}
+        />
         <HoveredContainer>{dateTime}</HoveredContainer>
       </a>
     </ImgWrapper>

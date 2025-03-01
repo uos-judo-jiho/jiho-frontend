@@ -1,10 +1,10 @@
+import { useTrainings } from "@/recoills/tranings";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import RightArrow from "../../assets/svgs/arrow_back_ios.svg";
 import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
 import Loading from "../../components/Skeletons/Loading";
-import { useTrainings } from "../../recoills/tranings";
 
 // TODO: 모바일 헤더 높이 44px 고정 상수화
 
@@ -61,14 +61,10 @@ const Feed = styled.div`
 `;
 
 const PhotoMobile = () => {
-  const { trainings, fetch, isLoad } = useTrainings();
+  const { trainings, isLoading } = useTrainings();
 
   const location = useLocation();
   const id = location.pathname.replace("photo", "").split("/").at(-1) ?? "";
-
-  useEffect(() => {
-    fetch();
-  }, [fetch]);
 
   useEffect(() => {
     if (!id || !trainings) {
@@ -77,7 +73,7 @@ const PhotoMobile = () => {
     document.getElementById(`training-mobile-card-${id}`)?.scrollIntoView();
   }, [id, trainings]);
 
-  if (!trainings || !isLoad) {
+  if (!trainings || isLoading) {
     return <Loading />;
   }
 
