@@ -1,5 +1,5 @@
 # build environment
-FROM node:16.7-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 ENV DANGEROUSLY_DISABLE_HOST_CHECK=true

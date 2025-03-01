@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 import { defineConfig } from "vite";
 
-// https://vite.dev/config/
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
