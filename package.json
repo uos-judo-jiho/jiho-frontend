@@ -10,7 +10,7 @@
   },
   "scripts": {
     "dev": "vite --port=3000",
-    "start": "vite preview --port=3000",
+    "start": "serve -s dist",
     "start:ssr": "node server/index.js",
     "build": "rm -rf dist && vite build",
     "start:prod": "npm run build && npm run start",
