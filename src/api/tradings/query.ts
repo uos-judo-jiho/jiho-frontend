@@ -15,5 +15,6 @@ export const useTrainingListQuery = (year: string = "all") => {
       }
       return getTrainings(year);
     },
+    staleTime: 24 * 60 * 60 * 1000, // 1 day
   });
 };
