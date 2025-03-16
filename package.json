@@ -12,7 +12,7 @@
     "dev": "vite --port=3000",
     "start": "vite preview --port=3000",
     "start:ssr": "node server/index.js",
-    "build": "rm -rf dist && vite build",
+    "build": "rm -rf build && vite build --out-dir build",
     "start:prod": "npm run build && npm run start",
     "prebuild": "node script/sitemap.js",
     "type-check": "tsc"
