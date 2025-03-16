@@ -3,10 +3,8 @@ import LOGO_WHITE from "../assets/images/logo/logo-removebg-white.png";
 import BG_COLOR_808080 from "../assets/images/bg-color-808080.png";
 
 export const Constants = {
-  BASE_URL:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://uosjudo.com",
+  /** NOTE: docker 환경에서 프론트 서버가 존재함으로 localhost:3000으로 설정 */
+  BASE_URL: "http://localhost:3000",
 
   // 이미지
   LOGO_BLACK: LOGO_BLACK,
