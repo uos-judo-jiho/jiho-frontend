@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { LoginValuesType } from "@/api/admin/login";
 import { Constants } from "@/lib/constant";
 import Title from "@/components/layouts/Title";
-import useSession from "../../../recoills/session";
+import useSession from "@/recoils/session";
 import {
   ButtonContainer,
   FormContainer,

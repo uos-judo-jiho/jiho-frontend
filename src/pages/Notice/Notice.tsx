@@ -6,7 +6,7 @@ import Line from "@/components/layouts/Line";
 import ListContainer from "@/components/layouts/ListContainer";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { useNotices } from "../../recoills/notices";
+import { useNotices } from "@/recoils/notices";
 
 function Notice() {
   const { notices, fetch } = useNotices();

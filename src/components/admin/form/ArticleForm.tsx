@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { deleteBoard, updateBoard, uploadBoard } from "@/api/admin/board";
 import { uploadPicture } from "@/api/admin/pictures";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import SubmitModal from "../../common/Modals/AlertModals/SubmitModal";
-import Loading from "../../common/Skeletons/Loading";
+import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
+import Loading from "@/components/common/Skeletons/Loading";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,

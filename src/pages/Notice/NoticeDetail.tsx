@@ -9,7 +9,7 @@ import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { useNotices } from "../../recoills/notices";
+import { useNotices } from "@/recoils/notices";
 
 const TitleWrapper = styled.div`
   width: min-content;

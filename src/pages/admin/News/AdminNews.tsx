@@ -4,7 +4,7 @@ import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { useNews } from "../../../recoills/news";
+import { useNews } from "@/recoils/news";
 
 const AdminNews = () => {
   const { news, refreshNew } = useNews();

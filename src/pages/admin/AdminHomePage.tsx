@@ -2,7 +2,7 @@ import AdminLogin from "@/components/admin/form/AdminLogin";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
-import useSession from "../../recoills/session";
+import useSession from "@/recoils/session";
 import AdminRouter from "../../routers/AdminRouter";
 
 const AdminHomePage = () => {

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNews } from "../../../recoills/news";
+import { useNews } from "@/recoils/news";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import ArticleForm from "./ArticleForm";
 

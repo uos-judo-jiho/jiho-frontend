@@ -14,7 +14,7 @@ import MyHelmet from "@/helmet/MyHelmet";
 
 import useKeyEscClose from "@/hooks/useKeyEscClose";
 
-import { useTrainings } from "@/recoills/tranings";
+import { useTrainings } from "@/recoils/tranings";
 
 const PhotoPC = () => {
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { useTrainings } from "@/recoills/tranings";
+import { useTrainings } from "@/recoils/tranings";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";

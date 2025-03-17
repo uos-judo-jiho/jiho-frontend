@@ -6,7 +6,7 @@ import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { useNews } from "../../recoills/news";
+import { useNews } from "@/recoils/news";
 import { NewsParamsType } from "@/lib/types/NewsParamsType";
 import { vaildNewsYearList } from "@/lib/utils/Utils";
 

@@ -8,8 +8,8 @@ import { Constants } from "@/lib/constant";
 import MyHelmet from "../helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
-import { useNews } from "../recoills/news";
-import { useNotices } from "../recoills/notices";
+import { useNews } from "@/recoils/news";
+import { useNotices } from "@/recoils/notices";
 
 const Home = () => {
   const { fetch: fetchNotices } = useNotices();

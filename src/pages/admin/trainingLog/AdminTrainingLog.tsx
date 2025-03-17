@@ -1,4 +1,4 @@
-import { useTrainings } from "@/recoills/tranings";
+import { useTrainings } from "@/recoils/tranings";
 import { Link } from "react-router-dom";
 import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";

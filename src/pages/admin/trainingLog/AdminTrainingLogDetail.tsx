@@ -1,4 +1,4 @@
-import { useTrainings } from "@/recoills/tranings";
+import { useTrainings } from "@/recoils/tranings";
 import { useParams } from "react-router-dom";
 import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
 import { Constants } from "@/lib/constant";

@@ -5,7 +5,7 @@ import FormContainer from "@/components/admin/form/FormContainer";
 import Carousel from "@/components/layouts/Carousel";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
-import { useNews } from "../../../../recoills/news";
+import { useNews } from "../../../../recoils/news";
 import LeftArrow from "@/lib/assets/svgs/arrow_forward_ios.svg";
 
 const YearTitle = styled.h3`

@@ -1,12 +1,13 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import PhotoModal from "@/components/common/Modals/PhotoModal";
 import Carousel from "@/components/layouts/Carousel";
 import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import useKeyEscClose from "@/hooks/useKeyEscClose";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import PhotoModal from "@/components/common/Modals/PhotoModal";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];
