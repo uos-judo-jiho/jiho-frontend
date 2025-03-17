@@ -1,27 +1,25 @@
+import { deleteBoard, updateBoard, uploadBoard } from "@/api/admin/board";
+import { uploadPicture } from "@/api/admin/pictures";
+import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
+import Loading from "@/components/common/Skeletons/Loading";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { deleteBoard, updateBoard, uploadBoard } from "@/api/admin/board";
-import { uploadPicture } from "@/api/admin/pictures";
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
-import Loading from "@/components/common/Skeletons/Loading";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
-  CancelButton,
   FormContainer,
   InputContainer,
-  NewArticleButton,
   StyledLabel,
   TagAddButton,
   TagDeleteButton,
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;

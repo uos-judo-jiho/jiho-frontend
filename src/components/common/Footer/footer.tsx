@@ -1,18 +1,9 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import FooterInfo from "@/lib/assets/jsons/footerData.json";
 import MobileRowColLayout from "@/components/layouts/MobileRowColLayout";
+import FooterInfo from "@/lib/assets/jsons/footerData.json";
 import { Constants } from "@/lib/constant";
-import { MediaLayout } from "@/lib/theme/GlobalStyle";
+import { Link } from "react-router-dom";
 
-const FooterWrapper = styled.footer`
-  ${MediaLayout}
-  margin: 80px auto 40px auto;
-
-  @media (max-width: 539px) {
-    margin: 80px auto 20px auto;
-  }
-`;
+import styled from "styled-components";
 
 const DescriptionList = styled.ul`
   margin-right: 20px;
@@ -50,8 +41,8 @@ const HyperLink = styled.a`
 
 const Footer = () => {
   return (
-    <FooterWrapper>
-      <MobileRowColLayout rowJustifyContent="start">
+    <footer className="mx-auto my-8 py-8 px-4 sm:px-0 bg-gray-50">
+      <MobileRowColLayout rowJustifyContent="center">
         {/* MARK: Home 훈련 일지 지호지 */}
         <DescriptionList>
           <DescriptionItemTitle>
@@ -116,13 +107,13 @@ const Footer = () => {
           </DescriptionItem>
           <DescriptionItem>
             {FooterInfo.connetUs.dev.title}
-            <HyperLink href="mailto: min390@uos.ac.kr">
+            <HyperLink href="mailto: uosjudojiho@gmail.com">
               {FooterInfo.connetUs.dev.href}
             </HyperLink>
           </DescriptionItem>
         </DescriptionList>
       </MobileRowColLayout>
-    </FooterWrapper>
+    </footer>
   );
 };
 
