@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
 import FormContainer from "@/components/admin/form/FormContainer";
 import Carousel from "@/components/layouts/Carousel";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
-import { useNews } from "../../../../recoils/news";
 import LeftArrow from "@/lib/assets/svgs/arrow_forward_ios.svg";
+import { useNews } from "@/recoils/news";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 const YearTitle = styled.h3`
   font-size: ${(props) => props.theme.subTitleFontSize};
@@ -34,6 +34,7 @@ const ForwardArrow = styled.img`
 
 const AdminGallery = () => {
   const { news, refreshNew } = useNews();
+
   const galleries = news
     .map((newsData) => ({
       year: newsData.year,

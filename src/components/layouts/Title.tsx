@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Constants } from "../constant";
+import { Constants } from "@/lib/constant";
 
 type TitleProps = {
   title: string;
@@ -13,12 +13,17 @@ type ContainerProps = {
 
 const Container = styled.h1<ContainerProps>`
   font-size: ${(props) => props.fontSize};
-  color: ${(props) => (props.color === "white" ? props.theme.bgColor : props.theme.blackColor)};
+  color: ${(props) =>
+    props.color === "white" ? props.theme.bgColor : props.theme.blackColor};
   word-break: keep-all;
   margin-bottom: 20px;
 `;
 
-function Title({ title, color = "white", fontSize = Constants.TITLE_FONT_SIZE }: TitleProps) {
+function Title({
+  title,
+  color = "white",
+  fontSize = Constants.TITLE_FONT_SIZE,
+}: TitleProps) {
   return (
     <Container color={color} fontSize={fontSize}>
       {title}
