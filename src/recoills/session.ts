@@ -1,5 +1,5 @@
 import { atom, useRecoilState } from "recoil";
-import { LoginValuesType, login as loginApi } from "../api/admin/login";
+import { LoginValuesType, login as loginApi } from "@/api/admin/login";
 import { Cookies } from "react-cookie";
 
 type SessionType = { isLogin: boolean };

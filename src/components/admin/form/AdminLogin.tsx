@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { LoginValuesType } from "../../../api/admin/login";
-import { Constants } from "../../../constant";
-import Title from "../../../layouts/Title";
+import { LoginValuesType } from "@/api/admin/login";
+import { Constants } from "@/lib/constant";
+import Title from "@/components/layouts/Title";
 import useSession from "../../../recoills/session";
-import { ButtonContainer, FormContainer, InputContainer, StyledInput } from "./StyledComponent/FormContainer";
+import {
+  ButtonContainer,
+  FormContainer,
+  InputContainer,
+  StyledInput,
+} from "./StyledComponent/FormContainer";
 
 const BackDescription = styled.div`
   font-size: ${(props) => props.theme.defaultFontSize};
@@ -48,13 +53,25 @@ function AdminLogin() {
         <form onSubmit={handleSubmit}>
           <InputContainer>
             <label htmlFor="uname">Username </label>
-            <StyledInput id="uname" type="text" name="uname" onChange={handleUsernameChange} required />
+            <StyledInput
+              id="uname"
+              type="text"
+              name="uname"
+              onChange={handleUsernameChange}
+              required
+            />
 
             {/* {renderErrorMessage("uname")} */}
           </InputContainer>
           <InputContainer>
             <label htmlFor="password">Password </label>
-            <StyledInput id="password" type="password" name="password" onChange={handlePasswordChange} required />
+            <StyledInput
+              id="password"
+              type="password"
+              name="password"
+              onChange={handlePasswordChange}
+              required
+            />
 
             {/* {renderErrorMessage("pass")} */}
           </InputContainer>

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import CloseSvg from "../../assets/svgs/close.svg";
+import CloseSvg from "@/lib/assets/svgs/close.svg";
 import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
 import { SelectedType } from "./MenuStyledComponents";

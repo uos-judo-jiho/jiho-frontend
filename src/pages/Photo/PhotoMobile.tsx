@@ -2,9 +2,9 @@ import { useTrainings } from "@/recoills/tranings";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import RightArrow from "../../assets/svgs/arrow_back_ios.svg";
+import RightArrow from "@/lib/assets/svgs/arrow_back_ios.svg";
 import MobilePhotoCard from "../../components/Photo/MobilePhotoCard";
-import Loading from "../../components/Skeletons/Loading";
+import Loading from "../../components/common/Skeletons/Loading";
 
 // TODO: 모바일 헤더 높이 44px 고정 상수화
 

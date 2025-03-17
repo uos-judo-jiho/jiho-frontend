@@ -1,4 +1,4 @@
-import { NewsType } from "../types/NewsType";
+import { NewsType } from "@/lib/types/NewsType";
 import axiosInstance from "./config";
 
 const METHOD_URL = "api/news";

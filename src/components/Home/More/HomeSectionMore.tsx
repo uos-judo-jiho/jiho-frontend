@@ -1,8 +1,8 @@
 import { useTrainings } from "@/recoills/tranings";
 import styled from "styled-components";
-import { Constants } from "../../../constant";
-import SheetWrapper from "../../../layouts/SheetWrapper";
-import Title from "../../../layouts/Title";
+import { Constants } from "@/lib/constant";
+import SheetWrapper from "@/components/layouts/SheetWrapper";
+import Title from "@/components/layouts/Title";
 import { useNews } from "../../../recoills/news";
 import { useNotices } from "../../../recoills/notices";
 import MoreCard from "./MoreCard";

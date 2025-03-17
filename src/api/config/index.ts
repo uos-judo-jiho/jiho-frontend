@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { Constants } from "../../constant";
+import { Constants } from "@/lib/constant";
 
 const axiosInstance = axios.create({
   baseURL: Constants.BASE_URL,

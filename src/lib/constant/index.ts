@@ -1,6 +1,6 @@
-import LOGO_BLACK from "../assets/images/logo/logo-removebg.png";
-import LOGO_WHITE from "../assets/images/logo/logo-removebg-white.png";
-import BG_COLOR_808080 from "../assets/images/bg-color-808080.png";
+import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.png";
+import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.png";
+import BG_COLOR_808080 from "@/lib/assets/images/bg-color-808080.png";
 
 export const Constants = {
   BASE_URL:

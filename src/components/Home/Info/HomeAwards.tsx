@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import styled from "styled-components";
-import Awards from "../../../assets/jsons/awards.json";
-import { AwardType } from "../../../types/AwardType";
-import { formaAwardsType } from "../../../utils/Utils";
+import Awards from "@/lib/assets/jsons/awards.json";
+import { AwardType } from "@/lib/types/AwardType";
+import { formatAwardsType } from "@/lib/utils/Utils";
 
 const AwardsConatiner = styled.div`
   flex: 1 0 0;
@@ -41,7 +41,7 @@ const AwardItem = ({ award }: { award: AwardType }) => {
   return (
     <AwardsItem>
       <b>{award.title}</b>
-      <span>{formaAwardsType(award)}</span>
+      <span>{formatAwardsType(award)}</span>
     </AwardsItem>
   );
 };

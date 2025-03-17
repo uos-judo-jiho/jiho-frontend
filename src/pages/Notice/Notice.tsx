@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { Constants } from "../../constant";
+import { Constants } from "@/lib/constant";
 import MyHelmet from "../../helmet/MyHelmet";
-import DefaultLayout from "../../layouts/DefaultLayout";
-import Line from "../../layouts/Line";
-import ListContainer from "../../layouts/ListContainer";
-import SheetWrapper from "../../layouts/SheetWrapper";
-import Title from "../../layouts/Title";
+import DefaultLayout from "@/components/layouts/DefaultLayout";
+import Line from "@/components/layouts/Line";
+import ListContainer from "@/components/layouts/ListContainer";
+import SheetWrapper from "@/components/layouts/SheetWrapper";
+import Title from "@/components/layouts/Title";
 import { useNotices } from "../../recoills/notices";
 
 function Notice() {

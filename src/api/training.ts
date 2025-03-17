@@ -1,9 +1,11 @@
-import { ArticleInfoType } from "../types/ArticleInfoType";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import axiosInstance from "./config";
 
 const METHOD_URL = "api/trainings";
 
-export const getTrainings = async (year?: string): Promise<ArticleInfoType[]> => {
+export const getTrainings = async (
+  year?: string
+): Promise<ArticleInfoType[]> => {
   return await axiosInstance<{ trainingLogs: ArticleInfoType[] }>({
     url: `${METHOD_URL}`,
     params: { year },

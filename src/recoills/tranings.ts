@@ -1,7 +1,7 @@
 import { useTrainingListQuery } from "@/api/tradings/query";
 import { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
-import { ArticleInfoType } from "../types/ArticleInfoType";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 
 const TrainingList = atom<ArticleInfoType[]>({
   key: "trainingObject",

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
-import BackArrow from "../assets/svgs/arrow_back_ios.svg";
-import ForwardArrow from "../assets/svgs/arrow_forward_ios.svg";
+import BackArrow from "@/lib/assets/svgs/arrow_back_ios.svg";
+import ForwardArrow from "@/lib/assets/svgs/arrow_forward_ios.svg";
 
 type ArrowProps = {
   current: number;

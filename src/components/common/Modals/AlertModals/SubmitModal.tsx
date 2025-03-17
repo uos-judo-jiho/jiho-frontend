@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
-import Col from "../../../layouts/Col";
-import Row from "../../../layouts/Row";
+import Col from "@/components/layouts/Col";
+import Row from "@/components/layouts/Row";
 
 type SubmitModalProps = {
   confirmText: string;
@@ -63,7 +63,14 @@ const Description = styled.span`
   height: 100%;
 `;
 
-function SubmitModal({ confirmText, cancelText, description, open, setOpen, onSubmit }: SubmitModalProps) {
+function SubmitModal({
+  confirmText,
+  cancelText,
+  description,
+  open,
+  setOpen,
+  onSubmit,
+}: SubmitModalProps) {
   const handleCancel = () => setOpen(false);
 
   const handleConfirm = () => onSubmit();
@@ -78,7 +85,9 @@ function SubmitModal({ confirmText, cancelText, description, open, setOpen, onSu
           <div>
             <Row justifyContent="center">
               <CancelButton onClick={handleCancel}>{cancelText}</CancelButton>
-              <ConfirmButton onClick={handleConfirm}>{confirmText}</ConfirmButton>
+              <ConfirmButton onClick={handleConfirm}>
+                {confirmText}
+              </ConfirmButton>
             </Row>
           </div>
         </Col>

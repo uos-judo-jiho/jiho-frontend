@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { PickCSSProperty } from "../utils/Type";
+import { PickCSSProperty } from "@/lib/utils/Type";
 
 type RowProps = {
   children: React.ReactNode | React.ReactNode[];

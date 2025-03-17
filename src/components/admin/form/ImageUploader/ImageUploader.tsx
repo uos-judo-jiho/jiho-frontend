@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { getImageFileFromSrc, toBase64 } from "../../../../utils/Utils";
-import { InputContainer, PreviewContainer, PreviewImg, PreviewImgContainer, PreviewName, StyledInput, StyledLabel, TagDeleteButton } from "../StyledComponent/FormContainer";
+import { getImageFileFromSrc, toBase64 } from "@/lib/utils/Utils";
+import {
+  InputContainer,
+  PreviewContainer,
+  PreviewImg,
+  PreviewImgContainer,
+  PreviewName,
+  StyledInput,
+  StyledLabel,
+  TagDeleteButton,
+} from "../StyledComponent/FormContainer";
 
 type ImageUploaderProps = {
   setValues: (images: string[]) => void;
@@ -8,7 +17,11 @@ type ImageUploaderProps = {
   imageLimit?: number;
 };
 
-const ImageUploader = ({ setValues, data, imageLimit = 10 }: ImageUploaderProps) => {
+const ImageUploader = ({
+  setValues,
+  data,
+  imageLimit = 10,
+}: ImageUploaderProps) => {
   const [img, setImg] = useState<File[]>([]);
   const [previewImg, setPreviewImg] = useState<string[]>(data || []);
   const [isFull, setIsFull] = useState<boolean>(false);
@@ -49,7 +62,9 @@ const ImageUploader = ({ setValues, data, imageLimit = 10 }: ImageUploaderProps)
 
     const fileList = Array.from(event.target.files).slice(0, imageLimit);
 
-    const base64Promises: Promise<string>[] = fileList.map((file) => toBase64(file));
+    const base64Promises: Promise<string>[] = fileList.map((file) =>
+      toBase64(file)
+    );
 
     Promise.all(base64Promises)
       .then((urlList: string[]) => {
@@ -61,7 +76,10 @@ const ImageUploader = ({ setValues, data, imageLimit = 10 }: ImageUploaderProps)
       });
   };
 
-  const deleteImg = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
+  const deleteImg = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
     event.preventDefault();
     const imgArr = img.filter((_el, idx) => idx !== index);
     const imgNameArr = previewImg.filter((_el, idx) => idx !== index);
@@ -77,7 +95,14 @@ const ImageUploader = ({ setValues, data, imageLimit = 10 }: ImageUploaderProps)
       <StyledLabel htmlFor="file" aria-required="true">
         사진 올리기 (최대 {imageLimit}장)
       </StyledLabel>
-      <StyledInput id="file" accept="image/*" type="file" name="file" onChange={insertImg} multiple />
+      <StyledInput
+        id="file"
+        accept="image/*"
+        type="file"
+        name="file"
+        onChange={insertImg}
+        multiple
+      />
       <PreviewContainer>
         {previewImg.map((el, index) => (
           <PreviewImgContainer key={el}>

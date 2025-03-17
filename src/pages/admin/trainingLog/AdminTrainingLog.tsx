@@ -2,8 +2,8 @@ import { useTrainings } from "@/recoills/tranings";
 import { Link } from "react-router-dom";
 import FormContainer from "../../../components/admin/form/FormContainer";
 import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
-import ListContainer from "../../../layouts/ListContainer";
-import Row from "../../../layouts/Row";
+import ListContainer from "@/components/layouts/ListContainer";
+import Row from "@/components/layouts/Row";
 
 const AdminTrainingLog = () => {
   const { trainings, refetch: refreshTraining } = useTrainings();

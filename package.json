@@ -16,7 +16,7 @@
     "start:prod": "npm run build && serve -s build",
     "prebuild": "node script/sitemap.js",
     "preinstall": "npx only-allow pnpm",
-    "type-check": "tsc"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",

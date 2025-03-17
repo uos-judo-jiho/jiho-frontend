@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import MyHelmet from "../helmet/MyHelmet";
-import Col from "../layouts/Col";
-import DefaultLayout from "../layouts/DefaultLayout";
+import Col from "@/components/layouts/Col";
+import DefaultLayout from "@/components/layouts/DefaultLayout";
 
 const Container = styled.div`
   display: flex;

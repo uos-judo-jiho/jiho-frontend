@@ -1,5 +1,5 @@
 import { Cookies } from "react-cookie";
-import { ArticleInfoType } from "../../types/ArticleInfoType";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import axiosInstance from "../config";
 
 const METHOD_URL = "api/admin/board";

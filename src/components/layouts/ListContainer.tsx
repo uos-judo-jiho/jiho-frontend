@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Constants } from "../constant";
-import { ArticleInfoType } from "../types/ArticleInfoType";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import Line from "./Line";
 
 type ListContainerProps = {
@@ -43,7 +43,11 @@ const TagWrapper = styled.div`
   text-align: center;
   flex: 10%;
 `;
-function ListContainer({ datas: data, targetUrl, additionalTitle = false }: ListContainerProps) {
+function ListContainer({
+  datas: data,
+  targetUrl,
+  additionalTitle = false,
+}: ListContainerProps) {
   return (
     <Container>
       <ItemList>

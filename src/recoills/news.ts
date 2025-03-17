@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
-import { getNews } from "../api/news";
-import { NewsType } from "../types/NewsType";
-import { vaildNewsYearList } from "../utils/Utils";
+import { getNews } from "@/api/news";
+import { NewsType } from "@/lib/types/NewsType";
+import { vaildNewsYearList } from "@/lib/utils/Utils";
 
 const NewList = atom<NewsType[]>({
   key: "newObject",
@@ -13,7 +13,9 @@ export const useNews = () => {
   const [news, setNews] = useRecoilState(NewList);
 
   const filterNews = useCallback((news: NewsType[]) => {
-    const filteredNews = news.filter((v, i, a) => a.findIndex((v2) => v2.year === v.year) === i);
+    const filteredNews = news.filter(
+      (v, i, a) => a.findIndex((v2) => v2.year === v.year) === i
+    );
     return filteredNews;
   }, []);
 

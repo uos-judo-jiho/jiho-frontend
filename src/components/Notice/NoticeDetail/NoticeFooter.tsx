@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import Line from "../../../layouts/Line";
+import Line from "@/components/layouts/Line";
 
 const FadeIn = keyframes`
     from {

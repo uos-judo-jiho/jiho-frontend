@@ -1,11 +1,12 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import { Constants } from "../../constant";
-import Col from "../../layouts/Col";
-import { ArticleInfoType } from "../../types/ArticleInfoType";
-import SkeletonThumbnail from "../Skeletons/SkeletonThumbnail";
-import { Card } from "../ui/card";
+import SkeletonThumbnail from "@/components/common/Skeletons/SkeletonThumbnail";
+import Col from "@/components/layouts/Col";
+import { Card } from "@/components/ui/card";
+
+import { Constants } from "@/lib/constant";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 
 type NewsCardProps = {
   index: number;

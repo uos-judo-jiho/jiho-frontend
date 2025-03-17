@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
-import MobileRowColLayout from "../../layouts/MobileRowColLayout";
-import Slider from "../../layouts/Slider";
-import { ArticleInfoType } from "../../types/ArticleInfoType";
+import MobileRowColLayout from "@/components/layouts/MobileRowColLayout";
+import Slider from "@/components/layouts/Slider";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
 
 type ModalArticleContainerProsp = {

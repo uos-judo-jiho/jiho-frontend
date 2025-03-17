@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import UpperArrowSvg from "../../assets/svgs/upper-arrow.svg";
+import UpperArrowSvg from "@/lib/assets/svgs/upper-arrow.svg";
 
 const FadeIn = keyframes`
   from {

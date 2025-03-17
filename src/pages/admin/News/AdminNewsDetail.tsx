@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import NewsForm from "../../../components/admin/form/NewsForm";
-import { Constants } from "../../../constant";
-import Title from "../../../layouts/Title";
+import { Constants } from "@/lib/constant";
+import Title from "@/components/layouts/Title";
 import { useNews } from "../../../recoills/news";
 import { useEffect } from "react";
 
@@ -9,7 +9,11 @@ const AdminNewsDetail = () => {
   const { id } = useParams();
 
   const { news, refreshNew } = useNews();
-  const article = news.find((newsData) => newsData.articles.find((item) => item.id.toString() === id))?.articles.find((item) => item.id.toString() === id);
+  const article = news
+    .find((newsData) =>
+      newsData.articles.find((item) => item.id.toString() === id)
+    )
+    ?.articles.find((item) => item.id.toString() === id);
 
   useEffect(() => {
     refreshNew();

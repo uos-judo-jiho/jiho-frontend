@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { atom, useRecoilState } from "recoil";
-import { getNotices } from "../api/notice";
-import { ArticleInfoType } from "../types/ArticleInfoType";
+import { getNotices } from "@/api/notice";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 
 const NoticeList = atom<ArticleInfoType[]>({
   key: "noticeObject",

@@ -1,7 +1,7 @@
 import AdminLogin from "../../components/admin/form/AdminLogin";
 import MyHelmet from "../../helmet/MyHelmet";
-import DefaultLayout from "../../layouts/DefaultLayout";
-import SheetWrapper from "../../layouts/SheetWrapper";
+import DefaultLayout from "@/components/layouts/DefaultLayout";
+import SheetWrapper from "@/components/layouts/SheetWrapper";
 import useSession from "../../recoills/session";
 import AdminRouter from "../../routers/AdminRouter";
 
@@ -12,7 +12,9 @@ const AdminHomePage = () => {
     <>
       <MyHelmet title="Admin" />
       <DefaultLayout>
-        <SheetWrapper>{session.isLogin ? <AdminRouter /> : <AdminLogin />}</SheetWrapper>
+        <SheetWrapper>
+          {session.isLogin ? <AdminRouter /> : <AdminLogin />}
+        </SheetWrapper>
       </DefaultLayout>
     </>
   );

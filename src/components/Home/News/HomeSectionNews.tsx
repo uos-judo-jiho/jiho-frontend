@@ -1,11 +1,11 @@
 import styled from "styled-components";
-import BGImage from "../../../assets/images/background-img-mono.jpg";
-import Title from "../../../layouts/Title";
+import BGImage from "@/lib/assets/images/background-img-mono.jpg";
+import Title from "@/components/layouts/Title";
 import HomeSectionBG from "../HomeSectionBG";
 
 import { Link } from "react-router-dom";
-import { Constants } from "../../../constant";
-import SheetWrapper from "../../../layouts/SheetWrapper";
+import { Constants } from "@/lib/constant";
+import SheetWrapper from "@/components/layouts/SheetWrapper";
 
 const Container = styled.div`
   width: 100%;
@@ -39,7 +39,11 @@ const HomeSectionNews = () => {
   return (
     <Container>
       <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>
-        <HomeSectionBG bgImageSrc={BGImage} id="sectionNews" backgroundCover={false}>
+        <HomeSectionBG
+          bgImageSrc={BGImage}
+          id="sectionNews"
+          backgroundCover={false}
+        >
           <SheetWrapper>
             <TextWrapper>
               <Title title={`${Constants.LATEST_NEWS_YEAR}년 지호지`} />

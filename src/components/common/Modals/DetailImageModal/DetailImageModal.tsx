@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
-import useClickOutside from "../../../Hooks/useClickOutside";
-import useKeyEscClose from "../../../Hooks/useKeyEscClose";
-import Close from "../../../assets/svgs/close.svg";
+import useClickOutside from "../../../../hooks/useClickOutside";
+import useKeyEscClose from "../../../../hooks/useKeyEscClose";
+import Close from "@/lib/assets/svgs/close.svg";
 
 type DetailImageModalProps = {
   image: string;

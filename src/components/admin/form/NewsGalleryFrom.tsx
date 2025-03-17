@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNews } from "../../../recoills/news";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import ArticleForm from "./ArticleForm";
 
 type NewsGalleryFromProps = {

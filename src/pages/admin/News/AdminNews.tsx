@@ -2,13 +2,15 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import FormContainer from "../../../components/admin/form/FormContainer";
 import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
-import ListContainer from "../../../layouts/ListContainer";
-import Row from "../../../layouts/Row";
+import ListContainer from "@/components/layouts/ListContainer";
+import Row from "@/components/layouts/Row";
 import { useNews } from "../../../recoills/news";
 
 const AdminNews = () => {
   const { news, refreshNew } = useNews();
-  const articles = news.flatMap((newsData) => newsData.articles).sort((a, b) => (a.id > b.id ? -1 : 1));
+  const articles = news
+    .flatMap((newsData) => newsData.articles)
+    .sort((a, b) => (a.id > b.id ? -1 : 1));
 
   useEffect(() => {
     refreshNew();
@@ -25,9 +27,15 @@ const AdminNews = () => {
             <NewArticleButton>년도별 갤러리 보기</NewArticleButton>
           </Link>
         </Row>
-        <NewArticleButton onClick={() => refreshNew()}>새로고침</NewArticleButton>
+        <NewArticleButton onClick={() => refreshNew()}>
+          새로고침
+        </NewArticleButton>
       </Row>
-      <ListContainer datas={articles} targetUrl={"/admin/news/"} additionalTitle={true}></ListContainer>
+      <ListContainer
+        datas={articles}
+        targetUrl={"/admin/news/"}
+        additionalTitle={true}
+      ></ListContainer>
     </FormContainer>
   );
 };
