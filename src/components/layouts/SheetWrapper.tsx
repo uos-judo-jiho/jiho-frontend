@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { MediaLayout } from "../theme/GlobalStyle";
+import { MediaLayout } from "@/lib/theme/GlobalStyle";
 
 type SheetWrapperProps = {
   children: React.ReactNode;

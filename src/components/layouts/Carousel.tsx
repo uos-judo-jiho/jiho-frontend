@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-import DetailImageModal from "../components/Modals/DetailImageModal/DetailImageModal";
+import DetailImageModal from "@/components/common/Modals/DetailImageModal/DetailImageModal";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 type CarouselProps = {

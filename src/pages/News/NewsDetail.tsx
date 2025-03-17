@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import NewsIndex from "../../components/News/NewsIndex";
-import Loading from "../../components/common/Skeletons/Loading";
+import NewsIndex from "@/components/News/NewsIndex";
+import Loading from "@/components/common/Skeletons/Loading";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";

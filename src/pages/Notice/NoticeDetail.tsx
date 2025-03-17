@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Link, redirect, useParams } from "react-router-dom";
 import styled from "styled-components";
-import NoticeDescription from "../../components/Notice/NoticeDetail/NoticeDescription";
-import NoticeFooter from "../../components/Notice/NoticeDetail/NoticeFooter";
-import NoticeTitle from "../../components/Notice/NoticeDetail/NoticeTitle";
+import NoticeDescription from "@/components/Notice/NoticeDetail/NoticeDescription";
+import NoticeFooter from "@/components/Notice/NoticeDetail/NoticeFooter";
+import NoticeTitle from "@/components/Notice/NoticeDetail/NoticeTitle";
 import { Constants } from "@/lib/constant";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";

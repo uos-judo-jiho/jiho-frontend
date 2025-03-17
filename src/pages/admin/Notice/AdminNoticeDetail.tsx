@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import NoticeForm from "../../../components/admin/form/NoticeForm";
+import NoticeForm from "@/components/admin/form/NoticeForm";
 import { Constants } from "@/lib/constant";
 import Title from "@/components/layouts/Title";
 import { useNotices } from "../../../recoills/notices";

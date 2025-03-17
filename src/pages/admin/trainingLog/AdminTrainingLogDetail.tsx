@@ -1,6 +1,6 @@
 import { useTrainings } from "@/recoills/tranings";
 import { useParams } from "react-router-dom";
-import TrainingLogForm from "../../../components/admin/form/TrainingLogForm";
+import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
 import { Constants } from "@/lib/constant";
 import Title from "@/components/layouts/Title";
 

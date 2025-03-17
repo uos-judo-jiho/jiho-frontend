@@ -4,9 +4,9 @@ import NewsCardContainer from "./NewsCardContainer";
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useKeyEscClose from "../../hooks/useKeyEscClose";
+import useKeyEscClose from "@/hooks/useKeyEscClose";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import PhotoModal from "../common/Modals/PhotoModal";
+import PhotoModal from "@/components/common/Modals/PhotoModal";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];

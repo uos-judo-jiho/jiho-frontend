@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import NewsForm from "../../../components/admin/form/NewsForm";
+import NewsForm from "@/components/admin/form/NewsForm";
 import { Constants } from "@/lib/constant";
 import Title from "@/components/layouts/Title";
 import { useNews } from "../../../recoills/news";

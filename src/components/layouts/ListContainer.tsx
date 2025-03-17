@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Constants } from "../constant";
+import { Constants } from "@/lib/constant";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import Line from "./Line";
 

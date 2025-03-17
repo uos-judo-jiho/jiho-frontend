@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import FormContainer from "../../../components/admin/form/FormContainer";
-import { NewArticleButton } from "../../../components/admin/form/StyledComponent/FormContainer";
+import FormContainer from "@/components/admin/form/FormContainer";
+import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
 import { useNews } from "../../../recoills/news";

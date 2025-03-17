@@ -1,4 +1,4 @@
-import AdminNavItem from "../../components/admin/Main/AdminNavItem";
+import AdminNavItem from "@/components/admin/Main/AdminNavItem";
 
 const AdminNavPage = () => {
   return (
