@@ -9,11 +9,20 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
 import { useNotices } from "@/recoils/notices";
+import { useNews } from "@/recoils/news";
 
 import MyHelmet from "@/helmet/MyHelmet";
 
+import { Constants } from "@/lib/constant";
+
 const Home = () => {
   const { fetch: fetchNotices } = useNotices();
+
+  const { fetch: fetchNews } = useNews();
+
+  useEffect(() => {
+    fetchNews(Constants.LATEST_NEWS_YEAR);
+  }, [fetchNews]);
 
   useEffect(() => {
     fetchNotices();

@@ -13,13 +13,15 @@ import {
   FormContainer,
   InputContainer,
   NewArticleButton,
-  StyledInput,
   StyledLabel,
-  StyledTextArea,
   TagAddButton,
   TagDeleteButton,
   TagsContainer,
 } from "./StyledComponent/FormContainer";
+
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -208,65 +210,69 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     <>
       <FormContainer>
         <div>
-          <InputContainer>
-            <StyledLabel htmlFor="author" aria-required="true">
-              작성자
-            </StyledLabel>
-            <StyledInput
-              disabled={gallery}
-              id="author"
-              type="text"
-              name="author"
-              onChange={handleAuthorChange}
-              required
-              value={values.author}
-            />
-          </InputContainer>
-          <InputContainer>
-            <StyledLabel htmlFor="title" aria-required="true">
-              제목
-            </StyledLabel>
-            <StyledInput
-              disabled={gallery}
-              id="title"
-              type="text"
-              name="title"
-              onChange={handleTitleChange}
-              required
-              value={values.title}
-            />
-          </InputContainer>
-          <InputContainer>
-            <StyledLabel htmlFor="tag0">
-              {type === "training" ? "참여 인원" : "태그"}
-            </StyledLabel>
-            {values.tags.map((tag, index) => (
-              <TagsContainer key={"tag" + index}>
-                {index + 1}
-                <StyledInput
+          {!gallery && (
+            <>
+              <InputContainer>
+                <StyledLabel htmlFor="author" aria-required="true">
+                  작성자
+                </StyledLabel>
+                <Input
                   disabled={gallery}
-                  id={"tag" + index}
-                  name={"tag" + index}
-                  onChange={(event) => handleTagsChange(event, index)}
+                  id="author"
+                  type="text"
+                  name="author"
+                  onChange={handleAuthorChange}
                   required
-                  value={tag}
+                  value={values.author}
                 />
-                <TagDeleteButton
-                  onClick={(event) => handleDeleteTagClick(event, index)}
-                >
-                  ❌
-                </TagDeleteButton>
-              </TagsContainer>
-            ))}
-            <TagAddButton onClick={handleAddTagsClick} disabled={gallery}>
-              {type === "training" ? "참여 인원" : "태그"} +
-            </TagAddButton>
-          </InputContainer>
+              </InputContainer>
+              <InputContainer>
+                <StyledLabel htmlFor="title" aria-required="true">
+                  제목
+                </StyledLabel>
+                <Input
+                  disabled={gallery}
+                  id="title"
+                  type="text"
+                  name="title"
+                  onChange={handleTitleChange}
+                  required
+                  value={values.title}
+                />
+              </InputContainer>
+              <InputContainer>
+                <StyledLabel htmlFor="tag0">
+                  {type === "training" ? "참여 인원" : "태그"}
+                </StyledLabel>
+                {values.tags.map((tag, index) => (
+                  <TagsContainer key={"tag" + index}>
+                    {index + 1}
+                    <Input
+                      disabled={gallery}
+                      id={"tag" + index}
+                      name={"tag" + index}
+                      onChange={(event) => handleTagsChange(event, index)}
+                      required
+                      value={tag}
+                    />
+                    <TagDeleteButton
+                      onClick={(event) => handleDeleteTagClick(event, index)}
+                    >
+                      ❌
+                    </TagDeleteButton>
+                  </TagsContainer>
+                ))}
+                <TagAddButton onClick={handleAddTagsClick} disabled={gallery}>
+                  {type === "training" ? "참여 인원" : "태그"} +
+                </TagAddButton>
+              </InputContainer>
+            </>
+          )}
           <InputContainer>
             <StyledLabel htmlFor="date" aria-required="true">
               날짜
             </StyledLabel>
-            <StyledInput
+            <Input
               disabled={gallery}
               id="date"
               type="date"
@@ -276,35 +282,50 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               value={values.dateTime}
             />
           </InputContainer>
-          <InputContainer>
-            <StyledLabel htmlFor="description" aria-required="true">
-              본문
-            </StyledLabel>
-            <StyledTextArea
-              disabled={gallery}
-              id="description"
-              name="description"
-              onChange={handleDescriptionChange}
-              required
-              value={values.description}
-            />
-            <InputValueLength>{values.description.length}</InputValueLength>
-          </InputContainer>
+          {!gallery && (
+            <InputContainer>
+              <StyledLabel htmlFor="description" aria-required="true">
+                본문
+              </StyledLabel>
+              <Textarea
+                disabled={gallery}
+                id="description"
+                name="description"
+                onChange={handleDescriptionChange}
+                required
+                value={values.description}
+              />
+              <InputValueLength>{values.description.length}</InputValueLength>
+            </InputContainer>
+          )}
           <ImageUploader
             setValues={handleUploadImages}
             data={data?.imgSrcs}
             imageLimit={gallery ? 20 : 10}
           />
+
           <ButtonContainer>
             {!isNew && !gallery && (
-              <CancelButton onClick={handleDeleteSubmit}>삭제</CancelButton>
+              <Button variant={"destructive"} onClick={handleDeleteSubmit}>
+                삭제
+              </Button>
             )}
-            <>
-              <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
-              <NewArticleButton onClick={handelSubmitOpen}>
+            <div className="flex gap-2">
+              <Button
+                className="text-primary bg-gray-300 hover:bg-gray-500"
+                variant={"secondary"}
+                onClick={handleCancelSubmit}
+              >
+                취소
+              </Button>
+              <Button
+                variant={"default"}
+                className="text-primary bg-blue-500 hover:bg-blue-600"
+                onClick={handelSubmitOpen}
+              >
                 제출
-              </NewArticleButton>
-            </>
+              </Button>
+            </div>
           </ButtonContainer>
           <SubmitModal
             confirmText={"확인"}

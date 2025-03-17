@@ -6,10 +6,11 @@ import {
   PreviewImg,
   PreviewImgContainer,
   PreviewName,
-  StyledInput,
   StyledLabel,
   TagDeleteButton,
 } from "../StyledComponent/FormContainer";
+
+import { Input } from "@/components/ui/input";
 
 type ImageUploaderProps = {
   setValues: (images: string[]) => void;
@@ -95,7 +96,7 @@ const ImageUploader = ({
       <StyledLabel htmlFor="file" aria-required="true">
         사진 올리기 (최대 {imageLimit}장)
       </StyledLabel>
-      <StyledInput
+      <Input
         id="file"
         accept="image/*"
         type="file"

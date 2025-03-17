@@ -88,8 +88,8 @@ header {
   padding: 0 1.6rem;
 }
 
-button,a{
-    background-color:transparent;
+button,a {
+
     border:none;
     &:hover{
         cursor: pointer; 
