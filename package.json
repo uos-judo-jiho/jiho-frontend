@@ -8,7 +8,6 @@
     "type": "git",
     "url": "https://github.com/uos-judo-jiho"
   },
-  "packageManager": "pnpm@10.6.2+sha512.47870716bea1572b53df34ad8647b42962bc790ce2bf4562ba0f643237d7302a3d6a8ecef9e4bdfc01d23af1969aa90485d4cebb0b9638fa5ef1daef656f6c1b",
   "scripts": {
     "dev": "vite --port=3000",
     "start": "vite preview",
@@ -16,7 +15,6 @@
     "build": "rm -rf build && vite build --out-dir build",
     "start:prod": "npm run build && serve -s build",
     "prebuild": "node script/sitemap.js",
-    "preinstall": "npx only-allow pnpm",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
