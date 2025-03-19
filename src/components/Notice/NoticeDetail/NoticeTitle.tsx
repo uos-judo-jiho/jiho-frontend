@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Line from "../../../layouts/Line";
+import Line from "@/components/layouts/Line";
 type NoticeTitleProps = {
   title: string;
   author: string;

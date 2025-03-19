@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTrainings } from "../training";
+import { getTrainings } from "./client";
 
 /**
  *

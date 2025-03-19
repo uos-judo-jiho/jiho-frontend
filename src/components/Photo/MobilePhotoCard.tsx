@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { ArticleInfoType } from "../../types/ArticleInfoType";
-import Slider from "../../layouts/Slider";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import Slider from "@/components/layouts/Slider";
 import { useState } from "react";
 
 type MobilePhotoCardProps = {
@@ -111,8 +111,12 @@ const MobilePhotoCard = ({ articleInfo, id }: MobilePhotoCardProps) => {
           ))}
         </div>
         <p className="description">
-          {isMore ? articleInfo.description : articleInfo.description.slice(0, 20)}
-          {!isMore && <MoreButton onClick={() => setIsMore(true)}>...더보기</MoreButton>}
+          {isMore
+            ? articleInfo.description
+            : articleInfo.description.slice(0, 20)}
+          {!isMore && (
+            <MoreButton onClick={() => setIsMore(true)}>...더보기</MoreButton>
+          )}
         </p>
       </Content>
     </MobilePhotoCardContainer>

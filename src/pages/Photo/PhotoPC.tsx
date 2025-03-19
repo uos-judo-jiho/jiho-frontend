@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
-import ThumbnailCard from "../../components/Photo/ThumbnailCard";
-import DefaultLayout from "../../layouts/DefaultLayout";
-
-import PhotoModal from "../../components/Modals/PhotoModal";
-import PhotoCardContainer from "../../components/Photo/PhotoCardContainer";
-import SheetWrapper from "../../layouts/SheetWrapper";
-import Title from "../../layouts/Title";
-
-import { useTrainings } from "@/recoills/tranings";
 import { useLocation, useNavigate } from "react-router-dom";
-import useKeyEscClose from "../../Hooks/useKeyEscClose";
-import Loading from "../../components/Skeletons/Loading";
-import SkeletonThumbnail from "../../components/Skeletons/SkeletonThumbnail";
-import MyHelmet from "../../helmet/MyHelmet";
+
+import PhotoCardContainer from "@/components/Photo/PhotoCardContainer";
+import ThumbnailCard from "@/components/Photo/ThumbnailCard";
+import PhotoModal from "@/components/common/Modals/PhotoModal";
+import Loading from "@/components/common/Skeletons/Loading";
+import SkeletonThumbnail from "@/components/common/Skeletons/SkeletonThumbnail";
+import DefaultLayout from "@/components/layouts/DefaultLayout";
+import SheetWrapper from "@/components/layouts/SheetWrapper";
+import Title from "@/components/layouts/Title";
+
+import MyHelmet from "@/helmet/MyHelmet";
+
+import useKeyEscClose from "@/hooks/useKeyEscClose";
+
+import { useTrainings } from "@/recoils/tranings";
 
 const PhotoPC = () => {
   const navigate = useNavigate();

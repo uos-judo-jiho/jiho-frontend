@@ -1,8 +1,7 @@
-import React from "react";
 import styled from "styled-components";
 
-import LogoWhite from "../assets/images/logo/logo-removebg-white.png";
-import LogoBlack from "../assets/images/logo/logo-removebg.png";
+import LogoWhite from "@/lib/assets/images/logo/logo-removebg-white.png";
+import LogoBlack from "@/lib/assets/images/logo/logo-removebg.png";
 
 type LogoProps = {
   size?: string;

@@ -1,8 +1,8 @@
-import BGImage from "../../../assets/images/background-img-training.jpg";
+import BGImage from "@/lib/assets/images/background-img-training.jpg";
 import HomeSectionBG from "../HomeSectionBG";
 
 import styled from "styled-components";
-import SheetWrapper from "../../../layouts/SheetWrapper";
+import SheetWrapper from "@/components/layouts/SheetWrapper";
 import ExerciseThumbnail from "./ExerciseThumbnail";
 
 const Container = styled.div`

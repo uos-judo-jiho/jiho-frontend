@@ -1,25 +1,25 @@
+import { deleteBoard, updateBoard, uploadBoard } from "@/api/admin/board";
+import { uploadPicture } from "@/api/admin/pictures";
+import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
+import Loading from "@/components/common/Skeletons/Loading";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { deleteBoard, updateBoard, uploadBoard } from "../../../api/admin/board";
-import { uploadPicture } from "../../../api/admin/pictures";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
-import SubmitModal from "../../Modals/AlertModals/SubmitModal";
-import Loading from "../../Skeletons/Loading";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
-  CancelButton,
   FormContainer,
   InputContainer,
-  NewArticleButton,
-  StyledInput,
   StyledLabel,
-  StyledTextArea,
   TagAddButton,
   TagDeleteButton,
   TagsContainer,
 } from "./StyledComponent/FormContainer";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -58,7 +58,9 @@ const InputValueLength = styled.span`
 `;
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
-  const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(data ?? initValues);
+  const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
+    data ?? initValues
+  );
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
@@ -68,7 +70,10 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handelSubmitOpen = () => setIsSubmitOpen(true);
 
-  const handleDelete = async (id: string, type: "news" | "training" | "notice") => {
+  const handleDelete = async (
+    id: string,
+    type: "news" | "training" | "notice"
+  ) => {
     const res = await deleteBoard(id);
     if (res) {
       redirect(`/admin/${type}`);
@@ -135,13 +140,18 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     });
   };
 
-  const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setValues((prev) => {
       return { ...prev, description: event.target.value };
     });
   };
 
-  const handleTagsChange = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleTagsChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     setValues((prev) => {
       let oldTags = [...prev.tags];
       oldTags[index] = event.target.value;
@@ -159,7 +169,10 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     });
   };
 
-  const handleDeleteTagClick = (event: React.MouseEvent<HTMLButtonElement>, index: number) => {
+  const handleDeleteTagClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    index: number
+  ) => {
     event.preventDefault();
 
     setValues((prev) => {
@@ -195,56 +208,129 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     <>
       <FormContainer>
         <div>
-          <InputContainer>
-            <StyledLabel htmlFor="author" aria-required="true">
-              작성자
-            </StyledLabel>
-            <StyledInput disabled={gallery} id="author" type="text" name="author" onChange={handleAuthorChange} required value={values.author} />
-          </InputContainer>
-          <InputContainer>
-            <StyledLabel htmlFor="title" aria-required="true">
-              제목
-            </StyledLabel>
-            <StyledInput disabled={gallery} id="title" type="text" name="title" onChange={handleTitleChange} required value={values.title} />
-          </InputContainer>
-          <InputContainer>
-            <StyledLabel htmlFor="tag0">{type === "training" ? "참여 인원" : "태그"}</StyledLabel>
-            {values.tags.map((tag, index) => (
-              <TagsContainer key={"tag" + index}>
-                {index + 1}
-                <StyledInput disabled={gallery} id={"tag" + index} name={"tag" + index} onChange={(event) => handleTagsChange(event, index)} required value={tag} />
-                <TagDeleteButton onClick={(event) => handleDeleteTagClick(event, index)}>❌</TagDeleteButton>
-              </TagsContainer>
-            ))}
-            <TagAddButton onClick={handleAddTagsClick} disabled={gallery}>
-              {type === "training" ? "참여 인원" : "태그"} +
-            </TagAddButton>
-          </InputContainer>
+          {!gallery && (
+            <>
+              <InputContainer>
+                <StyledLabel htmlFor="author" aria-required="true">
+                  작성자
+                </StyledLabel>
+                <Input
+                  disabled={gallery}
+                  id="author"
+                  type="text"
+                  name="author"
+                  onChange={handleAuthorChange}
+                  required
+                  value={values.author}
+                />
+              </InputContainer>
+              <InputContainer>
+                <StyledLabel htmlFor="title" aria-required="true">
+                  제목
+                </StyledLabel>
+                <Input
+                  disabled={gallery}
+                  id="title"
+                  type="text"
+                  name="title"
+                  onChange={handleTitleChange}
+                  required
+                  value={values.title}
+                />
+              </InputContainer>
+              <InputContainer>
+                <StyledLabel htmlFor="tag0">
+                  {type === "training" ? "참여 인원" : "태그"}
+                </StyledLabel>
+                {values.tags.map((tag, index) => (
+                  <TagsContainer key={"tag" + index}>
+                    {index + 1}
+                    <Input
+                      disabled={gallery}
+                      id={"tag" + index}
+                      name={"tag" + index}
+                      onChange={(event) => handleTagsChange(event, index)}
+                      required
+                      value={tag}
+                    />
+                    <TagDeleteButton
+                      onClick={(event) => handleDeleteTagClick(event, index)}
+                    >
+                      ❌
+                    </TagDeleteButton>
+                  </TagsContainer>
+                ))}
+                <TagAddButton onClick={handleAddTagsClick} disabled={gallery}>
+                  {type === "training" ? "참여 인원" : "태그"} +
+                </TagAddButton>
+              </InputContainer>
+            </>
+          )}
           <InputContainer>
             <StyledLabel htmlFor="date" aria-required="true">
               날짜
             </StyledLabel>
-            <StyledInput disabled={gallery} id="date" type="date" name="date" onChange={handleDateChange} required value={values.dateTime} />
+            <Input
+              disabled={gallery}
+              id="date"
+              type="date"
+              name="date"
+              onChange={handleDateChange}
+              required
+              value={values.dateTime}
+            />
           </InputContainer>
-          <InputContainer>
-            <StyledLabel htmlFor="description" aria-required="true">
-              본문
-            </StyledLabel>
-            <StyledTextArea disabled={gallery} id="description" name="description" onChange={handleDescriptionChange} required value={values.description} />
-            <InputValueLength>{values.description.length}</InputValueLength>
-          </InputContainer>
-          <ImageUploader setValues={handleUploadImages} data={data?.imgSrcs} imageLimit={gallery ? 20 : 10} />
+          {!gallery && (
+            <InputContainer>
+              <StyledLabel htmlFor="description" aria-required="true">
+                본문
+              </StyledLabel>
+              <Textarea
+                disabled={gallery}
+                id="description"
+                name="description"
+                onChange={handleDescriptionChange}
+                required
+                value={values.description}
+              />
+              <InputValueLength>{values.description.length}</InputValueLength>
+            </InputContainer>
+          )}
+          <ImageUploader
+            setValues={handleUploadImages}
+            data={data?.imgSrcs}
+            imageLimit={gallery ? 20 : 10}
+          />
+
           <ButtonContainer>
-            {!isNew && !gallery && <CancelButton onClick={handleDeleteSubmit}>삭제</CancelButton>}
-            <>
-              <CancelButton onClick={handleCancelSubmit}>취소</CancelButton>
-              <NewArticleButton onClick={handelSubmitOpen}>제출</NewArticleButton>
-            </>
+            {!isNew && !gallery && (
+              <Button variant={"destructive"} onClick={handleDeleteSubmit}>
+                삭제
+              </Button>
+            )}
+            <div className="flex gap-2">
+              <Button
+                className="text-primary bg-gray-300 hover:bg-gray-500"
+                variant={"secondary"}
+                onClick={handleCancelSubmit}
+              >
+                취소
+              </Button>
+              <Button
+                variant={"default"}
+                className="text-primary bg-blue-500 hover:bg-blue-600"
+                onClick={handelSubmitOpen}
+              >
+                제출
+              </Button>
+            </div>
           </ButtonContainer>
           <SubmitModal
             confirmText={"확인"}
             cancelText={"취소"}
-            description={`${!isNew ? "변경사항" : "작성한 글"}을 저장하시겠습니까?`}
+            description={`${
+              !isNew ? "변경사항" : "작성한 글"
+            }을 저장하시겠습니까?`}
             open={isSubmitOpen}
             setOpen={setIsSubmitOpen}
             onSubmit={async () => await handleSubmit()}

@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
-import FooterInfo from "../../../assets/jsons/footerData.json";
-import Title from "../../../layouts/Title";
+import FooterInfo from "@/lib/assets/jsons/footerData.json";
+import Title from "@/components/layouts/Title";
 import Logo from "../../Logo";
 
 const Container = styled.div`

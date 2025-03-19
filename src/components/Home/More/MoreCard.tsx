@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import Row from "../../../layouts/Row";
-import { ArticleInfoType } from "../../../types/ArticleInfoType";
+import Row from "@/components/layouts/Row";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 

@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import NewsIndex from "../../components/News/NewsIndex";
-import Loading from "../../components/Skeletons/Loading";
+import NewsIndex from "@/components/News/NewsIndex";
+import Loading from "@/components/common/Skeletons/Loading";
 import MyHelmet from "../../helmet/MyHelmet";
-import DefaultLayout from "../../layouts/DefaultLayout";
-import SheetWrapper from "../../layouts/SheetWrapper";
-import Title from "../../layouts/Title";
-import { useNews } from "../../recoills/news";
-import { NewsParamsType } from "../../types/NewsParamsType";
-import { vaildNewsYearList } from "../../utils/Utils";
+import DefaultLayout from "@/components/layouts/DefaultLayout";
+import SheetWrapper from "@/components/layouts/SheetWrapper";
+import Title from "@/components/layouts/Title";
+import { useNews } from "@/recoils/news";
+import { NewsParamsType } from "@/lib/types/NewsParamsType";
+import { vaildNewsYearList } from "@/lib/utils/Utils";
 
 const NewsDetail = () => {
   const { id, index } = useParams<NewsParamsType>();
@@ -23,13 +23,19 @@ const NewsDetail = () => {
     fetch(id);
   }, [fetch, id, news]);
 
-  const currentPageNews = news.find((newsData) => newsData.year.toString() === id?.toString());
+  const currentPageNews = news.find(
+    (newsData) => newsData.year.toString() === id?.toString()
+  );
 
   if (!news) {
     return <Loading />;
   }
 
-  const metaDescription = [currentPageNews?.year, currentPageNews?.articles.at(0)?.title, currentPageNews?.articles.at(0)?.description.slice(0, 80)].join(" | ");
+  const metaDescription = [
+    currentPageNews?.year,
+    currentPageNews?.articles.at(0)?.title,
+    currentPageNews?.articles.at(0)?.description.slice(0, 80),
+  ].join(" | ");
 
   const metaImgUrl = currentPageNews?.articles.at(0)?.imgSrcs.at(0);
 
@@ -40,11 +46,21 @@ const NewsDetail = () => {
 
   return (
     <div>
-      <MyHelmet title="News" description={metaDescription} imgUrl={metaImgUrl} />
+      <MyHelmet
+        title="News"
+        description={metaDescription}
+        imgUrl={metaImgUrl}
+      />
       <DefaultLayout>
         <SheetWrapper>
           <Title title={`${id}년 지호지`} color="black" />
-          <NewsIndex articles={currentPageNews?.articles || []} images={currentPageNews?.images || []} selectedIndex={parseInt(index as string)} index={index ?? ""} year={id} />
+          <NewsIndex
+            articles={currentPageNews?.articles || []}
+            images={currentPageNews?.images || []}
+            selectedIndex={parseInt(index as string)}
+            index={index ?? ""}
+            year={id}
+          />
         </SheetWrapper>
       </DefaultLayout>
     </div>

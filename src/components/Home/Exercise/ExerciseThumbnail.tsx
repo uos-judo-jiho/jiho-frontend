@@ -1,8 +1,8 @@
 import { Card } from "@/components/ui/card";
-import { useTrainings } from "@/recoills/tranings";
+import { useTrainings } from "@/recoils/tranings";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import Col from "../../../layouts/Col";
+import Col from "@/components/layouts/Col";
 
 const Stack = styled.div`
   width: 100%;
