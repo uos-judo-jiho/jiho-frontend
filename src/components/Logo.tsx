@@ -27,11 +27,7 @@ const Img = styled.img`
   height: 100%;
 `;
 
-const Logo = ({
-  size = "6rem",
-  margin = "0rem",
-  isDark = false,
-}: LogoProps) => {
+const Logo = ({ size = "6rem", margin = "0rem", isDark = false }: LogoProps) => {
   return (
     <Container margin={margin} size={size}>
       <Img src={isDark ? LogoBlack : LogoWhite} />

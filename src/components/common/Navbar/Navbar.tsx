@@ -19,13 +19,9 @@ const Container = styled.div`
   height: 100%;
 `;
 
-type StyledMenuProps = {
-  currentpath: string;
-};
-
-const StyledMenu = styled.img<StyledMenuProps>`
-  filter: ${(props) =>
-    props.currentpath === "/"
+const StyledMenu = styled.img<{ isDark: boolean }>`
+  filter: ${({ isDark }) =>
+    !isDark
       ? `invert(100%) sepia(3%) saturate(607%) hue-rotate(209deg) brightness(116%) contrast(87%)` // #eee
       : ""};
 
@@ -45,17 +41,17 @@ const LogoWrapper = styled.div`
   align-items: center;
 `;
 
-const NavMenu = ({ currentPath }: { currentPath: string }) => {
+const NavMenu = ({ isDark }: { isDark: boolean }) => {
   const { setOpen } = useNavbar();
 
   return (
     <NavDropDown onClick={() => setOpen((prev) => !prev)}>
-      <StyledMenu currentpath={currentPath} src={Menu} />
+      <StyledMenu isDark={isDark} src={Menu} />
     </NavDropDown>
   );
 };
 
-function Navbar() {
+function Navbar({ isDark }: { isDark?: boolean }) {
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -64,10 +60,10 @@ function Navbar() {
       <NavbarProvider>
         <Container>
           <Row justifyContent="space-between">
-            <NavMenu currentPath={currentPath} />
+            <NavMenu isDark={isDark || currentPath !== "/"} />
             <LogoWrapper>
               <Link to={"/"}>
-                <Logo size={"48px"} isDark={currentPath === "/" ? false : true} />
+                <Logo size={"48px"} isDark={isDark || currentPath !== "/"} />
               </Link>
             </LogoWrapper>
           </Row>

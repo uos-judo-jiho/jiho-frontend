@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Footer from "@/components/common/Footer/footer";
 import Navbar from "@/components/common/Navbar/Navbar";
@@ -17,6 +17,8 @@ import MyHelmet from "@/helmet/MyHelmet";
 import { Constants } from "@/lib/constant";
 
 const Home = () => {
+  const [isDark, setIsDark] = useState(false);
+
   const { fetch: fetchNotices } = useNotices();
 
   const { fetch: fetchNews } = useNews();
@@ -32,8 +34,8 @@ const Home = () => {
   return (
     <>
       <MyHelmet title="Home" />
-      <Navbar />
-      <ScrollSnap>
+      <Navbar isDark={isDark} />
+      <ScrollSnap setIsDark={setIsDark}>
         <HomeSectionMain />
         <HomeSectionInfo />
         <HomeSectionNews />
