@@ -5,6 +5,7 @@ import styled from "styled-components";
 import RightArrow from "@/lib/assets/svgs/arrow_back_ios.svg";
 import MobilePhotoCard from "@/components/Photo/MobilePhotoCard";
 import Loading from "@/components/common/Skeletons/Loading";
+import Footer from "@/components/common/Footer/footer";
 
 // TODO: 모바일 헤더 높이 44px 고정 상수화
 
@@ -97,13 +98,10 @@ const PhotoMobile = () => {
       </MobileHeader>
       <Feed>
         {trainings.map((trainingInfo) => (
-          <MobilePhotoCard
-            key={trainingInfo.id}
-            articleInfo={trainingInfo}
-            id={`training-mobile-card-${trainingInfo.id}`}
-          />
+          <MobilePhotoCard key={trainingInfo.id} articleInfo={trainingInfo} id={`training-mobile-card-${trainingInfo.id}`} />
         ))}
       </Feed>
+      <Footer />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import Slider from "@/components/layouts/Slider";
-import { useState } from "react";
+import { useToggle } from "@/hooks/useToggle";
 
 type MobilePhotoCardProps = {
   id: string;
@@ -81,17 +81,17 @@ const Content = styled.div`
   }
 `;
 
-const MoreButton = styled.button`
+const MoreText = styled.span`
   font-size: ${(props) => props.theme.defaultFontSize};
   line-height: ${(props) => props.theme.defaultLineHeight};
   color: ${(props) => props.theme.greyColor};
   letter-spacing: 0.16px;
 
-  cursor: pointer;
+  margin-left: 4px;
 `;
 
 const MobilePhotoCard = ({ articleInfo, id }: MobilePhotoCardProps) => {
-  const [isMore, setIsMore] = useState(false);
+  const [isMore, toggle] = useToggle(false);
   return (
     <MobilePhotoCardContainer id={id}>
       <CardHeader>
@@ -110,13 +110,9 @@ const MobilePhotoCard = ({ articleInfo, id }: MobilePhotoCardProps) => {
             <span key={tag}>{`#${tag}`}</span>
           ))}
         </div>
-        <p className="description">
-          {isMore
-            ? articleInfo.description
-            : articleInfo.description.slice(0, 20)}
-          {!isMore && (
-            <MoreButton onClick={() => setIsMore(true)}>...더보기</MoreButton>
-          )}
+        <p className="description" onClick={() => toggle()}>
+          {isMore ? articleInfo.description : `${articleInfo.description.slice(0, 40)}...`}
+          {!isMore && <MoreText>더보기</MoreText>}
         </p>
       </Content>
     </MobilePhotoCardContainer>

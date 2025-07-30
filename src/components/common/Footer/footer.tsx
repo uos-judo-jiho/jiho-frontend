@@ -41,7 +41,7 @@ const HyperLink = styled.a`
 
 const Footer = () => {
   return (
-    <footer className="mx-auto my-8 py-8 px-4 sm:px-0 bg-gray-50">
+    <footer className="sm:mx-auto my-8 py-8 px-4 sm:px-0">
       <MobileRowColLayout rowJustifyContent="center">
         {/* MARK: Home 훈련 일지 지호지 */}
         <DescriptionList>
@@ -57,9 +57,7 @@ const Footer = () => {
           </DescriptionItem>
           <DescriptionItem>
             <LinkWrapper>
-              <Link
-                to={`/news/${Constants.LATEST_NEWS_YEAR}`}
-              >{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</Link>
+              <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</Link>
             </LinkWrapper>
           </DescriptionItem>
           {/* 관리자 페이지로 */}
@@ -71,45 +69,32 @@ const Footer = () => {
         </DescriptionList>
         {/* 지호 이름 */}
         <DescriptionList>
-          <DescriptionItemTitle>
-            {FooterInfo.title.krTitle}
-          </DescriptionItemTitle>
+          <DescriptionItemTitle>{FooterInfo.title.krTitle}</DescriptionItemTitle>
           <DescriptionItem>{FooterInfo.title.enTitle}</DescriptionItem>
           <DescriptionItem>{FooterInfo.title.since}</DescriptionItem>
         </DescriptionList>
         {/* 정규 운동 */}
         <DescriptionList>
-          <DescriptionItemTitle>
-            {FooterInfo.exercise.title}
-          </DescriptionItemTitle>
+          <DescriptionItemTitle>{FooterInfo.exercise.title}</DescriptionItemTitle>
           <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
         </DescriptionList>
         {/* Connect Us */}
         <DescriptionList>
-          <DescriptionItemTitle>
-            {FooterInfo.connetUs.title}
-          </DescriptionItemTitle>
+          <DescriptionItemTitle>{FooterInfo.connetUs.title}</DescriptionItemTitle>
           <DescriptionItem>
             {FooterInfo.connetUs.instagram.title}
-            <HyperLink
-              href="https://www.instagram.com/uos_judo/"
-              target="_blank"
-            >
+            <HyperLink href="https://www.instagram.com/uos_judo/" target="_blank">
               {FooterInfo.connetUs.instagram.href}
             </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
             {FooterInfo.connetUs.email.title}
-            <HyperLink href="mailto: uosjudojiho@gmail.com">
-              {FooterInfo.connetUs.email.href}
-            </HyperLink>
+            <HyperLink href="mailto: uosjudojiho@gmail.com">{FooterInfo.connetUs.email.href}</HyperLink>
           </DescriptionItem>
           <DescriptionItem>
             {FooterInfo.connetUs.dev.title}
-            <HyperLink href="mailto: uosjudojiho@gmail.com">
-              {FooterInfo.connetUs.dev.href}
-            </HyperLink>
+            <HyperLink href="mailto: uosjudojiho@gmail.com">{FooterInfo.connetUs.dev.href}</HyperLink>
           </DescriptionItem>
         </DescriptionList>
       </MobileRowColLayout>

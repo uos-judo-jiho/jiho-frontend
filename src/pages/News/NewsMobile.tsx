@@ -6,6 +6,7 @@ import MobilePhotoCard from "@/components/Photo/MobilePhotoCard";
 import Loading from "@/components/common/Skeletons/Loading";
 import { useNews } from "@/recoils/news";
 import { NewsParamsType } from "@/lib/types/NewsParamsType";
+import Footer from "@/components/common/Footer/footer";
 
 // TODO: 모바일 헤더 높이 44px 고정 상수화
 
@@ -103,16 +104,9 @@ const NewsMobile = () => {
         <div className="nav-icon" />
       </MobileHeader>
       <Feed>
-        {news.map((newsByYear) =>
-          newsByYear.articles.map((newsInfo) => (
-            <MobilePhotoCard
-              key={newsInfo.id}
-              articleInfo={newsInfo}
-              id={`news-mobile-card-${newsInfo.id}`}
-            />
-          ))
-        )}
+        {news.map((newsByYear) => newsByYear.articles.map((newsInfo) => <MobilePhotoCard key={newsInfo.id} articleInfo={newsInfo} id={`news-mobile-card-${newsInfo.id}`} />))}
       </Feed>
+      <Footer />
     </div>
   );
 };

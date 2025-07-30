@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { MenuItemInfoType } from "@/lib/types/menuItemInfoType";
 import { SelectedType } from "./MenuStyledComponents";
+
+import { useNavbar } from "../Navbar/NavBar.provider";
 
 type SlideSubMenuProps = {
   selected: SelectedType;
@@ -48,17 +50,36 @@ const ToggleMenuList = styled.ul<{ count: number }>`
   }
 `;
 
-const MenuItem = styled.li`
+const MenuItem = styled.li<{ isActive: boolean }>`
   margin: 0 4px;
   line-height: 200%;
+
+  &:hover {
+    ${({ theme }) => `color: ${theme.greyColor};`}
+  }
+
+  ${({ isActive }) => isActive && "text-decoration: underline; font-weight: bold;"}
 `;
 
 const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
+  const location = useLocation();
+  const { open, setOpen } = useNavbar();
+
   return (
     <ToggleMenuList id={menuId} className={selected} count={itemsInfo.length}>
       {itemsInfo.map((itemInfo) => (
-        <MenuItem key={itemInfo.title}>
-          <Link to={itemInfo.href}>{itemInfo.title}</Link>
+        <MenuItem key={itemInfo.title} isActive={location.pathname === itemInfo.href}>
+          <Link
+            to={itemInfo.href}
+            onClick={(e) => {
+              if (open && location.pathname === itemInfo.href) {
+                e.preventDefault();
+              }
+              setOpen(false);
+            }}
+          >
+            {itemInfo.title}
+          </Link>
         </MenuItem>
       ))}
     </ToggleMenuList>

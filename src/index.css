@@ -275,7 +275,5 @@ header {
 button,
 a {
   border: none;
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 }

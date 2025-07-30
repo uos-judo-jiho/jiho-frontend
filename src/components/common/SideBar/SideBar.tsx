@@ -7,10 +7,7 @@ import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
 import { SelectedType } from "./MenuStyledComponents";
 
-type SideBarProps = {
-  isOpen: boolean;
-  setIsOpen: Function;
-};
+import { useNavbar } from "../Navbar/NavBar.provider";
 
 const SIDEBAR_ANIMATION_DURATION = 500;
 
@@ -51,28 +48,24 @@ const StyledClose = styled.img`
   cursor: pointer;
 `;
 
-const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
+const SideBar = () => {
+  const { open, setOpen } = useNavbar();
+
   const outside = useRef<any>();
 
   const location = useLocation();
 
-  const [selected, setSelected] = useState<[SelectedType, SelectedType]>([
-    "closed",
-    "closed",
-  ]);
+  const [selected, setSelected] = useState<[SelectedType, SelectedType]>(["closed", "closed"]);
 
-  const [prevLocation, setPrevLocation] = useState(location.pathname);
-
-  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> =
-    useRef(null);
+  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> = useRef(null);
 
   const toggleSide = () => {
     setSelected(["closed", "closed"]);
-    setIsOpen(false);
+    setOpen(false);
   };
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!open) {
       timer.current = setTimeout(() => {}, SIDEBAR_ANIMATION_DURATION);
     } else {
     }
@@ -82,43 +75,25 @@ const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
         clearTimeout(timer.current);
       }
     };
-  }, [isOpen]);
+  }, [open]);
 
   useEffect(() => {
     const handlerOutside = (e: any) => {
       if (!outside.current.contains(e.target)) {
         setSelected(["closed", "closed"]);
-        setIsOpen(false);
+        setOpen(false);
       }
     };
     document.addEventListener("mousedown", handlerOutside);
     return () => {
       document.removeEventListener("mousedown", handlerOutside);
     };
-  }, [setIsOpen]);
-
-  useEffect(() => {
-    if (prevLocation !== location.pathname) {
-      setSelected(["closed", "closed"]);
-      setIsOpen(false);
-      setPrevLocation(location.pathname);
-    }
-  }, [location.pathname, prevLocation, setIsOpen]);
+  }, []);
 
   return createPortal(
-    <Container
-      id="sidebar"
-      ref={outside}
-      className={isOpen ? "open" : undefined}
-    >
+    <Container id="sidebar" ref={outside} className={open ? "open" : undefined}>
       <StyledClose onClick={toggleSide} src={CloseSvg} />
-      <NavWrapper>
-        {location.pathname.includes("/admin") ? (
-          <AdminMenu />
-        ) : (
-          <ClientMenu selected={selected} setSelected={setSelected} />
-        )}
-      </NavWrapper>
+      <NavWrapper>{location.pathname.includes("/admin") ? <AdminMenu /> : <ClientMenu selected={selected} setSelected={setSelected} />}</NavWrapper>
     </Container>,
     document.body
   );

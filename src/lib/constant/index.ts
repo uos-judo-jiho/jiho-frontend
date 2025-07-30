@@ -3,10 +3,7 @@ import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.png";
 import BG_COLOR_808080 from "@/lib/assets/images/bg-color-808080.png";
 
 export const Constants = {
-  BASE_URL:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://uosjudo.com",
+  BASE_URL: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://uosjudo.com",
 
   // 이미지
   LOGO_BLACK: LOGO_BLACK,
@@ -53,8 +50,10 @@ export const Constants = {
   DEFAULT_LINE_HEIGHT: "24px",
   TINY_LINE_HEIGHT: "18px",
 
-  // lastest news
-  LATEST_NEWS_YEAR: "2024",
+  /**
+   * lastest news
+   */
+  LATEST_NEWS_YEAR: "2025",
 } as const;
 
 type T = typeof Constants;

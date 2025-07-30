@@ -1,38 +1,39 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { MENU_ID, MenuIdType } from "@/lib/types/MenuIdType";
 
 import { vaildNewsYearList } from "@/lib/utils/Utils";
-import {
-  MenuItem,
-  MenuItemTitle,
-  MenuList,
-  MenuProps,
-} from "./MenuStyledComponents";
+import { MenuItem, MenuItemTitle, MenuList, MenuProps } from "./MenuStyledComponents";
 import ToggleMenuItem from "./ToggleMenuItem";
+import { useNavbar } from "../Navbar/NavBar.provider";
 
 const ClientMenu = ({ selected, setSelected }: MenuProps) => {
+  const location = useLocation();
+  const { open, setOpen } = useNavbar();
+
   const handleClickMenu = (id: MenuIdType) => {
     switch (id) {
       case MENU_ID.newsToggleMenu:
-        setSelected((prev) => [
-          prev[0] === "selected" ? "animate" : "selected",
-          prev[1] === "closed" ? "closed" : "animate",
-        ]);
+        setSelected((prev) => [prev[0] === "selected" ? "animate" : "selected", prev[1] === "closed" ? "closed" : "animate"]);
         break;
       case MENU_ID.trainingToggleMenu:
-        setSelected((prev) => [
-          prev[0] === "closed" ? "closed" : "animate",
-          prev[1] === "selected" ? "animate" : "selected",
-        ]);
+        setSelected((prev) => [prev[0] === "closed" ? "closed" : "animate", prev[1] === "selected" ? "animate" : "selected"]);
         break;
       default:
         break;
     }
   };
+
+  const handleClickLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (open && location.pathname === href) {
+      e.preventDefault();
+      setOpen(false);
+    }
+  };
+
   return (
     <MenuList>
       <MenuItem>
-        <Link to={"/"}>
+        <Link to={"/"} onClick={(e) => handleClickLink(e, "/")}>
           <MenuItemTitle>About 지호</MenuItemTitle>
         </Link>
       </MenuItem>
@@ -42,10 +43,12 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
           selected={selected[0]}
           parentTitle={"지호지"}
           targetMenu={MENU_ID.newsToggleMenu}
-          subMenuItemList={vaildNewsYearList().map((year) => ({
-            href: `/news/${year}`,
-            title: `${year} 지호지`,
-          }))}
+          subMenuItemList={vaildNewsYearList()
+            .reverse()
+            .map((year) => ({
+              href: `/news/${year}`,
+              title: `${year} 지호지`,
+            }))}
         />
       </MenuItem>
       <MenuItem>
@@ -58,7 +61,7 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
         />
       </MenuItem>
       <MenuItem>
-        <Link to={"/notice"}>
+        <Link to={"/notice"} onClick={(e) => handleClickLink(e, "/notice")}>
           <MenuItemTitle>공지사항</MenuItemTitle>
         </Link>
       </MenuItem>

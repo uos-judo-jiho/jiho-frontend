@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import Row from "@/components/layouts/Row";
+import { Link, useLocation } from "react-router-dom";
 
 import Menu from "@/lib/assets/svgs/menu.svg";
 
+import Row from "@/components/layouts/Row";
 import Logo from "@/components/Logo";
 import SideBar from "@/components/common/SideBar/SideBar";
+
+import { NavbarProvider, useNavbar } from "./NavBar.provider";
 
 const Header = styled.header`
   position: fixed;
@@ -44,35 +45,35 @@ const LogoWrapper = styled.div`
   align-items: center;
 `;
 
+const NavMenu = ({ currentPath }: { currentPath: string }) => {
+  const { setOpen } = useNavbar();
+
+  return (
+    <NavDropDown onClick={() => setOpen((prev) => !prev)}>
+      <StyledMenu currentpath={currentPath} src={Menu} />
+    </NavDropDown>
+  );
+};
+
 function Navbar() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [currentPath, setcurrentPath] = useState("");
-
   const location = useLocation();
-
-  useEffect(() => {
-    setcurrentPath(location.pathname);
-  }, [location]);
-
-  function handleClick() {
-    setIsOpen((prev) => !prev);
-  }
+  const currentPath = location.pathname;
 
   return (
     <Header>
-      <Container>
-        <Row justifyContent="space-between">
-          <NavDropDown onClick={handleClick}>
-            <StyledMenu currentpath={currentPath} src={Menu} />
-          </NavDropDown>
-          <LogoWrapper>
-            <Link to={"/"}>
-              <Logo size={"48px"} isDark={currentPath === "/" ? false : true} />
-            </Link>
-          </LogoWrapper>
-        </Row>
-      </Container>
-      <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+      <NavbarProvider>
+        <Container>
+          <Row justifyContent="space-between">
+            <NavMenu currentPath={currentPath} />
+            <LogoWrapper>
+              <Link to={"/"}>
+                <Logo size={"48px"} isDark={currentPath === "/" ? false : true} />
+              </Link>
+            </LogoWrapper>
+          </Row>
+        </Container>
+        <SideBar />
+      </NavbarProvider>
     </Header>
   );
 }
