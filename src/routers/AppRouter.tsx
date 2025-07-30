@@ -1,15 +1,19 @@
+import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import About from "../pages/About";
+
 import Home from "../pages/Home";
-import NewsPage from "../pages/News";
-import News from "../pages/News/News";
-import NewsDetail from "../pages/News/NewsDetail";
-import NotFound from "../pages/NotFound";
-import Notice from "../pages/Notice/Notice";
-import NoticeDetail from "../pages/Notice/NoticeDetail";
-import PhotoPage from "../pages/Photo";
-import PhotoPC from "../pages/Photo/PhotoPC";
-import AdminHomePage from "../pages/admin/AdminHomePage";
+
+const About = lazy(() => import("../pages/About"));
+const NewsPage = lazy(() => import("../pages/News"));
+const News = lazy(() => import("../pages/News/News"));
+const NewsDetail = lazy(() => import("../pages/News/NewsDetail"));
+const Notice = lazy(() => import("../pages/Notice/Notice"));
+const NoticeDetail = lazy(() => import("../pages/Notice/NoticeDetail"));
+const PhotoPage = lazy(() => import("../pages/Photo"));
+const PhotoPC = lazy(() => import("../pages/Photo/PhotoPC"));
+const NotFound = lazy(() => import("../pages/NotFound"));
+
+const AdminHomePage = lazy(() => import("../pages/admin/AdminHomePage"));
 
 const AppRouter = () => {
   return (

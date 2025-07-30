@@ -1,5 +1,8 @@
 import styled from "styled-components";
+
 import BGImage from "@/lib/assets/images/background-img-mono.jpg";
+import BGImageWebp from "@/lib/assets/images/background-img-mono.webp";
+
 import Title from "@/components/layouts/Title";
 import HomeSectionBG from "../HomeSectionBG";
 
@@ -39,11 +42,7 @@ const HomeSectionNews = () => {
   return (
     <Container>
       <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>
-        <HomeSectionBG
-          bgImageSrc={BGImage}
-          id="sectionNews"
-          backgroundCover={false}
-        >
+        <HomeSectionBG bgImageSrc={BGImage} bgImageSrcWebp={BGImageWebp} bgImageAlt="news-background" id="sectionNews" backgroundCover={false}>
           <SheetWrapper>
             <TextWrapper>
               <Title title={`${Constants.LATEST_NEWS_YEAR}년 지호지`} />

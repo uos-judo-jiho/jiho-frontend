@@ -3,28 +3,28 @@ import styled from "styled-components";
 
 type HomeSectionBGProps = {
   bgImageSrc: string;
+  bgImageSrcWebp: string;
+  bgImageAlt: string;
   children: React.ReactNode;
   id: string;
   backgroundCover?: boolean;
 };
 
-type ContainerProps = {
-  bgImageSrc: string;
-  backgroundCover?: boolean;
-};
+const Container = styled.section`
+  position: relative;
 
-const Container = styled.section<ContainerProps>`
-  background-image: url(${(props) => props.bgImageSrc});
-
-  background-repeat: no-repeat;
-  background-color: ${(props) => props.theme.blackColor};
-
-  background-size: ${(props) => (props.backgroundCover ? "cover" : "contain")};
-  background-position: center;
   width: 100vw;
   height: 100vh;
+`;
 
-  position: relative;
+const BackgroundImageWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: ${(props) => props.theme.blackColor};
 
   &::before {
     content: "";
@@ -38,9 +38,23 @@ const Container = styled.section<ContainerProps>`
   }
 `;
 
-const HomeSectionBG = ({ bgImageSrc, children, id, backgroundCover = true }: HomeSectionBGProps) => {
+const BackgroundImage = styled.img<{ backgroundCover: boolean }>`
+  width: 100%;
+  height: 100%;
+
+  object-fit: ${(props) => (props.backgroundCover ? "cover" : "contain")};
+`;
+
+const HomeSectionBG = ({ bgImageSrc, bgImageSrcWebp, bgImageAlt, children, id, backgroundCover = true }: HomeSectionBGProps) => {
   return (
-    <Container bgImageSrc={bgImageSrc} id={id} backgroundCover={backgroundCover}>
+    <Container id={id}>
+      <BackgroundImageWrapper>
+        <picture>
+          <source srcSet={bgImageSrcWebp} type="image/webp" />
+          <source srcSet={bgImageSrc} type="image/jpeg" />
+          <BackgroundImage src={bgImageSrc} alt={bgImageAlt} backgroundCover={backgroundCover} />
+        </picture>
+      </BackgroundImageWrapper>
       {children}
     </Container>
   );

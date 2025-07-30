@@ -22,16 +22,14 @@ function HomeTitle() {
     <ContainerWrapper>
       <Container className="backdrop-blur-sm bg-white/30 border-none">
         <CardTitle className="flex flex-col gap-4">
-          <div className="text-2xl">서울시립대학교 유도부</div>
+          <h1 className="text-2xl">서울시립대학교 유도부</h1>
           <div>
-            <div className="text-2xl">지호</div>
+            <h2 className="text-2xl">지호</h2>
             <br />
-            <div className="inline-flex gap-2 ">
-              {"University of Seoul. Judo Team Jiho"}
-            </div>
+            <h3 className="inline-flex gap-2 ">{"University of Seoul. Judo Team Jiho"}</h3>
           </div>
         </CardTitle>
-        <div className="text-base">Since 1985</div>
+        <p className="text-base">Since 1985</p>
       </Container>
     </ContainerWrapper>
   );

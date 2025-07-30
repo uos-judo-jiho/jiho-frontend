@@ -1,4 +1,6 @@
 import BGImage from "@/lib/assets/images/background-img-training.jpg";
+import BGImageWebp from "@/lib/assets/images/background-img-training.webp";
+
 import HomeSectionBG from "../HomeSectionBG";
 
 import styled from "styled-components";
@@ -12,7 +14,7 @@ const Container = styled.div`
 
 const HomeSectionExercise = () => {
   return (
-    <HomeSectionBG bgImageSrc={BGImage} id="sectionExercise">
+    <HomeSectionBG bgImageSrc={BGImage} bgImageSrcWebp={BGImageWebp} bgImageAlt="exercise-background" id="sectionExercise">
       <SheetWrapper>
         <Container>
           <ExerciseThumbnail />
