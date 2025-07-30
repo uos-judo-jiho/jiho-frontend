@@ -1,15 +1,16 @@
 import { useEffect } from "react";
 
+import Footer from "@/components/common/Footer/footer";
+import Navbar from "@/components/common/Navbar/Navbar";
 import HomeSectionExercise from "@/components/Home/Exercise/HomeSectionExercise";
 import HomeSectionInfo from "@/components/Home/Info/HomeSectionInfo";
 import HomeSectionMain from "@/components/Home/Main/HomeSectionMain";
 import HomeSectionMore from "@/components/Home/More/HomeSectionMore";
 import HomeSectionNews from "@/components/Home/News/HomeSectionNews";
-import DefaultLayout from "@/components/layouts/DefaultLayout";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
-import { useNotices } from "@/recoils/notices";
 import { useNews } from "@/recoils/news";
+import { useNotices } from "@/recoils/notices";
 
 import MyHelmet from "@/helmet/MyHelmet";
 
@@ -31,14 +32,14 @@ const Home = () => {
   return (
     <>
       <MyHelmet title="Home" />
+      <Navbar />
       <ScrollSnap>
-        <DefaultLayout>
-          <HomeSectionMain />
-          <HomeSectionInfo />
-          <HomeSectionNews />
-          <HomeSectionExercise />
-          <HomeSectionMore />
-        </DefaultLayout>
+        <HomeSectionMain />
+        <HomeSectionInfo />
+        <HomeSectionNews />
+        <HomeSectionExercise />
+        <HomeSectionMore />
+        <Footer />
       </ScrollSnap>
     </>
   );

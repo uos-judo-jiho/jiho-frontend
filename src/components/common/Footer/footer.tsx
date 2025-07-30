@@ -63,7 +63,9 @@ const Footer = () => {
           {/* 관리자 페이지로 */}
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/admin"}>관리자 페이지로</Link>
+              <Link to={"/admin"} className="text-gray-500 hover:text-gray-600 hover:underline">
+                {`관리자 페이지`}
+              </Link>
             </LinkWrapper>
           </DescriptionItem>
         </DescriptionList>

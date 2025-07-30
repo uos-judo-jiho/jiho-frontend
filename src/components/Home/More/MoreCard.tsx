@@ -58,7 +58,7 @@ const More = styled.p`
 const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
   const boardData = data.slice(0, DATA_LEN);
   return (
-    <Card className="w-full hover:shadow-md">
+    <Card className="w-full hover:shadow-md h-[260px]">
       <CardHeader>
         <Link to={linkTo}>
           <div className="flex items-center justify-start">

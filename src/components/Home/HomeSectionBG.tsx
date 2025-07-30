@@ -37,6 +37,10 @@ const BackgroundImageWrapper = styled.div`
     left: 0;
   }
 `;
+const Picture = styled.picture`
+  border: none;
+  outline: none;
+`;
 
 const BackgroundImage = styled.img<{ backgroundCover: boolean }>`
   width: 100%;
@@ -49,11 +53,11 @@ const HomeSectionBG = ({ bgImageSrc, bgImageSrcWebp, bgImageAlt, children, id, b
   return (
     <Container id={id}>
       <BackgroundImageWrapper>
-        <picture>
+        <Picture>
           <source srcSet={bgImageSrcWebp} type="image/webp" />
           <source srcSet={bgImageSrc} type="image/jpeg" />
           <BackgroundImage src={bgImageSrc} alt={bgImageAlt} backgroundCover={backgroundCover} />
-        </picture>
+        </Picture>
       </BackgroundImageWrapper>
       {children}
     </Container>
