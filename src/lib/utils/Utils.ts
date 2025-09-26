@@ -87,3 +87,26 @@ export const vaildNewsYearList = () => {
   );
   return yearList;
 };
+
+/**
+ * SSG: 프리렌더된 뉴스 데이터를 로드
+ * @param year 뉴스 연도
+ * @returns Promise<NewsType | null>
+ */
+export const loadPrerenderedNewsData = async (year: string) => {
+  try {
+    // 클라이언트 사이드에서만 실행
+    if (typeof window === 'undefined') return null;
+
+    const response = await fetch(`/prerendered/news-${year}.json`);
+    if (!response.ok) {
+      console.warn(`No prerendered data found for news ${year}`);
+      return null;
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.warn(`Failed to load prerendered news data for ${year}:`, error);
+    return null;
+  }
+};

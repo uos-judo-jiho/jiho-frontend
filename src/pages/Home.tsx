@@ -16,6 +16,7 @@ import MyHelmet from "@/helmet/MyHelmet";
 
 import { Constants } from "@/lib/constant";
 import { lightTheme } from "@/lib/theme/theme";
+import { ThemeProvider } from "styled-components";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);
@@ -24,16 +25,16 @@ const Home = () => {
 
   const { fetch: fetchNews } = useNews();
 
+  // 클라이언트에서만 API 호출 (SSR 최적화)
   useEffect(() => {
-    fetchNews(Constants.LATEST_NEWS_YEAR);
-  }, [fetchNews]);
-
-  useEffect(() => {
-    fetchNotices();
-  }, [fetchNotices]);
+    if (typeof window !== "undefined") {
+      fetchNews(Constants.LATEST_NEWS_YEAR);
+      fetchNotices();
+    }
+  }, [fetchNews, fetchNotices]);
 
   return (
-    <>
+    <ThemeProvider theme={lightTheme}>
       <MyHelmet title="Home" />
       <Navbar isDark={isDark} />
       <ScrollSnap setIsDark={setIsDark}>
@@ -44,7 +45,7 @@ const Home = () => {
         <HomeSectionMore />
         <Footer />
       </ScrollSnap>
-    </>
+    </ThemeProvider>
   );
 };
 

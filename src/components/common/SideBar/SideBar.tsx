@@ -55,9 +55,13 @@ const SideBar = () => {
 
   const location = useLocation();
 
-  const [selected, setSelected] = useState<[SelectedType, SelectedType]>(["closed", "closed"]);
+  const [selected, setSelected] = useState<[SelectedType, SelectedType]>([
+    "closed",
+    "closed",
+  ]);
 
-  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> = useRef(null);
+  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> =
+    useRef(null);
 
   const toggleSide = () => {
     setSelected(["closed", "closed"]);
@@ -78,6 +82,9 @@ const SideBar = () => {
   }, [open]);
 
   useEffect(() => {
+    // Only run on client-side to avoid SSR issues
+    if (typeof document === 'undefined') return;
+
     const handlerOutside = (e: any) => {
       if (!outside.current.contains(e.target)) {
         setSelected(["closed", "closed"]);
@@ -88,12 +95,23 @@ const SideBar = () => {
     return () => {
       document.removeEventListener("mousedown", handlerOutside);
     };
-  }, []);
+  }, [setOpen]);
+
+  // Don't render during SSR to avoid document.body error
+  if (typeof document === 'undefined') {
+    return null;
+  }
 
   return createPortal(
     <Container id="sidebar" ref={outside} className={open ? "open" : undefined}>
       <StyledClose onClick={toggleSide} src={CloseSvg} />
-      <NavWrapper>{location.pathname.includes("/admin") ? <AdminMenu /> : <ClientMenu selected={selected} setSelected={setSelected} />}</NavWrapper>
+      <NavWrapper>
+        {location.pathname.includes("/admin") ? (
+          <AdminMenu />
+        ) : (
+          <ClientMenu selected={selected} setSelected={setSelected} />
+        )}
+      </NavWrapper>
     </Container>,
     document.body
   );

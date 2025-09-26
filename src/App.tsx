@@ -1,15 +1,14 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ThemeProvider } from "styled-components";
-import AppRouter from "./routers/AppRouter";
+import { queryClient } from "./context/QueryClient";
 import { GlobalStyle } from "./lib/theme/GlobalStyle";
 import { darkTheme, lightTheme } from "./lib/theme/theme";
+import AppRouter from "./routers/AppRouter";
 
 import "./index.css";
-
-const queryClient = new QueryClient();
 
 const App = () => {
   // TODO: dark mode

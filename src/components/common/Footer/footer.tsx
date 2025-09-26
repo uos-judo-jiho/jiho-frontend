@@ -1,4 +1,4 @@
-import MobileRowColLayout from "@/components/layouts/MobileRowColLayout";
+import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import FooterInfo from "@/lib/assets/jsons/footerData.json";
 import { Constants } from "@/lib/constant";
 import { Link } from "react-router-dom";
@@ -57,13 +57,18 @@ const Footer = () => {
           </DescriptionItem>
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</Link>
+              <Link
+                to={`/news/${Constants.LATEST_NEWS_YEAR}`}
+              >{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</Link>
             </LinkWrapper>
           </DescriptionItem>
           {/* 관리자 페이지로 */}
           <DescriptionItem>
             <LinkWrapper>
-              <Link to={"/admin"} className="text-gray-500 hover:text-gray-600 hover:underline">
+              <Link
+                to={"/admin"}
+                className="text-gray-500 hover:text-gray-600 hover:underline"
+              >
                 {`관리자 페이지`}
               </Link>
             </LinkWrapper>
@@ -71,32 +76,45 @@ const Footer = () => {
         </DescriptionList>
         {/* 지호 이름 */}
         <DescriptionList>
-          <DescriptionItemTitle>{FooterInfo.title.krTitle}</DescriptionItemTitle>
+          <DescriptionItemTitle>
+            {FooterInfo.title.krTitle}
+          </DescriptionItemTitle>
           <DescriptionItem>{FooterInfo.title.enTitle}</DescriptionItem>
           <DescriptionItem>{FooterInfo.title.since}</DescriptionItem>
         </DescriptionList>
         {/* 정규 운동 */}
         <DescriptionList>
-          <DescriptionItemTitle>{FooterInfo.exercise.title}</DescriptionItemTitle>
+          <DescriptionItemTitle>
+            {FooterInfo.exercise.title}
+          </DescriptionItemTitle>
           <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
           <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
         </DescriptionList>
         {/* Connect Us */}
         <DescriptionList>
-          <DescriptionItemTitle>{FooterInfo.connetUs.title}</DescriptionItemTitle>
+          <DescriptionItemTitle>
+            {FooterInfo.connetUs.title}
+          </DescriptionItemTitle>
           <DescriptionItem>
             {FooterInfo.connetUs.instagram.title}
-            <HyperLink href="https://www.instagram.com/uos_judo/" target="_blank">
+            <HyperLink
+              href="https://www.instagram.com/uos_judo/"
+              target="_blank"
+            >
               {FooterInfo.connetUs.instagram.href}
             </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
             {FooterInfo.connetUs.email.title}
-            <HyperLink href="mailto: uosjudojiho@gmail.com">{FooterInfo.connetUs.email.href}</HyperLink>
+            <HyperLink href="mailto: uosjudojiho@gmail.com">
+              {FooterInfo.connetUs.email.href}
+            </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
             {FooterInfo.connetUs.dev.title}
-            <HyperLink href="mailto: uosjudojiho@gmail.com">{FooterInfo.connetUs.dev.href}</HyperLink>
+            <HyperLink href="mailto: uosjudojiho@gmail.com">
+              {FooterInfo.connetUs.dev.href}
+            </HyperLink>
           </DescriptionItem>
         </DescriptionList>
       </MobileRowColLayout>

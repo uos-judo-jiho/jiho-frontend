@@ -1,13 +1,14 @@
-import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
+import styled from "styled-components";
 
 import Menu from "@/lib/assets/svgs/menu.svg";
 
+import SideBar from "@/components/common/SideBar/SideBar";
 import Row from "@/components/layouts/Row";
 import Logo from "@/components/Logo";
-import SideBar from "@/components/common/SideBar/SideBar";
 
 import { NavbarProvider, useNavbar } from "./NavBar.provider";
+import { ClientOnly } from "@/components/ClientOnly";
 
 const Header = styled.header`
   position: fixed;
@@ -68,7 +69,9 @@ function Navbar({ isDark }: { isDark?: boolean }) {
             </LogoWrapper>
           </Row>
         </Container>
-        <SideBar />
+        <ClientOnly>
+          <SideBar />
+        </ClientOnly>
       </NavbarProvider>
     </Header>
   );

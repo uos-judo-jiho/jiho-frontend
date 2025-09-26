@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PhotoCardContainer from "@/components/Photo/PhotoCardContainer";
 import ThumbnailCard from "@/components/Photo/ThumbnailCard";
 import PhotoModal from "@/components/common/Modals/PhotoModal";
-import Loading from "@/components/common/Skeletons/Loading";
 import SkeletonThumbnail from "@/components/common/Skeletons/SkeletonThumbnail";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
@@ -22,7 +21,7 @@ const PhotoPC = () => {
   const id = location.pathname.replace("photo", "").split("/").at(-1) ?? "";
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const { trainings, isLoading } = useTrainings();
+  const { trainings } = useTrainings();
 
   const openModal = () => setModalOpen(true);
 
@@ -41,16 +40,13 @@ const PhotoPC = () => {
     }
   }, [id, trainings]);
 
-  if (!trainings) {
-    return <Loading />;
-  }
-
-  const metaDescription = [
+  // SSR-friendly: Provide fallback meta data even when trainings is empty
+  const metaDescription = trainings?.length ? [
     trainings.at(0)?.title,
     trainings.at(0)?.description.slice(0, 80),
-  ].join(" | ");
+  ].join(" | ") : "서울시립대학교 유도부 지호 - 훈련일지";
 
-  const metaImgUrl = trainings.at(0)?.imgSrcs.at(0);
+  const metaImgUrl = trainings?.at(0)?.imgSrcs.at(0);
 
   return (
     <div>
@@ -63,7 +59,7 @@ const PhotoPC = () => {
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />
           <PhotoCardContainer>
-            {!isLoading
+            {trainings && trainings.length > 0
               ? trainings.map((trainingLog) => (
                   <ThumbnailCard
                     key={trainingLog.id}
@@ -79,7 +75,7 @@ const PhotoPC = () => {
           </PhotoCardContainer>
         </SheetWrapper>
       </DefaultLayout>
-      {modalOpen && (
+      {modalOpen && trainings && (
         <PhotoModal
           baseurl={"photo"}
           open={modalOpen}

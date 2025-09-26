@@ -8,6 +8,7 @@ import NewsCardContainer from "./NewsCardContainer";
 
 import useKeyEscClose from "@/hooks/useKeyEscClose";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { ClientOnly } from "../ClientOnly";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];
@@ -47,7 +48,9 @@ const NewsIndex = ({
 
   return (
     <>
-      <Carousel datas={images}></Carousel>
+      <ClientOnly>
+        <Carousel datas={images}></Carousel>
+      </ClientOnly>
       <NewsCardContainer>
         {articles.map((item, index) => (
           <NewsCard

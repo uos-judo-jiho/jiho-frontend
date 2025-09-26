@@ -37,7 +37,10 @@ if (isProduction) {
 
       // Set safe headers
       res.status(response.status);
-      res.setHeader("Content-Type", response.headers.get("content-type") || "application/json");
+      res.setHeader(
+        "Content-Type",
+        response.headers.get("content-type") || "application/json"
+      );
       res.send(data);
     } catch (error) {
       console.error(`${CONSOLE_PREFIX.ERROR} Proxy error:`, error);
@@ -51,6 +54,7 @@ let templateHtml = "";
 if (isProduction) {
   console.info(`${CONSOLE_PREFIX.INFO} Running in production mode`);
   templateHtml = await fs.readFile("./build/client/index.html", "utf-8");
+  console.info(`${CONSOLE_PREFIX.INFO} Production assets cached`, templateHtml);
 }
 
 // Add Vite or respective production middlewares

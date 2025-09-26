@@ -74,7 +74,8 @@ const PhotoMobile = () => {
     document.getElementById(`training-mobile-card-${id}`)?.scrollIntoView();
   }, [id, trainings]);
 
-  if (!trainings || isLoading) {
+  // SSR-friendly: Show layout structure even without data
+  if (!trainings && isLoading) {
     return <Loading />;
   }
 
@@ -97,9 +98,12 @@ const PhotoMobile = () => {
         <div className="nav-icon" />
       </MobileHeader>
       <Feed>
-        {trainings.map((trainingInfo) => (
-          <MobilePhotoCard key={trainingInfo.id} articleInfo={trainingInfo} id={`training-mobile-card-${trainingInfo.id}`} />
-        ))}
+        {trainings && trainings.length > 0 ?
+          trainings.map((trainingInfo) => (
+            <MobilePhotoCard key={trainingInfo.id} articleInfo={trainingInfo} id={`training-mobile-card-${trainingInfo.id}`} />
+          )) :
+          <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>훈련일지를 불러오는 중...</div>
+        }
       </Feed>
       <Footer />
     </div>

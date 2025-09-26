@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Col from "./Col";
 import Row from "./Row";
 
@@ -10,43 +10,21 @@ type MobileRowColLayoutProps = {
   colAlignItems?: string;
 };
 
-function MobileRowColLayout({
+export function MobileRowColLayout({
   children,
   rowAlignItems,
   rowJustifyContent,
   colAlignItems,
   colJustifyContent,
 }: MobileRowColLayoutProps) {
-  const [windowSize, setWindowSize] = useState([
-    window.innerWidth,
-    window.innerHeight,
-  ]);
-
-  useEffect(() => {
-    const handleWindowResize = () => {
-      setWindowSize([window.innerWidth, window.innerHeight]);
-    };
-
-    window.addEventListener("resize", handleWindowResize);
-
-    return () => {
-      window.removeEventListener("resize", handleWindowResize);
-    };
-  });
-
   return (
     <>
-      {windowSize[0] >= 540 ? (
-        <Row justifyContent={rowJustifyContent} alignItems={rowAlignItems}>
-          {children}
-        </Row>
-      ) : (
-        <Col justifyContent={colJustifyContent} alignItems={colAlignItems}>
-          {children}
-        </Col>
-      )}
+      <Row justifyContent={rowJustifyContent} alignItems={rowAlignItems} $pc>
+        {children}
+      </Row>
+      <Col justifyContent={colJustifyContent} alignItems={colAlignItems} mobile>
+        {children}
+      </Col>
     </>
   );
 }
-
-export default MobileRowColLayout;

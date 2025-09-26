@@ -17,6 +17,7 @@
     "preview": "cross-env NODE_ENV=production node server.js",
     "start": "npm run preview",
     "prebuild": "node script/sitemap.js",
+    "postbuild": "node script/prerender-news.js",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
