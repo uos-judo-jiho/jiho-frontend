@@ -15,6 +15,7 @@ import { useNotices } from "@/recoils/notices";
 import MyHelmet from "@/helmet/MyHelmet";
 
 import { Constants } from "@/lib/constant";
+import { lightTheme } from "@/lib/theme/theme";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);

@@ -14,6 +14,7 @@ export default defineConfig({
     },
   },
   server: {
+    port: 3000,
     proxy: {
       "/api": {
         target: "https://uosjudo.com/api",
@@ -23,5 +24,8 @@ export default defineConfig({
         ws: true,
       },
     },
+  },
+  ssr: {
+    noExternal: ["styled-components", "@emotion/stylis", "@emotion/unitless"],
   },
 });
