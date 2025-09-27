@@ -1,4 +1,4 @@
-import { useTrainingListQuery } from "@/api/tradings/query";
+import { useTrainingListQuery } from "@/api/trainings/query";
 import { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";

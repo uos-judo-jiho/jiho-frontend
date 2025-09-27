@@ -1,3 +1,4 @@
+import MarkdownRenderer from "@/components/common/Markdown/MarkdownRenderer";
 import styled from "styled-components";
 type NoticeDescriptionProps = {
   description: string;
@@ -15,14 +16,7 @@ const Container = styled.div`
 function NoticeDescription({ description }: NoticeDescriptionProps) {
   return (
     <Container>
-      {description.split("\n").map((line, index) => {
-        return (
-          <p key={"noticeText" + index.toString()}>
-            {line}
-            <br />
-          </p>
-        );
-      })}
+      <MarkdownRenderer content={description} />
     </Container>
   );
 }

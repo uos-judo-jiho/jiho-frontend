@@ -7,7 +7,7 @@ export const StyledLabel = styled.label`
 export const FormContainer = styled.div`
   background-color: ${(props) => props.theme.bgColor};
   padding: 20px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 20px;
 `;
 
 export const InputContainer = styled.div`
@@ -20,6 +20,7 @@ export const InputContainer = styled.div`
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  gap: 12px;
 `;
 
 export const CancelButton = styled.button`

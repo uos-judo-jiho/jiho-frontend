@@ -1,7 +1,7 @@
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import axiosInstance from "../config";
 
-const METHOD_URL = "api/trainings";
+const METHOD_URL = "/api/trainings";
 
 export const getTrainings = async (
   year?: string

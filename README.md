@@ -90,3 +90,7 @@ npm run prod:start
 ## BE
 
 38기 이진수
+
+# contact
+
+[uosjudojiho@gmail.com](mailto:uosjudojiho@gmail.com)

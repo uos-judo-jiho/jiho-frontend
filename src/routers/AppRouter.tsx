@@ -9,6 +9,7 @@ import NewsDetailPage from "@/pages/News/NewsDetailPage";
 import Photo from "@/pages/Photo/Photo";
 import PhotoDetail from "@/pages/Photo/PhotoDetail";
 import Home from "../pages/Home";
+import AdminHomePage from "@/pages/admin/AdminHomePage";
 
 const WithSuspense = ({ children }: { children: React.ReactNode }) => {
   return <Suspense fallback={<Loading />}>{children}</Suspense>;
@@ -18,8 +19,6 @@ const About = lazy(() => import("../pages/About"));
 const Notice = lazy(() => import("../pages/Notice/Notice"));
 const NoticeDetail = lazy(() => import("../pages/Notice/NoticeDetail"));
 const NotFound = lazy(() => import("../pages/NotFound"));
-
-const AdminHomePage = lazy(() => import("../pages/admin/AdminHomePage"));
 
 const AppRouter = () => {
   return (

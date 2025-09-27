@@ -55,6 +55,15 @@ const More = styled.p`
   }
 `;
 
+const formatOnlyWord = (text: string, maxLength: number) => {
+  // 문자, ".", ",", "!", "?", 괄호(),[],{},이모지만 허용하고 제거
+  const pattern = new RegExp(
+    `[^a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ.,!?()\\[\\]{}\\s]`,
+    "g"
+  );
+  return `${text.replace(pattern, "").slice(0, maxLength)}...`;
+};
+
 const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
   const boardData = data.slice(0, DATA_LEN);
   return (
@@ -74,7 +83,10 @@ const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
               <Item key={title + index}>
                 <Link to={`${linkTo}/${item.id}`}>
                   <Row justifyContent="space-between" gap={16}>
-                    <ItemWrapper>{`[${item.author}] ${item.description}`}</ItemWrapper>
+                    <ItemWrapper>{`[${item.author}] ${formatOnlyWord(
+                      item.description,
+                      100
+                    )}`}</ItemWrapper>
                     <TimeContent>{item.dateTime}</TimeContent>
                   </Row>
                 </Link>

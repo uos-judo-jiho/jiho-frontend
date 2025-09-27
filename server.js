@@ -113,6 +113,11 @@ if (!isProduction) {
   app.use(base, sirv("./build/client", { extensions: [] }));
 }
 
+// admin 페이지는 client 사이드 렌더링으로 처리
+app.use("/admin*", (res) => {
+  res.sendFile("index.html", { root: "./build/client" });
+});
+
 // Serve HTML
 app.use("*", async (req, res) => {
   try {

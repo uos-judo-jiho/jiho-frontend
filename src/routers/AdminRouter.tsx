@@ -1,13 +1,24 @@
 import { Route, Routes } from "react-router-dom";
+import { lazy } from "react";
+
 import AdminNavPage from "../pages/admin/AdminNavPage";
 import AdminNews from "../pages/admin/News/AdminNews";
-import AdminNewsDetail from "../pages/admin/News/AdminNewsDetail";
-import AdminGallery from "../pages/admin/News/Gallery/AdminGallery";
 import AdminNotice from "../pages/admin/Notice/AdminNotice";
-import AdminNoticeDetail from "../pages/admin/Notice/AdminNoticeDetail";
-import WriteArticlePage from "../pages/admin/WriteArticlePage";
 import AdminTrainingLog from "../pages/admin/trainingLog/AdminTrainingLog";
-import AdminTrainingLogDetail from "../pages/admin/trainingLog/AdminTrainingLogDetail";
+
+const WriteArticlePage = lazy(() => import("../pages/admin/WriteArticlePage"));
+const AdminGallery = lazy(
+  () => import("../pages/admin/News/Gallery/AdminGallery")
+);
+const AdminTrainingLogDetail = lazy(
+  () => import("../pages/admin/trainingLog/AdminTrainingLogDetail")
+);
+const AdminNewsDetail = lazy(
+  () => import("../pages/admin/News/AdminNewsDetail")
+);
+const AdminNoticeDetail = lazy(
+  () => import("../pages/admin/Notice/AdminNoticeDetail")
+);
 
 const AdminRouter = () => {
   return (

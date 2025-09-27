@@ -2,16 +2,87 @@ import fs from "fs";
 
 const filePath = `${process.env.PWD}/public/sitemap.xml`;
 
+// 2022, 2023, 2024
+const yearCandidates = Array.from(
+  { length: new Date().getFullYear() - 2021 },
+  (_, i) => 2022 + i
+);
+
+/**
+ * 현재 년도까지의 뉴스 데이터를 불러와서 사이트맵에 추가
+ * /news/{year}/{id} 형식으로 추가
+ */
+const fetchHistoricalNews = async (year) => {
+  const res = await fetch(`https://uosjudo.com/api/news/${year}`);
+  if (!res.ok) {
+    console.warn(`Failed to fetch historical news for ${year}`);
+    return [];
+  }
+  return await res.json();
+};
+
+const fetchHistoricalTrainings = async () => {
+  const res = await fetch(`https://uosjudo.com/api/trainings`);
+
+  if (!res.ok) {
+    console.warn(`Failed to fetch historical trainings`);
+    return [];
+  }
+  return await res.json();
+};
+
 const generateSitemap = async () => {
+  const trainings = await fetchHistoricalTrainings();
+
+  const latestTrainingDate = trainings.trainingLogs.length
+    ? new Date(trainings.trainingLogs[0].dateTime).toISOString()
+    : null;
+
+  const currentYear = new Date().getFullYear();
+
+  const latestNews = await fetchHistoricalNews(currentYear);
+  const latestNewsDate = latestNews.length
+    ? new Date(latestNews[0].dateTime).toISOString()
+    : null;
+
+  const newsByYear = {};
+  for (const year of yearCandidates) {
+    newsByYear[year] = await fetchHistoricalNews(year).then(
+      (news) => news.articles
+    );
+  }
+
   /**
-   * @type {{loc: string, lastmod?: string, changefreq?: string, priority?: string}[]}
+   * @type {{loc: string, lastmod?: string, Lastmod?: string, priority?: string}[]}
    */
   const sitemapMetaDataList = [
-    { loc: "https://uosjudo.com/photo", changefreq: "weekly" },
-    { loc: "https://uosjudo.com/news", changefreq: "yearly" },
-    { loc: "https://uosjudo.com/news/2022", changefreq: "never" },
-    { loc: "https://uosjudo.com/news/2023", changefreq: "never" },
-    { loc: "https://uosjudo.com/news/2024", changefreq: "never" },
+    {
+      loc: "https://uosjudo.com/photo",
+      lastmod: latestTrainingDate,
+      priority: "0.9",
+    },
+    ...trainings.trainingLogs.map((training) => ({
+      loc: `https://uosjudo.com/photo/${training.id}`,
+      lastmod: new Date(training.dateTime).toISOString(),
+      priority: "0.7",
+    })),
+    {
+      loc: "https://uosjudo.com/news",
+      lastmod: latestNewsDate,
+      priority: "0.9",
+    },
+    ...yearCandidates.map((year) => ({
+      loc: `https://uosjudo.com/news/${year}`,
+      lastmod: new Date(`${year}-12-31`).toISOString(),
+      priority: "0.8",
+    })),
+    ...Object.entries(newsByYear).flatMap(([year, newsList]) =>
+      newsList.map((news) => ({
+        loc: `https://uosjudo.com/news/${year}/${news.id}`,
+        lastmod: new Date(news.dateTime).toISOString(),
+        priority: "0.8",
+      }))
+    ),
     { loc: "https://uosjudo.com/notice" },
   ];
 
@@ -38,7 +109,7 @@ const generateSitemap = async () => {
       }`,
     ]
       .filter((_) => _)
-      .join("\n\t\t")}
+      .join("\n")}
   </url>`
     )
     .join("\n");

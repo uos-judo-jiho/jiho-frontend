@@ -19,7 +19,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import MarkdownEditor from "./MarkdownEditor/MarkdownEditor";
+import { toBase64 } from "@/lib/utils/Utils";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -51,10 +52,6 @@ const LoadingContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-`;
-
-const InputValueLength = styled.span`
-  text-align: right;
 `;
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
@@ -140,11 +137,9 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     });
   };
 
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
+  const handleMarkdownChange = (value: string) => {
     setValues((prev) => {
-      return { ...prev, description: event.target.value };
+      return { ...prev, description: value };
     });
   };
 
@@ -202,6 +197,20 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleUploadImages = (images: string[]) => {
     setValues((prev) => ({ ...prev, imgSrcs: [...images] }));
+  };
+
+  const handleImageUpload = async (file: File): Promise<string> => {
+    try {
+      // 파일을 base64로 변환
+      const base64String = await toBase64(file);
+
+      // TODO 프론트엔드 서버에서 직접 s3로 업로드 처리
+
+      return base64String;
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      throw new Error("이미지 업로드에 실패했습니다.");
+    }
   };
 
   return (
@@ -280,73 +289,107 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               value={values.dateTime}
             />
           </InputContainer>
-          {!gallery && (
-            <InputContainer>
-              <StyledLabel htmlFor="description" aria-required="true">
-                본문
-              </StyledLabel>
-              <Textarea
-                disabled={gallery}
-                id="description"
-                name="description"
-                onChange={handleDescriptionChange}
-                required
-                value={values.description}
-              />
-              <InputValueLength>{values.description.length}</InputValueLength>
-            </InputContainer>
-          )}
+
           <ImageUploader
             setValues={handleUploadImages}
             data={data?.imgSrcs}
             imageLimit={gallery ? 20 : 10}
           />
-
-          <ButtonContainer>
-            {!isNew && !gallery && (
-              <Button variant={"destructive"} onClick={handleDeleteSubmit}>
-                삭제
-              </Button>
-            )}
-            <div className="flex gap-2">
-              <Button
-                className="text-primary bg-gray-300 hover:bg-gray-500"
-                variant={"secondary"}
-                onClick={handleCancelSubmit}
-              >
-                취소
-              </Button>
-              <Button
-                variant={"default"}
-                className="text-primary bg-blue-500 hover:bg-blue-600"
-                onClick={handelSubmitOpen}
-              >
-                제출
-              </Button>
-            </div>
-          </ButtonContainer>
-          <SubmitModal
-            confirmText={"확인"}
-            cancelText={"취소"}
-            description={`${
-              !isNew ? "변경사항" : "작성한 글"
-            }을 저장하시겠습니까?`}
-            open={isSubmitOpen}
-            setOpen={setIsSubmitOpen}
-            onSubmit={async () => await handleSubmit()}
-          />
         </div>
-        {!isNew && (
-          <SubmitModal
-            confirmText={"삭제"}
-            cancelText={"취소"}
-            description={"게시물을 삭제하기겠습니까?"}
-            open={isDeleteOpen}
-            setOpen={setIsDeleteOpen}
-            onSubmit={async () => handleDelete(data.id, type)}
-          />
-        )}
       </FormContainer>
+      {!gallery && (
+        <InputContainer>
+          <StyledLabel htmlFor="description" aria-required="true">
+            본문 (마크다운 지원)
+          </StyledLabel>
+          <MarkdownEditor
+            value={values.description}
+            onChange={handleMarkdownChange}
+            disabled={gallery}
+            onImageUpload={handleImageUpload}
+            placeholder={`마크다운으로 ${
+              type === "training"
+                ? "훈련일지"
+                : type === "news"
+                ? "지호지"
+                : "공지사항"
+            } 내용을 작성하세요...
+
+# 제목 예시
+
+**굵은 글씨**와 *기울임꼴*을 사용할 수 있습니다.
+
+## 소제목
+
+- 리스트 항목 1
+- 리스트 항목 2
+
+### 세부 내용
+
+1. 순서가 있는 목록
+2. 두 번째 항목
+
+> 인용구도 사용할 수 있습니다.
+
+\`\`\`
+코드 블록도 지원됩니다
+\`\`\`
+
+[링크 텍스트](https://example.com)
+
+**💡 이미지 추가하기**
+- 이미지 파일을 에디터로 드래그 앤 드롭하세요
+- 자동으로 마크다운 이미지 문법이 삽입됩니다!`}
+          />
+        </InputContainer>
+      )}
+
+      <ButtonContainer>
+        {!isNew && !gallery && (
+          <Button
+            variant={"destructive"}
+            onClick={handleDeleteSubmit}
+            className="mr-2"
+          >
+            삭제
+          </Button>
+        )}
+        <div className="flex gap-2">
+          <Button
+            className="text-primary bg-gray-300 hover:bg-gray-500"
+            variant={"secondary"}
+            onClick={handleCancelSubmit}
+          >
+            취소
+          </Button>
+          <Button
+            variant={"default"}
+            className="text-primary bg-blue-500 hover:bg-blue-600"
+            onClick={handelSubmitOpen}
+          >
+            제출
+          </Button>
+        </div>
+      </ButtonContainer>
+      <SubmitModal
+        confirmText={"확인"}
+        cancelText={"취소"}
+        description={`${!isNew ? "변경사항" : "작성한 글"}을 저장하시겠습니까?`}
+        open={isSubmitOpen}
+        setOpen={setIsSubmitOpen}
+        onSubmit={async () => await handleSubmit()}
+      />
+      {!isNew && (
+        <SubmitModal
+          confirmText={"삭제"}
+          cancelText={"취소"}
+          description={"게시물을 삭제하기겠습니까?"}
+          open={isDeleteOpen}
+          setOpen={setIsDeleteOpen}
+          onSubmit={async () => handleDelete(data.id, type)}
+        />
+      )}
+
       {isSubmited && (
         <LoadingWrapper>
           <LoadingContainer>

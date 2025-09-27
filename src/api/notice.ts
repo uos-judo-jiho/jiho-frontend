@@ -1,7 +1,7 @@
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import axiosInstance from "./config";
 
-const METHOD_URL = "api/notices";
+const METHOD_URL = "/api/notices";
 
 export const getNotices = async (): Promise<ArticleInfoType[]> => {
   return await axiosInstance<{ notices: ArticleInfoType[] }>({

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Line from "@/components/layouts/Line";
+import MarkdownRenderer from "@/components/common/Markdown/MarkdownRenderer";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 
 type ModalDescriptionSectionProps = {
@@ -59,13 +60,6 @@ const DescriptionTitle = styled.h3`
   margin-bottom: 10px;
 `;
 
-const Description = styled.p`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  text-indent: 0.4em;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: keep-all;
-`;
 
 const DescriptionFooter = styled.div`
   flex: 0;
@@ -123,7 +117,7 @@ function ModalDescriptionSection({
       </DescriptionHeader>
       <DescriptionWrapper>
         <DescriptionTitle>{article.title}</DescriptionTitle>
-        <Description>{article.description}</Description>
+        <MarkdownRenderer content={article.description} />
       </DescriptionWrapper>
       <DescriptionFooter>
         <Line margin={"10px 0"} borderWidth={"1px"} />
