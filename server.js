@@ -46,8 +46,157 @@ console.info(`${CONSOLE_PREFIX.INFO} Environment: ${process.env.NODE_ENV}`);
 console.info(`${CONSOLE_PREFIX.INFO} isLocal: ${isLocal}`);
 console.info(`${CONSOLE_PREFIX.INFO} Base path set to: ${base}`);
 
+// BFF Utilities
+function bffLogger(req, res, next) {
+  const start = Date.now();
+
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    const timestamp = new Date().toISOString();
+    console.log(
+      `[${timestamp}] BFF ${req.method} ${req.originalUrl} - ${res.statusCode} - ${duration}ms`
+    );
+  });
+
+  next();
+}
+
+function bffErrorHandler(err, req, res, next) {
+  const statusCode = err.statusCode || err.status || 500;
+  const message = err.message || "Internal Server Error";
+
+  console.error("BFF Error occurred:", {
+    statusCode,
+    message,
+    stack: err.stack,
+    url: req.url,
+    method: req.method,
+    timestamp: new Date().toISOString()
+  });
+
+  res.status(statusCode).json({
+    error: message,
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack })
+  });
+}
+
+async function proxyToBackend(path, req, res) {
+  const BACKEND_URL = process.env.BACKEND_URL || 'https://uosjudo.com/api';
+
+  try {
+    const queryString = new URLSearchParams(req.query).toString();
+    const fullUrl = queryString ? `${BACKEND_URL}${path}?${queryString}` : `${BACKEND_URL}${path}`;
+
+    const response = await fetch(fullUrl, {
+      method: req.method,
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': req.headers['user-agent'] || 'jiho-bff-proxy',
+        ...(req.headers.authorization && { 'Authorization': req.headers.authorization })
+      },
+      body: req.method !== 'GET' && req.method !== 'HEAD' ? JSON.stringify(req.body) : undefined,
+    });
+
+    const data = await response.text();
+
+    // Set response headers
+    res.status(response.status);
+    res.setHeader(
+      'Content-Type',
+      response.headers.get('content-type') || 'application/json'
+    );
+
+    // Copy relevant headers from backend response
+    const headersToProxy = ['cache-control', 'etag', 'last-modified'];
+    headersToProxy.forEach(header => {
+      const value = response.headers.get(header);
+      if (value) {
+        res.setHeader(header, value);
+      }
+    });
+
+    res.send(data);
+  } catch (error) {
+    console.error('BFF Proxy error:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'Failed to proxy request to backend'
+    });
+  }
+}
+
 // Create http server
 const app = express();
+
+// BFF middleware for internal routes
+app.use("/_internal", bffLogger);
+app.use("/_internal", express.json({ limit: "10mb" }));
+app.use("/_internal", express.urlencoded({ extended: true, limit: "10mb" }));
+
+// BFF Internal API Routes
+app.get("/_internal/health", (req, res) => {
+  res.json({
+    status: "OK",
+    service: "BFF Internal Routes",
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get("/_internal/api", (req, res) => {
+  res.json({
+    message: "Jiho BFF Internal API",
+    version: "1.0.0",
+    endpoints: {
+      news: "/_internal/api/news/:year",
+      notices: "/_internal/api/notices",
+      trainings: "/_internal/api/trainings?year=<year>",
+      admin: "/_internal/api/admin"
+    }
+  });
+});
+
+// BFF API Routes - News
+app.use("/_internal/api/news*", async (req, res, next) => {
+  try {
+    const path = req.params[0] || "";
+    await proxyToBackend(`/news${path}`, req, res);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// BFF API Routes - Notices
+app.use("/_internal/api/notices*", async (req, res, next) => {
+  try {
+    const path = req.params[0] || "";
+    await proxyToBackend(`/notice${path}`, req, res);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// BFF API Routes - Trainings
+app.use("/_internal/api/trainings*", async (req, res, next) => {
+  try {
+    const path = req.params[0] || "";
+    await proxyToBackend(`/trading${path}`, req, res);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// BFF API Routes - Admin
+app.use("/_internal/api/admin*", async (req, res, next) => {
+  try {
+    const path = req.params[0] || "";
+    await proxyToBackend(`/admin${path}`, req, res);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// BFF Error handler (must be after routes)
+app.use("/_internal", bffErrorHandler);
 
 // API proxy for preview mode
 if (isProduction) {
@@ -102,7 +251,13 @@ if (!isProduction) {
     appType: "custom",
     base,
   });
-  app.use(vite.middlewares);
+  // Vite 미들웨어를 BFF 라우트 다음에 배치
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/_internal')) {
+      return next('route'); // BFF 라우트 우선
+    }
+    return vite.middlewares(req, res, next);
+  });
 } else {
   console.info(
     `${CONSOLE_PREFIX.INFO} Serving static assets from ./build/client`
