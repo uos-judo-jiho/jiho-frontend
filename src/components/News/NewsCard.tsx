@@ -8,14 +8,6 @@ import { Card } from "@/components/ui/card";
 import { Constants } from "@/lib/constant";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 
-type NewsCardProps = {
-  index: number;
-  year: string;
-  datas: ArticleInfoType[];
-  selectedIndex?: number;
-  handleClickCard: (index: string) => void;
-};
-
 const Container = styled(Card)`
   width: 100%;
   font-size: ${(props) => props.theme.descriptionFontSize};
@@ -144,55 +136,59 @@ const MoreButton = styled.button`
   }
 `;
 
-const NewsCard = ({ index, datas, handleClickCard, year }: NewsCardProps) => {
+type NewsCardProps = {
+  year: string;
+  article: ArticleInfoType;
+  selectedIndex?: number;
+  handleClickCard: (index: string) => void;
+};
+
+const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const newsData = datas[index];
-  const commenter = datas[index].description.slice(0, 100);
+  const commenter = article.description.slice(0, 100);
 
   const handleLoding = () => {
     setIsLoading(true);
   };
 
   return (
-    <Container onClick={() => handleClickCard(newsData.id)}>
+    <Container onClick={() => handleClickCard(article.id)}>
       <AnchoreContainer
-        href={`/news/${year}/${newsData.id}`}
+        href={`/news/${year}/${article.id}`}
         onClick={(e) => e.preventDefault()}
       >
         <ImgWrapper>
           {isLoading ? (
             <Img
               loading="lazy"
-              alt={newsData.title + newsData.author}
+              alt={article.title + article.author}
               src={
-                newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK
+                article.imgSrcs[0] ? article.imgSrcs[0] : Constants.LOGO_BLACK
               }
             />
           ) : (
             <SkeletonThumbnail />
           )}
           <img
-            alt={newsData.title + newsData.author}
-            src={
-              newsData.imgSrcs[0] ? newsData.imgSrcs[0] : Constants.LOGO_BLACK
-            }
+            alt={article.title + article.author}
+            src={article.imgSrcs[0] ? article.imgSrcs[0] : Constants.LOGO_BLACK}
             style={{ display: "none" }}
             onLoad={handleLoding}
           />
           <Col>
-            <ImgTitle>{newsData.title}</ImgTitle>
-            <ImgSubTitle>{newsData.author}</ImgSubTitle>
-            <ImgSubTitle>{newsData.tags}</ImgSubTitle>
+            <ImgTitle>{article.title}</ImgTitle>
+            <ImgSubTitle>{article.author}</ImgSubTitle>
+            <ImgSubTitle>{article.tags}</ImgSubTitle>
           </Col>
         </ImgWrapper>
         <DescriptionWrapper>
           <DescriptionTitleWrapper>
             <Col>
-              <DescriptionTitle>{newsData.title}</DescriptionTitle>
+              <DescriptionTitle>{article.title}</DescriptionTitle>
               <Col>
-                <DescriptionSubTitle>{newsData.author}</DescriptionSubTitle>
-                <DescriptionSubTitle>{newsData.tags}</DescriptionSubTitle>
+                <DescriptionSubTitle>{article.author}</DescriptionSubTitle>
+                <DescriptionSubTitle>{article.tags}</DescriptionSubTitle>
               </Col>
             </Col>
           </DescriptionTitleWrapper>

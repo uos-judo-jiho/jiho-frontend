@@ -1,8 +1,7 @@
-import { Navigate } from "react-router-dom";
-import { Constants } from "@/lib/constant";
+import NewsDetail from "./NewsDetail";
 
-const News = () => {
-  return <Navigate to={`/news/${Constants.LATEST_NEWS_YEAR}`} />;
+const NewsPage = () => {
+  return <NewsDetail />;
 };
 
-export default News;
+export default NewsPage;

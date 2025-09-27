@@ -1,16 +1,11 @@
 import { useCallback } from "react";
-import styled, { keyframes } from "styled-components";
-
-import {
-  StyledBackArrow,
-  StyledForwardArrow,
-} from "@/components/layouts/Arrow";
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-
-import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import Close from "@/lib/assets/svgs/close.svg";
-import Loading from "../Skeletons/Loading";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import ModalArticleContainer from "./ModalArticleContainer";
 
 type PhotoModalProps = {
@@ -21,130 +16,6 @@ type PhotoModalProps = {
   id: string;
   titles: string[];
 };
-
-const FadeOut = keyframes`
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-`;
-
-const FadeIn = keyframes`
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-`;
-
-const IndexContainer = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 5%;
-  padding-top: 10px;
-  color: ${(props) => props.theme.lightGreyColor};
-
-  @media (max-width: 539px) {
-    background-color: ${(props) => props.theme.bgColor};
-    color: ${(props) => props.theme.blackColor};
-  }
-`;
-const IndexSpan = styled.span`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  display: block;
-`;
-
-const Container = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.6);
-
-  height: 100vh;
-  width: 100vw;
-
-  animation-duration: 0.25s;
-  animation-name: ${FadeIn};
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &.closeModal {
-    animation-name: ${FadeOut};
-  }
-
-  @media (max-width: 539px) {
-    display: none;
-  }
-
-  & .modal-content {
-    position: relative;
-    background-color: #fefefe;
-    margin: auto;
-    padding: 0;
-    width: 100%;
-    max-width: 1200px;
-  }
-`;
-
-const MobileModalLayout = styled.div`
-  position: relative;
-  @media (max-width: 539px) {
-    width: 100%;
-    height: 100%;
-    padding-top: 100px;
-  }
-`;
-
-const StyledClose = styled.img``;
-
-type ArrowWrapperProps = {
-  isMobileVisible: boolean;
-  isDesktopVisible: boolean;
-};
-
-const ArrowWrapper = styled.div<ArrowWrapperProps>`
-  display: ${(props) => (props.isDesktopVisible ? "flex" : "none")};
-  @media (max-width: 539px) {
-    display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
-  }
-`;
-
-const CloseBtn = styled.button`
-  position: absolute;
-  z-index: 1;
-  top: 16px;
-  right: 16px;
-  width: 24px;
-  height: 24px;
-  background-color: transparent;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @media (max-width: 539px) {
-    position: absolute;
-    top: 8px;
-    right: 16px;
-
-    animation-duration: 0.5s;
-    animation-timing-function: ease-out;
-    animation-name: ${FadeIn};
-    animation-fill-mode: forwards;
-  }
-`;
 
 const PhotoModal = ({
   baseurl,
@@ -161,11 +32,15 @@ const PhotoModal = ({
   );
 
   const nextSlider = useCallback(() => {
-    navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
+    if (current < infos.length - 1) {
+      navigate(`/${baseurl}/${infos[current + 1].id}`, { replace: true });
+    }
   }, [baseurl, current, infos, navigate]);
 
   const prevSlider = useCallback(() => {
-    navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
+    if (current > 0) {
+      navigate(`/${baseurl}/${infos[current - 1].id}`, { replace: true });
+    }
   }, [baseurl, current, infos, navigate]);
 
   const info = infos.find(
@@ -175,56 +50,57 @@ const PhotoModal = ({
   const length = infos.length;
 
   if (!info) {
-    return <Loading />;
+    return null;
   }
 
-  return createPortal(
-    <Container className={open ? "openModal" : "closeModal"}>
-      <ArrowWrapper isMobileVisible={false} isDesktopVisible={true}>
-        <StyledBackArrow
-          size={"4rem"}
-          onClick={prevSlider}
-          current={current}
-          length={length}
-        />
-        <StyledForwardArrow
-          size={"4rem"}
-          onClick={nextSlider}
-          current={current}
-          length={length}
-        />
-      </ArrowWrapper>
-      <MobileModalLayout>
-        <CloseBtn
-          onClick={() => {
-            close();
-          }}
-        >
-          <StyledClose src={Close} />
-        </CloseBtn>
-        <ModalArticleContainer info={info} titles={titles} />
-        <IndexContainer>
-          <ArrowWrapper isMobileVisible={true} isDesktopVisible={false}>
-            <StyledBackArrow
-              size={"4rem"}
+  const handleClose = () => {
+    close();
+    navigate(`/${baseurl}`, { replace: true });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={handleClose}>
+      <DialogOverlay />
+      <DialogContent className="hidden md:block w-[95vw] h-[95vh] p-0 border-0 bg-transparent shadow-none">
+        {/* Navigation Arrows */}
+        <div>
+          {current > 0 && (
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={prevSlider}
-              current={current}
-              length={length}
-              isMobileVisible={true}
-            />
-            <StyledForwardArrow
-              size={"4rem"}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-40 bg-black/50 hover:bg-black/70 text-white rounded-full w-12 h-12"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </Button>
+          )}
+
+          {current < length - 1 && (
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={nextSlider}
-              current={current}
-              length={length}
-              isMobileVisible={true}
-            />
-          </ArrowWrapper>
-          <IndexSpan>{current + 1 + " / " + length}</IndexSpan>
-        </IndexContainer>
-      </MobileModalLayout>
-    </Container>,
-    document.body
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-40 bg-black/50 hover:bg-black/70 text-white rounded-full w-12 h-12"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </Button>
+          )}
+        </div>
+
+        {/* Main Content */}
+        <div className="relative w-full h-full">
+          {/* Article Container */}
+          <div className="w-full overflow-hidden flex align-center justify-center">
+            <ModalArticleContainer info={info} titles={titles} />
+          </div>
+
+          {/* Counter - Desktop Only */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+            {current + 1} / {length}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

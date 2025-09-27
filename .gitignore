@@ -25,3 +25,6 @@ yarn-error.log*
 
 .ssh
 .env*
+
+# local development files
+public/prerendered

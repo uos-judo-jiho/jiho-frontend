@@ -8,11 +8,11 @@ const API_BASE_URL = "https://uosjudo.com/api";
 /**
  * 뉴스 데이터를 미리 가져와서 정적 JSON 파일로 저장
  */
-const prerenderNewsData = async () => {
+const prerenderNewsData = async (isLocal) => {
   console.log("Starting news data prerendering...");
 
   // build/client/prerendered 디렉토리 생성 (빌드 결과물과 함께)
-  const outputDir = path.join(process.cwd(), "build", "server", "prerendered");
+  const outputDir = path.join(process.cwd(), "build", "client", "prerendered");
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
@@ -53,4 +53,7 @@ const prerenderNewsData = async () => {
   console.log("News data prerendering completed!");
 };
 
-prerenderNewsData();
+const args = process.argv.slice(2);
+const isLocal = args.includes("--local");
+
+prerenderNewsData(isLocal);

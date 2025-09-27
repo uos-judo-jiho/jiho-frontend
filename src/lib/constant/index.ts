@@ -1,14 +1,15 @@
 import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.png";
 import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.png";
-import BG_COLOR_808080 from "@/lib/assets/images/bg-color-808080.png";
 
 export const Constants = {
-  BASE_URL: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://uosjudo.com",
+  BASE_URL:
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : "https://uosjudo.com",
 
   // 이미지
   LOGO_BLACK: LOGO_BLACK,
   LOGO_WHIET: LOGO_WHITE,
-  BG_COLOR_808080: BG_COLOR_808080,
 
   BLACK_COLOR: "#0f0c0c",
   YELLOW_COLOR: "#ffb746",

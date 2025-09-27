@@ -1,17 +1,50 @@
 import fs from "node:fs/promises";
 import express from "express";
+import { default as nodeConsole } from "node:console";
 
 const REACT_EXPRESS_SERVER = "[REACT-EXPRESS-SERVER]";
 const CONSOLE_PREFIX = {
+  LOG: `[LOG]${REACT_EXPRESS_SERVER}`,
   INFO: `[INFO]${REACT_EXPRESS_SERVER}`,
   ERROR: `[ERROR]${REACT_EXPRESS_SERVER}`,
   WARN: `[WARN]${REACT_EXPRESS_SERVER}`,
+};
+
+// --local for development mode
+// No flag for production mode
+const args = process.argv.slice(2);
+
+nodeConsole.log("Arguments received:", args);
+
+const isLocal = args.includes("--local");
+
+const console = {
+  log: (...args) => {
+    if (!isLocal) return;
+    nodeConsole.log(`${CONSOLE_PREFIX.LOG}`, ...args);
+  },
+  info: (...args) => {
+    if (!isLocal) return;
+    nodeConsole.log(`${CONSOLE_PREFIX.INFO}`, ...args);
+  },
+  error: (...args) => {
+    if (!isLocal) return;
+    nodeConsole.error(`${CONSOLE_PREFIX.ERROR}`, ...args);
+  },
+  warn: (...args) => {
+    if (!isLocal) return;
+    nodeConsole.warn(`${CONSOLE_PREFIX.WARN}`, ...args);
+  },
 };
 
 // Constants
 const isProduction = process.env.NODE_ENV === "production";
 const port = process.env.PORT || 3000;
 const base = process.env.BASE || "/";
+
+console.info(`${CONSOLE_PREFIX.INFO} Environment: ${process.env.NODE_ENV}`);
+console.info(`${CONSOLE_PREFIX.INFO} isLocal: ${isLocal}`);
+console.info(`${CONSOLE_PREFIX.INFO} Base path set to: ${base}`);
 
 // Create http server
 const app = express();
@@ -87,6 +120,7 @@ app.use("*", async (req, res) => {
 
     /** @type {string} */
     let template;
+
     /** @type {import('./src/entry-server.tsx').render} */
     let render;
     if (!isProduction) {

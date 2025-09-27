@@ -96,7 +96,7 @@ export const vaildNewsYearList = () => {
 export const loadPrerenderedNewsData = async (year: string) => {
   try {
     // 클라이언트 사이드에서만 실행
-    if (typeof window === 'undefined') return null;
+    if (typeof window === "undefined") return null;
 
     const response = await fetch(`/prerendered/news-${year}.json`);
     if (!response.ok) {

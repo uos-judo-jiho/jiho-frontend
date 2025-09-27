@@ -1,78 +1,34 @@
-import styled, { keyframes } from "styled-components";
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import Slider from "@/components/layouts/Slider";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import ModalDescriptionSection from "./ModalDescriptionSection";
+import { cn } from "@/lib/utils";
 
-type ModalArticleContainerProsp = {
+type ModalArticleContainerProps = {
   info: ArticleInfoType;
   titles: string[];
 };
 
-const SlideUp = keyframes`
-  from {
-    transform: translateY(-100px);
-  }
-  to {
-    transform: translateY(0px);
-  }
-`;
-
-const ModalArticle = styled.article`
-  width: 80vw;
-  height: 80vh;
-  margin: auto;
-  border-radius: 8px;
-  background-color: ${(props) => props.theme.bgColor};
-  overflow: auto;
-
-  animation-duration: 0.25s;
-  animation-timing-function: ease-out;
-  animation-name: ${SlideUp};
-  animation-fill-mode: forwards;
-
-  overflow: hidden;
-  isolation: isolate;
-
-  @media (max-width: 539px) {
-    width: 100%;
-    height: 95%;
-    border-radius: 0.5rem 0.5rem 0 0;
-    overflow: scroll;
-    isolation: auto;
-  }
-`;
-
-const Main = styled.main`
-  position: relative;
-  padding: 10px;
-  width: 100%;
-  height: 100%;
-`;
-
-function ModalArticleContainer({ info, titles }: ModalArticleContainerProsp) {
+function ModalArticleContainer({ info, titles }: ModalArticleContainerProps) {
+  console.log("Rendering ModalArticleContainer with info:", info);
   return (
-    <ModalArticle
-    // onTouchStart={onTouchStart}
-    // onTouchEnd={onTouchEnd}
-    // onMouseDown={onMouseDown}
-    // onMouseUp={onMouseUp}
+    <div
+      className={cn(
+        "w-full h-full bg-white rounded-lg overflow-hidden",
+        "md:w-auto md:h-auto md:max-w-4xl md:max-h-[85vh]",
+        "flex flex-col"
+      )}
     >
-      <Main>
-        {/* 모바일 환경에서 드래그로 모달 닫는 액션 */}
-        {/* <MobileSlideBarWrapper>
-              <MobileSlideBar />
-            </MobileSlideBarWrapper> */}
-        {/* <CloseBtn onClick={close}>
-              <StyledClose />
-            </CloseBtn> */}
+      {/* Main Content */}
+      <div className="flex-1 p-4 md:p-6 overflow-auto">
         <MobileRowColLayout>
-          {/* <ImgSlider datas={info.imgSrcs} /> */}
+          {/* Image Slider */}
           <Slider datas={info.imgSrcs} />
+          {/* Description Section */}
           <ModalDescriptionSection article={info} titles={titles} />
         </MobileRowColLayout>
-      </Main>
-    </ModalArticle>
+      </div>
+    </div>
   );
 }
 

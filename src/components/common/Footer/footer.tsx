@@ -41,7 +41,7 @@ const HyperLink = styled.a`
 
 const Footer = () => {
   return (
-    <footer className="sm:mx-auto my-8 py-8 px-4 sm:px-0">
+    <footer className="sm:mx-auto my-8 py-8 px-4">
       <MobileRowColLayout rowJustifyContent="center">
         {/* MARK: Home 훈련 일지 지호지 */}
         <DescriptionList>
