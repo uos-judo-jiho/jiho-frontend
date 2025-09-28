@@ -1,5 +1,9 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { uploadClient, UploadProgress, UploadStartResponse } from "@/api/_internal/upload/client";
+import {
+  uploadClient,
+  UploadProgress,
+  UploadStartResponse,
+} from "@/api/_internal/upload/client";
 
 export interface UploadState {
   isUploading: boolean;
@@ -37,7 +41,10 @@ export const useFileUpload = () => {
 
   const startProgressTracking = useCallback(
     (uploadId: string, sseToken: string) => {
-      const eventSource = uploadClient.createUploadEventSource(uploadId, sseToken);
+      const eventSource = uploadClient.createUploadEventSource(
+        uploadId,
+        sseToken
+      );
 
       eventSource.onmessage = (event) => {
         try {
@@ -110,7 +117,10 @@ export const useFileUpload = () => {
           error: null,
         }));
 
-        const response: UploadStartResponse = await uploadClient.uploadFile(file, folder);
+        const response: UploadStartResponse = await uploadClient.uploadFile(
+          file,
+          folder
+        );
 
         // 초기 업로드 상태 설정
         updateUpload(response.uploadId, {
@@ -148,10 +158,8 @@ export const useFileUpload = () => {
           error: null,
         }));
 
-        const response: UploadStartResponse = await uploadClient.uploadMultipleFiles(
-          files,
-          folder
-        );
+        const response: UploadStartResponse =
+          await uploadClient.uploadMultipleFiles(files, folder);
 
         // 초기 업로드 상태 설정
         updateUpload(response.uploadId, {

@@ -4,6 +4,7 @@ import "@uiw/react-md-editor/markdown-editor.css";
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useFileUpload } from "@/hooks/upload/useFileUpload";
+import { HelpMarkdown } from "@/components/admin/form/Help/HelpMarkdown";
 
 const EditorContainer = styled.div`
   width: 100%;
@@ -160,8 +161,15 @@ const CharacterCount = styled.div`
 
 const ModeToggle = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
+`;
+
+const ModeButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
 `;
 
 const ModeButton = styled.button<{ active: boolean }>`
@@ -209,13 +217,18 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
   // 업로드 완료된 이미지들을 마크다운에 반영
   useEffect(() => {
-    uploadsArray.forEach(upload => {
-      if (upload.status === 'completed' && upload.url) {
-        const placeholder = uploadingPlaceholdersRef.current.get(upload.uploadId);
+    uploadsArray.forEach((upload) => {
+      if (upload.status === "completed" && upload.url) {
+        const placeholder = uploadingPlaceholdersRef.current.get(
+          upload.uploadId
+        );
         if (placeholder) {
           // 업로드 중 플레이스홀더를 실제 이미지로 교체
           const imageMarkdown = `![Image](${upload.url})`;
-          const updatedValue = internalValue.replace(placeholder, imageMarkdown);
+          const updatedValue = internalValue.replace(
+            placeholder,
+            imageMarkdown
+          );
 
           setInternalValue(updatedValue);
           onChange(updatedValue);
@@ -223,11 +236,15 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           // 플레이스홀더 제거
           uploadingPlaceholdersRef.current.delete(upload.uploadId);
         }
-      } else if (upload.status === 'error') {
-        const placeholder = uploadingPlaceholdersRef.current.get(upload.uploadId);
+      } else if (upload.status === "error") {
+        const placeholder = uploadingPlaceholdersRef.current.get(
+          upload.uploadId
+        );
         if (placeholder) {
           // 에러 시 플레이스홀더를 에러 메시지로 교체
-          const errorMessage = `![Upload failed: ${upload.error || 'Unknown error'}]()`;
+          const errorMessage = `![Upload failed: ${
+            upload.error || "Unknown error"
+          }]()`;
           const updatedValue = internalValue.replace(placeholder, errorMessage);
 
           setInternalValue(updatedValue);
@@ -270,7 +287,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         onChange(newValue);
 
         // S3에 파일 업로드 시작 (비동기)
-        const uploadId = await uploadFile(file, 'markdown-images');
+        const uploadId = await uploadFile(file, "markdown-images");
 
         // 플레이스홀더와 uploadId 매핑 저장
         uploadingPlaceholdersRef.current.set(uploadId, uploadingPlaceholder);
@@ -292,7 +309,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
     // 이미지 파일이 포함되어 있는지 확인
     const items = Array.from(e.dataTransfer.items);
-    const hasImageFile = items.some(item => item.type.startsWith('image/'));
+    const hasImageFile = items.some((item) => item.type.startsWith("image/"));
 
     if (hasImageFile) {
       setIsDragOver(true);
@@ -325,36 +342,39 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   return (
     <EditorContainer className="markdown-editor-container">
       <ModeToggle>
-        <ModeButton
-          active={mode === "edit"}
-          onClick={() => setMode("edit")}
-          type="button"
-        >
-          편집
-        </ModeButton>
-        <ModeButton
-          active={mode === "live"}
-          onClick={() => setMode("live")}
-          type="button"
-        >
-          실시간 프리뷰
-        </ModeButton>
-        <ModeButton
-          active={mode === "preview"}
-          onClick={() => setMode("preview")}
-          type="button"
-        >
-          프리뷰
-        </ModeButton>
+        <ModeButtons>
+          <ModeButton
+            active={mode === "edit"}
+            onClick={() => setMode("edit")}
+            type="button"
+          >
+            편집
+          </ModeButton>
+          <ModeButton
+            active={mode === "live"}
+            onClick={() => setMode("live")}
+            type="button"
+          >
+            실시간 프리뷰
+          </ModeButton>
+          <ModeButton
+            active={mode === "preview"}
+            onClick={() => setMode("preview")}
+            type="button"
+          >
+            프리뷰
+          </ModeButton>
+        </ModeButtons>
+        <HelpMarkdown />
       </ModeToggle>
 
       <div
-        className={`md-editor-wrapper ${isDragOver ? 'drag-over' : ''}`}
+        className={`md-editor-wrapper ${isDragOver ? "drag-over" : ""}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
-        style={{ position: 'relative' }}
+        style={{ position: "relative" }}
       >
         <MDEditor
           value={internalValue}
