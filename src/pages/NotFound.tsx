@@ -26,7 +26,6 @@ const NotFound = () => {
     <>
       <MyHelmet title="NotFound" />
       <DefaultLayout>
-        {/* <SheetWrapper> */}
         <Container>
           <Col alignItems="center">
             <Description>존재하지 않는 페이지입니다.</Description>
@@ -35,7 +34,6 @@ const NotFound = () => {
             </Link>
           </Col>
         </Container>
-        {/* </SheetWrapper> */}
       </DefaultLayout>
     </>
   );

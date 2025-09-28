@@ -8,7 +8,6 @@ import { useTrainings } from "@/recoils/tranings";
 export const PhotoDetailMobile = () => {
   const { trainings, isLoading } = useTrainings();
 
-  // SSR-friendly: Show layout structure even without data
   if (!trainings && isLoading) {
     return <Loading />;
   }

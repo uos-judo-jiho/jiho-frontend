@@ -24,7 +24,7 @@ const AdminNewsDetail = () => {
   return (
     <>
       <Title title={"지호지 수정"} color={Constants.BLACK_COLOR} />
-      <NewsForm data={article} />;
+      <NewsForm data={article} />
     </>
   );
 };

@@ -12,15 +12,15 @@ import {
   FormContainer,
   InputContainer,
   StyledLabel,
-  TagAddButton,
   TagDeleteButton,
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import MarkdownEditor from "./MarkdownEditor/MarkdownEditor";
 import { toBase64 } from "@/lib/utils/Utils";
+import MarkdownEditor from "./MarkdownEditor/MarkdownEditor";
+import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -147,21 +147,31 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     event: React.ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
+    const tagValue = event.target.value;
     setValues((prev) => {
       let oldTags = [...prev.tags];
-      oldTags[index] = event.target.value;
+      oldTags[index] = tagValue;
       return { ...prev, tags: oldTags };
     });
   };
 
-  const handleAddTagsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleTagAdd = () => {
+    const inputElement = document.getElementById(
+      "tagInput"
+    ) as HTMLInputElement;
+
+    const inputValue = inputElement.value;
+    const newTags = inputValue
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
 
     setValues((prev) => {
-      let newTags = [...prev.tags];
-      newTags.push("");
-      return { ...prev, tags: newTags };
+      // newTags 만큰 빈칸 추가
+      let updatedTags = [...prev.tags, ...newTags];
+      return { ...prev, tags: updatedTags };
     });
+    inputElement.value = "";
   };
 
   const handleDeleteTagClick = (
@@ -226,6 +236,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                   id="author"
                   type="text"
                   name="author"
+                  placeholder="34기 김영민 (컴과 18) 혹은 김영민"
                   onChange={handleAuthorChange}
                   required
                   value={values.author}
@@ -241,6 +252,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                   type="text"
                   name="title"
                   onChange={handleTitleChange}
+                  placeholder="제목을 입력하세요"
                   required
                   value={values.title}
                 />
@@ -249,6 +261,42 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                 <StyledLabel htmlFor="tag0">
                   {type === "training" ? "참여 인원" : "태그"}
                 </StyledLabel>
+                <hr className="my-2" />
+                {/* TIP: 여러 태그를 입력할 때는 ,로 구분하세요 */}
+                <div className="mb-2">
+                  <small className="text-gray-500">
+                    TIP: 여러 {type === "training" ? "참여 인원" : "태그"}을
+                    입력할 때는 ,로 구분하세요
+                  </small>
+                </div>
+                {/* 태그 입력란 */}
+                <div className="flex flex-row items-center mb-2 gap-4">
+                  <Input
+                    disabled={gallery}
+                    id="tagInput"
+                    type="text"
+                    name="tagInput"
+                    placeholder={
+                      type === "training"
+                        ? "참여 인원을 입력하세요 (예: 김영민, 이지호)"
+                        : "태그를 입력하세요 (예: 대회, 행사, 공지)"
+                    }
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        handleTagAdd();
+                      }
+                    }}
+                  />
+                  <Button
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handleTagAdd();
+                    }}
+                  >
+                    태그 추가
+                  </Button>
+                </div>
                 {values.tags.map((tag, index) => (
                   <TagsContainer key={"tag" + index}>
                     {index + 1}
@@ -267,9 +315,6 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                     </TagDeleteButton>
                   </TagsContainer>
                 ))}
-                <TagAddButton onClick={handleAddTagsClick} disabled={gallery}>
-                  {type === "training" ? "참여 인원" : "태그"} +
-                </TagAddButton>
               </InputContainer>
             </>
           )}
@@ -298,7 +343,12 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
       {!gallery && (
         <InputContainer>
           <StyledLabel htmlFor="description" aria-required="true">
-            본문 (마크다운 지원)
+            <div className="flex flex-col">
+              <span>본문 (마크다운 지원)</span>
+              <small>
+                본문 내부에 이미지를 넣으려면 이미지를 드래그 앤 드랍하세요
+              </small>
+            </div>
           </StyledLabel>
           <MarkdownEditor
             value={values.description}
@@ -369,6 +419,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           </Button>
         </div>
       </ButtonContainer>
+
       <SubmitModal
         confirmText={"확인"}
         cancelText={"취소"}
@@ -395,6 +446,24 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           </LoadingContainer>
         </LoadingWrapper>
       )}
+
+      <div className="mt-4 py-2 border-t-2 border-b-2 border-gray-300">
+        <div className="font-bold text-lg">
+          본문 미리보기{" "}
+          <span className="text-gray-500 font-normal text-sm">
+            (작성한 내용이 어떻게 보이는지 확인하세요)
+          </span>
+        </div>
+        <small>첨부 이미지 미포함</small>
+      </div>
+      <ModalDescriptionSection
+        article={{ ...values, id: "preview-id" }}
+        titles={
+          type === "news"
+            ? ["작성자", "카테고리", "작성일"]
+            : ["작성자", "참여 인원", "훈련 날짜"]
+        }
+      />
     </>
   );
 }

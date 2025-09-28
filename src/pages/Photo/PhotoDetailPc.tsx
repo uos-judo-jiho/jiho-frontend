@@ -107,7 +107,7 @@ export const PhotoDetailPc = () => {
           {/* Main Content */}
           <div className="flex flex-col flex-1">
             {/* Image Slider */}
-            <div className="mb-6 md:mb-0 flex justify-center h-[300px]">
+            <div className="mb-6 md:mb-0 flex justify-center">
               <Slider datas={info.imgSrcs} />
             </div>
 

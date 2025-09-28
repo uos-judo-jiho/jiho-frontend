@@ -20,54 +20,12 @@ const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route
-        path="/news"
-        element={
-          <WithSuspense>
-            <News />
-          </WithSuspense>
-        }
-      />
-      <Route
-        path="/news/:id"
-        element={
-          <WithSuspense>
-            <NewsDetail />
-          </WithSuspense>
-        }
-      />
-      <Route
-        path="/news/:id/:index"
-        element={
-          <WithSuspense>
-            <NewsDetailPage />
-          </WithSuspense>
-        }
-      />
-      <Route
-        path="/about"
-        element={
-          <WithSuspense>
-            <About />
-          </WithSuspense>
-        }
-      />
-      <Route
-        path="/photo"
-        element={
-          <WithSuspense>
-            <Photo />
-          </WithSuspense>
-        }
-      />
-      <Route
-        path="/photo/:id"
-        element={
-          <WithSuspense>
-            <PhotoDetail />
-          </WithSuspense>
-        }
-      />
+      <Route path="/news" element={<News />} />
+      <Route path="/news/:id" element={<NewsDetail />} />
+      <Route path="/news/:id/:index" element={<NewsDetailPage />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/photo" element={<Photo />} />
+      <Route path="/photo/:id" element={<PhotoDetail />} />
       <Route
         path="/notice"
         element={

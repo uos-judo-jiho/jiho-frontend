@@ -11,7 +11,7 @@ type ContainerProps = {
   fontSize?: string;
 };
 
-const Container = styled.h1<ContainerProps>`
+const Container = styled.h2<ContainerProps>`
   font-size: ${(props) => props.fontSize};
   color: ${(props) =>
     props.color === "white" ? props.theme.bgColor : props.theme.blackColor};
