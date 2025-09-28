@@ -818,8 +818,19 @@ if (!isProduction) {
 }
 
 // admin 페이지는 client 사이드 렌더링으로 처리
-app.use("/admin*", (res) => {
-  res.sendFile("index.html", { root: "./build/client" });
+app.use("/admin*", async (req, res) => {
+  const url = req.originalUrl.replace(base, "");
+  console.info(`${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`);
+  if (!isProduction) {
+    try {
+      const html = await fs.readFile("index.html", "utf-8");
+      return res.send(await vite.transformIndexHtml(url, html));
+    } catch (error) {
+      console.error(`${CONSOLE_PREFIX.ERROR} Error reading index.html:`, error);
+      return res.status(500).send("Internal Server Error");
+    }
+  }
+  res.sendFile(path.resolve("./build/client/index.html"));
 });
 
 // Serve HTML
