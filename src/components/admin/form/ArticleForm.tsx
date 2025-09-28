@@ -201,11 +201,9 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleImageUpload = async (file: File): Promise<string> => {
     try {
-      // 파일을 base64로 변환
+      // S3에 업로드 (이 함수는 레거시 용도로, 드래그 앤 드롭은 MarkdownEditor 내부에서 처리됨)
+      // 여기서는 임시로 base64를 반환하지만, 실제로는 S3 URL이 반환되어야 함
       const base64String = await toBase64(file);
-
-      // TODO 프론트엔드 서버에서 직접 s3로 업로드 처리
-
       return base64String;
     } catch (error) {
       console.error("Image upload failed:", error);

@@ -4,7 +4,7 @@ import { Constants } from "@/lib/constant";
 
 const getBaseURL = () => {
   // 서버 사이드에서는 항상 풀 URL 사용
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return Constants.BASE_URL;
   }
 
@@ -12,12 +12,15 @@ const getBaseURL = () => {
   const hostname = window.location.hostname;
 
   // 로컬 개발 환경 (localhost, 127.0.0.1)
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+  if (hostname === "localhost" || hostname === "127.0.0.1") {
     return "";
   }
 
   // Docker 환경에서 내부 네트워크 체크 (환경변수 활용)
-  if (process.env.NODE_ENV === 'development' || process.env.VITE_USE_PROXY === 'true') {
+  if (
+    process.env.NODE_ENV === "development" ||
+    process.env.VITE_USE_PROXY === "true"
+  ) {
     return "";
   }
 
@@ -30,6 +33,19 @@ const axiosInstance = axios.create({
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
+  },
+});
+
+// _internal API 전용 axios 인스턴스 (서버에서 발급받은 토큰 사용)
+const serverInternalToken =
+  import.meta.env.VITE_INTERNAL_API_TOKEN || "jiho-internal-2024";
+
+export const internalAxiosInstance = axios.create({
+  baseURL: "",
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+    "X-Jiho-Internal": serverInternalToken,
   },
 });
 

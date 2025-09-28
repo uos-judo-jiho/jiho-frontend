@@ -11,6 +11,8 @@ import {
 } from "../StyledComponent/FormContainer";
 
 import { Input } from "@/components/ui/input";
+import { useFileUpload } from "@/hooks/upload/useFileUpload";
+import { UploadProgress } from "./UploadProgress";
 
 type ImageUploaderProps = {
   setValues: (images: string[]) => void;
@@ -44,7 +46,20 @@ const ImageUploader = ({
     (async () => await _convertFileFromSrc())();
   }, [data, previewImg]);
 
-  const insertImg = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const { uploadMultipleFiles, uploadsArray, cancelUpload, completedUploads } = useFileUpload();
+
+  // 완료된 업로드에서 URL 추출하여 setValues에 전달
+  useEffect(() => {
+    const completedUrls = completedUploads
+      .filter(upload => upload.url)
+      .map(upload => upload.url!);
+
+    if (completedUrls.length > 0) {
+      setValues([...previewImg.filter(url => !url.startsWith('data:')), ...completedUrls]);
+    }
+  }, [completedUploads, previewImg, setValues]);
+
+  const insertImg = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isFull) {
       alert(`사진은 최대 ${imageLimit}장까지 추가할 수 있습니다.`);
       return;
@@ -59,22 +74,25 @@ const ImageUploader = ({
       return;
     }
 
-    setImg([...img, ...Array.from(event.target.files)].slice(0, imageLimit));
+    const fileList = Array.from(event.target.files).slice(0, imageLimit - img.length);
 
-    const fileList = Array.from(event.target.files).slice(0, imageLimit);
-
+    // 미리보기용 base64 생성 (즉시 표시)
     const base64Promises: Promise<string>[] = fileList.map((file) =>
       toBase64(file)
     );
 
-    Promise.all(base64Promises)
-      .then((urlList: string[]) => {
-        setPreviewImg(urlList);
-        setValues(urlList);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    try {
+      const urlList = await Promise.all(base64Promises);
+      setPreviewImg([...previewImg, ...urlList]);
+      setImg([...img, ...fileList]);
+
+      // S3에 비동기 업로드 시작 (UI 차단 없음)
+      await uploadMultipleFiles(fileList, 'images');
+
+    } catch (error) {
+      console.error("Error:", error);
+      alert('이미지 업로드 중 오류가 발생했습니다.');
+    }
   };
 
   const deleteImg = (
@@ -104,6 +122,10 @@ const ImageUploader = ({
         onChange={insertImg}
         multiple
       />
+
+      {/* 업로드 진행 상황 표시 */}
+      <UploadProgress uploads={uploadsArray} onCancel={cancelUpload} />
+
       <PreviewContainer>
         {previewImg.map((el, index) => (
           <PreviewImgContainer key={el}>

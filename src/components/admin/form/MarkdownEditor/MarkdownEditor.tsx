@@ -1,8 +1,9 @@
 import "@uiw/react-markdown-preview/markdown.css";
 import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
+import { useFileUpload } from "@/hooks/upload/useFileUpload";
 
 const EditorContainer = styled.div`
   width: 100%;
@@ -121,6 +122,33 @@ const EditorContainer = styled.div`
     background-color: #f6f8fa;
     font-weight: bold;
   }
+
+  /* 드래그 앤 드롭 스타일 */
+  .md-editor-wrapper {
+    transition: all 0.2s ease;
+    border: 2px dashed transparent;
+    border-radius: 8px;
+  }
+
+  .md-editor-wrapper.drag-over {
+    border-color: #0969da;
+    background-color: rgba(9, 105, 218, 0.05);
+  }
+
+  .md-editor-wrapper.drag-over::before {
+    content: "📁 이미지를 여기에 드롭하세요";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(9, 105, 218, 0.9);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    z-index: 10;
+    pointer-events: none;
+  }
 `;
 
 const CharacterCount = styled.div`
@@ -170,11 +198,47 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 }) => {
   const [mode, setMode] = useState<EditorMode>("live");
   const [internalValue, setInternalValue] = useState(value);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const { uploadFile, uploadsArray } = useFileUpload();
+  const uploadingPlaceholdersRef = useRef<Map<string, string>>(new Map());
 
   // value prop이 변경될 때 내부 상태 동기화
   useEffect(() => {
     setInternalValue(value);
   }, [value]);
+
+  // 업로드 완료된 이미지들을 마크다운에 반영
+  useEffect(() => {
+    uploadsArray.forEach(upload => {
+      if (upload.status === 'completed' && upload.url) {
+        const placeholder = uploadingPlaceholdersRef.current.get(upload.uploadId);
+        if (placeholder) {
+          // 업로드 중 플레이스홀더를 실제 이미지로 교체
+          const imageMarkdown = `![Image](${upload.url})`;
+          const updatedValue = internalValue.replace(placeholder, imageMarkdown);
+
+          setInternalValue(updatedValue);
+          onChange(updatedValue);
+
+          // 플레이스홀더 제거
+          uploadingPlaceholdersRef.current.delete(upload.uploadId);
+        }
+      } else if (upload.status === 'error') {
+        const placeholder = uploadingPlaceholdersRef.current.get(upload.uploadId);
+        if (placeholder) {
+          // 에러 시 플레이스홀더를 에러 메시지로 교체
+          const errorMessage = `![Upload failed: ${upload.error || 'Unknown error'}]()`;
+          const updatedValue = internalValue.replace(placeholder, errorMessage);
+
+          setInternalValue(updatedValue);
+          onChange(updatedValue);
+
+          // 플레이스홀더 제거
+          uploadingPlaceholdersRef.current.delete(upload.uploadId);
+        }
+      }
+    });
+  }, [uploadsArray, internalValue, onChange]);
 
   const handleChange = (val?: string) => {
     const newValue = val || "";
@@ -184,66 +248,37 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
   // 이미지 드래그 앤 드롭 핸들러
   const handleDrop = async (e: React.DragEvent) => {
-    // TODO: 이벤트 기반 이미지 업로드 처리
-    // 드래그 앤 드롭으로 이미지 업로드 시작 -> id생성하여 업로드 중 표시 -> 업로드 완료 후 마크다운에 이미지 삽입
-    // 업로드 비동기 처리 시 텍스트 입력을 막지 않도록 구현
-    // 텍스트 입력 막지 않는 방법
-    // 1. 업로드 완료 메시지 worker에서 처리
-    // 2. 프론트엔드 서버 SSE 통신 처리
-    alert(
-      "이미지 드래그 앤 드롭 기능은 아직 지원하지 않습니다. 이미지 업로드 버튼을 이용해주세요."
-    );
-
     e.preventDefault();
     e.stopPropagation();
-    return;
+    setIsDragOver(false);
 
-    // if (!onImageUpload) return;
+    const files = Array.from(e.dataTransfer.files);
+    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
-    // const files = Array.from(e.dataTransfer.files);
-    // const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+    if (imageFiles.length === 0) {
+      alert("이미지 파일만 업로드할 수 있습니다.");
+      return;
+    }
 
-    // if (imageFiles.length === 0) return;
+    try {
+      // 각 이미지 파일에 대해 업로드 처리
+      for (const file of imageFiles) {
+        // 즉시 업로드 중 플레이스홀더 삽입
+        const uploadingPlaceholder = `![Uploading ${file.name}...]()\n`;
+        const newValue = internalValue + uploadingPlaceholder;
+        setInternalValue(newValue);
+        onChange(newValue);
 
-    // // 업로드 중일 때 현재 커서 위치에 업로드 중 표시
-    // // 업로드 파일 만큼 반복
-    // const uploadingIds = imageFiles.map((_) => {
-    //   const id = Math.random().toString(36).substring(2, 15);
-    //   const uploadingText = `\n![\`Uploading image...${id}\`]()\n`;
-    //   const cursorPosition = (e.target as HTMLTextAreaElement).selectionStart;
-    //   const newValue =
-    //     internalValue.slice(0, cursorPosition) +
-    //     uploadingText +
-    //     internalValue.slice(cursorPosition);
-    //   setInternalValue(newValue);
-    //   onChange(newValue);
+        // S3에 파일 업로드 시작 (비동기)
+        const uploadId = await uploadFile(file, 'markdown-images');
 
-    //   return id;
-    // });
-
-    // try {
-    //   for (const file of imageFiles) {
-    //     const imageUrl = await onImageUpload(file);
-    //     const imageMarkdown = `![${file.name}](${imageUrl})\n`;
-
-    //     // 현재 커서 위치에 이미지 삽입
-    //     const newValue = internalValue + imageMarkdown;
-    //     setInternalValue((prev) => {
-    //       // 업로드 중 표시 제거
-    //       let updatedValue = prev;
-    //       uploadingIds.forEach((id) => {
-    //         const uploadingText = `\n![\`Uploading image...${id}\`]()\n`;
-    //         updatedValue = updatedValue.replace(uploadingText, imageMarkdown);
-    //       });
-    //       return updatedValue;
-    //     });
-    //     onChange(newValue);
-    //   }
-    // } catch (error) {
-    //   console.error("Image upload failed:", error);
-    //   alert("이미지 업로드에 실패했습니다.");
-    // } finally {
-    // }
+        // 플레이스홀더와 uploadId 매핑 저장
+        uploadingPlaceholdersRef.current.set(uploadId, uploadingPlaceholder);
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      alert("이미지 업로드에 실패했습니다.");
+    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -254,6 +289,28 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // 이미지 파일이 포함되어 있는지 확인
+    const items = Array.from(e.dataTransfer.items);
+    const hasImageFile = items.some(item => item.type.startsWith('image/'));
+
+    if (hasImageFile) {
+      setIsDragOver(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // 에디터 영역을 완전히 벗어났을 때만 상태 변경
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+
+    if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
+      setIsDragOver(false);
+    }
   };
 
   if (disabled) {
@@ -292,10 +349,12 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
       </ModeToggle>
 
       <div
-        className="md-editor-wrapper"
+        className={`md-editor-wrapper ${isDragOver ? 'drag-over' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        style={{ position: 'relative' }}
       >
         <MDEditor
           value={internalValue}

@@ -1,19 +1,15 @@
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import Loading from "@/components/common/Skeletons/Loading";
+import { WithSuspense } from "@/components/utils/WithSuspense";
 
+import AdminHomePage from "@/pages/admin/AdminHomePage";
 import News from "@/pages/News/News";
 import NewsDetail from "@/pages/News/NewsDetail";
 import NewsDetailPage from "@/pages/News/NewsDetailPage";
 import Photo from "@/pages/Photo/Photo";
 import PhotoDetail from "@/pages/Photo/PhotoDetail";
 import Home from "../pages/Home";
-import AdminHomePage from "@/pages/admin/AdminHomePage";
-
-const WithSuspense = ({ children }: { children: React.ReactNode }) => {
-  return <Suspense fallback={<Loading />}>{children}</Suspense>;
-};
 
 const About = lazy(() => import("../pages/About"));
 const Notice = lazy(() => import("../pages/Notice/Notice"));

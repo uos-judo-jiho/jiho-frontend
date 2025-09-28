@@ -7,13 +7,46 @@ RUN npm ci
 # Build stage - 애플리케이션 빌드
 FROM node:20-alpine AS builder
 WORKDIR /app
+
+# Build arguments for environment variables
+ARG VITE_INTERNAL_API_TOKEN
+ARG BACKEND_URL
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG AWS_REGION
+ARG AWS_S3_BUCKET
+ARG S3_UPLOAD_MAX_SIZE
+ARG S3_ALLOWED_EXTENSIONS
+
+# Set environment variables for build
+ENV VITE_INTERNAL_API_TOKEN=$VITE_INTERNAL_API_TOKEN
+ENV BACKEND_URL=$BACKEND_URL
+ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+ENV AWS_REGION=$AWS_REGION
+ENV AWS_S3_BUCKET=$AWS_S3_BUCKET
+ENV S3_UPLOAD_MAX_SIZE=$S3_UPLOAD_MAX_SIZE
+ENV S3_ALLOWED_EXTENSIONS=$S3_ALLOWED_EXTENSIONS
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# Build the application with environment variables
 RUN npm run build
 
 # Production stage - 런타임 dependencies만 설치
 FROM node:20-alpine AS runner
 WORKDIR /app
+
+# Runtime environment variables (server-side only)
+ARG INTERNAL_API_TOKEN
+ARG PORT=3000
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG AWS_REGION
+ARG AWS_S3_BUCKET
+ARG S3_UPLOAD_MAX_SIZE
+ARG S3_ALLOWED_EXTENSIONS
 
 # Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
@@ -37,9 +70,16 @@ COPY --from=builder /app/index.html ./
 RUN chown -R nodejs:nodejs /app
 USER nodejs
 
-# Set environment
+# Set runtime environment variables
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=$PORT
+ENV INTERNAL_API_TOKEN=$INTERNAL_API_TOKEN
+ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+ENV AWS_REGION=$AWS_REGION
+ENV AWS_S3_BUCKET=$AWS_S3_BUCKET
+ENV S3_UPLOAD_MAX_SIZE=$S3_UPLOAD_MAX_SIZE
+ENV S3_ALLOWED_EXTENSIONS=$S3_ALLOWED_EXTENSIONS
 
 # Expose port
 EXPOSE 3000
