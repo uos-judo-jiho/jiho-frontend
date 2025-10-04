@@ -3,4 +3,4 @@
 
 vite build --watch --mode=development --outDir build/client &\
 vite build --ssr src/entry-server.tsx --watch --mode=development --outDir build/server &\
-cross-env NODE_ENV=production node server.js --local
+cross-env NODE_ENV=production npx tsx server/index.ts --local
