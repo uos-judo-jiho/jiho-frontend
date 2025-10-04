@@ -64,7 +64,6 @@ RUN npm ci --only=production && \
 # Copy built application and server files
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/server ./server
-COPY --from=builder /app/server.js ./
 COPY --from=builder /app/index.html ./
 
 # Change ownership to non-root user
