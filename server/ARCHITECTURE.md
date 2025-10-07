@@ -298,14 +298,15 @@ Set `NODE_ENV=development` for:
 
 ## Development vs Production
 
-| Aspect | Development | Production |
-|--------|-------------|------------|
-| Server | Vite Dev Server | Static Assets |
-| TypeScript | tsx (runtime) | tsx (runtime) |
-| Logging | Verbose | Minimal |
-| Error Details | Full stack | Message only |
-| Hot Reload | Yes | No |
-| Compression | No | Yes |
+| Aspect | Development | Production (Local) | Production (Docker) |
+|--------|-------------|-------------------|---------------------|
+| Server | Vite Dev Server | Static Assets | Static Assets |
+| TypeScript | tsx (runtime) | tsx (runtime) | Compiled JS |
+| Execution | tsx watch | tsx | node |
+| Logging | Verbose | Minimal | Minimal |
+| Error Details | Full stack | Message only | Message only |
+| Hot Reload | Yes | No | No |
+| Compression | No | Yes | Yes |
 
 ## Dependencies
 
@@ -315,12 +316,15 @@ Set `NODE_ENV=development` for:
 - `multer` - File upload middleware
 - `dotenv` - Environment variables
 - `uuid` - Unique ID generation
-- `tsx` - TypeScript executor
+- `compression` - Gzip compression (production)
+- `sirv` - Static file server (production)
 
 ### Development Dependencies
 - `@types/express` - Express types
 - `@types/multer` - Multer types
+- `@types/compression` - Compression types
 - `typescript` - TypeScript compiler
+- `tsx` - TypeScript executor (development/local only)
 
 ## Future Enhancements
 

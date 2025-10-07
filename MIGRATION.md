@@ -75,6 +75,7 @@ Total: ~1,022 lines (including documentation and better spacing)
 ### 4. Performance
 - **Same Runtime Performance**: TypeScript compiles to efficient JavaScript
 - **Development Speed**: tsx provides fast hot-reload during development
+- **Production Efficiency**: Compiled JavaScript runs directly with Node.js (no tsx overhead)
 
 ## Migration Path
 
@@ -93,13 +94,18 @@ npm run dev:server  # Uses tsx with watch mode
 npm run preview  # node server.js
 
 # New (TypeScript)
-npm run preview  # tsx server/index.ts
+npm run preview  # tsx server/index.ts (development/local)
+                 # node build/server-ts/index.js (production/Docker)
 ```
 
 ### Build
 ```bash
-# New TypeScript compilation
-npm run build:server-ts  # Compiles to build/server-ts/
+# Build TypeScript server (compiles to build/server-ts/)
+npm run build:server-ts
+
+# In Docker:
+# TypeScript is compiled during build, then runs as JavaScript:
+# CMD ["node", "build/server-ts/index.js"]
 ```
 
 ## Backward Compatibility
