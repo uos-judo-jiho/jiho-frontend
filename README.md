@@ -44,58 +44,23 @@ npm install
 2. dev run
 
 ```bash
-npm run dev
-```
-
-3. dev server (with SSR)
-
-```bash
-npm run dev:server
-```
-
-4. production build
-
-```bash
-npm run build
-```
-
-5. production run
-
-```bash
 npm run start
 ```
 
-## Server Architecture
+3. production run
 
-The server has been refactored to TypeScript for better maintainability. The server code is organized in the `server/` directory with the following structure:
-
-- `server/index.ts` - Main entry point
-- `server/config.ts` - Configuration and environment variables  
-- `server/middleware/` - Express middleware (logger, security, error handler)
-- `server/routes/` - Route handlers (BFF, upload, SSE)
-- `server/services/` - Business logic (S3 upload, proxy)
-- `server/utils/` - Utility functions (SSE tokens, progress tracking)
-- `server/types.ts` - TypeScript type definitions
-
-See `server/README.md` for detailed server documentation.
+```bash
+npm run prod:start
+```
 
 # 기술스택
 
 ## FE
 
 - React 18
-- TypeScript
-- Recoil
-- Styled-Components (JS-in-CSS)
-- Vite
-- TanStack Query (React Query)
-
-## Server (BFF - Backend For Frontend)
-
-- Node.js + Express
-- TypeScript
-- AWS S3 (File Upload)
-- Server-Side Rendering (SSR) with Vite
+- typescript
+- recoil
+- styled-component JS-in-CSS
 
 ## BE
 

@@ -1,16 +1,3 @@
-/**
- * @deprecated This file is deprecated and kept for reference only.
- * The server has been refactored to TypeScript for better maintainability.
- * 
- * New server location: server/index.ts
- * 
- * To use the new TypeScript server:
- * - Development: npm run dev:server
- * - Production: npm run preview
- * 
- * See server/README.md for more information.
- */
-
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import express from "express";

@@ -14,14 +14,12 @@
     "build": "sh script/build.sh",
     "build:client": "vite build --outDir build/client",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir build/server",
-    "build:server-ts": "tsc -p tsconfig.server.json",
-    "preview": "cross-env NODE_ENV=production tsx server/index.ts",
+    "preview": "cross-env NODE_ENV=production node server.js",
     "start": "npm run preview",
     "type-check": "tsc --noEmit",
-    "type-check:server": "tsc -p tsconfig.server.json --noEmit",
     "dev": "vite",
     "dev:local": "sh script/dev-local.sh",
-    "dev:server": "cross-env NODE_ENV=development tsx watch server/index.ts --local"
+    "dev:server": "cross-env NODE_ENV=development nodemon --watch server.js --exec \"node -r @babel/register server.js --local\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.896.0",
@@ -38,7 +36,6 @@
     "clsx": "^2.1.1",
     "compression": "^1.8.1",
     "date-fns": "^4.1.0",
-    "dotenv": "^17.2.2",
     "http-proxy-middleware": "^2.0.7",
     "ignore-styles": "^5.0.1",
     "lucide-react": "^0.477.0",
@@ -63,7 +60,8 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^4.9.5",
     "uuid": "^13.0.0",
-    "web-vitals": "^3.3.0"
+    "web-vitals": "^3.3.0",
+    "dotenv": "^17.2.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.24.4",
@@ -73,10 +71,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/compression": "^1.8.1",
-    "@types/express": "^4.17.23",
     "@types/jest": "^29.5.0",
-    "@types/multer": "^2.0.0",
     "@types/node": "^18.19.78",
     "@types/react": "^18.0.29",
     "@types/react-dom": "^18.0.11",
@@ -85,7 +80,6 @@
     "babel-plugin-import": "^1.13.6",
     "cross-env": "^10.0.0",
     "serve": "^14.2.4",
-    "tsx": "^4.20.6",
     "vite": "^6.2.0"
   },
   "eslintConfig": {

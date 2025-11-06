@@ -25,18 +25,6 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    minify: "esbuild",
-    target: "esnext",
-    rollupOptions: {
-      output: {
-        manualChunks: undefined,
-      },
-    },
-  },
-  esbuild: {
-    drop: process.env.NODE_ENV === "production" ? ["console", "debugger"] : [],
-  },
   ssr: {
     noExternal: ["styled-components", "@emotion/stylis", "@emotion/unitless"],
   },

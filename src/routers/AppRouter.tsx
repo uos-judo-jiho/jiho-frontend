@@ -1,3 +1,4 @@
+import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { WithSuspense } from "@/components/utils/WithSuspense";
@@ -9,10 +10,11 @@ import NewsDetailPage from "@/pages/News/NewsDetailPage";
 import Photo from "@/pages/Photo/Photo";
 import PhotoDetail from "@/pages/Photo/PhotoDetail";
 import Home from "../pages/Home";
-import About from "../pages/About";
-import Notice from "../pages/Notice/Notice";
-import NoticeDetail from "../pages/Notice/NoticeDetail";
-import NotFound from "../pages/NotFound";
+
+const About = lazy(() => import("../pages/About"));
+const Notice = lazy(() => import("../pages/Notice/Notice"));
+const NoticeDetail = lazy(() => import("../pages/Notice/NoticeDetail"));
+const NotFound = lazy(() => import("../pages/NotFound"));
 
 const AppRouter = () => {
   return (
@@ -24,9 +26,30 @@ const AppRouter = () => {
       <Route path="/about" element={<About />} />
       <Route path="/photo" element={<Photo />} />
       <Route path="/photo/:id" element={<PhotoDetail />} />
-      <Route path="/notice" element={<Notice />} />
-      <Route path="/notice/:id" element={<NoticeDetail />} />
-      <Route path="*" element={<NotFound />} />
+      <Route
+        path="/notice"
+        element={
+          <WithSuspense>
+            <Notice />
+          </WithSuspense>
+        }
+      />
+      <Route
+        path="/notice/:id"
+        element={
+          <WithSuspense>
+            <NoticeDetail />
+          </WithSuspense>
+        }
+      />
+      <Route
+        path="*"
+        element={
+          <WithSuspense>
+            <NotFound />
+          </WithSuspense>
+        }
+      />
       <Route
         path="/admin/*"
         element={
