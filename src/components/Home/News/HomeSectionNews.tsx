@@ -42,10 +42,19 @@ const HomeSectionNews = () => {
   return (
     <Container>
       <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>
-        <HomeSectionBG bgImageSrc={BGImage} bgImageSrcWebp={BGImageWebp} bgImageAlt="news-background" id="sectionNews" backgroundCover={false}>
+        <HomeSectionBG
+          bgImageSrc={BGImage}
+          bgImageSrcWebp={BGImageWebp}
+          bgImageAlt="news-background"
+          id="sectionNews"
+          backgroundCover={false}
+        >
           <SheetWrapper>
             <TextWrapper>
-              <Title title={`${Constants.LATEST_NEWS_YEAR}년 지호지`} />
+              <Title
+                title={`${Constants.LATEST_NEWS_YEAR}년 지호지`}
+                heading={2}
+              />
               <SeeMore>자세히 보기</SeeMore>
             </TextWrapper>
           </SheetWrapper>
