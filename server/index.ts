@@ -1,14 +1,20 @@
 import express from "express";
 import fs from "node:fs/promises";
 import path from "path";
-import { CONSOLE_PREFIX, customConsole, isProduction, port, base, isLocal } from "./config.js";
+import type { ViteDevServer } from "vite";
+import {
+  base,
+  CONSOLE_PREFIX,
+  customConsole,
+  isProduction,
+  port,
+} from "./config.js";
+import { bffErrorHandler } from "./middleware/error-handler.js";
 import { bffLogger } from "./middleware/logger.js";
 import { bffSecurityMiddleware } from "./middleware/security.js";
-import { bffErrorHandler } from "./middleware/error-handler.js";
-import { handleSSEProgress } from "./routes/sse-progress.js";
 import bffRouter from "./routes/bff.js";
+import { handleSSEProgress } from "./routes/sse-progress.js";
 import uploadRouter from "./routes/upload.js";
-import type { ViteDevServer } from "vite";
 
 // Create http server
 const app = express();
@@ -39,7 +45,9 @@ if (isProduction) {
   app.use("/api", async (req, res) => {
     try {
       const targetUrl = `https://uosjudo.com/api${req.path}`;
-      const queryString = new URLSearchParams(req.query as Record<string, string>).toString();
+      const queryString = new URLSearchParams(
+        req.query as Record<string, string>
+      ).toString();
       const fullUrl = queryString ? `${targetUrl}?${queryString}` : targetUrl;
 
       const response = await fetch(fullUrl, {
@@ -72,7 +80,10 @@ let templateHtml = "";
 if (isProduction) {
   customConsole.info(`${CONSOLE_PREFIX.INFO} Running in production mode`);
   templateHtml = await fs.readFile("./build/client/index.html", "utf-8");
-  customConsole.info(`${CONSOLE_PREFIX.INFO} Production assets cached`, templateHtml);
+  customConsole.info(
+    `${CONSOLE_PREFIX.INFO} Production assets cached`,
+    templateHtml
+  );
 }
 
 // Add Vite or respective production middlewares
@@ -131,7 +142,9 @@ app.use("*", async (req, res) => {
     }
 
     let template: string;
-    let render: (url: string) => Promise<{ html: string; dehydratedState: any }>;
+    let render: (
+      url: string
+    ) => Promise<{ html: string; dehydratedState: any }>;
 
     if (!isProduction) {
       // Always read fresh template in development
@@ -145,16 +158,24 @@ app.use("*", async (req, res) => {
     } else {
       template = templateHtml;
       // @ts-ignore - Dynamic import of build artifact
-      const entryModule = await import("../build/server/entry-server.js");
+      const buildPath = isProduction
+        ? "../server/entry-server.js"
+        : "../build/server/entry-server.js";
+      // @ts-ignore - Dynamic import of build artifact
+      const entryModule = await import(buildPath);
       render = entryModule.render;
 
-      customConsole.info(`${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`);
+      customConsole.info(
+        `${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`
+      );
     }
 
     const { html: rendered, dehydratedState } = await render(url);
 
     // Inject dehydrated state into HTML
-    const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(dehydratedState).replace(/</g, '\\u003c')};</script>`;
+    const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
+      dehydratedState
+    ).replace(/</g, "\\u003c")};</script>`;
     const html = template
       .replace(`<!--app-html-->`, rendered)
       .replace(`</head>`, `${stateScript}</head>`);
