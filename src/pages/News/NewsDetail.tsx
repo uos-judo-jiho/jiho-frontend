@@ -11,15 +11,12 @@ import { vaildNewsYearList } from "@/lib/utils/Utils";
 
 const NewsDetail = () => {
   const { id, index } = useParams<NewsParamsType>();
-  const { news, fetch } = useNews(id); // year 파라미터 전달
+  const { news, fetch } = useNews();
 
   const naviagate = useNavigate();
 
   useEffect(() => {
     if (news.some((newsData) => newsData.year?.toString() === id?.toString())) {
-      return;
-    }
-    if (!id) {
       return;
     }
     fetch(id);
@@ -30,13 +27,11 @@ const NewsDetail = () => {
   );
 
   // SSG-friendly: 뉴스 데이터가 없어도 기본 메타 정보 제공
-  const metaDescription = currentPageNews
-    ? [
-        currentPageNews.year,
-        currentPageNews.articles.at(0)?.title,
-        currentPageNews.articles.at(0)?.description.slice(0, 80),
-      ].join(" | ")
-    : `${id}년 서울시립대학교 유도부 지호지`;
+  const metaDescription = currentPageNews ? [
+    currentPageNews.year,
+    currentPageNews.articles.at(0)?.title,
+    currentPageNews.articles.at(0)?.description.slice(0, 80),
+  ].join(" | ") : `${id}년 서울시립대학교 유도부 지호지`;
 
   const metaImgUrl = currentPageNews?.articles.at(0)?.imgSrcs.at(0);
 

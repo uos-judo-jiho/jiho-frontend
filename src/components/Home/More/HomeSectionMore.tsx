@@ -28,11 +28,7 @@ const HomeSectionMore = () => {
   return (
     <SheetWrapper>
       <Container>
-        <Title
-          title={"게시글 전체보기"}
-          color={Constants.LOGO_BLACK}
-          heading={2}
-        />
+        <Title title={"게시글 전체보기"} color={Constants.LOGO_BLACK} />
         <GridContainer>
           <MoreCard title="공지사항" linkTo="/notice" data={notices} />
           <MoreCard title="훈련일지" linkTo="/photo" data={trainings || []} />
