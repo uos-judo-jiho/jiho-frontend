@@ -124,11 +124,15 @@ app.use("/admin*", async (req, res) => {
 // Serve HTML
 app.use("*", async (req, res) => {
   try {
-    const url = req.originalUrl.replace(base, "");
+    // Preserve leading slash for routing
+    let url = req.originalUrl.replace(base, "");
+    if (!url.startsWith("/")) {
+      url = "/" + url;
+    }
 
     let template: string;
-    let render: (url: string) => string;
-    
+    let render: (url: string) => Promise<{ html: string; dehydratedState: any }>;
+
     if (!isProduction) {
       // Always read fresh template in development
       template = await fs.readFile("./index.html", "utf-8");
@@ -147,9 +151,13 @@ app.use("*", async (req, res) => {
       customConsole.info(`${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`);
     }
 
-    const rendered = render(url);
+    const { html: rendered, dehydratedState } = await render(url);
 
-    const html = template.replace(`<!--app-html-->`, rendered);
+    // Inject dehydrated state into HTML
+    const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(dehydratedState).replace(/</g, '\\u003c')};</script>`;
+    const html = template
+      .replace(`<!--app-html-->`, rendered)
+      .replace(`</head>`, `${stateScript}</head>`);
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);
   } catch (e: any) {

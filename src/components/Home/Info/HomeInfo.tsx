@@ -49,7 +49,7 @@ function HomeInfo() {
         </LogoWrapper>
         <DescriptionContainer>
           <DescriptionItem>
-            <Title title={FooterInfo.title.krTitle} />
+            <Title title={FooterInfo.title.krTitle} heading={2} />
           </DescriptionItem>
           <DescriptionItem>
             <DescriptionTitle>{FooterInfo.title.since}</DescriptionTitle>
