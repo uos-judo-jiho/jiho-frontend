@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, redirect, useParams } from "react-router-dom";
 import styled from "styled-components";
 import NoticeDescription from "@/components/Notice/NoticeDetail/NoticeDescription";
@@ -9,7 +8,7 @@ import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { useNotices } from "@/recoils/notices";
+import { useNoticesQuery } from "@/api/notices/query";
 
 const TitleWrapper = styled.div`
   width: min-content;
@@ -21,13 +20,7 @@ const TitleWrapper = styled.div`
 
 const NoticeDetail = () => {
   const { id } = useParams();
-  const { notices, fetch } = useNotices();
-
-  useEffect(() => {
-    fetch();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { data: notices = [] } = useNoticesQuery();
 
   const data = notices.find((value) => value.id.toString() === id?.toString());
 

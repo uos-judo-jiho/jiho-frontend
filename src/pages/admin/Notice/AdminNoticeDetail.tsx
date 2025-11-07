@@ -1,19 +1,12 @@
 import NoticeForm from "@/components/admin/form/NoticeForm";
 import Title from "@/components/layouts/Title";
 import { Constants } from "@/lib/constant";
-import { useNotices } from "@/recoils/notices";
-import { useEffect } from "react";
+import { useNoticesQuery } from "@/api/notices/query";
 import { useParams } from "react-router-dom";
 
 const AdminNoticeDetail = () => {
   const { id } = useParams();
-  const { notices, refreshNotice } = useNotices();
-
-  useEffect(() => {
-    refreshNotice();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { data: notices = [] } = useNoticesQuery();
 
   const targetArticle = notices.find((item) => item.id.toString() === id);
 

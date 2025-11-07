@@ -1,11 +1,12 @@
-import { useTrainings } from "@/recoils/tranings";
+import { useTrainingListQuery } from "@/api/trainings/query";
 import styled from "styled-components";
 import { Constants } from "@/lib/constant";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 import { useNews } from "@/recoils/news";
-import { useNotices } from "@/recoils/notices";
+import { useNoticesQuery } from "@/api/notices/query";
 import MoreCard from "./MoreCard";
+import { useMemo } from "react";
 
 const Container = styled.div``;
 
@@ -22,8 +23,14 @@ const GridContainer = styled.div`
 
 const HomeSectionMore = () => {
   const { news } = useNews();
-  const { trainings } = useTrainings();
-  const { notices } = useNotices();
+  const { data } = useTrainingListQuery();
+  const { data: notices = [] } = useNoticesQuery();
+
+  // 날짜순 정렬
+  const trainings = useMemo(() => {
+    if (!data) return [];
+    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+  }, [data]);
 
   return (
     <SheetWrapper>

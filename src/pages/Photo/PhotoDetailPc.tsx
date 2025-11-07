@@ -10,11 +10,18 @@ import { Button } from "@/components/ui/button";
 import MyHelmet from "@/helmet/MyHelmet";
 
 import { cn } from "@/lib/utils";
-import { useTrainings } from "@/recoils/tranings";
+import { useTrainingListQuery } from "@/api/trainings/query";
+import { useMemo } from "react";
 
 export const PhotoDetailPc = () => {
   const { id } = useParams<{ id: string }>();
-  const { trainings } = useTrainings();
+  const { data } = useTrainingListQuery();
+
+  // 날짜순 정렬
+  const trainings = useMemo(() => {
+    if (!data) return [];
+    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+  }, [data]);
 
   const current =
     trainings?.findIndex((item) => item.id.toString() === id?.toString()) ?? -1;

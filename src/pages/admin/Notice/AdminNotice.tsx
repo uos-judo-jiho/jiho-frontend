@@ -2,17 +2,11 @@ import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { useNotices } from "@/recoils/notices";
-import { useEffect } from "react";
+import { useNoticesQuery } from "@/api/notices/query";
 import { Link } from "react-router-dom";
 
 const AdminNotice = () => {
-  const { notices, refreshNotice } = useNotices();
-  useEffect(() => {
-    refreshNotice();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { data: notices = [], refetch } = useNoticesQuery();
 
   return (
     <FormContainer title="공지사항 관리">
@@ -20,7 +14,7 @@ const AdminNotice = () => {
         <Link to="/admin/notice/write">
           <NewArticleButton>새 글쓰기</NewArticleButton>
         </Link>
-        <NewArticleButton onClick={() => refreshNotice()}>
+        <NewArticleButton onClick={() => refetch()}>
           새로고침
         </NewArticleButton>
       </Row>
