@@ -8,13 +8,6 @@ import { lightTheme } from "./lib/theme/theme";
 import { getTrainings } from "./api/trainings/client";
 import { getNews } from "./api/news/client";
 
-// SSR logger - only logs in development
-const ssrLog = (...args: any[]) => {
-  if (process.env.NODE_ENV !== "production") {
-    console.log(...args);
-  }
-};
-
 export async function render(url: string) {
   // Create a new QueryClient for each SSR request
   const queryClient = new QueryClient({
@@ -26,19 +19,19 @@ export async function render(url: string) {
     },
   });
 
-  ssrLog("[SSR] Rendering URL:", url);
+  console.log("[SSR] Rendering URL:", url);
 
   // Prefetch data based on route
   try {
     // Match photo routes: /photo or /photo/:id
     const photoMatch = url.match(/^\/photo/);
     if (photoMatch) {
-      ssrLog("[SSR] Prefetching trainings for photo page");
+      console.log("[SSR] Prefetching trainings for photo page");
       await queryClient.prefetchQuery({
         queryKey: ["trainings", "all"],
         queryFn: async () => {
           const data = await getTrainings();
-          ssrLog("[SSR] Prefetched trainings count:", data.length);
+          console.log("[SSR] Prefetched trainings count:", data.length);
           return data;
         },
       });
@@ -48,12 +41,12 @@ export async function render(url: string) {
     const newsMatch = url.match(/^\/news\/(\d{4})/);
     if (newsMatch) {
       const year = newsMatch[1];
-      ssrLog("[SSR] Prefetching news for year:", year);
+      console.log("[SSR] Prefetching news for year:", year);
       await queryClient.prefetchQuery({
         queryKey: ["news", year],
         queryFn: async () => {
           const data = await getNews(year);
-          ssrLog("[SSR] Prefetched news:", data?.year || "Not found");
+          console.log("[SSR] Prefetched news:", data?.year || "Not found");
           return data;
         },
       });
