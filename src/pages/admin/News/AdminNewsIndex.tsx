@@ -1,9 +1,7 @@
-import { Link } from "react-router-dom";
 import FormContainer from "@/components/admin/form/FormContainer";
-import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
-import Row from "@/components/layouts/Row";
 import Col from "@/components/layouts/Col";
 import { vaildNewsYearList } from "@/lib/utils/Utils";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const YearCard = styled.div`
@@ -40,16 +38,8 @@ const AdminNewsIndex = () => {
 
   return (
     <FormContainer title="지호지 관리 - 년도 선택">
-      <Row justifyContent="space-between" style={{ marginBottom: "20px" }}>
-        <Link to="/admin/news/gallery">
-          <NewArticleButton>년도별 갤러리 보기</NewArticleButton>
-        </Link>
-      </Row>
-
       <Col gap={12}>
-        <p style={{ margin: 0, color: "#666" }}>
-          관리하실 년도를 선택해주세요
-        </p>
+        <p style={{ margin: 0, color: "#666" }}>관리하실 년도를 선택해주세요</p>
         <YearGrid>
           {yearList.map((year) => (
             <Link

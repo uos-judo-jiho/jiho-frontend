@@ -2,20 +2,25 @@ import FormContainer from "@/components/admin/form/FormContainer";
 import Carousel from "@/components/layouts/Carousel";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
-import LeftArrow from "@/lib/assets/svgs/arrow_forward_ios.svg";
-import { useNews } from "@/recoils/news";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useNewsQuery } from "@/api/news/query";
 
-const YearTitle = styled.h3`
-  font-size: ${(props) => props.theme.subTitleFontSize};
-  line-height: ${(props) => props.theme.subTitleLineHeight};
-`;
-
-const LinkHelpText = styled.span`
+const EditButton = styled(Link)`
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: ${(props) => props.theme.primaryColor};
+  color: white;
+  border-radius: 4px;
+  text-decoration: none;
   font-size: ${(props) => props.theme.defaultFontSize};
-  line-height: ${(props) => props.theme.defaultLineHeight};
-  color: ${(props) => props.theme.greyColor};
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
 `;
 
 const EmptyImageText = styled.div`
@@ -27,40 +32,43 @@ const EmptyImageText = styled.div`
   text-align: center;
 `;
 
-const ForwardArrow = styled.img`
-  width: 20px;
+const BackButton = styled.button`
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.greyColor};
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: ${(props) => props.theme.defaultFontSize};
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: ${(props) => props.theme.lightGreyColor};
+  }
 `;
 
 const AdminGallery = () => {
-  const { news } = useNews();
+  const navigate = useNavigate();
+  const { year } = useParams<{ year: string }>();
+  const { data: newsData } = useNewsQuery(year || "2025");
 
-  const galleries = news
-    .map((newsData) => ({
-      year: newsData.year,
-
-      images: newsData.images,
-    }))
-    .sort((a, b) => (a.year > b.year ? -1 : 1));
+  const images = newsData?.images || [];
 
   return (
-    <FormContainer title="지호지 갤러리 관리">
+    <FormContainer title={`지호지 갤러리 관리 (${year}년)`}>
+      <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
+        <BackButton onClick={() => navigate(`/admin/news/${year}`)}>
+          ← {year}년 게시판으로 돌아가기
+        </BackButton>
+      </Row>
       <Col gap={20}>
-        {galleries.map((gallery) => (
-          <div key={gallery.year}>
-            <Link to={`/admin/news/gallery/write?year=${gallery.year}`}>
-              <Row gap={4} alignItems="flex-end">
-                <YearTitle>{gallery.year}</YearTitle>
-                <LinkHelpText>년 갤러리 수정하기</LinkHelpText>
-                <ForwardArrow src={LeftArrow} />
-              </Row>
-            </Link>
-            {gallery.images.length ? (
-              <Carousel datas={gallery.images} />
-            ) : (
-              <EmptyImageText>해당 년도 사진이 없습니다</EmptyImageText>
-            )}
-          </div>
-        ))}
+        <EditButton to={`/admin/news/${year}/gallery/write`}>
+          갤러리 이미지 수정하기
+        </EditButton>
+        {images.length > 0 ? (
+          <Carousel datas={images} />
+        ) : (
+          <EmptyImageText>해당 년도 사진이 없습니다</EmptyImageText>
+        )}
       </Col>
     </FormContainer>
   );

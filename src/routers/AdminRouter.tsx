@@ -13,6 +13,9 @@ const WriteArticlePage = lazy(() => import("../pages/admin/WriteArticlePage"));
 const AdminGallery = lazy(
   () => import("../pages/admin/News/Gallery/AdminGallery")
 );
+const AdminGalleryIndex = lazy(
+  () => import("../pages/admin/News/Gallery/AdminGalleryIndex")
+);
 const AdminTrainingLogDetail = lazy(
   () => import("../pages/admin/trainingLog/AdminTrainingLogDetail")
 );
@@ -50,19 +53,27 @@ const AdminRouter = () => {
         path="news/gallery"
         element={
           <WithSuspense>
+            <AdminGalleryIndex />
+          </WithSuspense>
+        }
+      />
+      <Route path="news/:year" element={<AdminNews />} />
+      <Route
+        path="news/:year/gallery"
+        element={
+          <WithSuspense>
             <AdminGallery />
           </WithSuspense>
         }
       />
       <Route
-        path="news/gallery/write"
+        path="news/:year/gallery/write"
         element={
           <WithSuspense>
             <WriteArticlePage />
           </WithSuspense>
         }
       />
-      <Route path="news/:year" element={<AdminNews />} />
       <Route
         path="news/:year/:id"
         element={

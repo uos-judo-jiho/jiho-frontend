@@ -39,8 +39,8 @@ const AdminNews = () => {
           <Link to={`/admin/news/${year}/write`}>
             <NewArticleButton>새 글쓰기</NewArticleButton>
           </Link>
-          <Link to="/admin/news/gallery">
-            <NewArticleButton>년도별 갤러리 보기</NewArticleButton>
+          <Link to={`/admin/news/${year}/gallery`}>
+            <NewArticleButton>{year}년 갤러리 보기</NewArticleButton>
           </Link>
         </Row>
         <NewArticleButton onClick={() => refetch()}>
