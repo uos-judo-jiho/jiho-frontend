@@ -1,39 +1,19 @@
+import { useNoticesQuery } from "@/api/notices/query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { atom, useRecoilState } from "recoil";
-import { getNotices } from "@/api/notice";
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-
-const NoticeList = atom<ArticleInfoType[]>({
-  key: "noticeObject",
-  default: [],
-});
-
-const isNoticeFecthed = atom<boolean>({
-  key: "isNoticeFecthed",
-  default: false,
-});
 
 export const useNotices = () => {
-  const [notices, setNotices] = useRecoilState(NoticeList);
-  const [isLoad, setIsLoad] = useRecoilState(isNoticeFecthed);
+  const queryClient = useQueryClient();
+  const { data: notices = [], refetch } = useNoticesQuery();
 
   const fetch = useCallback(async () => {
-    if (isLoad) {
-      return;
-    }
-    const newNoticeList = await getNotices();
-    if (!newNoticeList) {
-      return;
-    }
+    await refetch();
+  }, [refetch]);
 
-    setNotices(newNoticeList);
-    setIsLoad(true);
-  }, [isLoad, setIsLoad, setNotices]);
-
-  const refreshNotice = useCallback(() => {
-    setIsLoad(false);
-    fetch();
-  }, [fetch, setIsLoad]);
+  const refreshNotice = useCallback(async () => {
+    // 캐시 무효화 후 다시 가져오기
+    await queryClient.invalidateQueries({ queryKey: ["notices"] });
+  }, [queryClient]);
 
   return { fetch, refreshNotice, notices };
 };
