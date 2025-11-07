@@ -4,7 +4,6 @@ import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
 import LeftArrow from "@/lib/assets/svgs/arrow_forward_ios.svg";
 import { useNews } from "@/recoils/news";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -33,7 +32,7 @@ const ForwardArrow = styled.img`
 `;
 
 const AdminGallery = () => {
-  const { news, refreshNew } = useNews();
+  const { news } = useNews();
 
   const galleries = news
     .map((newsData) => ({
@@ -42,12 +41,6 @@ const AdminGallery = () => {
       images: newsData.images,
     }))
     .sort((a, b) => (a.year > b.year ? -1 : 1));
-
-  useEffect(() => {
-    refreshNew();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <FormContainer title="지호지 갤러리 관리">

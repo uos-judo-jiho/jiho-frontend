@@ -24,7 +24,7 @@ const GridContainer = styled.div`
 const HomeSectionMore = () => {
   const { news } = useNews();
   const { data } = useTrainingListQuery();
-  const { data: notices = [] } = useNoticesQuery();
+  const { data: notices } = useNoticesQuery();
 
   // 날짜순 정렬
   const trainings = useMemo(() => {
@@ -41,13 +41,13 @@ const HomeSectionMore = () => {
           heading={2}
         />
         <GridContainer>
-          <MoreCard title="공지사항" linkTo="/notice" data={notices} />
           <MoreCard title="훈련일지" linkTo="/photo" data={trainings || []} />
           <MoreCard
             title="지호지"
             linkTo={`/news/${Constants.LATEST_NEWS_YEAR}`}
             data={news[0]?.articles || []}
           />
+          <MoreCard title="공지사항" linkTo="/notice" data={notices || []} />
         </GridContainer>
       </Container>
     </SheetWrapper>

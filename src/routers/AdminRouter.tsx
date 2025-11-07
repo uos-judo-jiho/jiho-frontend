@@ -7,6 +7,7 @@ import AdminNavPage from "../pages/admin/AdminNavPage";
 import AdminNews from "../pages/admin/News/AdminNews";
 import AdminNotice from "../pages/admin/Notice/AdminNotice";
 import AdminTrainingLog from "../pages/admin/trainingLog/AdminTrainingLog";
+import AdminNewsIndex from "../pages/admin/News/AdminNewsIndex";
 
 const WriteArticlePage = lazy(() => import("../pages/admin/WriteArticlePage"));
 const AdminGallery = lazy(
@@ -44,23 +45,7 @@ const AdminRouter = () => {
           </WithSuspense>
         }
       />
-      <Route path="news" element={<AdminNews />} />
-      <Route
-        path="news/:id"
-        element={
-          <WithSuspense>
-            <AdminNewsDetail />
-          </WithSuspense>
-        }
-      />
-      <Route
-        path="news/write"
-        element={
-          <WithSuspense>
-            <WriteArticlePage />
-          </WithSuspense>
-        }
-      />
+      <Route path="news" element={<AdminNewsIndex />} />
       <Route
         path="news/gallery"
         element={
@@ -71,6 +56,23 @@ const AdminRouter = () => {
       />
       <Route
         path="news/gallery/write"
+        element={
+          <WithSuspense>
+            <WriteArticlePage />
+          </WithSuspense>
+        }
+      />
+      <Route path="news/:year" element={<AdminNews />} />
+      <Route
+        path="news/:year/:id"
+        element={
+          <WithSuspense>
+            <AdminNewsDetail />
+          </WithSuspense>
+        }
+      />
+      <Route
+        path="news/:year/write"
         element={
           <WithSuspense>
             <WriteArticlePage />
