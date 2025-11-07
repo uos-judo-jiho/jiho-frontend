@@ -447,23 +447,27 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
         </LoadingWrapper>
       )}
 
-      <div className="mt-4 py-2 border-t-2 border-b-2 border-gray-300">
-        <div className="font-bold text-lg">
-          본문 미리보기{" "}
-          <span className="text-gray-500 font-normal text-sm">
-            (작성한 내용이 어떻게 보이는지 확인하세요)
-          </span>
-        </div>
-        <small>첨부 이미지 미포함</small>
-      </div>
-      <ModalDescriptionSection
-        article={{ ...values, id: "preview-id" }}
-        titles={
-          type === "news"
-            ? ["작성자", "카테고리", "작성일"]
-            : ["작성자", "참여 인원", "훈련 날짜"]
-        }
-      />
+      {!gallery && (
+        <>
+          <div className="mt-4 py-2 border-t-2 border-b-2 border-gray-300">
+            <div className="font-bold text-lg">
+              본문 미리보기{" "}
+              <span className="text-gray-500 font-normal text-sm">
+                (작성한 내용이 어떻게 보이는지 확인하세요)
+              </span>
+            </div>
+            <small>첨부 이미지 미포함</small>
+          </div>
+          <ModalDescriptionSection
+            article={{ ...values, id: "preview-id" }}
+            titles={
+              type === "news"
+                ? ["작성자", "카테고리", "작성일"]
+                : ["작성자", "참여 인원", "훈련 날짜"]
+            }
+          />
+        </>
+      )}
     </>
   );
 }

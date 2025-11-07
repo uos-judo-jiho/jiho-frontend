@@ -16,6 +16,9 @@ const AdminGallery = lazy(
 const AdminGalleryIndex = lazy(
   () => import("../pages/admin/News/Gallery/AdminGalleryIndex")
 );
+const AdminGalleryWrite = lazy(
+  () => import("../pages/admin/News/Gallery/AdminGalleryWrite")
+);
 const AdminTrainingLogDetail = lazy(
   () => import("../pages/admin/trainingLog/AdminTrainingLogDetail")
 );
@@ -70,7 +73,7 @@ const AdminRouter = () => {
         path="news/:year/gallery/write"
         element={
           <WithSuspense>
-            <WriteArticlePage />
+            <AdminGalleryWrite />
           </WithSuspense>
         }
       />
