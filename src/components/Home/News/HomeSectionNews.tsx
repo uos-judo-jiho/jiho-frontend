@@ -10,7 +10,7 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 
 const HomeSectionNews = () => {
   return (
-    <div className="w-full h-full">
+    <section className="w-full h-full">
       <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>
         <HomeSectionBG
           bgImageSrc={BGImage}
@@ -32,7 +32,7 @@ const HomeSectionNews = () => {
           </SheetWrapper>
         </HomeSectionBG>
       </Link>
-    </div>
+    </section>
   );
 };
 

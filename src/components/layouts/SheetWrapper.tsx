@@ -17,10 +17,10 @@ function SheetWrapper({
       className={cn(
         "relative mx-auto",
         "w-[340px]",
-        "sm:w-[540px]",
+        "sm:w-[640px]",
         "md:w-[768px]",
         "lg:w-[960px]",
-        className,
+        className
       )}
       style={{ paddingTop: `${paddingTop}px` }}
     >

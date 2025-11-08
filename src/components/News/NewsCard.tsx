@@ -28,8 +28,8 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
       onClick={() => handleClickCard(article.id)}
       className={cn(
         "flex w-full text-theme-description leading-theme-description",
-        "border border-theme-light-grey rounded-[10px] p-4",
-        "xs:p-2",
+        "border border-theme-light-grey p-4",
+        "xs:p-2"
       )}
     >
       <a
@@ -68,7 +68,7 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
             </div>
           </Col>
         </div>
-        <div className="flex flex-col flex-1 text-theme-default leading-theme-description w-full indent-1 xs:hidden">
+        <div className="flex flex-col flex-1 h-full text-theme-default leading-theme-description w-full indent-1 xs:hidden">
           <div className="mb-2.5">
             <Col>
               <h3 className="indent-0 text-theme-description leading-theme-description font-bold">
