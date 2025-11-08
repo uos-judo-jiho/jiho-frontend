@@ -26,8 +26,8 @@ const IMG = styled.img<IMGProps>`
     props.isImage ? props.theme.blackColor : props.theme.bgColor};
 
   @media (max-width: 539px) {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 60vw;
+    max-height: 60vw;
   }
 `;
 

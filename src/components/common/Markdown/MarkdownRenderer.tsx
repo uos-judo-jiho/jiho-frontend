@@ -6,8 +6,6 @@ import styled from "styled-components";
 
 const MarkdownContainer = styled.div`
   font-size: ${(props) => props.theme.defaultFontSize};
-  word-wrap: break-word;
-  word-break: keep-all;
   line-height: 1.6;
 
   /* Markdown 스타일링 */
