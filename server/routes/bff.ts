@@ -1,4 +1,8 @@
-import express, { type Request, type Response, type NextFunction } from "express";
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import { proxyToBackend } from "../services/proxy.js";
 
 const router = express.Router();
@@ -28,43 +32,56 @@ router.get("/api", (req: Request, res: Response) => {
 });
 
 // BFF API Routes - News
-router.use("/api/news*", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const path = req.params[0] || "";
-    await proxyToBackend(`/news${path}`, req, res);
-  } catch (error) {
-    next(error);
+router.use(
+  "/api/news*",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const path = req.params[0] || "";
+      await proxyToBackend(`/news${path}`, req, res);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 // BFF API Routes - Notices
-router.use("/api/notices*", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const path = req.params[0] || "";
-    await proxyToBackend(`/notice${path}`, req, res);
-  } catch (error) {
-    next(error);
+router.use(
+  "/api/notices*",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const path = req.params[0] || "";
+      await proxyToBackend(`/notice${path}`, req, res);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 // BFF API Routes - Trainings
-router.use("/api/trainings*", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const path = req.params[0] || "";
-    await proxyToBackend(`/trading${path}`, req, res);
-  } catch (error) {
-    next(error);
+router.use(
+  "/api/trainings*",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const path = req.params[0] || "";
+      await proxyToBackend(`/trainings${path}`, req, res);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 // BFF API Routes - Admin
-router.use("/api/admin*", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const path = req.params[0] || "";
-    await proxyToBackend(`/admin${path}`, req, res);
-  } catch (error) {
-    next(error);
+router.use(
+  "/api/admin*",
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.params);
+    try {
+      const path = req.params[0] || "";
+      await proxyToBackend(`/admin${path}`, req, res);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 export default router;

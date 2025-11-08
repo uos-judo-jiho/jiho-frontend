@@ -5,9 +5,17 @@ import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormCo
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
 import { useMemo } from "react";
+import Loading from "@/components/common/Skeletons/Loading";
 
 const AdminTrainingLog = () => {
-  const { data, refetch: refreshTraining } = useTrainingListQuery();
+  const {
+    data,
+    refetch: refreshTraining,
+    isLoading,
+    isRefetching,
+  } = useTrainingListQuery();
+
+  const isDataLoading = isLoading || isRefetching;
 
   // 날짜순 정렬
   const trainings = useMemo(() => {
@@ -25,11 +33,15 @@ const AdminTrainingLog = () => {
           새로고침
         </NewArticleButton>
       </Row>
-      <ListContainer
-        datas={trainings ?? []}
-        targetUrl={"/admin/training/"}
-        additionalTitle={true}
-      />
+      {isDataLoading ? (
+        <Loading loading={isDataLoading} />
+      ) : (
+        <ListContainer
+          datas={trainings ?? []}
+          targetUrl={"/admin/training/"}
+          additionalTitle={true}
+        />
+      )}
     </FormContainer>
   );
 };

@@ -19,7 +19,10 @@ const EditButton = styled(Link)`
 
   &:hover {
     opacity: 0.9;
-    transform: translateY(-1px);
+  }
+  &:active {
+    opacity: 0.8;
+    scale: 0.98;
   }
 `;
 

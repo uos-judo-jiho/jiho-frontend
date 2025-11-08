@@ -1,7 +1,11 @@
-import type { Request, Response, NextFunction } from "express";
-import { INTERNAL_API_TOKEN, ALLOWED_HOSTS, isProduction, port } from "../config.js";
+import type { NextFunction, Request, Response } from "express";
+import { ALLOWED_HOSTS, INTERNAL_API_TOKEN, isProduction } from "../config.js";
 
-export function bffSecurityMiddleware(req: Request, res: Response, next: NextFunction): void {
+export function bffSecurityMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
   // _internal API 보안 검증
   const origin = req.headers.origin;
   const referer = req.headers.referer;
@@ -58,9 +62,9 @@ export function bffSecurityMiddleware(req: Request, res: Response, next: NextFun
   }
 
   // 4. Origin/Referer 이중 검증 (추가 보안층)
-  const allowedOrigins = ALLOWED_HOSTS
-    .map((h) => `http://${h}`)
-    .concat(ALLOWED_HOSTS.map((h) => `https://${h}`));
+  const allowedOrigins = ALLOWED_HOSTS.map((h) => `http://${h}`).concat(
+    ALLOWED_HOSTS.map((h) => `https://${h}`)
+  );
 
   if (!isProduction) {
     allowedOrigins.push("http://localhost:3000", "http://127.0.0.1:3000");

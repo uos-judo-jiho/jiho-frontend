@@ -27,9 +27,9 @@ const DescriptionWrapper = styled.div`
 const LinkWrapper = styled.div`
   background-color: transparent;
   text-align: start;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+
+  padding-right: 12px;
+
   &:hover {
     text-decoration-line: underline;
   }
@@ -58,10 +58,10 @@ function ListContainer({
         </Item>
         <Line borderColor={Constants.LIGHT_GREY_COLOR} borderWidth="1px" />
 
-        {data.map((data) => (
+        {data.map((data, index) => (
           <div key={data?.id}>
             <Item>
-              <TagWrapper>{parseInt(data?.id ?? "") + 1}</TagWrapper>
+              <TagWrapper>{index + 1}</TagWrapper>
               <DescriptionWrapper>
                 <Link to={targetUrl + data.id}>
                   <LinkWrapper>

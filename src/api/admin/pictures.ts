@@ -1,7 +1,6 @@
-import { Cookies } from "react-cookie";
 import axiosInstance from "../config";
 
-const METHOD_URL = "api/admin/pictures/";
+const METHOD_URL = "/api/admin/pictures/";
 
 /**
  * upload picture
@@ -15,15 +14,10 @@ const METHOD_URL = "api/admin/pictures/";
  * ```
  */
 export const uploadPicture = async (year: string, imgs: string[]) => {
-  const cookies = new Cookies();
-
   try {
     const res = await axiosInstance({
       url: `${METHOD_URL}${year}`,
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${cookies.get("JSESSIONID")}`,
-      },
       data: {
         base64Imgs: imgs,
       },

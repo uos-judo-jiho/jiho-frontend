@@ -5,6 +5,7 @@ import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
 import { useNewsQuery } from "@/api/news/query";
 import styled from "styled-components";
+import Loading from "@/components/common/Skeletons/Loading";
 
 const BackButton = styled.button`
   padding: 8px 16px;
@@ -23,7 +24,14 @@ const BackButton = styled.button`
 const AdminNews = () => {
   const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
-  const { data: newsData, refetch } = useNewsQuery(year || "2025");
+  const {
+    data: newsData,
+    refetch,
+    isLoading,
+    isRefetching,
+  } = useNewsQuery(year || "2025");
+
+  const isDataLoading = isLoading || isRefetching;
 
   const articles = newsData?.articles || [];
 
@@ -43,15 +51,17 @@ const AdminNews = () => {
             <NewArticleButton>{year}년 갤러리 보기</NewArticleButton>
           </Link>
         </Row>
-        <NewArticleButton onClick={() => refetch()}>
-          새로고침
-        </NewArticleButton>
+        <NewArticleButton onClick={() => refetch()}>새로고침</NewArticleButton>
       </Row>
-      <ListContainer
-        datas={articles}
-        targetUrl={`/admin/news/${year}/`}
-        additionalTitle={true}
-      ></ListContainer>
+      {isDataLoading ? (
+        <Loading />
+      ) : (
+        <ListContainer
+          datas={articles}
+          targetUrl={`/admin/news/${year}/`}
+          additionalTitle={true}
+        />
+      )}
     </FormContainer>
   );
 };

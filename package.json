@@ -17,6 +17,7 @@
     "build:server-ts": "tsc -p tsconfig.server.json",
     "preview": "cross-env NODE_ENV=production tsx server/index.ts",
     "start": "npm run preview",
+    "start:prod": "node build/server-ts/index.js",
     "type-check": "tsc --noEmit",
     "type-check:server": "tsc -p tsconfig.server.json --noEmit",
     "dev": "vite",

@@ -8,11 +8,11 @@ import NewsDetail from "@/pages/News/NewsDetail";
 import NewsDetailPage from "@/pages/News/NewsDetailPage";
 import Photo from "@/pages/Photo/Photo";
 import PhotoDetail from "@/pages/Photo/PhotoDetail";
-import Home from "../pages/Home";
 import About from "../pages/About";
+import Home from "../pages/Home";
+import NotFound from "../pages/NotFound";
 import Notice from "../pages/Notice/Notice";
 import NoticeDetail from "../pages/Notice/NoticeDetail";
-import NotFound from "../pages/NotFound";
 
 const AppRouter = () => {
   return (

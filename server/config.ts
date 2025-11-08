@@ -49,9 +49,9 @@ export const isProduction = process.env.NODE_ENV === "production";
 export const port = process.env.PORT || 3000;
 export const base = process.env.BASE || "/";
 
-customConsole.info(`${CONSOLE_PREFIX.INFO} Environment: ${process.env.NODE_ENV}`);
-customConsole.info(`${CONSOLE_PREFIX.INFO} isLocal: ${isLocal}`);
-customConsole.info(`${CONSOLE_PREFIX.INFO} Base path set to: ${base}`);
+customConsole.info(`Environment: ${process.env.NODE_ENV}`);
+customConsole.info(`isLocal: ${isLocal}`);
+customConsole.info(`Base path set to: ${base}`);
 
 // S3 Configuration
 export const s3Client = new S3Client({
@@ -69,7 +69,8 @@ export const ALLOWED_EXTENSIONS = (
   process.env.S3_ALLOWED_EXTENSIONS || "jpg,jpeg,png,gif,webp,pdf,doc,docx"
 ).split(",");
 export const BACKEND_URL = process.env.BACKEND_URL || "https://uosjudo.com/api";
-export const INTERNAL_API_TOKEN = process.env.INTERNAL_API_TOKEN || "jiho-internal-2024";
+export const INTERNAL_API_TOKEN =
+  process.env.INTERNAL_API_TOKEN || "jiho-internal-2024";
 export const ALLOWED_HOSTS = (
   process.env.ALLOWED_HOSTS || `localhost:${port},127.0.0.1:${port}`
 ).split(",");

@@ -40,57 +40,95 @@ app.use("/_internal/api", uploadRouter);
 // BFF Error handler (must be after routes)
 app.use("/_internal", bffErrorHandler);
 
-// API proxy for preview mode
-if (isProduction) {
-  app.use("/api", async (req, res) => {
-    try {
-      const targetUrl = `https://uosjudo.com/api${req.path}`;
-      const queryString = new URLSearchParams(
-        req.query as Record<string, string>
-      ).toString();
-      const fullUrl = queryString ? `${targetUrl}?${queryString}` : targetUrl;
+// API proxy for both development and production
+// Body parsing middleware only for admin routes (other routes are GET-only)
+app.use("/api/admin", express.json({ limit: "10mb" }));
+app.use("/api/admin", express.urlencoded({ extended: true, limit: "10mb" }));
 
-      const response = await fetch(fullUrl, {
-        method: req.method,
-        headers: {
-          "Content-Type": "application/json",
-          "User-Agent": req.headers["user-agent"] || "proxy",
-        },
-        body: req.method !== "GET" ? JSON.stringify(req.body) : undefined,
-      });
+app.use("/api", async (req, res) => {
+  try {
+    const targetUrl = `https://uosjudo.com/api${req.path}`;
+    const queryString = new URLSearchParams(
+      req.query as Record<string, string>
+    ).toString();
+    const fullUrl = queryString ? `${targetUrl}?${queryString}` : targetUrl;
 
-      const data = await response.text();
+    console.log(`[${req.method}] ${fullUrl}`);
 
-      // Set safe headers
-      res.status(response.status);
-      res.setHeader(
-        "Content-Type",
-        response.headers.get("content-type") || "application/json"
-      );
-      res.send(data);
-    } catch (error) {
-      console.error(`${CONSOLE_PREFIX.ERROR} Proxy error:`, error);
-      res.status(500).json({ error: "Proxy error" });
+    const response = await fetch(fullUrl, {
+      method: req.method,
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": req.headers["user-agent"] || "proxy",
+        ...(req.headers.authorization && {
+          Authorization: req.headers.authorization,
+        }),
+        ...(req.headers.cookie && {
+          Cookie: req.headers.cookie,
+        }),
+      },
+      body:
+        req.method !== "GET" && req.method !== "HEAD"
+          ? JSON.stringify(req.body)
+          : undefined,
+    });
+
+    console.log(JSON.stringify(response));
+
+    const data = await response.text();
+
+    // Convert 302 redirects to 401 for CORS compatibility
+    // Redirects in preflight requests cause CORS errors
+    if (response.status === 302 || response.status === 301) {
+      const location = response.headers.get("location");
+      // If redirecting to login/admin page, it means unauthorized
+      if (location?.includes("/admin") || location?.includes("/login")) {
+        res.status(401);
+        res.setHeader("Content-Type", "application/json");
+        res.json({
+          error: "Unauthorized",
+          message: "Authentication required",
+          redirectTo: location,
+        });
+        return;
+      }
     }
-  });
-}
+
+    // Forward status and headers from backend
+    res.status(response.status);
+
+    // Forward important headers
+    const contentType = response.headers.get("content-type");
+    if (contentType) {
+      res.setHeader("Content-Type", contentType);
+    }
+
+    // Forward Set-Cookie headers (critical for authentication)
+    const setCookie = response.headers.get("set-cookie");
+    if (setCookie) {
+      res.setHeader("Set-Cookie", setCookie);
+    }
+
+    res.send(data);
+  } catch (error) {
+    console.error(`${CONSOLE_PREFIX.ERROR} Proxy error:`, error);
+    res.status(500).json({ error: "Proxy error" });
+  }
+});
 
 // Cached production assets
 let templateHtml = "";
 if (isProduction) {
-  customConsole.info(`${CONSOLE_PREFIX.INFO} Running in production mode`);
+  customConsole.info(`Running in production mode`);
   templateHtml = await fs.readFile("./build/client/index.html", "utf-8");
-  customConsole.info(
-    `${CONSOLE_PREFIX.INFO} Production assets cached`,
-    templateHtml
-  );
+  customConsole.info(`Production assets cached`, templateHtml);
 }
 
 // Add Vite or respective production middlewares
 let vite: ViteDevServer | undefined;
 if (!isProduction) {
-  customConsole.info(`${CONSOLE_PREFIX.INFO} Running in development mode`);
-  customConsole.info(`${CONSOLE_PREFIX.INFO} Starting Vite server...`);
+  customConsole.info(`Running in development mode`);
+  customConsole.info(`Starting Vite server...`);
   const { createServer } = await import("vite");
   vite = await createServer({
     server: { middlewareMode: true },
@@ -105,9 +143,7 @@ if (!isProduction) {
     return vite!.middlewares(req, res, next);
   });
 } else {
-  customConsole.info(
-    `${CONSOLE_PREFIX.INFO} Serving static assets from ./build/client`
-  );
+  customConsole.info(`Serving static assets from ./build/client`);
   const compression = (await import("compression")).default;
   const sirv = (await import("sirv")).default;
   app.use(compression());
@@ -117,7 +153,7 @@ if (!isProduction) {
 // admin 페이지는 client 사이드 렌더링으로 처리
 app.use("/admin*", async (req, res) => {
   const url = req.originalUrl.replace(base, "");
-  customConsole.info(`${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`);
+  customConsole.info(`${req.method} ${req.originalUrl}`);
   if (!isProduction) {
     try {
       const html = await fs.readFile("index.html", "utf-8");
@@ -152,16 +188,11 @@ app.use("*", async (req, res) => {
       template = await vite!.transformIndexHtml(url, template);
       render = (await vite!.ssrLoadModule("/src/entry-server.tsx")).render;
 
-      customConsole.info(
-        `[DEV]${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`
-      );
+      customConsole.info(`[DEV] ${req.method} ${req.originalUrl}`);
     } else {
       template = templateHtml;
-      // @ts-ignore - Dynamic import of build artifact
-      const buildPath = isProduction
-        ? "../server/entry-server.js"
-        : "../build/server/entry-server.js";
-      // @ts-ignore - Dynamic import of build artifact
+
+      const buildPath = "../server/entry-server.js";
       const entryModule = await import(buildPath);
       render = entryModule.render;
 

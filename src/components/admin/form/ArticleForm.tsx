@@ -4,7 +4,7 @@ import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
@@ -16,11 +16,11 @@ import {
   TagsContainer,
 } from "./StyledComponent/FormContainer";
 
+import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toBase64 } from "@/lib/utils/Utils";
 import MarkdownEditor from "./MarkdownEditor/MarkdownEditor";
-import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -73,7 +73,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   ) => {
     const res = await deleteBoard(id);
     if (res) {
-      redirect(`/admin/${type}`);
+      replace(`/admin/${type}`);
     } else {
       alert("게시물을 삭제에 실패하였습니다!");
     }
@@ -205,8 +205,13 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     setIsDeleteOpen(true);
   };
 
-  const handleUploadImages = (images: string[]) => {
-    setValues((prev) => ({ ...prev, imgSrcs: [...images] }));
+  const handleUploadImages = (images: (prev: string[]) => string[]) => {
+    setValues((prev) => {
+      return {
+        ...prev,
+        imgSrcs: [...images(prev.imgSrcs)],
+      };
+    });
   };
 
   const handleImageUpload = async (file: File): Promise<string> => {

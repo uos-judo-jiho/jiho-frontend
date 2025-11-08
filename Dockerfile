@@ -63,7 +63,7 @@ RUN npm ci --only=production && \
 
 # Copy built application and server files
 COPY --from=builder /app/build ./build
-COPY --from=builder /app/index.html ./
+# COPY --from=builder /app/index.html ./
 
 # Change ownership to non-root user
 RUN chown -R nodejs:nodejs /app
@@ -85,4 +85,4 @@ EXPOSE 3000
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "build/server-ts/index.js"]
+CMD ["npm", "run", "start:prod"]
