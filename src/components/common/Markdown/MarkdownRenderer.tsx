@@ -2,129 +2,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
-import styled from "styled-components";
-
-const MarkdownContainer = styled.div`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  line-height: 1.6;
-
-  /* Markdown 스타일링 */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-  }
-
-  h1 {
-    font-size: 1.5em;
-  }
-  h2 {
-    font-size: 1.3em;
-  }
-  h3 {
-    font-size: 1.1em;
-  }
-
-  p {
-    margin-bottom: 1em;
-    text-indent: 0.4em;
-  }
-
-  ul,
-  ol {
-    margin-bottom: 1em;
-    padding-left: 1.5em;
-  }
-
-  li {
-    margin-bottom: 0.3em;
-  }
-
-  blockquote {
-    border-left: 4px solid ${(props) => props.theme.lightGreyColor || "#ddd"};
-    margin: 1em 0;
-    padding-left: 1em;
-    font-style: italic;
-    color: ${(props) => props.theme.greyColor || "#666"};
-  }
-
-  code {
-    background-color: #f5f5f5;
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-family: monospace;
-    font-size: 0.9em;
-  }
-
-  pre {
-    background-color: #f5f5f5;
-    padding: 1em;
-    border-radius: 5px;
-    overflow-x: auto;
-    margin: 1em 0;
-  }
-
-  pre code {
-    background-color: transparent;
-    padding: 0;
-  }
-
-  strong {
-    font-weight: bold;
-  }
-
-  em {
-    font-style: italic;
-  }
-
-  a {
-    color: ${(props) => props.theme.primaryColor || "#007bff"};
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1em 0;
-  }
-
-  th,
-  td {
-    border: 1px solid ${(props) => props.theme.lightGreyColor || "#ddd"};
-    padding: 0.5em;
-    text-align: left;
-  }
-
-  th {
-    background-color: #f9f9f9;
-    font-weight: bold;
-  }
-
-  hr {
-    border: none;
-    border-top: 1px solid ${(props) => props.theme.lightGreyColor || "#ddd"};
-    margin: 1.5em 0;
-  }
-
-  /* 첫 번째 단락의 text-indent 제거 (제목 바로 다음) */
-  h1 + p,
-  h2 + p,
-  h3 + p,
-  h4 + p,
-  h5 + p,
-  h6 + p {
-    text-indent: 0;
-  }
-`;
+import { cn } from "@/lib/utils";
 
 interface MarkdownRendererProps {
   content: string;
@@ -136,7 +14,46 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   className,
 }) => {
   return (
-    <MarkdownContainer className={className}>
+    <div
+      className={cn(
+        "text-theme-default leading-relaxed",
+        // Headings
+        "[&>h1]:mt-6 [&>h1]:mb-1 [&>h1]:font-bold [&>h1]:text-[1.5em]",
+        "[&>h2]:mt-6 [&>h2]:mb-1 [&>h2]:font-bold [&>h2]:text-[1.3em]",
+        "[&>h3]:mt-6 [&>h3]:mb-1 [&>h3]:font-bold [&>h3]:text-[1.1em]",
+        "[&>h4]:mt-6 [&>h4]:mb-1 [&>h4]:font-bold",
+        "[&>h5]:mt-6 [&>h5]:mb-1 [&>h5]:font-bold",
+        "[&>h6]:mt-6 [&>h6]:mb-1 [&>h6]:font-bold",
+        // Paragraphs
+        "[&>p]:mb-2 [&>p]:indent-[0.4em]",
+        "[&>h1+p]:indent-0 [&>h2+p]:indent-0 [&>h3+p]:indent-0",
+        "[&>h4+p]:indent-0 [&>h5+p]:indent-0 [&>h6+p]:indent-0",
+        // Lists
+        "[&>ul]:mb-2 [&>ul]:pl-6 [&>ul]:list-disc",
+        "[&>ol]:mb-2 [&>ol]:pl-6 [&>ol]:list-decimal",
+        "[&>li]:mb-[0.3em]",
+        // Blockquote
+        "[&>blockquote]:border-l-4 [&>blockquote]:border-theme-light-grey",
+        "[&>blockquote]:my-2 [&>blockquote]:pl-4 [&>blockquote]:italic [&>blockquote]:text-theme-grey",
+        // Code
+        "[&>code]:bg-[#f5f5f5] [&>code]:px-[0.4em] [&>code]:py-[0.2em]",
+        "[&>code]:rounded [&>code]:font-mono [&>code]:text-[0.9em]",
+        "[&>pre]:bg-[#f5f5f5] [&>pre]:p-4 [&>pre]:rounded-md [&>pre]:overflow-x-auto [&>pre]:my-2",
+        "[&>pre_code]:bg-transparent [&>pre_code]:p-0",
+        // Text formatting
+        "[&>strong]:font-bold",
+        "[&>em]:italic",
+        // Links
+        "[&>a]:text-theme-primary [&>a]:no-underline hover:[&>a]:underline",
+        // Tables
+        "[&>table]:border-collapse [&>table]:w-full [&>table]:my-2",
+        "[&>th]:border [&>th]:border-theme-light-grey [&>th]:p-2 [&>th]:text-left [&>th]:bg-[#f9f9f9] [&>th]:font-bold",
+        "[&>td]:border [&>td]:border-theme-light-grey [&>td]:p-2 [&>td]:text-left",
+        // Horizontal rule
+        "[&>hr]:border-0 [&>hr]:border-t [&>hr]:border-theme-light-grey [&>hr]:my-2",
+        className
+      )}
+    >
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
         components={{
@@ -177,7 +94,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
       >
         {content}
       </ReactMarkdown>
-    </MarkdownContainer>
+    </div>
   );
 };
 

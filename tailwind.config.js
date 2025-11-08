@@ -90,6 +90,20 @@ module.exports = {
         'md': '860px',
         'lg': '1200px',
       },
+      keyframes: {
+        fadeIn: {
+          from: { transform: 'scale(0)' },
+          to: { transform: 'scale(1.0)' },
+        },
+        fadeOut: {
+          from: { transform: 'scale(1.0)' },
+          to: { transform: 'scale(0)' },
+        },
+      },
+      animation: {
+        fadeIn: 'fadeIn 0.25s ease-in forwards',
+        fadeOut: 'fadeOut 0.25s ease-in forwards',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

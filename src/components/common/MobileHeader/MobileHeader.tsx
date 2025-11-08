@@ -1,53 +1,6 @@
-import styled from "styled-components";
 import { ArrowBackIosIcon } from "@/components/icons";
 
 // TODO: 모바일 헤더 높이 44px 고정 상수화
-
-const MobileHeaderContainer = styled.header`
-  position: sticky;
-  top: 0;
-  left: 0;
-  z-index: 2;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  gap: 16px;
-
-  height: 44px;
-  padding: 0 16px;
-
-  border-bottom: 1px solid ${(props) => props.theme.lightGreyColor};
-
-  background-color: rgb(255, 255, 255);
-
-  & .nav-icon {
-    width: 24px;
-    height: 24px;
-  }
-`;
-
-const HeaderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-
-  text-align: center;
-  & .title {
-    font-size: ${(props) => props.theme.tinyFontSize};
-    line-height: ${(props) => props.theme.tinyLineHeight};
-    color: ${(props) => props.theme.greyColor};
-    letter-spacing: 0.32px;
-  }
-
-  & .sub-title {
-    font-size: ${(props) => props.theme.defaultFontSize};
-    line-height: ${(props) => props.theme.defaultLineHeight};
-    color: ${(props) => props.theme.textColor};
-    letter-spacing: 0.16px;
-  }
-`;
 
 interface MobileHeaderProps {
   backUrl: string;
@@ -61,22 +14,26 @@ const MobileHeader = ({
   subTitleUrl,
 }: MobileHeaderProps) => {
   return (
-    <MobileHeaderContainer>
-      <div className="nav-icon">
+    <header className="sticky top-0 left-0 z-[2] flex justify-center items-center gap-4 h-11 px-4 border-b border-theme-light-grey bg-white">
+      <div className="w-6 h-6">
         <a href={backUrl}>
           <ArrowBackIosIcon title="Go back" />
         </a>
       </div>
-      <HeaderContainer>
+      <div className="flex flex-col flex-grow text-center">
         <a href="/">
-          <h1 className="title">{"서울시립대학교 유도부 지호"}</h1>
+          <h1 className="text-theme-tiny leading-theme-tiny text-theme-grey tracking-[0.32px]">
+            서울시립대학교 유도부 지호
+          </h1>
         </a>
         <a href={subTitleUrl}>
-          <h2 className="sub-title">{subTitle}</h2>
+          <h2 className="text-theme-default leading-theme-default text-theme-text tracking-[0.16px]">
+            {subTitle}
+          </h2>
         </a>
-      </HeaderContainer>
-      <div className="nav-icon" />
-    </MobileHeaderContainer>
+      </div>
+      <div className="w-6 h-6" />
+    </header>
   );
 };
 
