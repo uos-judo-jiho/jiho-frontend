@@ -1,10 +1,20 @@
-import { deleteBoard, updateBoard, uploadBoard } from "@/api/admin/board";
+import {
+  useCreateNewsBoard,
+  useUpdateNewsBoard,
+  useDeleteNewsBoard,
+  useCreateTrainingBoard,
+  useUpdateTrainingBoard,
+  useDeleteTrainingBoard,
+  useCreateNoticeBoard,
+  useUpdateNoticeBoard,
+  useDeleteNoticeBoard,
+} from "@/api/admin/board/query";
 import { uploadPicture } from "@/api/admin/pictures";
 import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { useState } from "react";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
@@ -65,16 +75,52 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const isNew = !data;
 
-  const handelSubmitOpen = () => setIsSubmitOpen(true);
+  // Mutation hooks - call all hooks unconditionally (React Hook rule)
+  const createNewsMutation = useCreateNewsBoard();
+  const updateNewsMutation = useUpdateNewsBoard();
+  const deleteNewsMutation = useDeleteNewsBoard();
+
+  const createTrainingMutation = useCreateTrainingBoard();
+  const updateTrainingMutation = useUpdateTrainingBoard();
+  const deleteTrainingMutation = useDeleteTrainingBoard();
+
+  const createNoticeMutation = useCreateNoticeBoard();
+  const updateNoticeMutation = useUpdateNoticeBoard();
+  const deleteNoticeMutation = useDeleteNoticeBoard();
+
+  // Select appropriate mutation based on board type
+  const createBoardMutation =
+    type === "news"
+      ? createNewsMutation
+      : type === "training"
+      ? createTrainingMutation
+      : createNoticeMutation;
+
+  const updateBoardMutation =
+    type === "news"
+      ? updateNewsMutation
+      : type === "training"
+      ? updateTrainingMutation
+      : updateNoticeMutation;
+
+  const deleteBoardMutation =
+    type === "news"
+      ? deleteNewsMutation
+      : type === "training"
+      ? deleteTrainingMutation
+      : deleteNoticeMutation;
+
+  const handleSubmitOpen = () => setIsSubmitOpen(true);
 
   const handleDelete = async (
     id: string,
     type: "news" | "training" | "notice"
   ) => {
-    const res = await deleteBoard(id);
-    if (res) {
-      replace(`/admin/${type}`);
-    } else {
+    try {
+      await deleteBoardMutation.mutateAsync(id);
+      naviagate(`/admin/${type}`);
+    } catch (error) {
+      console.error(error);
       alert("게시물을 삭제에 실패하였습니다!");
     }
   };
@@ -82,47 +128,46 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const handleSubmit = async () => {
     setIsSubmited(true);
 
-    let res;
-    if (gallery) {
-      res = await uploadPicture(values.dateTime.slice(0, 4), values.imgSrcs);
-    } else {
-      if (isNew) {
-        res = await uploadBoard(
-          {
-            title: values.title,
-            author: values.author,
-            description: values.description,
-            dateTime: values.dateTime,
-            tags: values.tags,
-            imgSrcs: values.imgSrcs,
-          },
-          type
-        );
+    try {
+      if (gallery) {
+        await uploadPicture(values.dateTime.slice(0, 4), values.imgSrcs);
       } else {
-        res = await updateBoard(
-          {
-            id: data.id,
-            title: values.title,
-            author: values.author,
-            description: values.description,
-            dateTime: values.dateTime,
-            tags: values.tags,
-            imgSrcs: values.imgSrcs,
-          },
-          type
-        );
+        if (isNew) {
+          await createBoardMutation.mutateAsync({
+            articleInfo: {
+              title: values.title,
+              author: values.author,
+              description: values.description,
+              dateTime: values.dateTime,
+              tags: values.tags,
+              imgSrcs: values.imgSrcs,
+            },
+            boardType: type,
+          });
+        } else {
+          await updateBoardMutation.mutateAsync({
+            articleInfo: {
+              id: data.id,
+              title: values.title,
+              author: values.author,
+              description: values.description,
+              dateTime: values.dateTime,
+              tags: values.tags,
+              imgSrcs: values.imgSrcs,
+            },
+            boardType: type,
+          });
+        }
       }
-    }
 
-    if (res) {
       alert("업로드에 성공하였습니다.");
-    } else {
+      naviagate(`/admin/${type}/${gallery ? "gallery" : ""}`);
+    } catch (error) {
+      console.error("upload error:", error);
       alert("업로드에 실패하였습니다.");
-      console.error("upload error");
+    } finally {
+      setIsSubmited(false);
     }
-
-    setIsSubmited(false);
-    naviagate(`/admin/${type}/${gallery ? "gallery" : ""}`);
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -418,7 +463,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           <Button
             variant={"default"}
             className="text-primary bg-blue-500 hover:bg-blue-600"
-            onClick={handelSubmitOpen}
+            onClick={handleSubmitOpen}
           >
             제출
           </Button>
@@ -437,7 +482,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
         <SubmitModal
           confirmText={"삭제"}
           cancelText={"취소"}
-          description={"게시물을 삭제하기겠습니까?"}
+          description={"게시물을 삭제할까요?"}
           open={isDeleteOpen}
           setOpen={setIsDeleteOpen}
           onSubmit={async () => handleDelete(data.id, type)}
