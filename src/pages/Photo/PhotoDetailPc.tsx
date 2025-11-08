@@ -1,16 +1,18 @@
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
+import { useTrainingListQuery } from "@/api/trainings/query";
+
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import Loading from "@/components/common/Skeletons/Loading";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Slider from "@/components/layouts/Slider";
 import { Button } from "@/components/ui/button";
-import MyHelmet from "@/helmet/MyHelmet";
 
+import MyHelmet from "@/helmet/MyHelmet";
 import { cn } from "@/lib/utils";
-import { useTrainingListQuery } from "@/api/trainings/query";
+
 import { useMemo } from "react";
 
 export const PhotoDetailPc = () => {
@@ -32,36 +34,58 @@ export const PhotoDetailPc = () => {
     return <Loading />;
   }
 
-  const metaDescription = [info.title, info.description.slice(0, 80)].join(
-    " | "
+  const metaDescription = [info.title, info.description.slice(0, 140)].join(
+    " | ",
   );
 
   const metaImgUrl = info.imgSrcs.at(0);
 
+  // Format date for meta tags (ISO 8601 format)
+  const publishedDate = info.dateTime
+    ? new Date(info.dateTime).toISOString()
+    : undefined;
+
   return (
     <div>
       <MyHelmet
-        title={`훈련일지 - ${info.title}`}
+        title={`훈련일지 - ${info.author}`}
         description={metaDescription}
         imgUrl={metaImgUrl}
+        datePublished={publishedDate}
+        dateModified={publishedDate}
+        author={info.author}
+        articleType="article"
       />
 
       <DefaultLayout>
         <SheetWrapper>
           {/* Header with Back Button and Navigation */}
           <div className="flex items-center justify-between mb-6">
-            <Button
-              asChild
-              variant="ghost"
-              className="flex items-center ext-gray-600 hover:text-gray-900"
-            >
+            <div className="flex items-center ext-gray-600 hover:text-gray-900">
               <Link to={`/photo`} className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 훈련일지로 돌아가기
               </Link>
-            </Button>
+            </div>
+          </div>
 
-            <div className="flex items-center gap-2">
+          {/* Main Content */}
+          <div className="flex flex-col flex-1">
+            {/* Image Slider */}
+            <div className="mb-6 md:mb-0 flex justify-center">
+              <Slider datas={info.imgSrcs} />
+            </div>
+
+            {/* Description Section */}
+            <div className="flex-1">
+              <ModalDescriptionSection
+                article={info}
+                titles={["작성자", "참여 인원", "훈련 날짜"]}
+              />
+            </div>
+
+            {/* Navigation */}
+            <div className="flex items-center justify-end gap-2">
               <Button
                 asChild
                 variant="link"
@@ -69,7 +93,7 @@ export const PhotoDetailPc = () => {
                 disabled={current === 0}
                 className={cn(
                   "flex items-center",
-                  current === 0 && "opacity-50 cursor-not-allowed"
+                  current === 0 && "opacity-50 cursor-not-allowed",
                 )}
               >
                 <Link
@@ -93,7 +117,7 @@ export const PhotoDetailPc = () => {
                 className={cn(
                   "flex items-center",
                   current === trainings.length - 1 &&
-                    "opacity-50 cursor-not-allowed"
+                    "opacity-50 cursor-not-allowed",
                 )}
               >
                 <Link
@@ -108,22 +132,6 @@ export const PhotoDetailPc = () => {
                   <ChevronRight className="h-4 w-4" />
                 </Link>
               </Button>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div className="flex flex-col flex-1">
-            {/* Image Slider */}
-            <div className="mb-6 md:mb-0 flex justify-center">
-              <Slider datas={info.imgSrcs} />
-            </div>
-
-            {/* Description Section */}
-            <div className="flex-1">
-              <ModalDescriptionSection
-                article={info}
-                titles={["작성자", "참여 인원", "훈련 날짜"]}
-              />
             </div>
           </div>
         </SheetWrapper>

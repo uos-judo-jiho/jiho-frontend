@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import FooterInfo from "@/lib/assets/jsons/footerData.json";
+import { footerData } from "@/lib/assets/data/footer";
 import Title from "@/components/layouts/Title";
 import Logo from "../../Logo";
 
@@ -49,16 +49,16 @@ function HomeInfo() {
         </LogoWrapper>
         <DescriptionContainer>
           <DescriptionItem>
-            <Title title={FooterInfo.title.krTitle} heading={2} />
+            <Title title={footerData.title.krTitle} heading={2} />
           </DescriptionItem>
           <DescriptionItem>
-            <DescriptionTitle>{FooterInfo.title.since}</DescriptionTitle>
+            <DescriptionTitle>{footerData.title.since}</DescriptionTitle>
           </DescriptionItem>
           <DescriptionItem>
-            <DescriptionTitle>{FooterInfo.exercise.title}</DescriptionTitle>
+            <DescriptionTitle>{footerData.exercise.title}</DescriptionTitle>
           </DescriptionItem>
-          <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
-          <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
+          <DescriptionItem>{footerData.exercise.time}</DescriptionItem>
+          <DescriptionItem>{footerData.exercise.place}</DescriptionItem>
         </DescriptionContainer>
       </div>
     </Container>

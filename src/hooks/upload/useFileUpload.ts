@@ -42,14 +42,14 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
         };
       });
     },
-    []
+    [],
   );
 
   const startProgressTracking = useCallback(
     (uploadId: string, sseToken: string) => {
       const eventSource = uploadClient.createUploadEventSource(
         uploadId,
-        sseToken
+        sseToken,
       );
 
       eventSource.onmessage = (event) => {
@@ -81,7 +81,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
                   isUploading:
                     prev.uploads.size > 1 ||
                     Array.from(prev.uploads.values()).some(
-                      (u) => u.status === "uploading"
+                      (u) => u.status === "uploading",
                     ),
                 }));
 
@@ -118,7 +118,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
 
       eventSourcesRef.current.set(uploadId, eventSource);
     },
-    [onComplete, onError, updateUpload]
+    [onComplete, onError, updateUpload],
   );
 
   const uploadFile = useCallback(
@@ -132,7 +132,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
 
         const response: UploadStartResponse = await uploadClient.uploadFile(
           file,
-          folder
+          folder,
         );
 
         // 초기 업로드 상태 설정
@@ -159,7 +159,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
         throw error;
       }
     },
-    [updateUpload, startProgressTracking]
+    [updateUpload, startProgressTracking],
   );
 
   const uploadMultipleFiles = useCallback(
@@ -198,7 +198,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
         throw error;
       }
     },
-    [updateUpload, startProgressTracking]
+    [updateUpload, startProgressTracking],
   );
 
   const cancelUpload = useCallback(async (uploadId: string) => {
@@ -224,7 +224,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
           isUploading:
             newUploads.size > 0 &&
             Array.from(newUploads.values()).some(
-              (u) => u.status === "uploading"
+              (u) => u.status === "uploading",
             ),
         };
       });
@@ -253,10 +253,10 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
   const getUploadByStatus = useCallback(
     (status: UploadProgress["status"]) => {
       return Array.from(state.uploads.values()).filter(
-        (upload) => upload.status === status
+        (upload) => upload.status === status,
       );
     },
-    [state.uploads]
+    [state.uploads],
   );
 
   // 컴포넌트 언마운트 시 모든 EventSource 정리
@@ -279,13 +279,13 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
     getUploadByStatus,
     uploadsArray: Array.from(state.uploads.values()),
     completedUploads: Array.from(state.uploads.values()).filter(
-      (u) => u.status === "completed"
+      (u) => u.status === "completed",
     ),
     failedUploads: Array.from(state.uploads.values()).filter(
-      (u) => u.status === "error"
+      (u) => u.status === "error",
     ),
     uploadingCount: Array.from(state.uploads.values()).filter(
-      (u) => u.status === "uploading"
+      (u) => u.status === "uploading",
     ).length,
   };
 };

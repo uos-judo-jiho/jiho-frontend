@@ -1,7 +1,5 @@
-import styled from "styled-components";
-
-import LogoWhite from "@/lib/assets/images/logo/logo-removebg-white.png";
-import LogoBlack from "@/lib/assets/images/logo/logo-removebg.png";
+import LogoWhite from "@/lib/assets/images/logo/logo-removebg-white.webp";
+import LogoBlack from "@/lib/assets/images/logo/logo-removebg.webp";
 
 type LogoProps = {
   size?: string;
@@ -9,29 +7,26 @@ type LogoProps = {
   isDark?: boolean;
 };
 
-type ContainerProps = {
-  margin: string;
-  size: string;
-};
-
-const Container = styled.div<ContainerProps>`
-  margin: ${(props) => props.margin};
-  display: flex;
-
-  width: ${(props) => props.size};
-  height: ${(props) => props.size};
-`;
-
-const Img = styled.img`
-  width: 100%;
-  height: 100%;
-`;
-
-const Logo = ({ size = "6rem", margin = "0rem", isDark = false }: LogoProps) => {
+const Logo = ({
+  size = "6rem",
+  margin = "0rem",
+  isDark = false,
+}: LogoProps) => {
   return (
-    <Container margin={margin} size={size}>
-      <Img src={isDark ? LogoBlack : LogoWhite} />
-    </Container>
+    <div
+      className="flex"
+      style={{
+        margin,
+        width: size,
+        height: size,
+      }}
+    >
+      <img
+        src={isDark ? LogoBlack : LogoWhite}
+        alt="서울시립대학교 유도부 지호 로고"
+        className="w-full h-full"
+      />
+    </div>
   );
 };
 

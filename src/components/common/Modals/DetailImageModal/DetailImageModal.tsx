@@ -3,11 +3,12 @@ import { createPortal } from "react-dom";
 import styled from "styled-components";
 import useClickOutside from "../../../../hooks/useClickOutside";
 import useKeyEscClose from "../../../../hooks/useKeyEscClose";
-import Close from "@/lib/assets/svgs/close.svg";
+import { CloseIcon } from "@/components/icons";
 
 type DetailImageModalProps = {
   image: string;
   isOpen: boolean;
+  title?: string;
   onClose: () => void;
 };
 
@@ -40,7 +41,7 @@ const Img = styled.img`
   object-fit: contain;
 `;
 
-const CloseButton = styled.img`
+const CloseButton = styled(CloseIcon)`
   position: absolute;
   top: 24px;
   right: 24px;
@@ -56,6 +57,7 @@ const CloseButton = styled.img`
 const DetailImageModal = ({
   image,
   isOpen,
+  title,
   onClose,
 }: DetailImageModalProps) => {
   const modalRef = useRef<HTMLImageElement>(null);
@@ -64,12 +66,12 @@ const DetailImageModal = ({
 
   return createPortal(
     <Container id={`detail-image-${image}`} open={isOpen}>
-      <CloseButton onClick={onClose} src={Close} />
+      <CloseButton onClick={onClose} title="Close image modal" />
       <Inner>
-        <Img src={image} ref={modalRef} />
+        <Img src={image} ref={modalRef} alt={title || "상세 이미지"} />
       </Inner>
     </Container>,
-    document.body
+    document.body,
   );
 };
 

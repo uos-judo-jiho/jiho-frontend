@@ -1,22 +1,13 @@
-import { Link, redirect, useParams } from "react-router-dom";
-import styled from "styled-components";
+import { useNoticesQuery } from "@/api/notices/query";
+import DefaultLayout from "@/components/layouts/DefaultLayout";
+import SheetWrapper from "@/components/layouts/SheetWrapper";
+import Title from "@/components/layouts/Title";
 import NoticeDescription from "@/components/Notice/NoticeDetail/NoticeDescription";
 import NoticeFooter from "@/components/Notice/NoticeDetail/NoticeFooter";
 import NoticeTitle from "@/components/Notice/NoticeDetail/NoticeTitle";
 import { Constants } from "@/lib/constant";
+import { Link, redirect, useParams } from "react-router-dom";
 import MyHelmet from "../../helmet/MyHelmet";
-import DefaultLayout from "@/components/layouts/DefaultLayout";
-import SheetWrapper from "@/components/layouts/SheetWrapper";
-import Title from "@/components/layouts/Title";
-import { useNoticesQuery } from "@/api/notices/query";
-
-const TitleWrapper = styled.div`
-  width: min-content;
-
-  &:hover {
-    text-decoration: underline solid;
-  }
-`;
 
 const NoticeDetail = () => {
   const { id } = useParams();
@@ -29,8 +20,8 @@ const NoticeDetail = () => {
     return <></>;
   }
 
-  const metaDescription = [data.title, data.description.slice(0, 80)].join(
-    " | "
+  const metaDescription = [data.title, data.description.slice(0, 140)].join(
+    " | ",
   );
 
   const metaImgUrl = data.imgSrcs[0];
@@ -44,11 +35,11 @@ const NoticeDetail = () => {
       />
       <DefaultLayout>
         <SheetWrapper>
-          <TitleWrapper>
+          <div className="mb-4 width-min-content hover:underline">
             <Link to={"/notice"}>
               <Title title={"공지사항"} color={Constants.BLACK_COLOR} />
             </Link>
-          </TitleWrapper>
+          </div>
           <NoticeTitle
             title={data.title}
             author={data.author}

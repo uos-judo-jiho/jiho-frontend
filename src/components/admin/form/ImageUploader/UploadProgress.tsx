@@ -129,7 +129,7 @@ export const UploadProgress = ({
         className={cn(
           "close-icon-button opacity-0",
           "absolute top-[-4px] right-[-12px]",
-          "bg-white border-radius-50 m-2 text-gray-500 hover:text-gray-800"
+          "bg-white border-radius-50 m-2 text-gray-500 hover:text-gray-800",
         )}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">

@@ -1,43 +1,28 @@
-import React from "react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
+
 import Line from "@/components/layouts/Line";
-
-const FadeIn = keyframes`
-    from {
-      opacity: 0.5;
-    }
-    to {
-      opacity: 1;
-    }
-`;
-
-const Container = styled.div`
-  width: max-content;
-
-  font-size: ${(props) => props.theme.defaultFontSize};
-  color: ${(props) => props.theme.greyColor};
-`;
-
-const LinkWrapper = styled.div`
-  padding: 8px 12px;
-  &:hover {
-    background-color: ${(props) => props.theme.lightGreyColor};
-    color: ${(props) => props.theme.textColor};
-    animation: ${FadeIn} 0.5s;
-    animation-timing-function: ease-in-out;
-  }
-`;
+import { cn } from "@/lib/utils";
 
 function NoticeFooter() {
   return (
     <>
       <Line borderWidth="1px" margin="2rem 0" />
-      <Container>
-        <LinkWrapper>
-          <Link to="/notice">목록으로</Link>
-        </LinkWrapper>
-      </Container>
+      <div className="w-max text-theme-default text-theme-grey">
+        <div
+          className={cn(
+            "px-3 py-2 border-radius-md",
+            "hover:bg-gray-100 hover:text-theme-text",
+            "active:scale-95",
+            "transition-all duration-500 ease-in-out animate-in fade-in",
+          )}
+        >
+          <Link to="/notice" className="flex items-center gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            목록으로
+          </Link>
+        </div>
+      </div>
     </>
   );
 }

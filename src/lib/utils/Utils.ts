@@ -65,7 +65,7 @@ export const toBase64 = async (file: File): Promise<string> => {
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result as string);
         reader.onerror = reject;
-      }
+      },
     );
 
     return data;
@@ -83,7 +83,7 @@ export const toBase64 = async (file: File): Promise<string> => {
 export const vaildNewsYearList = () => {
   const currentYear = new Date().getFullYear();
   const yearList = Array.from({ length: currentYear - 2021 }, (_, i) =>
-    String(2022 + i)
+    String(2022 + i),
   );
   return yearList;
 };

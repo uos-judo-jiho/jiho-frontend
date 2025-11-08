@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import NewsIndex from "@/components/News/NewsIndex";
 import MyHelmet from "../../helmet/MyHelmet";
@@ -8,6 +8,7 @@ import Title from "@/components/layouts/Title";
 import { useNews } from "@/recoils/news";
 import { NewsParamsType } from "@/lib/types/NewsParamsType";
 import { vaildNewsYearList } from "@/lib/utils/Utils";
+import { StructuredData, createImageGalleryData } from "@/seo";
 
 const NewsDetail = () => {
   const { id, index } = useParams<NewsParamsType>();
@@ -26,7 +27,7 @@ const NewsDetail = () => {
   }, [fetch, id, news]);
 
   const currentPageNews = news.find(
-    (newsData) => newsData.year?.toString() === id?.toString()
+    (newsData) => newsData.year?.toString() === id?.toString(),
   );
 
   // SSG-friendly: 뉴스 데이터가 없어도 기본 메타 정보 제공
@@ -34,11 +35,45 @@ const NewsDetail = () => {
     ? [
         currentPageNews.year,
         currentPageNews.articles.at(0)?.title,
-        currentPageNews.articles.at(0)?.description.slice(0, 80),
+        currentPageNews.articles.at(0)?.description.slice(0, 140),
       ].join(" | ")
     : `${id}년 서울시립대학교 유도부 지호지`;
 
   const metaImgUrl = currentPageNews?.articles.at(0)?.imgSrcs.at(0);
+
+  // Create structured data for image gallery
+  const structuredData = useMemo(() => {
+    if (
+      !currentPageNews ||
+      !currentPageNews.articles ||
+      currentPageNews.articles.length === 0
+    ) {
+      return null;
+    }
+
+    const currentUrl =
+      typeof window !== "undefined"
+        ? window.location.href
+        : `https://uosjudo.com/news/${id}`;
+
+    // Collect all images from all articles
+    const allImages = currentPageNews.articles.flatMap((article) =>
+      article.imgSrcs.slice(0, 5).map((imgSrc, imgIdx) => ({
+        url: imgSrc,
+        caption: `${article.title} - ${imgIdx + 1}`,
+        datePublished: article.dateTime
+          ? new Date(article.dateTime).toISOString()
+          : undefined,
+      })),
+    );
+
+    return createImageGalleryData({
+      name: `${id}년 서울시립대학교 유도부 지호지`,
+      description: metaDescription,
+      url: currentUrl,
+      images: allImages.slice(0, 30), // Limit to 30 images for performance
+    });
+  }, [currentPageNews, id, metaDescription]);
 
   if (!id || !vaildNewsYearList().includes(id)) {
     naviagate(`/news/${vaildNewsYearList().at(-1)}`);
@@ -52,6 +87,7 @@ const NewsDetail = () => {
         description={metaDescription}
         imgUrl={metaImgUrl}
       />
+      {structuredData && <StructuredData data={structuredData} />}
       <DefaultLayout>
         <SheetWrapper>
           <Title title={`${id}년 지호지`} color="black" />

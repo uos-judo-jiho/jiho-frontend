@@ -60,7 +60,6 @@ const DescriptionTitle = styled.h3`
   margin-bottom: 10px;
 `;
 
-
 const DescriptionFooter = styled.div`
   flex: 0;
   /* position: absolute;

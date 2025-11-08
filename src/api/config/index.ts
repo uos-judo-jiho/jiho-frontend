@@ -46,13 +46,16 @@ axiosInstance.interceptors.response.use(
     // If 401 Unauthorized, redirect to admin login
     if (error.response?.status === 401) {
       // Only redirect if we're in a browser context and on an admin page
-      if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
+      if (
+        typeof window !== "undefined" &&
+        window.location.pathname.startsWith("/admin")
+      ) {
         console.warn("[Auth] Unauthorized - redirecting to login");
         window.location.href = "/admin/login";
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // _internal API 전용 axios 인스턴스 (서버에서 발급받은 토큰 사용)

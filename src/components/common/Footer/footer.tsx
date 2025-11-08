@@ -1,5 +1,5 @@
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
-import FooterInfo from "@/lib/assets/jsons/footerData.json";
+import { footerData } from "@/lib/assets/data/footer";
 import { Constants } from "@/lib/constant";
 import { Link } from "react-router-dom";
 
@@ -7,11 +7,14 @@ import styled from "styled-components";
 
 const DescriptionList = styled.ul`
   margin-right: 20px;
-  margin-bottom: 5px;
+  margin-bottom: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const DescriptionItem = styled.li`
-  margin: 4px 0;
   color: ${(props) => props.theme.textColor};
   font-size: ${(props) => props.theme.tinyFontSize};
 
@@ -20,8 +23,6 @@ const DescriptionItem = styled.li`
 `;
 
 const DescriptionItemTitle = styled.li`
-  margin: 4px 0;
-
   font-weight: bold;
   font-size: ${(props) => props.theme.tinyFontSize};
   color: ${(props) => props.theme.textColor};
@@ -77,43 +78,43 @@ const Footer = () => {
         {/* 지호 이름 */}
         <DescriptionList>
           <DescriptionItemTitle>
-            {FooterInfo.title.krTitle}
+            {footerData.title.krTitle}
           </DescriptionItemTitle>
-          <DescriptionItem>{FooterInfo.title.enTitle}</DescriptionItem>
-          <DescriptionItem>{FooterInfo.title.since}</DescriptionItem>
+          <DescriptionItem>{footerData.title.enTitle}</DescriptionItem>
+          <DescriptionItem>{footerData.title.since}</DescriptionItem>
         </DescriptionList>
         {/* 정규 운동 */}
         <DescriptionList>
           <DescriptionItemTitle>
-            {FooterInfo.exercise.title}
+            {footerData.exercise.title}
           </DescriptionItemTitle>
-          <DescriptionItem>{FooterInfo.exercise.time}</DescriptionItem>
-          <DescriptionItem>{FooterInfo.exercise.place}</DescriptionItem>
+          <DescriptionItem>{footerData.exercise.time}</DescriptionItem>
+          <DescriptionItem>{footerData.exercise.place}</DescriptionItem>
         </DescriptionList>
         {/* Connect Us */}
         <DescriptionList>
           <DescriptionItemTitle>
-            {FooterInfo.connetUs.title}
+            {footerData.connetUs.title}
           </DescriptionItemTitle>
           <DescriptionItem>
-            {FooterInfo.connetUs.instagram.title}
+            {footerData.connetUs.instagram.title}
             <HyperLink
               href="https://www.instagram.com/uos_judo/"
               target="_blank"
             >
-              {FooterInfo.connetUs.instagram.href}
+              {footerData.connetUs.instagram.href}
             </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
-            {FooterInfo.connetUs.email.title}
+            {footerData.connetUs.email.title}
             <HyperLink href="mailto: uosjudojiho@gmail.com">
-              {FooterInfo.connetUs.email.href}
+              {footerData.connetUs.email.href}
             </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
-            {FooterInfo.connetUs.dev.title}
+            {footerData.connetUs.dev.title}
             <HyperLink href="mailto: uosjudojiho@gmail.com">
-              {FooterInfo.connetUs.dev.href}
+              {footerData.connetUs.dev.href}
             </HyperLink>
           </DescriptionItem>
         </DescriptionList>

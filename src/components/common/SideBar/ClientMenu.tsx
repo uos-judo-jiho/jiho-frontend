@@ -2,7 +2,12 @@ import { Link, useLocation } from "react-router-dom";
 import { MENU_ID, MenuIdType } from "@/lib/types/MenuIdType";
 
 import { vaildNewsYearList } from "@/lib/utils/Utils";
-import { MenuItem, MenuItemTitle, MenuList, MenuProps } from "./MenuStyledComponents";
+import {
+  MenuItem,
+  MenuItemTitle,
+  MenuList,
+  MenuProps,
+} from "./MenuStyledComponents";
 import ToggleMenuItem from "./ToggleMenuItem";
 import { useNavbar } from "../Navbar/NavBar.provider";
 
@@ -13,17 +18,26 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
   const handleClickMenu = (id: MenuIdType) => {
     switch (id) {
       case MENU_ID.newsToggleMenu:
-        setSelected((prev) => [prev[0] === "selected" ? "animate" : "selected", prev[1] === "closed" ? "closed" : "animate"]);
+        setSelected((prev) => [
+          prev[0] === "selected" ? "animate" : "selected",
+          prev[1] === "closed" ? "closed" : "animate",
+        ]);
         break;
       case MENU_ID.trainingToggleMenu:
-        setSelected((prev) => [prev[0] === "closed" ? "closed" : "animate", prev[1] === "selected" ? "animate" : "selected"]);
+        setSelected((prev) => [
+          prev[0] === "closed" ? "closed" : "animate",
+          prev[1] === "selected" ? "animate" : "selected",
+        ]);
         break;
       default:
         break;
     }
   };
 
-  const handleClickLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleClickLink = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
     if (open && location.pathname === href) {
       e.preventDefault();
       setOpen(false);

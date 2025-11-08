@@ -1,13 +1,23 @@
-import MobilePhotoCard from "@/components/Photo/MobilePhotoCard";
-import Feed from "@/components/common/Feed/Feed";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+
 import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
+import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import Loading from "@/components/common/Skeletons/Loading";
+import Slider from "@/components/layouts/Slider";
+import { Button } from "@/components/ui/button";
+import MyHelmet from "@/helmet/MyHelmet";
+
 import { useTrainingListQuery } from "@/api/trainings/query";
+
+import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 
 export const PhotoDetailMobile = () => {
-  const { data, isLoading } = useTrainingListQuery();
+  const { id } = useParams<{ id: string }>();
+
+  const { data } = useTrainingListQuery();
 
   // 날짜순 정렬
   const trainings = useMemo(() => {
@@ -15,29 +25,103 @@ export const PhotoDetailMobile = () => {
     return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
   }, [data]);
 
-  if (!trainings && isLoading) {
+  const current =
+    trainings?.findIndex((item) => item.id.toString() === id?.toString()) ?? -1;
+
+  const info = trainings?.find((item) => item.id.toString() === id?.toString());
+
+  if (!trainings || !info) {
     return <Loading />;
   }
 
+  const metaDescription = [info.title, info.description.slice(0, 140)].join(
+    " | ",
+  );
+
+  const metaImgUrl = info.imgSrcs.at(0);
+
+  // Format date for meta tags (ISO 8601 format)
+  const publishedDate = info.dateTime
+    ? new Date(info.dateTime).toISOString()
+    : undefined;
+
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
+      <MyHelmet
+        title={`훈련일지 - ${info.author}`}
+        description={metaDescription}
+        imgUrl={metaImgUrl}
+        datePublished={publishedDate}
+        dateModified={publishedDate}
+        author={info.author}
+        articleType="article"
+      />
+
       <MobileHeader backUrl="/photo" subTitle="훈련일지" subTitleUrl="/photo" />
-      <Feed>
-        {trainings && trainings.length > 0 ? (
-          trainings.map((trainingInfo) => (
-            <div key={trainingInfo.id}>
-              <MobilePhotoCard
-                articleInfo={trainingInfo}
-                id={`training-mobile-card-${trainingInfo.id}`}
-              />
-            </div>
-          ))
-        ) : (
-          <div style={{ padding: "20px", textAlign: "center", color: "#666" }}>
-            훈련일지를 불러오는 중...
-          </div>
-        )}
-      </Feed>
+
+      <div className="flex-1">
+        {/* Image Slider */}
+        <div className="mb-4">
+          <Slider datas={info.imgSrcs} />
+        </div>
+
+        {/* Description Section */}
+        <div>
+          <ModalDescriptionSection
+            article={info}
+            titles={["작성자", "참여 인원", "훈련 날짜"]}
+          />
+        </div>
+        {/* Navigation */}
+        <div className="flex items-center justify-end mb-4 gap-4">
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            disabled={current === 0}
+            className={cn(
+              "flex items-center text-sm",
+              current === 0 && "opacity-50 cursor-not-allowed",
+            )}
+          >
+            <Link
+              to={current > 0 ? `/photo/${trainings[current - 1].id}` : "#"}
+              className="flex items-center gap-1"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              이전
+            </Link>
+          </Button>
+
+          <span className="text-sm text-gray-500">
+            {current + 1} / {trainings.length}
+          </span>
+
+          <Button
+            asChild
+            variant="ghost"
+            size="sm"
+            disabled={current === trainings.length - 1}
+            className={cn(
+              "flex items-center text-sm",
+              current === trainings.length - 1 &&
+                "opacity-50 cursor-not-allowed",
+            )}
+          >
+            <Link
+              to={
+                current < trainings.length - 1
+                  ? `/photo/${trainings[current + 1].id}`
+                  : "#"
+              }
+              className="flex items-center gap-1"
+            >
+              다음
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </div>
       <Footer />
     </div>
   );

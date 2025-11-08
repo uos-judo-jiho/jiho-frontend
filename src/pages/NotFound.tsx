@@ -1,39 +1,23 @@
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import MyHelmet from "../helmet/MyHelmet";
 import Col from "@/components/layouts/Col";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
-
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 80vh;
-`;
-const Description = styled.div``;
-const BackDescription = styled.div`
-  margin: 1rem 0;
-  text-decoration-line: underline;
-
-  &:hover {
-    opacity: 0.6;
-  }
-`;
+import { Link } from "react-router-dom";
+import MyHelmet from "../helmet/MyHelmet";
 
 const NotFound = () => {
   return (
     <>
       <MyHelmet title="NotFound" />
       <DefaultLayout>
-        <Container>
+        <div className="flex justify-center items-center w-full h-[80vh]">
           <Col alignItems="center">
-            <Description>존재하지 않는 페이지입니다.</Description>
+            <div>존재하지 않는 페이지입니다.</div>
             <Link to={"/"}>
-              <BackDescription>홈으로 돌아가기</BackDescription>
+              <div className="my-4 text-gray-500 hover:text-gray-600 hover:underline">
+                홈으로 돌아가기
+              </div>
             </Link>
           </Col>
-        </Container>
+        </div>
       </DefaultLayout>
     </>
   );

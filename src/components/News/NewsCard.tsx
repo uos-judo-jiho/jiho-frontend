@@ -1,140 +1,11 @@
 import { useState } from "react";
-import styled from "styled-components";
 
 import SkeletonThumbnail from "@/components/common/Skeletons/SkeletonThumbnail";
 import Col from "@/components/layouts/Col";
-import { Card } from "@/components/ui/card";
 
 import { Constants } from "@/lib/constant";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-
-const Container = styled(Card)`
-  width: 100%;
-  font-size: ${(props) => props.theme.descriptionFontSize};
-  line-height: ${(props) => props.theme.descriptionLineHeight};
-
-  display: flex;
-
-  border: 1px solid ${(props) => props.theme.lightGreyColor};
-  border-radius: 10px;
-  padding: 16px;
-
-  transition: all 500ms;
-  cursor: pointer;
-
-  @media (min-width: 540px) {
-    &:hover {
-      transform: scale3d(1.01, 1.01, 1.01);
-      box-shadow: 0.2rem 0.4rem 1.6rem rgb(0 0 0 / 16%);
-    }
-  }
-  @media (max-width: 540px) {
-    padding: 8px;
-  }
-`;
-
-const AnchoreContainer = styled.a`
-  width: 100%;
-  display: flex;
-  gap: 24px;
-`;
-
-const ImgWrapper = styled.div`
-  flex: 1 1 0;
-  width: 50%;
-
-  border-radius: 5px;
-
-  @media (max-width: 539px) {
-    width: 100%;
-  }
-`;
-
-const ImgSubTitle = styled.div`
-  font-size: ${(props) => props.theme.tinyFontSize};
-  line-height: ${(props) => props.theme.tinyLineHeight};
-  color: ${(props) => props.theme.greyColor};
-
-  display: none;
-  @media (max-width: 539px) {
-    display: block;
-  }
-`;
-const ImgTitle = styled.div`
-  font-size: ${(props) => props.theme.descriptionFontSize};
-  line-height: ${(props) => props.theme.descriptionLineHeight};
-
-  font-weight: bold;
-  padding-top: 8px;
-  display: none;
-  @media (max-width: 539px) {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    display: block;
-  }
-`;
-
-const Img = styled.img`
-  width: 100%;
-  height: 100%;
-  border-radius: inherit;
-  object-fit: contain;
-
-  background-color: ${(props) => props.theme.bgColor};
-
-  @media (max-width: 539px) {
-    height: inherit;
-    max-height: 200px;
-  }
-`;
-
-const DescriptionTitleWrapper = styled.div`
-  margin-bottom: 10px;
-`;
-
-const DescriptionTitle = styled.h3`
-  text-indent: 0;
-  font-size: ${(props) => props.theme.descriptionFontSize};
-  line-height: ${(props) => props.theme.descriptionLineHeight};
-  font-weight: bold;
-`;
-
-const DescriptionSubTitle = styled.span`
-  text-indent: 0;
-  font-size: ${(props) => props.theme.tinyFontSize};
-  line-height: ${(props) => props.theme.tinyLineHeight};
-  color: ${(props) => props.theme.greyColor};
-  padding-right: 8px;
-`;
-const DescriptionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  flex: 1 1 0;
-  font-size: ${(props) => props.theme.defaultFontSize};
-  line-height: ${(props) => props.theme.descriptionLineHeight};
-  width: 100%;
-
-  text-indent: 4px;
-
-  @media (max-width: 539px) {
-    display: none;
-  }
-`;
-
-const SeeMore = styled.span``;
-
-const MoreButton = styled.button`
-  margin-top: 2px;
-  font-size: ${(props) => props.theme.tinyFontSize};
-  line-height: ${(props) => props.theme.tinyLineHeight};
-  color: ${(props) => props.theme.textColor};
-
-  &:hover {
-    color: ${(props) => props.theme.greyColor};
-  }
-`;
+import { cn } from "@/lib/utils";
 
 type NewsCardProps = {
   year: string;
@@ -153,19 +24,28 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
   };
 
   return (
-    <Container onClick={() => handleClickCard(article.id)}>
-      <AnchoreContainer
+    <div
+      onClick={() => handleClickCard(article.id)}
+      className={cn(
+        "flex w-full text-theme-description leading-theme-description",
+        "border border-theme-light-grey rounded-[10px] p-4",
+        "xs:p-2",
+      )}
+    >
+      <a
         href={`/news/${year}/${article.id}`}
         onClick={(e) => e.preventDefault()}
+        className="w-full flex sm:flex-row flex-col items-center gap-4"
       >
-        <ImgWrapper>
+        <div className="flex-1 rounded-[5px]">
           {isLoading ? (
-            <Img
+            <img
               loading="lazy"
               alt={article.title + article.author}
               src={
                 article.imgSrcs[0] ? article.imgSrcs[0] : Constants.LOGO_BLACK
               }
+              className="w-full h-full rounded-inherit object-contain bg-theme-bg xs:h-auto xs:max-h-[200px]"
             />
           ) : (
             <SkeletonThumbnail />
@@ -177,30 +57,44 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
             onLoad={handleLoding}
           />
           <Col>
-            <ImgTitle>{article.title}</ImgTitle>
-            <ImgSubTitle>{article.author}</ImgSubTitle>
-            <ImgSubTitle>{article.tags}</ImgSubTitle>
+            <div className="text-theme-description leading-theme-description font-bold pt-2 text-ellipsis overflow-hidden whitespace-nowrap hidden xs:block">
+              {article.title}
+            </div>
+            <div className="text-theme-tiny leading-theme-tiny text-theme-grey hidden xs:block">
+              {article.author}
+            </div>
+            <div className="text-theme-tiny leading-theme-tiny text-theme-grey hidden xs:block">
+              {article.tags}
+            </div>
           </Col>
-        </ImgWrapper>
-        <DescriptionWrapper>
-          <DescriptionTitleWrapper>
+        </div>
+        <div className="flex flex-col flex-1 text-theme-default leading-theme-description w-full indent-1 xs:hidden">
+          <div className="mb-2.5">
             <Col>
-              <DescriptionTitle>{article.title}</DescriptionTitle>
+              <h3 className="indent-0 text-theme-description leading-theme-description font-bold">
+                {article.title}
+              </h3>
               <Col>
-                <DescriptionSubTitle>{article.author}</DescriptionSubTitle>
-                <DescriptionSubTitle>{article.tags}</DescriptionSubTitle>
+                <span className="indent-0 text-theme-tiny leading-theme-tiny text-theme-grey pr-2">
+                  {article.author}
+                </span>
+                <span className="indent-0 text-theme-tiny leading-theme-tiny text-theme-grey pr-2">
+                  {article.tags}
+                </span>
               </Col>
             </Col>
-          </DescriptionTitleWrapper>
+          </div>
           <div>
             {`${commenter}...`}
-            <SeeMore>
-              <MoreButton>자세히 보기</MoreButton>
-            </SeeMore>
+            <span>
+              <button className="mt-0.5 text-theme-tiny leading-theme-tiny text-theme-text hover:text-theme-grey">
+                자세히 보기
+              </button>
+            </span>
           </div>
-        </DescriptionWrapper>
-      </AnchoreContainer>
-    </Container>
+        </div>
+      </a>
+    </div>
   );
 };
 

@@ -28,7 +28,11 @@ const BackgroundImageWrapper = styled.div`
 
   &::before {
     content: "";
-    background: radial-gradient(circle at 40% 20%, rgba(0, 0, 0, 0) 0%, rgb(18, 18, 18) 90.2%);
+    background: radial-gradient(
+      circle at 40% 20%,
+      rgba(0, 0, 0, 0) 0%,
+      rgb(18, 18, 18) 90.2%
+    );
 
     height: 100%;
     position: absolute;
@@ -49,14 +53,25 @@ const BackgroundImage = styled.img<{ backgroundCover: boolean }>`
   object-fit: ${(props) => (props.backgroundCover ? "cover" : "contain")};
 `;
 
-const HomeSectionBG = ({ bgImageSrc, bgImageSrcWebp, bgImageAlt, children, id, backgroundCover = true }: HomeSectionBGProps) => {
+const HomeSectionBG = ({
+  bgImageSrc,
+  bgImageSrcWebp,
+  bgImageAlt,
+  children,
+  id,
+  backgroundCover = true,
+}: HomeSectionBGProps) => {
   return (
     <Container id={id}>
       <BackgroundImageWrapper>
         <Picture>
           <source srcSet={bgImageSrcWebp} type="image/webp" />
           <source srcSet={bgImageSrc} type="image/jpeg" />
-          <BackgroundImage src={bgImageSrc} alt={bgImageAlt} backgroundCover={backgroundCover} />
+          <BackgroundImage
+            src={bgImageSrc}
+            alt={bgImageAlt}
+            backgroundCover={backgroundCover}
+          />
         </Picture>
       </BackgroundImageWrapper>
       {children}

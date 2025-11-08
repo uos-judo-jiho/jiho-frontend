@@ -16,7 +16,7 @@ function ModalArticleContainer({ info, titles }: ModalArticleContainerProps) {
       className={cn(
         "w-full h-full bg-white rounded-lg overflow-hidden",
         "md:w-auto md:h-auto md:max-w-4xl md:max-h-[85vh]",
-        "flex flex-col"
+        "flex flex-col",
       )}
     >
       {/* Main Content */}

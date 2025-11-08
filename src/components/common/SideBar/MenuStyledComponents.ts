@@ -24,7 +24,9 @@ export type SelectedType = "selected" | "animate" | "closed";
 
 export type MenuProps = {
   selected: [SelectedType, SelectedType];
-  setSelected: React.Dispatch<React.SetStateAction<[SelectedType, SelectedType]>>;
+  setSelected: React.Dispatch<
+    React.SetStateAction<[SelectedType, SelectedType]>
+  >;
 };
 
 export { MenuItem, MenuItemTitle, MenuList, MenuToggle };

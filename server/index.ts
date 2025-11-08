@@ -49,7 +49,7 @@ app.use("/api", async (req, res) => {
   try {
     const targetUrl = `https://uosjudo.com/api${req.path}`;
     const queryString = new URLSearchParams(
-      req.query as Record<string, string>
+      req.query as Record<string, string>,
     ).toString();
     const fullUrl = queryString ? `${targetUrl}?${queryString}` : targetUrl;
 
@@ -178,9 +178,13 @@ app.use("*", async (req, res) => {
     }
 
     let template: string;
-    let render: (
-      url: string
-    ) => Promise<{ html: string; dehydratedState: any }>;
+    let render: (url: string) => Promise<{
+      html: string;
+      dehydratedState: any;
+      styleTags: string;
+      helmetData: any;
+      structuredData: any;
+    }>;
 
     if (!isProduction) {
       // Always read fresh template in development
@@ -197,19 +201,106 @@ app.use("*", async (req, res) => {
       render = entryModule.render;
 
       customConsole.info(
-        `${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`
+        `${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`,
       );
     }
 
-    const { html: rendered, dehydratedState } = await render(url);
+    const {
+      html: rendered,
+      dehydratedState,
+      styleTags,
+      helmetData,
+      structuredData,
+    } = await render(url);
 
     // Inject dehydrated state into HTML
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
-      dehydratedState
+      dehydratedState,
     ).replace(/</g, "\\u003c")};</script>`;
-    const html = template
+
+    // Create structured data script if available
+    const structuredDataScript = structuredData
+      ? `\n    <script type="application/ld+json">${JSON.stringify(
+          structuredData,
+        )}</script>`
+      : "";
+
+    // Inject metadata
+    let html = template
       .replace(`<!--app-html-->`, rendered)
-      .replace(`</head>`, `${stateScript}</head>`);
+      .replace(`<!--app-styles-->`, styleTags)
+      .replace(`</head>`, `${stateScript}${structuredDataScript}\n  </head>`);
+
+    // Update meta tags with helmetData
+    if (helmetData) {
+      const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+
+      // Update title
+      html = html.replace(
+        /<title>.*?<\/title>/,
+        `<title>${helmetData.title}</title>`,
+      );
+
+      // Update og:type
+      html = html.replace(
+        /<meta property="og:type" content=".*?" \/>/,
+        `<meta property="og:type" content="${
+          helmetData.articleType || "website"
+        }" />`,
+      );
+
+      // Update og:title
+      html = html.replace(
+        /<meta property="og:title" content=".*?" \/>/,
+        `<meta property="og:title" content="${helmetData.title}" />`,
+      );
+
+      // Update description
+      html = html.replace(
+        /<meta name="description" content=".*?" \/>/,
+        `<meta name="description" content="${helmetData.description}" />`,
+      );
+
+      // Update og:description
+      html = html.replace(
+        /<meta property="og:description" content=".*?" \/>/,
+        `<meta property="og:description" content="${helmetData.description}" />`,
+      );
+
+      // Update og:url
+      html = html.replace(
+        /<meta property="og:url" content=".*?" \/>/,
+        `<meta property="og:url" content="${fullUrl}" />`,
+      );
+
+      // Update og:image
+      html = html.replace(
+        /<meta property="og:image" content=".*?" \/>/,
+        `<meta property="og:image" content="${helmetData.imgUrl}" />`,
+      );
+
+      // Add article-specific meta tags for articles
+      if (helmetData.articleType === "article") {
+        let articleTags = "";
+
+        if (helmetData.datePublished) {
+          articleTags += `\n    <meta property="article:published_time" content="${helmetData.datePublished}" />`;
+        }
+
+        if (helmetData.dateModified) {
+          articleTags += `\n    <meta property="article:modified_time" content="${helmetData.dateModified}" />`;
+        }
+
+        if (helmetData.author) {
+          articleTags += `\n    <meta property="article:author" content="${helmetData.author}" />`;
+        }
+
+        // Insert article tags before </head>
+        if (articleTags) {
+          html = html.replace("</head>", `${articleTags}\n  </head>`);
+        }
+      }
+    }
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);
   } catch (e: any) {

@@ -1,5 +1,5 @@
-import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.png";
-import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.png";
+import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.webp";
+import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.webp";
 
 export const Constants = {
   BASE_URL:
@@ -14,7 +14,7 @@ export const Constants = {
   BLACK_COLOR: "#0f0c0c",
   YELLOW_COLOR: "#ffb746",
   PINK_COLOR: "#ff4667",
-  WHITE_COLOR: "#f5f5fa",
+  WHITE_COLOR: "#f8f8f8",
   PRIMARY_COLOR: "#448aff",
   DARK_GREY_COLOR: "#121212",
   GREY_COLOR: "#808080",

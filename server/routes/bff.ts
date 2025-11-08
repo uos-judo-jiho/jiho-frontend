@@ -41,7 +41,7 @@ router.use(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // BFF API Routes - Notices
@@ -54,7 +54,7 @@ router.use(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // BFF API Routes - Trainings
@@ -67,21 +67,20 @@ router.use(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // BFF API Routes - Admin
 router.use(
   "/api/admin*",
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.params);
     try {
       const path = req.params[0] || "";
       await proxyToBackend(`/admin${path}`, req, res);
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 export default router;

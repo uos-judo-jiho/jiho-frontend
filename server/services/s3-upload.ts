@@ -9,7 +9,7 @@ import { uploadProgressMap } from "../utils/upload-progress.js";
 export async function uploadToS3(
   file: Express.Multer.File,
   folder: string = "uploads",
-  uploadId: string | null = null
+  uploadId: string | null = null,
 ): Promise<S3UploadResult> {
   const fileExtension = path.extname(file.originalname).toLowerCase();
   const fileName = `${folder}/${uuidv4()}${fileExtension}`;
@@ -87,7 +87,7 @@ export async function uploadToS3(
 export async function generatePresignedUrl(
   fileName: string,
   folder: string = "uploads",
-  expiresIn: number = 3600
+  expiresIn: number = 3600,
 ): Promise<PresignedUrlResult> {
   const key = `${folder}/${fileName}`;
 

@@ -77,12 +77,12 @@ const ImageUploader = ({
 
     const fileList = Array.from(event.target.files).slice(
       0,
-      imageLimit - img.length
+      imageLimit - img.length,
     );
 
     // 미리보기용 base64 생성 (즉시 표시)
     const base64Promises: Promise<string>[] = fileList.map((file) =>
-      toBase64(file)
+      toBase64(file),
     );
 
     try {
@@ -101,7 +101,7 @@ const ImageUploader = ({
 
   const deleteImg = (
     event: React.MouseEvent<HTMLButtonElement>,
-    index: number
+    index: number,
   ) => {
     event.preventDefault();
 

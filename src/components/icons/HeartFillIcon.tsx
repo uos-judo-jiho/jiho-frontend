@@ -1,0 +1,19 @@
+import BaseSvgComponent, {
+  BaseSvgProps,
+} from "@/components/common/BaseSvgComponent";
+
+export const HeartFillIcon: React.FC<BaseSvgProps> = ({
+  size = 24,
+  ...props
+}) => {
+  return (
+    <BaseSvgComponent viewBox="0 0 100 100" size={size} {...props}>
+      <path
+        id="패스_2"
+        data-name="패스 2"
+        d="M50,100C23.115,80.033,9.015,61.869,3.233,46.667-12.258,5.926,31.989-13.557,50,10.493c18.011-24.05,62.258-4.567,46.767,36.174C90.985,61.869,76.885,80.033,50,100Z"
+        fill="#ff2f40"
+      />
+    </BaseSvgComponent>
+  );
+};

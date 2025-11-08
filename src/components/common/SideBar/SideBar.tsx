@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import CloseSvg from "@/lib/assets/svgs/close.svg";
+import { CloseIcon } from "@/components/icons";
 import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
 import { SelectedType } from "./MenuStyledComponents";
@@ -38,7 +38,7 @@ const Container = styled.div`
 `;
 const NavWrapper = styled.nav``;
 
-const StyledClose = styled.img`
+const StyledClose = styled(CloseIcon)`
   position: absolute;
   top: 12px;
   left: 12px;
@@ -83,7 +83,7 @@ const SideBar = () => {
 
   useEffect(() => {
     // Only run on client-side to avoid SSR issues
-    if (typeof document === 'undefined') return;
+    if (typeof document === "undefined") return;
 
     const handlerOutside = (e: any) => {
       if (!outside.current.contains(e.target)) {
@@ -98,13 +98,13 @@ const SideBar = () => {
   }, [setOpen]);
 
   // Don't render during SSR to avoid document.body error
-  if (typeof document === 'undefined') {
+  if (typeof document === "undefined") {
     return null;
   }
 
   return createPortal(
     <Container id="sidebar" ref={outside} className={open ? "open" : undefined}>
-      <StyledClose onClick={toggleSide} src={CloseSvg} />
+      <StyledClose onClick={toggleSide} title="Close sidebar" />
       <NavWrapper>
         {location.pathname.includes("/admin") ? (
           <AdminMenu />
@@ -113,7 +113,7 @@ const SideBar = () => {
         )}
       </NavWrapper>
     </Container>,
-    document.body
+    document.body,
   );
 };
 

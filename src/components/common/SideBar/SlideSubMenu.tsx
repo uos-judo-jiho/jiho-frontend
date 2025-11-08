@@ -58,7 +58,8 @@ const MenuItem = styled.li<{ isActive: boolean }>`
     ${({ theme }) => `color: ${theme.greyColor};`}
   }
 
-  ${({ isActive }) => isActive && "text-decoration: underline; font-weight: bold;"}
+  ${({ isActive }) =>
+    isActive && "text-decoration: underline; font-weight: bold;"}
 `;
 
 const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
@@ -68,7 +69,10 @@ const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
   return (
     <ToggleMenuList id={menuId} className={selected} count={itemsInfo.length}>
       {itemsInfo.map((itemInfo) => (
-        <MenuItem key={itemInfo.title} isActive={location.pathname === itemInfo.href}>
+        <MenuItem
+          key={itemInfo.title}
+          isActive={location.pathname === itemInfo.href}
+        >
           <Link
             to={itemInfo.href}
             onClick={(e) => {

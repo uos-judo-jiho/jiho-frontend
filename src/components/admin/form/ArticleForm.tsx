@@ -1,10 +1,20 @@
-import { deleteBoard, updateBoard, uploadBoard } from "@/api/admin/board";
+import {
+  useCreateNewsBoard,
+  useCreateNoticeBoard,
+  useCreateTrainingBoard,
+  useDeleteNewsBoard,
+  useDeleteNoticeBoard,
+  useDeleteTrainingBoard,
+  useUpdateNewsBoard,
+  useUpdateNoticeBoard,
+  useUpdateTrainingBoard,
+} from "@/api/admin/board/query";
 import { uploadPicture } from "@/api/admin/pictures";
 import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { useState } from "react";
-import { replace, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
@@ -20,7 +30,7 @@ import ModalDescriptionSection from "@/components/common/Modals/ModalDescription
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toBase64 } from "@/lib/utils/Utils";
-import MarkdownEditor from "./MarkdownEditor/MarkdownEditor";
+import MarkdownEditorField from "./MarkdownEditor/MarkdownEditorField";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -56,7 +66,7 @@ const LoadingContainer = styled.div`
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
-    data ?? initValues
+    data ?? initValues,
   );
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
@@ -65,16 +75,52 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const isNew = !data;
 
-  const handelSubmitOpen = () => setIsSubmitOpen(true);
+  // Mutation hooks - call all hooks unconditionally (React Hook rule)
+  const createNewsMutation = useCreateNewsBoard();
+  const updateNewsMutation = useUpdateNewsBoard();
+  const deleteNewsMutation = useDeleteNewsBoard();
+
+  const createTrainingMutation = useCreateTrainingBoard();
+  const updateTrainingMutation = useUpdateTrainingBoard();
+  const deleteTrainingMutation = useDeleteTrainingBoard();
+
+  const createNoticeMutation = useCreateNoticeBoard();
+  const updateNoticeMutation = useUpdateNoticeBoard();
+  const deleteNoticeMutation = useDeleteNoticeBoard();
+
+  // Select appropriate mutation based on board type
+  const createBoardMutation =
+    type === "news"
+      ? createNewsMutation
+      : type === "training"
+        ? createTrainingMutation
+        : createNoticeMutation;
+
+  const updateBoardMutation =
+    type === "news"
+      ? updateNewsMutation
+      : type === "training"
+        ? updateTrainingMutation
+        : updateNoticeMutation;
+
+  const deleteBoardMutation =
+    type === "news"
+      ? deleteNewsMutation
+      : type === "training"
+        ? deleteTrainingMutation
+        : deleteNoticeMutation;
+
+  const handleSubmitOpen = () => setIsSubmitOpen(true);
 
   const handleDelete = async (
     id: string,
-    type: "news" | "training" | "notice"
+    type: "news" | "training" | "notice",
   ) => {
-    const res = await deleteBoard(id);
-    if (res) {
-      replace(`/admin/${type}`);
-    } else {
+    try {
+      await deleteBoardMutation.mutateAsync(id);
+      naviagate(`/admin/${type}`);
+    } catch (error) {
+      console.error(error);
       alert("게시물을 삭제에 실패하였습니다!");
     }
   };
@@ -82,47 +128,46 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const handleSubmit = async () => {
     setIsSubmited(true);
 
-    let res;
-    if (gallery) {
-      res = await uploadPicture(values.dateTime.slice(0, 4), values.imgSrcs);
-    } else {
-      if (isNew) {
-        res = await uploadBoard(
-          {
-            title: values.title,
-            author: values.author,
-            description: values.description,
-            dateTime: values.dateTime,
-            tags: values.tags,
-            imgSrcs: values.imgSrcs,
-          },
-          type
-        );
+    try {
+      if (gallery) {
+        await uploadPicture(values.dateTime.slice(0, 4), values.imgSrcs);
       } else {
-        res = await updateBoard(
-          {
-            id: data.id,
-            title: values.title,
-            author: values.author,
-            description: values.description,
-            dateTime: values.dateTime,
-            tags: values.tags,
-            imgSrcs: values.imgSrcs,
-          },
-          type
-        );
+        if (isNew) {
+          await createBoardMutation.mutateAsync({
+            articleInfo: {
+              title: values.title,
+              author: values.author,
+              description: values.description,
+              dateTime: values.dateTime,
+              tags: values.tags,
+              imgSrcs: values.imgSrcs,
+            },
+            boardType: type,
+          });
+        } else {
+          await updateBoardMutation.mutateAsync({
+            articleInfo: {
+              id: data.id,
+              title: values.title,
+              author: values.author,
+              description: values.description,
+              dateTime: values.dateTime,
+              tags: values.tags,
+              imgSrcs: values.imgSrcs,
+            },
+            boardType: type,
+          });
+        }
       }
-    }
 
-    if (res) {
       alert("업로드에 성공하였습니다.");
-    } else {
+      naviagate(`/admin/${type}/${gallery ? "gallery" : ""}`);
+    } catch (error) {
+      console.error("upload error:", error);
       alert("업로드에 실패하였습니다.");
-      console.error("upload error");
+    } finally {
+      setIsSubmited(false);
     }
-
-    setIsSubmited(false);
-    naviagate(`/admin/${type}/${gallery ? "gallery" : ""}`);
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,7 +190,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagsChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     const tagValue = event.target.value;
     setValues((prev) => {
@@ -157,7 +202,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagAdd = () => {
     const inputElement = document.getElementById(
-      "tagInput"
+      "tagInput",
     ) as HTMLInputElement;
 
     const inputValue = inputElement.value;
@@ -176,7 +221,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleDeleteTagClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    index: number
+    index: number,
   ) => {
     event.preventDefault();
 
@@ -346,55 +391,13 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
         </div>
       </FormContainer>
       {!gallery && (
-        <InputContainer>
-          <StyledLabel htmlFor="description" aria-required="true">
-            <div className="flex flex-col">
-              <span>본문 (마크다운 지원)</span>
-              <small>
-                본문 내부에 이미지를 넣으려면 이미지를 드래그 앤 드랍하세요
-              </small>
-            </div>
-          </StyledLabel>
-          <MarkdownEditor
-            value={values.description}
-            onChange={handleMarkdownChange}
-            disabled={gallery}
-            onImageUpload={handleImageUpload}
-            placeholder={`마크다운으로 ${
-              type === "training"
-                ? "훈련일지"
-                : type === "news"
-                ? "지호지"
-                : "공지사항"
-            } 내용을 작성하세요...
-
-# 제목 예시
-
-**굵은 글씨**와 *기울임꼴*을 사용할 수 있습니다.
-
-## 소제목
-
-- 리스트 항목 1
-- 리스트 항목 2
-
-### 세부 내용
-
-1. 순서가 있는 목록
-2. 두 번째 항목
-
-> 인용구도 사용할 수 있습니다.
-
-\`\`\`
-코드 블록도 지원됩니다
-\`\`\`
-
-[링크 텍스트](https://example.com)
-
-**💡 이미지 추가하기**
-- 이미지 파일을 에디터로 드래그 앤 드롭하세요
-- 자동으로 마크다운 이미지 문법이 삽입됩니다!`}
-          />
-        </InputContainer>
+        <MarkdownEditorField
+          value={values.description}
+          onChange={handleMarkdownChange}
+          onImageUpload={handleImageUpload}
+          type={type}
+          disabled={gallery}
+        />
       )}
 
       <ButtonContainer>
@@ -418,7 +421,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           <Button
             variant={"default"}
             className="text-primary bg-blue-500 hover:bg-blue-600"
-            onClick={handelSubmitOpen}
+            onClick={handleSubmitOpen}
           >
             제출
           </Button>
@@ -437,7 +440,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
         <SubmitModal
           confirmText={"삭제"}
           cancelText={"취소"}
-          description={"게시물을 삭제하기겠습니까?"}
+          description={"게시물을 삭제할까요?"}
           open={isDeleteOpen}
           setOpen={setIsDeleteOpen}
           onSubmit={async () => handleDelete(data.id, type)}

@@ -70,7 +70,7 @@ npm run start
 The server has been refactored to TypeScript for better maintainability. The server code is organized in the `server/` directory with the following structure:
 
 - `server/index.ts` - Main entry point
-- `server/config.ts` - Configuration and environment variables  
+- `server/config.ts` - Configuration and environment variables
 - `server/middleware/` - Express middleware (logger, security, error handler)
 - `server/routes/` - Route handlers (BFF, upload, SSE)
 - `server/services/` - Business logic (S3 upload, proxy)

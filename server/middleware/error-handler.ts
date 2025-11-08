@@ -4,7 +4,7 @@ export function bffErrorHandler(
   err: any,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   const statusCode = err.statusCode || err.status || 500;
   const message = err.message || "Internal Server Error";

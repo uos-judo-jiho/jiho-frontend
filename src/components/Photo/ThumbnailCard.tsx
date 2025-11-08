@@ -1,6 +1,6 @@
 import { useState } from "react";
-import styled from "styled-components";
 import SkeletonThumbnail from "../common/Skeletons/SkeletonThumbnail";
+import { cn } from "@/lib/utils";
 
 type ThumbnailCardProps = {
   imgSrc: string;
@@ -9,64 +9,6 @@ type ThumbnailCardProps = {
   handleClickCard: (index: string) => void;
 };
 
-const ImgWrapper = styled.li`
-  position: relative;
-
-  width: 100%;
-  aspect-ratio: 1/ 1;
-
-  &:hover {
-    cursor: pointer;
-  }
-  &:after {
-    display: block;
-    content: "";
-  }
-`;
-
-const HoveredContainer = styled.div`
-  position: absolute;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  opacity: 0;
-
-  width: 100%;
-  height: 100%;
-
-  font-size: ${(props) => props.theme.subTitleFontSize};
-
-  color: ${(props) => props.theme.bgColor};
-
-  transition: opacity 0.287s;
-
-  @media (min-width: 540px) {
-    ${ImgWrapper}:hover & {
-      opacity: 1;
-    }
-  }
-`;
-
-const Thumbnail = styled.img`
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  width: 100%;
-  aspect-ratio: 1/1;
-
-  object-fit: cover;
-
-  transition: filter 0.287s;
-
-  @media (min-width: 540px) {
-    ${ImgWrapper}:hover & {
-      filter: brightness(50%);
-    }
-  }
-`;
 const ThumbnailCard = ({
   imgSrc,
   dateTime,
@@ -80,13 +22,17 @@ const ThumbnailCard = ({
   const handleLoad = () => setIsLoading(true);
 
   return (
-    <ImgWrapper onClick={handleClick}>
+    <li
+      onClick={handleClick}
+      className="relative w-full aspect-square hover:cursor-pointer after:block after:content-[''] group"
+    >
       <a href={`/photo/${id}`} onClick={(e) => e.preventDefault()}>
         {isLoading ? (
-          <Thumbnail
+          <img
             loading="lazy"
             src={imgSrc}
             alt={"훈련 일지: " + dateTime}
+            className="absolute top-0 right-0 w-full aspect-square object-cover transition-[filter] duration-[287ms] sm:group-hover:brightness-50"
           />
         ) : (
           <SkeletonThumbnail />
@@ -97,9 +43,19 @@ const ThumbnailCard = ({
           style={{ display: "none" }}
           onLoad={handleLoad}
         />
-        <HoveredContainer>{dateTime}</HoveredContainer>
+        <div
+          className={cn(
+            "absolute flex justify-center items-center",
+            "opacity-0 w-full h-full",
+            "text-theme-title text-theme-bg text-white",
+            "transition-opacity duration-[287ms]",
+            "sm:group-hover:opacity-100",
+          )}
+        >
+          {dateTime}
+        </div>
       </a>
-    </ImgWrapper>
+    </li>
   );
 };
 

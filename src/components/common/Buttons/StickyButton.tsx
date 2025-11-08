@@ -1,60 +1,5 @@
 import { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import UpperArrowSvg from "@/lib/assets/svgs/upper-arrow.svg";
-
-const FadeIn = keyframes`
-  from {
-    transform: scale(0);
-  }
-  to {
-    transform: scale(1.0);
-  }
-`;
-const FadeOut = keyframes`
-  from {
-    transform: scale(1.0);
-  }
-  to {
-    transform: scale(0);
-  }
-`;
-
-const Container = styled.div`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-
-  background-color: transparent;
-`;
-const UpperButton = styled.button`
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background-color: ${(props) => props.theme.lightGreyColor};
-  opacity: 0.8;
-`;
-
-const FadeInAnimationWrapper = styled.div`
-  transform-origin: center center;
-
-  animation-duration: 0.25s;
-  animation-timing-function: ease-in;
-  animation-name: ${FadeIn};
-  animation-fill-mode: forwards;
-`;
-const FadeOutAnimationWrapper = styled.div`
-  transform-origin: center center;
-
-  animation-duration: 0.25s;
-  animation-timing-function: ease-in;
-  animation-name: ${FadeOut};
-  animation-fill-mode: forwards;
-`;
-
-const StyledUpperArrow = styled.img`
-  width: inherit;
-  height: inherit;
-`;
+import { UpperArrowIcon } from "@/components/icons";
 
 function StickyButton() {
   const [visible, setVisible] = useState<boolean>(false);
@@ -69,6 +14,7 @@ function StickyButton() {
       setVisible(false);
     }
   }
+
   function handleClick() {
     window.scrollTo({
       top: 0,
@@ -85,25 +31,20 @@ function StickyButton() {
   }, []);
 
   return (
-    <Container>
-      {isRender ? (
-        visible ? (
-          <FadeInAnimationWrapper>
-            <UpperButton onClick={handleClick}>
-              <StyledUpperArrow src={UpperArrowSvg} />
-            </UpperButton>
-          </FadeInAnimationWrapper>
-        ) : (
-          <FadeOutAnimationWrapper>
-            <UpperButton onClick={handleClick}>
-              <StyledUpperArrow src={UpperArrowSvg} />
-            </UpperButton>
-          </FadeOutAnimationWrapper>
-        )
-      ) : (
-        <></>
+    <div className="fixed bottom-5 right-5 bg-transparent">
+      {isRender && (
+        <div
+          className={`origin-center ${visible ? "animate-fadeIn" : "animate-fadeOut"}`}
+        >
+          <button
+            onClick={handleClick}
+            className="w-12 h-12 rounded-xl bg-theme-light-grey opacity-80"
+          >
+            <UpperArrowIcon title="Scroll to top" className="w-full h-full" />
+          </button>
+        </div>
       )}
-    </Container>
+    </div>
   );
 }
 

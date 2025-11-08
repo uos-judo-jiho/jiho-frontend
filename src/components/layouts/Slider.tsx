@@ -26,8 +26,8 @@ const IMG = styled.img<IMGProps>`
     props.isImage ? props.theme.blackColor : props.theme.bgColor};
 
   @media (max-width: 539px) {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 60vw;
+    max-height: 60vw;
   }
 `;
 
@@ -141,15 +141,15 @@ function Slider({ datas }: SliderProps) {
         onClick={prevSlide}
         current={currentSlide}
         length={length}
-        isBackGround={true}
-        isMobileVisible={true}
+        $isBackGround={true}
+        $isMobileVisible={true}
       />
       <StyledForwardArrow
         onClick={nextSlide}
         current={currentSlide}
         length={length}
-        isBackGround={true}
-        isMobileVisible={true}
+        $isBackGround={true}
+        $isMobileVisible={true}
       />
       <SliderWrapper>
         <SliderContainer
@@ -162,6 +162,7 @@ function Slider({ datas }: SliderProps) {
               src={img ? img : Constants.LOGO_BLACK}
               key={"thumbnail" + i}
               isImage={img ? true : false}
+              alt={`슬라이드 이미지 ${i + 1}`}
             />
           ))}
         </SliderContainer>

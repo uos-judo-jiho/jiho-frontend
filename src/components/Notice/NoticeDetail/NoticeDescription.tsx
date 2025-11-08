@@ -1,23 +1,14 @@
 import MarkdownRenderer from "@/components/common/Markdown/MarkdownRenderer";
-import styled from "styled-components";
+
 type NoticeDescriptionProps = {
   description: string;
 };
 
-const Container = styled.div`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  line-height: 160%;
-
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  word-break: keep-all;
-`;
-
 function NoticeDescription({ description }: NoticeDescriptionProps) {
   return (
-    <Container>
+    <div className="text-theme-default leading-[160%] whitespace-pre-wrap break-words break-keep">
       <MarkdownRenderer content={description} />
-    </Container>
+    </div>
   );
 }
 

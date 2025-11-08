@@ -1,56 +1,34 @@
-import React from "react";
-import styled from "styled-components";
 import Line from "@/components/layouts/Line";
+
 type NoticeTitleProps = {
   title: string;
   author: string;
   dateTime: string;
   tags: string[];
 };
-const Container = styled.div`
-  padding: 4rem 0 2rem 0;
-`;
-
-const NoticeTitleH3 = styled.h3`
-  font-size: ${(props) => props.theme.subTitleFontSize};
-`;
-const SubTitleWrapper = styled.div`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  padding-top: 10px;
-  display: flex;
-`;
-const SubTitleItem = styled.span`
-  display: flex;
-  color: ${(props) => props.theme.blackColor};
-  &:not(:last-child)::after {
-    content: "|";
-    padding: 0 4px;
-  }
-`;
-
-const TagWrapper = styled.p`
-  color: ${(props) => props.theme.greyColor};
-  &:not(:last-child) {
-    padding-right: 4px;
-  }
-`;
 
 function NoticeTitle({ title, author, dateTime, tags }: NoticeTitleProps) {
   return (
     <>
-      <Container>
-        <NoticeTitleH3>{title}</NoticeTitleH3>
-        <SubTitleWrapper>
-          <SubTitleItem>{author}</SubTitleItem>
-          <SubTitleItem>{dateTime}</SubTitleItem>
-          <SubTitleItem>
+      <div className="py-16 pb-8">
+        <h2 className="text-theme-subtitle">{title}</h2>
+        <div className="text-theme-default pt-2.5 flex">
+          <span className="flex text-theme-black after:content-['|'] after:px-1 last:after:content-none">
+            {author}
+          </span>
+          <span className="flex text-theme-black after:content-['|'] after:px-1 last:after:content-none">
+            {dateTime}
+          </span>
+          <span className="flex text-theme-black">
             {tags.map((tag) => (
-              <TagWrapper key={title + tag}>#{tag}</TagWrapper>
+              <p key={title + tag} className="text-theme-grey pr-1 last:pr-0">
+                #{tag}
+              </p>
             ))}
-          </SubTitleItem>
-        </SubTitleWrapper>
+          </span>
+        </div>
         <Line borderWidth="1px" margin="2rem 0" />
-      </Container>
+      </div>
     </>
   );
 }

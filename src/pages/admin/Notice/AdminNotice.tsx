@@ -14,9 +14,7 @@ const AdminNotice = () => {
         <Link to="/admin/notice/write">
           <NewArticleButton>새 글쓰기</NewArticleButton>
         </Link>
-        <NewArticleButton onClick={() => refetch()}>
-          새로고침
-        </NewArticleButton>
+        <NewArticleButton onClick={() => refetch()}>새로고침</NewArticleButton>
       </Row>
       <ListContainer datas={notices} targetUrl={"/admin/notice/"} />
     </FormContainer>

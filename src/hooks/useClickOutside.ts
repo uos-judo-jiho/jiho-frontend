@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 const useClickOutside = (
   ref: React.MutableRefObject<any>,
-  onClick: (event: MouseEvent) => void
+  onClick: (event: MouseEvent) => void,
 ) => {
   const handleClickOutside = (event: MouseEvent) => {
     if (ref.current && !ref.current.contains(event.target)) {

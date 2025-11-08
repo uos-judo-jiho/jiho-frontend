@@ -89,7 +89,8 @@ const EditorContainer = styled.div`
     background-color: rgba(175, 184, 193, 0.2);
     padding: 0.2em 0.4em;
     border-radius: 3px;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-family:
+      "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
     font-size: 0.9em;
   }
 
@@ -220,14 +221,14 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     uploadsArray.forEach((upload) => {
       if (upload.status === "completed" && upload.url) {
         const placeholder = uploadingPlaceholdersRef.current.get(
-          upload.uploadId
+          upload.uploadId,
         );
         if (placeholder) {
           // 업로드 중 플레이스홀더를 실제 이미지로 교체
           const imageMarkdown = `![Image](${upload.url})`;
           const updatedValue = internalValue.replace(
             placeholder,
-            imageMarkdown
+            imageMarkdown,
           );
 
           setInternalValue(updatedValue);
@@ -238,7 +239,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         }
       } else if (upload.status === "error") {
         const placeholder = uploadingPlaceholdersRef.current.get(
-          upload.uploadId
+          upload.uploadId,
         );
         if (placeholder) {
           // 에러 시 플레이스홀더를 에러 메시지로 교체

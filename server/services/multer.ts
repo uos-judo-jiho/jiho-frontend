@@ -16,9 +16,9 @@ export const upload = multer({
       cb(
         new Error(
           `허용되지 않는 파일 확장자입니다. 허용 확장자: ${ALLOWED_EXTENSIONS.join(
-            ", "
-          )}`
-        )
+            ", ",
+          )}`,
+        ),
       );
     }
   },

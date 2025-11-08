@@ -5,7 +5,7 @@ const filePath = `${process.env.PWD}/public/sitemap.xml`;
 // 2022, 2023, 2024
 const yearCandidates = Array.from(
   { length: new Date().getFullYear() - 2021 },
-  (_, i) => 2022 + i
+  (_, i) => 2022 + i,
 );
 
 /**
@@ -48,7 +48,7 @@ const generateSitemap = async () => {
   const newsByYear = {};
   for (const year of yearCandidates) {
     newsByYear[year] = await fetchHistoricalNews(year).then(
-      (news) => news.articles
+      (news) => news.articles,
     );
   }
 
@@ -81,7 +81,7 @@ const generateSitemap = async () => {
         loc: `https://uosjudo.com/news/${year}/${news.id}`,
         lastmod: new Date(news.dateTime).toISOString(),
         priority: "0.8",
-      }))
+      })),
     ),
     { loc: "https://uosjudo.com/notice" },
   ];
@@ -110,7 +110,7 @@ const generateSitemap = async () => {
     ]
       .filter((_) => _)
       .join("\n")}
-  </url>`
+  </url>`,
     )
     .join("\n");
 

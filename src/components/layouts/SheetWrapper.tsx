@@ -1,6 +1,5 @@
 import React from "react";
-import styled from "styled-components";
-import { MediaLayout } from "@/lib/theme/GlobalStyle";
+import { cn } from "@/lib/utils";
 
 type SheetWrapperProps = {
   children: React.ReactNode;
@@ -8,19 +7,25 @@ type SheetWrapperProps = {
   paddingTop?: number;
 };
 
-const Container = styled.div<SheetWrapperProps>`
-  position: relative;
-  margin: 0 auto;
-  padding-top: ${(props) => props.paddingTop || 92}px;
-
-  ${MediaLayout}
-`;
-
-function SheetWrapper({ children, paddingTop, className }: SheetWrapperProps) {
+function SheetWrapper({
+  children,
+  paddingTop = 92,
+  className,
+}: SheetWrapperProps) {
   return (
-    <Container paddingTop={paddingTop} className={className}>
+    <div
+      className={cn(
+        "relative mx-auto",
+        "w-[340px]",
+        "sm:w-[540px]",
+        "md:w-[768px]",
+        "lg:w-[960px]",
+        className,
+      )}
+      style={{ paddingTop: `${paddingTop}px` }}
+    >
       {children}
-    </Container>
+    </div>
   );
 }
 

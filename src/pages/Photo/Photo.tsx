@@ -10,6 +10,7 @@ import Title from "@/components/layouts/Title";
 import MyHelmet from "@/helmet/MyHelmet";
 import { useTrainingListQuery } from "@/api/trainings/query";
 import { useMemo } from "react";
+import { StructuredData, createImageGalleryData } from "@/seo";
 
 const PhotoPC = () => {
   const navigate = useNavigate();
@@ -27,12 +28,35 @@ const PhotoPC = () => {
 
   // SSR-friendly: Provide fallback meta data even when trainings is empty
   const metaDescription = trainings?.length
-    ? [trainings.at(0)?.title, trainings.at(0)?.description.slice(0, 80)].join(
-        " | "
+    ? [trainings.at(0)?.title, trainings.at(0)?.description.slice(0, 140)].join(
+        " | ",
       )
     : "서울시립대학교 유도부 지호 - 훈련일지";
 
   const metaImgUrl = trainings?.at(0)?.imgSrcs.at(0);
+
+  // Create structured data for image gallery
+  const structuredData = useMemo(() => {
+    if (!trainings || trainings.length === 0) return null;
+
+    const currentUrl =
+      typeof window !== "undefined"
+        ? window.location.href
+        : "https://uosjudo.com/photo";
+
+    return createImageGalleryData({
+      name: "서울시립대학교 유도부 지호 훈련일지",
+      description: metaDescription,
+      url: currentUrl,
+      images: trainings.slice(0, 20).map((training) => ({
+        url: training.imgSrcs[0] || "",
+        caption: training.title,
+        datePublished: training.dateTime
+          ? new Date(training.dateTime).toISOString()
+          : undefined,
+      })),
+    });
+  }, [trainings, metaDescription]);
 
   return (
     <div>
@@ -41,11 +65,12 @@ const PhotoPC = () => {
         description={metaDescription}
         imgUrl={metaImgUrl}
       />
+      {structuredData && <StructuredData data={structuredData} />}
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />
           <PhotoCardContainer>
-            {trainings && trainings.length > 0
+            {!isLoading && trainings.length > 0
               ? trainings.map((trainingLog) => (
                   <ThumbnailCard
                     key={trainingLog.id}

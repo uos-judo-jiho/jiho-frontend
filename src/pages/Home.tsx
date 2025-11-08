@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { ThemeProvider } from "styled-components";
 
 import Footer from "@/components/common/Footer/footer";
 import Navbar from "@/components/common/Navbar/Navbar";
@@ -9,14 +10,15 @@ import HomeSectionMore from "@/components/Home/More/HomeSectionMore";
 import HomeSectionNews from "@/components/Home/News/HomeSectionNews";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
-import { useNews } from "@/recoils/news";
 import { useNoticesQuery } from "@/api/notices/query";
 
-import MyHelmet from "@/helmet/MyHelmet";
+import { useNews } from "@/recoils/news";
 
+import MyHelmet from "@/helmet/MyHelmet";
+import { awardsData } from "@/lib/assets/data/awards";
 import { Constants } from "@/lib/constant";
 import { lightTheme } from "@/lib/theme/theme";
-import { ThemeProvider } from "styled-components";
+import { StructuredData, createOrganizationData } from "@/seo";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);
@@ -33,9 +35,46 @@ const Home = () => {
     }
   }, [fetchNews]);
 
+  // Create structured data for organization
+  const structuredData = useMemo(() => {
+    const currentUrl =
+      typeof window !== "undefined"
+        ? window.location.origin
+        : "https://uosjudo.com";
+
+    const awardTitles = awardsData.awards.map((award) => award.title);
+    const description = awardTitles.join(", ");
+
+    return createOrganizationData({
+      name: "서울시립대학교 유도부 지호",
+      description,
+      url: currentUrl,
+      logo: `${currentUrl}/favicon-96x96.png`,
+      foundingDate: "1985",
+      email: "uosjudojiho@gmail.com",
+      sameAs: ["https://www.instagram.com/uos_judo"],
+      sport: "유도 (Judo)",
+      memberOf: {
+        name: "서울시립대학교 (University of Seoul)",
+      },
+      award: awardTitles,
+    });
+  }, []);
+
+  // Create helmet metadata
+  const metaDescription = awardsData.awards
+    .map((award) => award.title)
+    .join(", ");
+
   return (
     <ThemeProvider theme={lightTheme}>
-      <MyHelmet title="Home" />
+      <MyHelmet
+        title="서울시립대학교 유도부 지호 | Home"
+        description={metaDescription}
+        imgUrl="/favicon-96x96.png"
+      />
+      <StructuredData data={structuredData} />
+
       <Navbar isDark={isDark} />
       <ScrollSnap setIsDark={setIsDark}>
         <HomeSectionMain />

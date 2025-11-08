@@ -6,8 +6,8 @@ export type MergeTypes<T, U> = {
       ? T[K] | U[K] // Merge values for the same key
       : T[K]
     : K extends keyof U
-    ? U[K]
-    : never;
+      ? U[K]
+      : never;
 };
 
 export type PickCSSProperty<T extends keyof CSSProperties> = Partial<{

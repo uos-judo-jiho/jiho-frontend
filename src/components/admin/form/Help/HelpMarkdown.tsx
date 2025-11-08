@@ -45,7 +45,8 @@ const HelpContent = styled.div`
     border-radius: 4px;
     padding: 0.5rem;
     margin: 0.5rem 0;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-family:
+      "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
     font-size: 12px;
     color: #cf222e;
   }
@@ -119,8 +120,8 @@ const HelpContent = styled.div`
       background-color: rgba(175, 184, 193, 0.2);
       padding: 0.2rem 0.4rem;
       border-radius: 3px;
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
-        monospace;
+      font-family:
+        "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       font-size: 11px;
     }
 
