@@ -14,7 +14,7 @@ export const Constants = {
   BLACK_COLOR: "#0f0c0c",
   YELLOW_COLOR: "#ffb746",
   PINK_COLOR: "#ff4667",
-  WHITE_COLOR: "#f5f5fa",
+  WHITE_COLOR: "#f8f8f8",
   PRIMARY_COLOR: "#448aff",
   DARK_GREY_COLOR: "#121212",
   GREY_COLOR: "#808080",

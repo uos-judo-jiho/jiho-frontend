@@ -7,15 +7,19 @@ type SheetWrapperProps = {
   paddingTop?: number;
 };
 
-function SheetWrapper({ children, paddingTop = 92, className }: SheetWrapperProps) {
+function SheetWrapper({
+  children,
+  paddingTop = 92,
+  className,
+}: SheetWrapperProps) {
   return (
     <div
       className={cn(
         "relative mx-auto",
         "w-[340px]",
         "sm:w-[540px]",
-        "md:w-[800px]",
-        "lg:w-[1080px]",
+        "md:w-[768px]",
+        "lg:w-[960px]",
         className
       )}
       style={{ paddingTop: `${paddingTop}px` }}

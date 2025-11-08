@@ -37,7 +37,7 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
         onClick={(e) => e.preventDefault()}
         className="w-full flex sm:flex-row flex-col items-center gap-4"
       >
-        <div className="flex-1 w-1/2 rounded-[5px] xs:w-full">
+        <div className="flex-1 rounded-[5px]">
           {isLoading ? (
             <img
               loading="lazy"
