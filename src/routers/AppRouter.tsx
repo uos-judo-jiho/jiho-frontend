@@ -13,8 +13,11 @@ import Home from "../pages/Home";
 import NotFound from "../pages/NotFound";
 import Notice from "../pages/Notice/Notice";
 import NoticeDetail from "../pages/Notice/NoticeDetail";
+import { useScrollToTop } from "@/hooks/useScolltoTop";
 
 const AppRouter = () => {
+  useScrollToTop();
+
   return (
     <Routes>
       <Route path="/" element={<Home />} />
