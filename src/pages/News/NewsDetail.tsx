@@ -34,7 +34,7 @@ const NewsDetail = () => {
     ? [
         currentPageNews.year,
         currentPageNews.articles.at(0)?.title,
-        currentPageNews.articles.at(0)?.description.slice(0, 80),
+        currentPageNews.articles.at(0)?.description.slice(0, 140),
       ].join(" | ")
     : `${id}년 서울시립대학교 유도부 지호지`;
 

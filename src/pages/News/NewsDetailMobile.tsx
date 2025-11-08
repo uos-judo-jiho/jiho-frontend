@@ -30,10 +30,15 @@ export const NewsDetailMobile = ({
 
   const metaDescription = [
     currentArticle.title,
-    currentArticle.description.slice(0, 80),
+    currentArticle.description.slice(0, 140),
   ].join(" | ");
 
   const metaImgUrl = currentArticle.imgSrcs.at(0);
+
+  // Format date for meta tags (ISO 8601 format)
+  const publishedDate = currentArticle.dateTime
+    ? new Date(currentArticle.dateTime).toISOString()
+    : undefined;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -41,6 +46,10 @@ export const NewsDetailMobile = ({
         title={`${year}년 지호지 - ${currentArticle.title}`}
         description={metaDescription}
         imgUrl={metaImgUrl}
+        datePublished={publishedDate}
+        dateModified={publishedDate}
+        author={currentArticle.author}
+        articleType="article"
       />
 
       <MobileHeader

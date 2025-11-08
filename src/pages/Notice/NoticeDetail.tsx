@@ -29,7 +29,7 @@ const NoticeDetail = () => {
     return <></>;
   }
 
-  const metaDescription = [data.title, data.description.slice(0, 80)].join(
+  const metaDescription = [data.title, data.description.slice(0, 140)].join(
     " | "
   );
 

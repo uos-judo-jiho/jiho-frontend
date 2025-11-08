@@ -34,18 +34,27 @@ export const PhotoDetailMobile = () => {
     return <Loading />;
   }
 
-  const metaDescription = [info.title, info.description.slice(0, 80)].join(
+  const metaDescription = [info.title, info.description.slice(0, 140)].join(
     " | "
   );
 
   const metaImgUrl = info.imgSrcs.at(0);
 
+  // Format date for meta tags (ISO 8601 format)
+  const publishedDate = info.dateTime
+    ? new Date(info.dateTime).toISOString()
+    : undefined;
+
   return (
     <div className="min-h-screen flex flex-col">
       <MyHelmet
-        title={`훈련일지 - ${info.title}`}
+        title={`훈련일지 - ${info.author}`}
         description={metaDescription}
         imgUrl={metaImgUrl}
+        datePublished={publishedDate}
+        dateModified={publishedDate}
+        author={info.author}
+        articleType="article"
       />
 
       <MobileHeader backUrl="/photo" subTitle="훈련일지" subTitleUrl="/photo" />

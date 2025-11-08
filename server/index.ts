@@ -224,6 +224,12 @@ app.use("*", async (req, res) => {
         `<title>${helmetData.title}</title>`
       );
 
+      // Update og:type
+      html = html.replace(
+        /<meta property="og:type" content=".*?" \/>/,
+        `<meta property="og:type" content="${helmetData.articleType || 'website'}" />`
+      );
+
       // Update og:title
       html = html.replace(
         /<meta property="og:title" content=".*?" \/>/,
@@ -253,6 +259,28 @@ app.use("*", async (req, res) => {
         /<meta property="og:image" content=".*?" \/>/,
         `<meta property="og:image" content="${helmetData.imgUrl}" />`
       );
+
+      // Add article-specific meta tags for articles
+      if (helmetData.articleType === 'article') {
+        let articleTags = '';
+
+        if (helmetData.datePublished) {
+          articleTags += `\n    <meta property="article:published_time" content="${helmetData.datePublished}" />`;
+        }
+
+        if (helmetData.dateModified) {
+          articleTags += `\n    <meta property="article:modified_time" content="${helmetData.dateModified}" />`;
+        }
+
+        if (helmetData.author) {
+          articleTags += `\n    <meta property="article:author" content="${helmetData.author}" />`;
+        }
+
+        // Insert article tags before </head>
+        if (articleTags) {
+          html = html.replace('</head>', `${articleTags}\n  </head>`);
+        }
+      }
     }
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);
