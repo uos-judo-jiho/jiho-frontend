@@ -7,11 +7,14 @@ import styled from "styled-components";
 
 const DescriptionList = styled.ul`
   margin-right: 20px;
-  margin-bottom: 5px;
+  margin-bottom: 12px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const DescriptionItem = styled.li`
-  margin: 4px 0;
   color: ${(props) => props.theme.textColor};
   font-size: ${(props) => props.theme.tinyFontSize};
 
@@ -20,8 +23,6 @@ const DescriptionItem = styled.li`
 `;
 
 const DescriptionItemTitle = styled.li`
-  margin: 4px 0;
-
   font-weight: bold;
   font-size: ${(props) => props.theme.tinyFontSize};
   color: ${(props) => props.theme.textColor};
