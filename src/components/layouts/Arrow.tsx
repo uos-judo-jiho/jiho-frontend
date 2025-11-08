@@ -4,13 +4,13 @@ import { ArrowBackIosIcon, ArrowForwardIosIcon } from "@/components/icons";
 type ArrowProps = {
   current: number;
   length: number;
-  horizontalPosition?: string;
   size?: string;
-  mobileSize?: string;
   id?: string;
-  isMobileVisible?: boolean;
-  isBackGround?: boolean;
-  $isVisble?: boolean;
+  $isMobileVisible?: boolean;
+  $isBackGround?: boolean;
+  $mobileSize?: string;
+  $horizontalPosition?: string;
+  $isVisible?: boolean;
 };
 
 const ArrowCss = css`
@@ -29,16 +29,16 @@ const ArrowCss = css`
 
 const StyledBackArrowStyle = styled(ArrowBackIosIcon)<ArrowProps>`
   display: ${(props) =>
-    props.current !== 0 || props.$isVisble ? "flex" : "none"} !important;
+    props.current !== 0 || props.$isVisible ? "flex" : "none"} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
   height: ${(props) => (props.size ? props.size : "24px")};
 
   left: ${(props) =>
-    props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
+    props.$horizontalPosition ? props.$horizontalPosition : "1.2rem"};
   ${ArrowCss}
 
   ${(props) =>
-    props.isBackGround
+    props.$isBackGround
       ? css`
           border-radius: 50%;
           padding: 4px;
@@ -48,26 +48,26 @@ const StyledBackArrowStyle = styled(ArrowBackIosIcon)<ArrowProps>`
       : ``}
 
   @media (max-width: 539px) {
-    width: ${(props) => (props.mobileSize ? props.mobileSize : "24px")};
-    height: ${(props) => (props.mobileSize ? props.mobileSize : "24px")};
-    display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
+    width: ${(props) => (props.$mobileSize ? props.$mobileSize : "24px")};
+    height: ${(props) => (props.$mobileSize ? props.$mobileSize : "24px")};
+    display: ${(props) => (props.$isMobileVisible ? "flex" : "none")};
   }
 `;
 
 const StyledForwardArrowStyle = styled(ArrowForwardIosIcon)<ArrowProps>`
   display: ${(props) =>
-    props.current < props.length - 1 || props.$isVisble
+    props.current < props.length - 1 || props.$isVisible
       ? "flex"
       : "none"} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
   height: ${(props) => (props.size ? props.size : "24px")};
 
   right: ${(props) =>
-    props.horizontalPosition ? props.horizontalPosition : "1.2rem"};
+    props.$horizontalPosition ? props.$horizontalPosition : "1.2rem"};
   ${ArrowCss}
 
   ${(props) =>
-    props.isBackGround
+    props.$isBackGround
       ? css`
           border-radius: 50%;
           padding: 4px;
@@ -76,9 +76,9 @@ const StyledForwardArrowStyle = styled(ArrowForwardIosIcon)<ArrowProps>`
       : ``}
 
   @media (max-width: 539px) {
-    width: ${(props) => (props.mobileSize ? props.mobileSize : "24px")};
-    height: ${(props) => (props.mobileSize ? props.mobileSize : "24px")};
-    display: ${(props) => (props.isMobileVisible ? "flex" : "none")};
+    width: ${(props) => (props.$mobileSize ? props.$mobileSize : "24px")};
+    height: ${(props) => (props.$mobileSize ? props.$mobileSize : "24px")};
+    display: ${(props) => (props.$isMobileVisible ? "flex" : "none")};
   }
 `;
 
@@ -89,13 +89,13 @@ const StyledBackArrow = (
   const {
     current,
     length,
-    horizontalPosition,
+    $horizontalPosition,
     size,
-    mobileSize,
+    $mobileSize,
     id,
-    isMobileVisible,
-    isBackGround,
-    $isVisble,
+    $isMobileVisible,
+    $isBackGround,
+    $isVisible,
     ...rest
   } = props;
 
@@ -103,13 +103,13 @@ const StyledBackArrow = (
     <StyledBackArrowStyle
       current={current}
       length={length}
-      horizontalPosition={horizontalPosition}
+      $horizontalPosition={$horizontalPosition}
       size={size}
-      mobileSize={mobileSize}
+      $mobileSize={$mobileSize}
       id={id}
-      isMobileVisible={isMobileVisible}
-      isBackGround={isBackGround}
-      $isVisble={$isVisble}
+      $isMobileVisible={$isMobileVisible}
+      $isBackGround={$isBackGround}
+      $isVisible={$isVisible}
       title="Previous"
       {...rest}
     />
@@ -123,26 +123,26 @@ const StyledForwardArrow = (
   const {
     current,
     length,
-    horizontalPosition,
+    $horizontalPosition,
     size,
-    mobileSize,
+    $mobileSize,
     id,
-    isMobileVisible,
-    isBackGround,
-    $isVisble,
+    $isMobileVisible,
+    $isBackGround,
+    $isVisible,
     ...rest
   } = props;
   return (
     <StyledForwardArrowStyle
       current={current}
       length={length}
-      horizontalPosition={horizontalPosition}
+      $horizontalPosition={$horizontalPosition}
       size={size}
-      mobileSize={mobileSize}
+      $mobileSize={$mobileSize}
       id={id}
-      isMobileVisible={isMobileVisible}
-      isBackGround={isBackGround}
-      $isVisble={$isVisble}
+      $isMobileVisible={$isMobileVisible}
+      $isBackGround={$isBackGround}
+      $isVisible={$isVisible}
       title="Next"
       {...rest}
     />

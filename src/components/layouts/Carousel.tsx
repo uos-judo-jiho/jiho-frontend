@@ -200,16 +200,16 @@ const Carousel = ({ datas }: CarouselProps) => {
         current={page}
         length={datas.length}
         size={"3rem"}
-        isBackGround={true}
-        isMobileVisible={false}
+        $isBackGround={true}
+        $isMobileVisible={false}
       />
       <StyledForwardArrow
         id="rightArrow"
         current={page}
         length={datas.length}
         size={"3rem"}
-        isBackGround={true}
-        isMobileVisible={false}
+        $isBackGround={true}
+        $isMobileVisible={false}
       />
       <ScrollWrapper id={"scroll"} ref={targetContanier}>
         <CarouselWrapper id={"carousel"}>

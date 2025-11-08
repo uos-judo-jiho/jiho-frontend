@@ -141,15 +141,15 @@ function Slider({ datas }: SliderProps) {
         onClick={prevSlide}
         current={currentSlide}
         length={length}
-        isBackGround={true}
-        isMobileVisible={true}
+        $isBackGround={true}
+        $isMobileVisible={true}
       />
       <StyledForwardArrow
         onClick={nextSlide}
         current={currentSlide}
         length={length}
-        isBackGround={true}
-        isMobileVisible={true}
+        $isBackGround={true}
+        $isMobileVisible={true}
       />
       <SliderWrapper>
         <SliderContainer
