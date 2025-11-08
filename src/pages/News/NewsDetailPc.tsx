@@ -61,59 +61,6 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
                 {year}년 지호지로 돌아가기
               </Link>
             </Button>
-
-            <div className="flex items-center gap-2">
-              <Button
-                asChild
-                variant="link"
-                size="sm"
-                disabled={currentIndex === 0}
-                className={cn(
-                  "flex items-center",
-                  currentIndex === 0 && "opacity-50 cursor-not-allowed"
-                )}
-              >
-                <Link
-                  to={
-                    currentIndex > 0
-                      ? `/news/${year}/${articles[currentIndex - 1].id}`
-                      : "#"
-                  }
-                  className="flex items-center gap-1"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  이전
-                </Link>
-              </Button>
-
-              <span className="text-sm text-gray-500 px-3">
-                {currentIndex + 1} / {articles.length}
-              </span>
-
-              <Button
-                asChild
-                variant="link"
-                size="sm"
-                disabled={currentIndex === articles.length - 1}
-                className={cn(
-                  "flex items-center",
-                  currentIndex === articles.length - 1 &&
-                    "opacity-50 cursor-not-allowed"
-                )}
-              >
-                <Link
-                  to={
-                    currentIndex < articles.length - 1
-                      ? `/news/${year}/${articles[currentIndex + 1].id}`
-                      : "#"
-                  }
-                  aria-disabled={currentIndex === articles.length - 1}
-                >
-                  다음
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
           </div>
 
           {/* Main Content */}
@@ -130,6 +77,59 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
                 titles={["작성자", "카테고리", "작성일"]}
               />
             </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              asChild
+              variant="link"
+              size="sm"
+              disabled={currentIndex === 0}
+              className={cn(
+                "flex items-center",
+                currentIndex === 0 && "opacity-50 cursor-not-allowed"
+              )}
+            >
+              <Link
+                to={
+                  currentIndex > 0
+                    ? `/news/${year}/${articles[currentIndex - 1].id}`
+                    : "#"
+                }
+                className="flex items-center gap-1"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                이전
+              </Link>
+            </Button>
+
+            <span className="text-sm text-gray-500 px-3">
+              {currentIndex + 1} / {articles.length}
+            </span>
+
+            <Button
+              asChild
+              variant="link"
+              size="sm"
+              disabled={currentIndex === articles.length - 1}
+              className={cn(
+                "flex items-center",
+                currentIndex === articles.length - 1 &&
+                  "opacity-50 cursor-not-allowed"
+              )}
+            >
+              <Link
+                to={
+                  currentIndex < articles.length - 1
+                    ? `/news/${year}/${articles[currentIndex + 1].id}`
+                    : "#"
+                }
+                aria-disabled={currentIndex === articles.length - 1}
+              >
+                다음
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </SheetWrapper>
       </DefaultLayout>
