@@ -1,13 +1,13 @@
 import {
   useCreateNewsBoard,
-  useUpdateNewsBoard,
-  useDeleteNewsBoard,
-  useCreateTrainingBoard,
-  useUpdateTrainingBoard,
-  useDeleteTrainingBoard,
   useCreateNoticeBoard,
-  useUpdateNoticeBoard,
+  useCreateTrainingBoard,
+  useDeleteNewsBoard,
   useDeleteNoticeBoard,
+  useDeleteTrainingBoard,
+  useUpdateNewsBoard,
+  useUpdateNoticeBoard,
+  useUpdateTrainingBoard,
 } from "@/api/admin/board/query";
 import { uploadPicture } from "@/api/admin/pictures";
 import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
@@ -30,7 +30,7 @@ import ModalDescriptionSection from "@/components/common/Modals/ModalDescription
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toBase64 } from "@/lib/utils/Utils";
-import MarkdownEditor from "./MarkdownEditor/MarkdownEditor";
+import MarkdownEditorField from "./MarkdownEditor/MarkdownEditorField";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -391,55 +391,13 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
         </div>
       </FormContainer>
       {!gallery && (
-        <InputContainer>
-          <StyledLabel htmlFor="description" aria-required="true">
-            <div className="flex flex-col">
-              <span>본문 (마크다운 지원)</span>
-              <small>
-                본문 내부에 이미지를 넣으려면 이미지를 드래그 앤 드랍하세요
-              </small>
-            </div>
-          </StyledLabel>
-          <MarkdownEditor
-            value={values.description}
-            onChange={handleMarkdownChange}
-            disabled={gallery}
-            onImageUpload={handleImageUpload}
-            placeholder={`마크다운으로 ${
-              type === "training"
-                ? "훈련일지"
-                : type === "news"
-                ? "지호지"
-                : "공지사항"
-            } 내용을 작성하세요...
-
-# 제목 예시
-
-**굵은 글씨**와 *기울임꼴*을 사용할 수 있습니다.
-
-## 소제목
-
-- 리스트 항목 1
-- 리스트 항목 2
-
-### 세부 내용
-
-1. 순서가 있는 목록
-2. 두 번째 항목
-
-> 인용구도 사용할 수 있습니다.
-
-\`\`\`
-코드 블록도 지원됩니다
-\`\`\`
-
-[링크 텍스트](https://example.com)
-
-**💡 이미지 추가하기**
-- 이미지 파일을 에디터로 드래그 앤 드롭하세요
-- 자동으로 마크다운 이미지 문법이 삽입됩니다!`}
-          />
-        </InputContainer>
+        <MarkdownEditorField
+          value={values.description}
+          onChange={handleMarkdownChange}
+          onImageUpload={handleImageUpload}
+          type={type}
+          disabled={gallery}
+        />
       )}
 
       <ButtonContainer>
