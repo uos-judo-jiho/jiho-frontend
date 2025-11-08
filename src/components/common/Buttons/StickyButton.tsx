@@ -34,7 +34,9 @@ function StickyButton() {
     <div className="fixed bottom-5 right-5 bg-transparent">
       {isRender && (
         <div
-          className={`origin-center ${visible ? "animate-fadeIn" : "animate-fadeOut"}`}
+          className={`origin-center ${
+            visible ? "animate-fadeIn" : "animate-fadeOut"
+          }`}
         >
           <button
             onClick={handleClick}

@@ -1,6 +1,8 @@
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import { footerData } from "@/lib/assets/data/footer";
 import { Constants } from "@/lib/constant";
+import { cn } from "@/lib/utils";
+import { HTMLProps } from "react";
 import { Link } from "react-router-dom";
 
 import styled from "styled-components";
@@ -14,31 +16,47 @@ const DescriptionList = styled.ul`
   gap: 8px;
 `;
 
-const DescriptionItem = styled.li`
-  color: ${(props) => props.theme.textColor};
-  font-size: ${(props) => props.theme.tinyFontSize};
+const DescriptionItem = ({
+  className,
+  children,
+  ...rest
+}: HTMLProps<HTMLLIElement>) => (
+  <li
+    className={cn(
+      "text-sm text-theme-black break-keep-all wrap-break",
+      className
+    )}
+    {...rest}
+  >
+    {children}
+  </li>
+);
 
-  word-break: keep-all;
-  word-wrap: break-word;
-`;
+const DescriptionItemTitle = ({
+  className,
+  children,
+  ...rest
+}: HTMLProps<HTMLLIElement>) => (
+  <li className={cn("font-bold text-sm text-theme-black", className)} {...rest}>
+    {children}
+  </li>
+);
 
-const DescriptionItemTitle = styled.li`
-  font-weight: bold;
-  font-size: ${(props) => props.theme.tinyFontSize};
-  color: ${(props) => props.theme.textColor};
-`;
-
-const LinkWrapper = styled.div`
-  &:hover {
-    opacity: 0.6;
-  }
-`;
-
-const HyperLink = styled.a`
-  &:hover {
-    opacity: 0.6;
-  }
-`;
+const HyperLink = ({
+  to,
+  className,
+  children,
+  target,
+}: {
+  to: string;
+  className?: string;
+  children: React.ReactNode;
+  target?: string;
+}) => (
+  <Link to={to} target={target} className={cn("hover:opacity-60", className)}>
+    {children}
+  </Link>
+);
 
 const Footer = () => {
   return (
@@ -47,32 +65,34 @@ const Footer = () => {
         {/* MARK: Home 훈련 일지 지호지 */}
         <DescriptionList>
           <DescriptionItemTitle>
-            <LinkWrapper>
-              <Link to={"/"}>HOME으로 바로가기</Link>
-            </LinkWrapper>
+            <HyperLink to={"/"}>HOME으로 바로가기</HyperLink>
           </DescriptionItemTitle>
           <DescriptionItem>
-            <LinkWrapper>
-              <Link to={"/photo"}>훈련 일지로 바로가기</Link>
-            </LinkWrapper>
+            <HyperLink to={"/photo"}>훈련 일지로 바로가기</HyperLink>
           </DescriptionItem>
           <DescriptionItem>
-            <LinkWrapper>
-              <Link
-                to={`/news/${Constants.LATEST_NEWS_YEAR}`}
-              >{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</Link>
-            </LinkWrapper>
+            <HyperLink
+              to={`/news/${Constants.LATEST_NEWS_YEAR}`}
+            >{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</HyperLink>
           </DescriptionItem>
           {/* 관리자 페이지로 */}
           <DescriptionItem>
-            <LinkWrapper>
-              <Link
-                to={"/admin"}
-                className="text-gray-500 hover:text-gray-600 hover:underline"
-              >
-                {`관리자 페이지`}
-              </Link>
-            </LinkWrapper>
+            <HyperLink
+              to={"/admin"}
+              className="text-gray-500 hover:text-gray-600 hover:underline"
+            >
+              {`관리자 페이지`}
+            </HyperLink>
+          </DescriptionItem>
+          {/* 사이트맵 */}
+          <DescriptionItem>
+            <HyperLink
+              to={"https://uosjudo.com/sitemap.xml"}
+              target="_blank"
+              className="text-gray-500 hover:text-gray-600 hover:underline"
+            >
+              {`사이트맵`}
+            </HyperLink>
           </DescriptionItem>
         </DescriptionList>
         {/* 지호 이름 */}
@@ -98,22 +118,19 @@ const Footer = () => {
           </DescriptionItemTitle>
           <DescriptionItem>
             {footerData.connetUs.instagram.title}
-            <HyperLink
-              href="https://www.instagram.com/uos_judo/"
-              target="_blank"
-            >
+            <HyperLink to="https://www.instagram.com/uos_judo/" target="_blank">
               {footerData.connetUs.instagram.href}
             </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
             {footerData.connetUs.email.title}
-            <HyperLink href="mailto: uosjudojiho@gmail.com">
+            <HyperLink to="mailto: uosjudojiho@gmail.com">
               {footerData.connetUs.email.href}
             </HyperLink>
           </DescriptionItem>
           <DescriptionItem>
             {footerData.connetUs.dev.title}
-            <HyperLink href="mailto: uosjudojiho@gmail.com">
+            <HyperLink to="mailto: uosjudojiho@gmail.com">
               {footerData.connetUs.dev.href}
             </HyperLink>
           </DescriptionItem>

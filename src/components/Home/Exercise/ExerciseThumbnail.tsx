@@ -21,7 +21,6 @@ const Container = styled(Card)`
   max-width: 640px;
   margin: auto;
   position: relative;
-  box-shadow: 0 0.4rem 0.8rem 0 rgba(0, 0, 0, 0.2);
   padding: 0;
 
   @media (max-width: 539px) {
@@ -43,7 +42,6 @@ const HoveredContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 0.8rem 1.6rem 0 rgba(0, 0, 0, 0.2);
   }
   @media (max-width: 539px) {
     display: flex;
@@ -86,7 +84,7 @@ const ExerciseThumbnail = () => {
   const lastTraningData = useMemo(() => {
     if (!data || data.length === 0) return null;
     const sorted = [...data].sort((a, b) =>
-      b.dateTime.localeCompare(a.dateTime),
+      b.dateTime.localeCompare(a.dateTime)
     );
     return sorted[0];
   }, [data]);

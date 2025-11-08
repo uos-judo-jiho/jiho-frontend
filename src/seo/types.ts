@@ -39,6 +39,7 @@ export interface Article {
     "@type": "Person";
     name: string;
   };
+  keywords?: string[] | string;
 }
 
 export interface Organization {

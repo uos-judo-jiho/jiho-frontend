@@ -2,19 +2,35 @@ import express from "express";
 import fs from "node:fs/promises";
 import path from "path";
 import type { ViteDevServer } from "vite";
-import {
-  base,
-  CONSOLE_PREFIX,
-  customConsole,
-  isProduction,
-  port,
-} from "./config.js";
+import { base, customConsole, isProduction, port } from "./config.js";
 import { bffErrorHandler } from "./middleware/error-handler.js";
 import { bffLogger } from "./middleware/logger.js";
 import { bffSecurityMiddleware } from "./middleware/security.js";
 import bffRouter from "./routes/bff.js";
 import { handleSSEProgress } from "./routes/sse-progress.js";
 import uploadRouter from "./routes/upload.js";
+
+const PRERENDERED_DIR = path.resolve("./build/prerendered");
+
+const readPrerenderedHtml = async (routePath: string) => {
+  const normalizedPath =
+    routePath === "/"
+      ? "index"
+      : routePath.replace(/\/$/, "").replace(/^\//, "");
+
+  if (!normalizedPath) {
+    return null;
+  }
+
+  const filePath = path.join(PRERENDERED_DIR, `${normalizedPath}.html`);
+  try {
+    await fs.access(filePath);
+    const html = await fs.readFile(filePath, "utf-8");
+    return { html, filePath };
+  } catch {
+    return null;
+  }
+};
 
 // Create http server
 const app = express();
@@ -49,7 +65,7 @@ app.use("/api", async (req, res) => {
   try {
     const targetUrl = `https://uosjudo.com/api${req.path}`;
     const queryString = new URLSearchParams(
-      req.query as Record<string, string>,
+      req.query as Record<string, string>
     ).toString();
     const fullUrl = queryString ? `${targetUrl}?${queryString}` : targetUrl;
 
@@ -111,7 +127,7 @@ app.use("/api", async (req, res) => {
 
     res.send(data);
   } catch (error) {
-    console.error(`${CONSOLE_PREFIX.ERROR} Proxy error:`, error);
+    console.error(`Proxy error:`, error);
     res.status(500).json({ error: "Proxy error" });
   }
 });
@@ -160,7 +176,7 @@ app.use("/admin*", async (req, res) => {
       res.send(await vite!.transformIndexHtml(url, html));
       return;
     } catch (error) {
-      console.error(`${CONSOLE_PREFIX.ERROR} Error reading index.html:`, error);
+      console.error(`Error reading index.html:`, error);
       res.status(500).send("Internal Server Error");
       return;
     }
@@ -170,11 +186,25 @@ app.use("/admin*", async (req, res) => {
 
 // Serve HTML
 app.use("*", async (req, res) => {
+  customConsole.log(req.originalUrl);
   try {
     // Preserve leading slash for routing
     let url = req.originalUrl.replace(base, "");
     if (!url.startsWith("/")) {
       url = "/" + url;
+    }
+    const routePath = url.split("?")[0] || "/";
+
+    if (isProduction) {
+      const prerendered = await readPrerenderedHtml(routePath);
+      if (prerendered) {
+        console.info(`[SSG] ${routePath}`);
+        res
+          .status(200)
+          .set({ "Content-Type": "text/html" })
+          .send(prerendered.html);
+        return;
+      }
     }
 
     let template: string;
@@ -200,9 +230,7 @@ app.use("*", async (req, res) => {
       const entryModule = await import(buildPath);
       render = entryModule.render;
 
-      customConsole.info(
-        `${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`,
-      );
+      customConsole.info(`${req.method} ${req.originalUrl}`);
     }
 
     const {
@@ -215,13 +243,13 @@ app.use("*", async (req, res) => {
 
     // Inject dehydrated state into HTML
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
-      dehydratedState,
+      dehydratedState
     ).replace(/</g, "\\u003c")};</script>`;
 
     // Create structured data script if available
     const structuredDataScript = structuredData
       ? `\n    <script type="application/ld+json">${JSON.stringify(
-          structuredData,
+          structuredData
         )}</script>`
       : "";
 
@@ -238,7 +266,7 @@ app.use("*", async (req, res) => {
       // Update title
       html = html.replace(
         /<title>.*?<\/title>/,
-        `<title>${helmetData.title}</title>`,
+        `<title>${helmetData.title}</title>`
       );
 
       // Update og:type
@@ -246,37 +274,37 @@ app.use("*", async (req, res) => {
         /<meta property="og:type" content=".*?" \/>/,
         `<meta property="og:type" content="${
           helmetData.articleType || "website"
-        }" />`,
+        }" />`
       );
 
       // Update og:title
       html = html.replace(
         /<meta property="og:title" content=".*?" \/>/,
-        `<meta property="og:title" content="${helmetData.title}" />`,
+        `<meta property="og:title" content="${helmetData.title}" />`
       );
 
       // Update description
       html = html.replace(
         /<meta name="description" content=".*?" \/>/,
-        `<meta name="description" content="${helmetData.description}" />`,
+        `<meta name="description" content="${helmetData.description}" />`
       );
 
       // Update og:description
       html = html.replace(
         /<meta property="og:description" content=".*?" \/>/,
-        `<meta property="og:description" content="${helmetData.description}" />`,
+        `<meta property="og:description" content="${helmetData.description}" />`
       );
 
       // Update og:url
       html = html.replace(
         /<meta property="og:url" content=".*?" \/>/,
-        `<meta property="og:url" content="${fullUrl}" />`,
+        `<meta property="og:url" content="${fullUrl}" />`
       );
 
       // Update og:image
       html = html.replace(
         /<meta property="og:image" content=".*?" \/>/,
-        `<meta property="og:image" content="${helmetData.imgUrl}" />`,
+        `<meta property="og:image" content="${helmetData.imgUrl}" />`
       );
 
       // Add article-specific meta tags for articles

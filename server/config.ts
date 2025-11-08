@@ -6,13 +6,19 @@ import type { ConsolePrefix } from "./types.js";
 // Load environment variables from .env file
 dotenv.config();
 
-const REACT_EXPRESS_SERVER = "[REACT-EXPRESS-SERVER]";
+const COLOR = {
+  RESET: "\x1b[0m",
+  LOG: "\x1b[37m",
+  INFO: "\x1b[34m",
+  ERROR: "\x1b[31m",
+  WARN: "\x1b[33m",
+};
 
 export const CONSOLE_PREFIX: ConsolePrefix = {
-  LOG: `[LOG]${REACT_EXPRESS_SERVER}`,
-  INFO: `[INFO]${REACT_EXPRESS_SERVER}`,
-  ERROR: `[ERROR]${REACT_EXPRESS_SERVER}`,
-  WARN: `[WARN]${REACT_EXPRESS_SERVER}`,
+  LOG: "[LOG]",
+  INFO: "[INFO]",
+  ERROR: "[ERROR]",
+  WARN: "[WARN]",
 };
 
 // --local for development mode
@@ -25,20 +31,28 @@ export const isLocal = args.includes("--local");
 
 export const customConsole = {
   log: (...args: any[]) => {
-    if (!isLocal) return;
-    nodeConsole.log(`${CONSOLE_PREFIX.LOG}`, ...args);
+    nodeConsole.log(`${COLOR.LOG}${CONSOLE_PREFIX.LOG}`, ...args, COLOR.RESET);
   },
   info: (...args: any[]) => {
-    if (!isLocal) return;
-    nodeConsole.log(`${CONSOLE_PREFIX.INFO}`, ...args);
+    nodeConsole.log(
+      `${COLOR.INFO}${CONSOLE_PREFIX.INFO}`,
+      ...args,
+      COLOR.RESET
+    );
   },
   error: (...args: any[]) => {
-    if (!isLocal) return;
-    nodeConsole.error(`${CONSOLE_PREFIX.ERROR}`, ...args);
+    nodeConsole.error(
+      `${COLOR.ERROR}${CONSOLE_PREFIX.ERROR}`,
+      ...args,
+      COLOR.RESET
+    );
   },
   warn: (...args: any[]) => {
-    if (!isLocal) return;
-    nodeConsole.warn(`${CONSOLE_PREFIX.WARN}`, ...args);
+    nodeConsole.warn(
+      `${COLOR.WARN}${CONSOLE_PREFIX.WARN}`,
+      ...args,
+      COLOR.RESET
+    );
   },
 };
 

@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
@@ -7,68 +7,38 @@ import ModalDescriptionSection from "@/components/common/Modals/ModalDescription
 import Loading from "@/components/common/Skeletons/Loading";
 import Slider from "@/components/layouts/Slider";
 import { Button } from "@/components/ui/button";
-import MyHelmet from "@/helmet/MyHelmet";
 
-import { useTrainingListQuery } from "@/api/trainings/query";
-
+import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { cn } from "@/lib/utils";
-import { useMemo } from "react";
 
-export const PhotoDetailMobile = () => {
-  const { id } = useParams<{ id: string }>();
+type PhotoDetailMobileProps = {
+  trainings: ArticleInfoType[];
+  current: number;
+  training: ArticleInfoType | undefined;
+};
 
-  const { data } = useTrainingListQuery();
-
-  // 날짜순 정렬
-  const trainings = useMemo(() => {
-    if (!data) return [];
-    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
-  }, [data]);
-
-  const current =
-    trainings?.findIndex((item) => item.id.toString() === id?.toString()) ?? -1;
-
-  const info = trainings?.find((item) => item.id.toString() === id?.toString());
-
-  if (!trainings || !info) {
+export const PhotoDetailMobile = ({
+  training,
+  current,
+  trainings,
+}: PhotoDetailMobileProps) => {
+  if (!training) {
     return <Loading />;
   }
 
-  const metaDescription = [info.title, info.description.slice(0, 140)].join(
-    " | ",
-  );
-
-  const metaImgUrl = info.imgSrcs.at(0);
-
-  // Format date for meta tags (ISO 8601 format)
-  const publishedDate = info.dateTime
-    ? new Date(info.dateTime).toISOString()
-    : undefined;
-
   return (
     <div className="min-h-screen flex flex-col">
-      <MyHelmet
-        title={`훈련일지 - ${info.author}`}
-        description={metaDescription}
-        imgUrl={metaImgUrl}
-        datePublished={publishedDate}
-        dateModified={publishedDate}
-        author={info.author}
-        articleType="article"
-      />
-
       <MobileHeader backUrl="/photo" subTitle="훈련일지" subTitleUrl="/photo" />
-
       <div className="flex-1">
         {/* Image Slider */}
         <div className="mb-4">
-          <Slider datas={info.imgSrcs} />
+          <Slider datas={training.imgSrcs} />
         </div>
 
         {/* Description Section */}
         <div>
           <ModalDescriptionSection
-            article={info}
+            article={training}
             titles={["작성자", "참여 인원", "훈련 날짜"]}
           />
         </div>
@@ -81,7 +51,7 @@ export const PhotoDetailMobile = () => {
             disabled={current === 0}
             className={cn(
               "flex items-center text-sm",
-              current === 0 && "opacity-50 cursor-not-allowed",
+              current === 0 && "opacity-50 cursor-not-allowed"
             )}
           >
             <Link
@@ -105,7 +75,7 @@ export const PhotoDetailMobile = () => {
             className={cn(
               "flex items-center text-sm",
               current === trainings.length - 1 &&
-                "opacity-50 cursor-not-allowed",
+                "opacity-50 cursor-not-allowed"
             )}
           >
             <Link

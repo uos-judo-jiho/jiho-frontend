@@ -14,8 +14,6 @@ const YearCard = styled.div`
 
   &:hover {
     border-color: ${(props) => props.theme.primaryColor};
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transform: translateY(-2px);
   }
 `;
 
@@ -42,11 +40,7 @@ const AdminNewsIndex = () => {
         <p style={{ margin: 0, color: "#666" }}>관리하실 년도를 선택해주세요</p>
         <YearGrid>
           {yearList.map((year) => (
-            <Link
-              to={`/admin/news/${year}`}
-              key={year}
-              style={{ textDecoration: "none" }}
-            >
+            <Link to={`/admin/news/${year}`} key={year}>
               <YearCard>
                 <YearTitle>{year}년</YearTitle>
               </YearCard>

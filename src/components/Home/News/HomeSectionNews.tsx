@@ -10,7 +10,7 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 
 const HomeSectionNews = () => {
   return (
-    <div className="w-full h-full">
+    <section className="w-full h-full">
       <Link to={`/news/${Constants.LATEST_NEWS_YEAR}`}>
         <HomeSectionBG
           bgImageSrc={BGImage}
@@ -25,14 +25,14 @@ const HomeSectionNews = () => {
                 title={`${Constants.LATEST_NEWS_YEAR}년 지호지`}
                 heading={2}
               />
-              <p className="text-theme-grey text-theme-default mt-1 opacity-60 hover:opacity-100 xs:opacity-100 xs:text-theme-bg">
+              <p className="text-white text-theme-default mt-1 opacity-60 hover:opacity-100 xs:opacity-100 xs:text-theme-bg">
                 자세히 보기
               </p>
             </div>
           </SheetWrapper>
         </HomeSectionBG>
       </Link>
-    </div>
+    </section>
   );
 };
 
