@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-import LeftArrow from "@/lib/assets/svgs/arrow_forward_ios.svg";
+import { ArrowForwardIosIcon } from "@/components/icons";
 
 type AdminNavItemProps = {
   linkTo: string;
@@ -18,7 +18,7 @@ const LinkWrapper = styled.div`
   align-items: center;
 `;
 
-const StyledArrow = styled.img`
+const StyledArrow = styled(ArrowForwardIosIcon)`
   width: 20px;
   margin-left: 10px;
 `;
@@ -34,7 +34,7 @@ function AdminNavItem({ linkTo, title }: AdminNavItemProps) {
       <Link to={linkTo}>
         <ItemWrapper>
           <TitleSpan>{title}</TitleSpan>
-          <StyledArrow src={LeftArrow} />
+          <StyledArrow title="Navigate" />
         </ItemWrapper>
       </Link>
     </LinkWrapper>

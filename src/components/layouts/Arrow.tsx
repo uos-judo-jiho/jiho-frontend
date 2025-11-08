@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
-import BackArrow from "@/lib/assets/svgs/arrow_back_ios.svg";
-import ForwardArrow from "@/lib/assets/svgs/arrow_forward_ios.svg";
+import { ArrowBackIosIcon, ArrowForwardIosIcon } from "@/components/icons";
 
 type ArrowProps = {
   current: number;
@@ -28,7 +27,7 @@ const ArrowCss = css`
   }
 `;
 
-const StyledBackArrowStyle = styled.img<ArrowProps>`
+const StyledBackArrowStyle = styled(ArrowBackIosIcon)<ArrowProps>`
   display: ${(props) =>
     props.current !== 0 || props.isVisble ? "flex" : "none"} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
@@ -55,7 +54,7 @@ const StyledBackArrowStyle = styled.img<ArrowProps>`
   }
 `;
 
-const StyledForwardArrowStyle = styled.img<ArrowProps>`
+const StyledForwardArrowStyle = styled(ArrowForwardIosIcon)<ArrowProps>`
   display: ${(props) =>
     props.current < props.length - 1 || props.isVisble
       ? "flex"
@@ -85,13 +84,7 @@ const StyledForwardArrowStyle = styled.img<ArrowProps>`
 
 const StyledBackArrow = (
   props: ArrowProps &
-    Omit<
-      React.DetailedHTMLProps<
-        React.ImgHTMLAttributes<HTMLImageElement>,
-        HTMLImageElement
-      >,
-      keyof ArrowProps | "ref"
-    >
+    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">
 ) => {
   const {
     current,
@@ -117,7 +110,7 @@ const StyledBackArrow = (
       isMobileVisible={isMobileVisible}
       isBackGround={isBackGround}
       isVisble={isVisble}
-      src={BackArrow}
+      title="Previous"
       {...rest}
     />
   );
@@ -125,13 +118,7 @@ const StyledBackArrow = (
 
 const StyledForwardArrow = (
   props: ArrowProps &
-    Omit<
-      React.DetailedHTMLProps<
-        React.ImgHTMLAttributes<HTMLImageElement>,
-        HTMLImageElement
-      >,
-      keyof ArrowProps | "ref"
-    >
+    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">
 ) => {
   const {
     current,
@@ -156,7 +143,7 @@ const StyledForwardArrow = (
       isMobileVisible={isMobileVisible}
       isBackGround={isBackGround}
       isVisble={isVisble}
-      src={ForwardArrow}
+      title="Next"
       {...rest}
     />
   );

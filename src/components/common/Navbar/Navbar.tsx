@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
-import Menu from "@/lib/assets/svgs/menu.svg";
+import { MenuIcon } from "@/components/icons";
 
 import SideBar from "@/components/common/SideBar/SideBar";
 import Row from "@/components/layouts/Row";
@@ -20,7 +20,7 @@ const Container = styled.div`
   height: 100%;
 `;
 
-const StyledMenu = styled.img<{ isDark: boolean }>`
+const StyledMenu = styled(MenuIcon)<{ isDark: boolean }>`
   filter: ${({ isDark }) =>
     !isDark
       ? `invert(100%) sepia(3%) saturate(607%) hue-rotate(209deg) brightness(116%) contrast(87%)` // #eee
@@ -47,7 +47,7 @@ const NavMenu = ({ isDark }: { isDark: boolean }) => {
 
   return (
     <NavDropDown onClick={() => setOpen((prev) => !prev)}>
-      <StyledMenu isDark={isDark} src={Menu} />
+      <StyledMenu isDark={isDark} title="Menu" />
     </NavDropDown>
   );
 };

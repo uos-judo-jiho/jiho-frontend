@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import RightArrow from "@/lib/assets/svgs/arrow_back_ios.svg";
+import { ArrowBackIosIcon } from "@/components/icons";
 
 // TODO: 모바일 헤더 높이 44px 고정 상수화
 
@@ -60,7 +60,7 @@ const MobileHeader = ({ backUrl, subTitle, subTitleUrl }: MobileHeaderProps) => 
     <MobileHeaderContainer>
       <div className="nav-icon">
         <a href={backUrl}>
-          <img src={RightArrow} alt="back" />
+          <ArrowBackIosIcon title="Go back" />
         </a>
       </div>
       <HeaderContainer>

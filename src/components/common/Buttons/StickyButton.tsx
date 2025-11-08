@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import UpperArrowSvg from "@/lib/assets/svgs/upper-arrow.svg";
+import { UpperArrowIcon } from "@/components/icons";
 
 const FadeIn = keyframes`
   from {
@@ -51,7 +51,7 @@ const FadeOutAnimationWrapper = styled.div`
   animation-fill-mode: forwards;
 `;
 
-const StyledUpperArrow = styled.img`
+const StyledUpperArrow = styled(UpperArrowIcon)`
   width: inherit;
   height: inherit;
 `;
@@ -90,13 +90,13 @@ function StickyButton() {
         visible ? (
           <FadeInAnimationWrapper>
             <UpperButton onClick={handleClick}>
-              <StyledUpperArrow src={UpperArrowSvg} />
+              <StyledUpperArrow title="Scroll to top" />
             </UpperButton>
           </FadeInAnimationWrapper>
         ) : (
           <FadeOutAnimationWrapper>
             <UpperButton onClick={handleClick}>
-              <StyledUpperArrow src={UpperArrowSvg} />
+              <StyledUpperArrow title="Scroll to top" />
             </UpperButton>
           </FadeOutAnimationWrapper>
         )
