@@ -1,10 +1,11 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import styled from "styled-components";
+import MyHelmet from "@/helmet/MyHelmet";
 import Awards from "@/lib/assets/jsons/awards.json";
 import { AwardType } from "@/lib/types/AwardType";
 import { formatAwardsType } from "@/lib/utils/Utils";
+import styled from "styled-components";
 
-const AwardsConatiner = styled.div`
+const AwardsContainer = styled.div`
   flex: 1 0 0;
 `;
 
@@ -50,7 +51,12 @@ const HomeAwards = () => {
   const awards: AwardType[] = Awards.awards;
 
   return (
-    <AwardsConatiner>
+    <AwardsContainer>
+      <MyHelmet
+        title="Home"
+        description={awards.map((award) => award.title).join(", ")}
+        imgUrl="/favicon-96x96.png"
+      />
       <div className="flex flex-col">
         <Card className="bg-white/30 shadow-md backdrop-blur-sm border-none">
           <CardHeader>
@@ -65,7 +71,7 @@ const HomeAwards = () => {
           </CardContent>
         </Card>
       </div>
-    </AwardsConatiner>
+    </AwardsContainer>
   );
 };
 

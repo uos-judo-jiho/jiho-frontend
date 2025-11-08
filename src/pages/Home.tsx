@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ThemeProvider } from "styled-components";
 
 import Footer from "@/components/common/Footer/footer";
 import Navbar from "@/components/common/Navbar/Navbar";
@@ -9,14 +10,12 @@ import HomeSectionMore from "@/components/Home/More/HomeSectionMore";
 import HomeSectionNews from "@/components/Home/News/HomeSectionNews";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
-import { useNews } from "@/recoils/news";
 import { useNoticesQuery } from "@/api/notices/query";
 
-import MyHelmet from "@/helmet/MyHelmet";
+import { useNews } from "@/recoils/news";
 
 import { Constants } from "@/lib/constant";
 import { lightTheme } from "@/lib/theme/theme";
-import { ThemeProvider } from "styled-components";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);
@@ -35,7 +34,6 @@ const Home = () => {
 
   return (
     <ThemeProvider theme={lightTheme}>
-      <MyHelmet title="Home" />
       <Navbar isDark={isDark} />
       <ScrollSnap setIsDark={setIsDark}>
         <HomeSectionMain />

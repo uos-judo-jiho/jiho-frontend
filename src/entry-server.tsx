@@ -1,13 +1,18 @@
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { RecoilRoot } from "recoil";
-import { QueryClient, QueryClientProvider, dehydrate } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  dehydrate,
+} from "@tanstack/react-query";
 import { ServerStyleSheet, ThemeProvider } from "styled-components";
 import AppRouter from "./routers/AppRouter";
 import { lightTheme } from "./lib/theme/theme";
 import { getTrainings } from "./api/trainings/client";
 import { getNews } from "./api/news/client";
 import { HelmetContext } from "./helmet/MyHelmet";
+import Awards from "@/lib/assets/jsons/awards.json";
 
 type HelmetData = {
   title: string;
@@ -72,9 +77,15 @@ export async function render(url: string) {
   const sheet = new ServerStyleSheet();
 
   // Helmet data collector for SSR
+  // Default metadata for home page
+  const defaultDescription = Awards.awards
+    .map((award) => award.title)
+    .join(", ");
+
   let helmetData: HelmetData = {
-    title: "서울시립대학교 유도부 지호",
-    description: "서울시립대학교 유도부 지호",
+    title: "서울시립대학교 유도부 지호 | Home",
+    description:
+      url === "/" ? defaultDescription : "서울시립대학교 유도부 지호",
     imgUrl: "/favicon-96x96.png",
   };
 
