@@ -2,13 +2,7 @@ import express from "express";
 import fs from "node:fs/promises";
 import path from "path";
 import type { ViteDevServer } from "vite";
-import {
-  base,
-  CONSOLE_PREFIX,
-  customConsole,
-  isProduction,
-  port,
-} from "./config.js";
+import { base, customConsole, isProduction, port } from "./config.js";
 import { bffErrorHandler } from "./middleware/error-handler.js";
 import { bffLogger } from "./middleware/logger.js";
 import { bffSecurityMiddleware } from "./middleware/security.js";
@@ -133,7 +127,7 @@ app.use("/api", async (req, res) => {
 
     res.send(data);
   } catch (error) {
-    console.error(`${CONSOLE_PREFIX.ERROR} Proxy error:`, error);
+    console.error(`Proxy error:`, error);
     res.status(500).json({ error: "Proxy error" });
   }
 });
@@ -182,7 +176,7 @@ app.use("/admin*", async (req, res) => {
       res.send(await vite!.transformIndexHtml(url, html));
       return;
     } catch (error) {
-      console.error(`${CONSOLE_PREFIX.ERROR} Error reading index.html:`, error);
+      console.error(`Error reading index.html:`, error);
       res.status(500).send("Internal Server Error");
       return;
     }
@@ -192,6 +186,7 @@ app.use("/admin*", async (req, res) => {
 
 // Serve HTML
 app.use("*", async (req, res) => {
+  customConsole.log(req.originalUrl);
   try {
     // Preserve leading slash for routing
     let url = req.originalUrl.replace(base, "");
@@ -203,9 +198,7 @@ app.use("*", async (req, res) => {
     if (isProduction) {
       const prerendered = await readPrerenderedHtml(routePath);
       if (prerendered) {
-        customConsole.info(
-          `Serving prerendered HTML for ${routePath} (${prerendered.filePath})`
-        );
+        console.info(`[SSG] ${routePath}`);
         res
           .status(200)
           .set({ "Content-Type": "text/html" })
@@ -237,9 +230,7 @@ app.use("*", async (req, res) => {
       const entryModule = await import(buildPath);
       render = entryModule.render;
 
-      customConsole.info(
-        `${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`
-      );
+      customConsole.info(`${req.method} ${req.originalUrl}`);
     }
 
     const {
