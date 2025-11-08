@@ -1,5 +1,5 @@
-import LogoWhite from "@/lib/assets/images/logo/logo-removebg-white.png";
-import LogoBlack from "@/lib/assets/images/logo/logo-removebg.png";
+import LogoWhite from "@/lib/assets/images/logo/logo-removebg-white.webp";
+import LogoBlack from "@/lib/assets/images/logo/logo-removebg.webp";
 
 type LogoProps = {
   size?: string;
@@ -7,14 +7,18 @@ type LogoProps = {
   isDark?: boolean;
 };
 
-const Logo = ({ size = "6rem", margin = "0rem", isDark = false }: LogoProps) => {
+const Logo = ({
+  size = "6rem",
+  margin = "0rem",
+  isDark = false,
+}: LogoProps) => {
   return (
     <div
       className="flex"
       style={{
         margin,
         width: size,
-        height: size
+        height: size,
       }}
     >
       <img

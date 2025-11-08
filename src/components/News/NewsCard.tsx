@@ -5,6 +5,7 @@ import Col from "@/components/layouts/Col";
 
 import { Constants } from "@/lib/constant";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { cn } from "@/lib/utils";
 
 type NewsCardProps = {
   year: string;
@@ -25,15 +26,13 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
   return (
     <div
       onClick={() => handleClickCard(article.id)}
-      className="
-        w-full
-        text-theme-description leading-theme-description
-        flex
-        border border-theme-light-grey rounded-[10px] p-4
-        transition-all duration-500 cursor-pointer
-        sm:hover:scale-[1.01] sm:hover:shadow-[0.2rem_0.4rem_1.6rem_rgba(0,0,0,0.16)]
-        xs:p-2
-      "
+      className={cn(
+        "flex w-full text-theme-description leading-theme-description",
+        "border border-theme-light-grey rounded-[10px] p-4",
+        "transition-all duration-500 cursor-pointer",
+        "sm:hover:scale-[1.01] sm:hover:shadow-[0.2rem_0.4rem_1.6rem_rgba(0,0,0,0.16)]",
+        "xs:p-2"
+      )}
     >
       <a
         href={`/news/${year}/${article.id}`}

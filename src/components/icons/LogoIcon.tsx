@@ -7,7 +7,7 @@ import {
  * LogoIcon Component
  *
  * Note: This logo SVG is very large (contains embedded base64 image data).
- * For better performance, consider using PNG versions (logo-removebg.png or logo-removebg-white.png)
+ * For better performance, consider using PNG versions (logo-removebg.webp or logo-removebg-white.webp)
  * which are already optimized and available in the assets folder.
  */
 export const LogoIcon: React.FC<BaseSvgProps> = ({

@@ -1,5 +1,5 @@
-import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.png";
-import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.png";
+import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.webp";
+import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.webp";
 
 export const Constants = {
   BASE_URL:

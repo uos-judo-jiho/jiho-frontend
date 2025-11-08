@@ -11,7 +11,7 @@ function NoticeTitle({ title, author, dateTime, tags }: NoticeTitleProps) {
   return (
     <>
       <div className="py-16 pb-8">
-        <h3 className="text-theme-subtitle">{title}</h3>
+        <h2 className="text-theme-subtitle">{title}</h2>
         <div className="text-theme-default pt-2.5 flex">
           <span className="flex text-theme-black after:content-['|'] after:px-1 last:after:content-none">
             {author}
