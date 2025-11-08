@@ -12,6 +12,7 @@ import { lightTheme } from "./lib/theme/theme";
 import { getTrainings } from "./api/trainings/client";
 import { getNews } from "./api/news/client";
 import { HelmetContext } from "./helmet/MyHelmet";
+import { StructuredDataContext } from "./seo/StructuredData";
 import Awards from "@/lib/assets/jsons/awards.json";
 
 type HelmetData = {
@@ -93,20 +94,29 @@ export async function render(url: string) {
     helmetData = data;
   };
 
+  // Structured data collector for SSR
+  let structuredData: object | null = null;
+
+  const setStructuredData = (data: object) => {
+    structuredData = data;
+  };
+
   try {
     const html = renderToString(
       sheet.collectStyles(
-        <HelmetContext.Provider value={{ setHelmetData }}>
-          <QueryClientProvider client={queryClient}>
-            <RecoilRoot>
-              <ThemeProvider theme={lightTheme}>
-                <StaticRouter location={url}>
-                  <AppRouter />
-                </StaticRouter>
-              </ThemeProvider>
-            </RecoilRoot>
-          </QueryClientProvider>
-        </HelmetContext.Provider>
+        <StructuredDataContext.Provider value={{ setStructuredData }}>
+          <HelmetContext.Provider value={{ setHelmetData }}>
+            <QueryClientProvider client={queryClient}>
+              <RecoilRoot>
+                <ThemeProvider theme={lightTheme}>
+                  <StaticRouter location={url}>
+                    <AppRouter />
+                  </StaticRouter>
+                </ThemeProvider>
+              </RecoilRoot>
+            </QueryClientProvider>
+          </HelmetContext.Provider>
+        </StructuredDataContext.Provider>
       )
     );
 
@@ -116,9 +126,11 @@ export async function render(url: string) {
     // Dehydrate the query cache to send to client
     const dehydratedState = dehydrate(queryClient);
 
-    console.log("[SSR] Helmet data:", helmetData);
+    console.log("[SSR] Helmet data");
+    console.table(helmetData);
+    console.log("[SSR] Structured data:", structuredData ? "Present" : "None");
 
-    return { html, dehydratedState, styleTags, helmetData };
+    return { html, dehydratedState, styleTags, helmetData, structuredData };
   } finally {
     // Always seal the sheet to prevent memory leaks
     sheet.seal();

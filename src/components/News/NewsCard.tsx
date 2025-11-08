@@ -29,15 +29,13 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
       className={cn(
         "flex w-full text-theme-description leading-theme-description",
         "border border-theme-light-grey rounded-[10px] p-4",
-        "transition-all duration-500 cursor-pointer",
-        "sm:hover:scale-[1.01] sm:hover:shadow-[0.2rem_0.4rem_1.6rem_rgba(0,0,0,0.16)]",
         "xs:p-2"
       )}
     >
       <a
         href={`/news/${year}/${article.id}`}
         onClick={(e) => e.preventDefault()}
-        className="w-full flex gap-6"
+        className="w-full flex sm:flex-row flex-col items-center gap-4"
       >
         <div className="flex-1 w-1/2 rounded-[5px] xs:w-full">
           {isLoading ? (

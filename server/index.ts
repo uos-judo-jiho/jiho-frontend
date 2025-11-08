@@ -180,7 +180,13 @@ app.use("*", async (req, res) => {
     let template: string;
     let render: (
       url: string
-    ) => Promise<{ html: string; dehydratedState: any; styleTags: string; helmetData: any }>;
+    ) => Promise<{
+      html: string;
+      dehydratedState: any;
+      styleTags: string;
+      helmetData: any;
+      structuredData: any;
+    }>;
 
     if (!isProduction) {
       // Always read fresh template in development
@@ -201,18 +207,31 @@ app.use("*", async (req, res) => {
       );
     }
 
-    const { html: rendered, dehydratedState, styleTags, helmetData } = await render(url);
+    const {
+      html: rendered,
+      dehydratedState,
+      styleTags,
+      helmetData,
+      structuredData,
+    } = await render(url);
 
     // Inject dehydrated state into HTML
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
       dehydratedState
     ).replace(/</g, "\\u003c")};</script>`;
 
+    // Create structured data script if available
+    const structuredDataScript = structuredData
+      ? `\n    <script type="application/ld+json">${JSON.stringify(
+          structuredData
+        )}</script>`
+      : "";
+
     // Inject metadata
     let html = template
       .replace(`<!--app-html-->`, rendered)
       .replace(`<!--app-styles-->`, styleTags)
-      .replace(`</head>`, `${stateScript}</head>`);
+      .replace(`</head>`, `${stateScript}${structuredDataScript}\n  </head>`);
 
     // Update meta tags with helmetData
     if (helmetData) {
@@ -227,7 +246,9 @@ app.use("*", async (req, res) => {
       // Update og:type
       html = html.replace(
         /<meta property="og:type" content=".*?" \/>/,
-        `<meta property="og:type" content="${helmetData.articleType || 'website'}" />`
+        `<meta property="og:type" content="${
+          helmetData.articleType || "website"
+        }" />`
       );
 
       // Update og:title
@@ -261,8 +282,8 @@ app.use("*", async (req, res) => {
       );
 
       // Add article-specific meta tags for articles
-      if (helmetData.articleType === 'article') {
-        let articleTags = '';
+      if (helmetData.articleType === "article") {
+        let articleTags = "";
 
         if (helmetData.datePublished) {
           articleTags += `\n    <meta property="article:published_time" content="${helmetData.datePublished}" />`;
@@ -278,7 +299,7 @@ app.use("*", async (req, res) => {
 
         // Insert article tags before </head>
         if (articleTags) {
-          html = html.replace('</head>', `${articleTags}\n  </head>`);
+          html = html.replace("</head>", `${articleTags}\n  </head>`);
         }
       }
     }
