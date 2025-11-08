@@ -49,7 +49,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
 
       <DefaultLayout>
         <SheetWrapper>
-          {/* Header with Back Button and Navigation */}
+          {/* Header with Back Button */}
           <div className="flex items-center justify-between mb-6">
             <Button
               asChild
@@ -79,6 +79,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
             </div>
           </div>
 
+          {/* Navigation */}
           <div className="flex items-center justify-end gap-2">
             <Button
               asChild

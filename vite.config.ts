@@ -24,6 +24,7 @@ export default defineConfig({
         ws: true,
       },
     },
+    // allowedHosts: ["88601a79b159.ngrok-free.app"],
   },
   build: {
     minify: "esbuild",

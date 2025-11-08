@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
@@ -9,13 +9,13 @@ import { Button } from "@/components/ui/button";
 import MyHelmet from "@/helmet/MyHelmet";
 
 import { useTrainingListQuery } from "@/api/trainings/query";
-import { useSwipeNavigation } from "@/hooks/useSwipeNavigation";
+
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 
 export const PhotoDetailMobile = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+
   const { data } = useTrainingListQuery();
 
   // 날짜순 정렬
@@ -28,22 +28,6 @@ export const PhotoDetailMobile = () => {
     trainings?.findIndex((item) => item.id.toString() === id?.toString()) ?? -1;
 
   const info = trainings?.find((item) => item.id.toString() === id?.toString());
-
-  // 스와이프 네비게이션
-  const { onTouchStart, onTouchEnd } = useSwipeNavigation({
-    onSwipeUp: () => {
-      // 위로 스와이프 = 다음 페이지
-      if (current < trainings.length - 1) {
-        navigate(`/photo/${trainings[current + 1].id}`);
-      }
-    },
-    onSwipeDown: () => {
-      // 아래로 스와이프 = 이전 페이지
-      if (current > 0) {
-        navigate(`/photo/${trainings[current - 1].id}`);
-      }
-    },
-  });
 
   if (!trainings || !info) {
     return <Loading />;
@@ -65,11 +49,7 @@ export const PhotoDetailMobile = () => {
 
       <MobileHeader backUrl="/photo" subTitle="훈련일지" subTitleUrl="/photo" />
 
-      <div
-        className="flex-1 px-4 py-4"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
+      <div className="flex-1 px-4 py-4">
         {/* Image Slider */}
         <div className="mb-4">
           <Slider datas={info.imgSrcs} />
@@ -83,7 +63,7 @@ export const PhotoDetailMobile = () => {
           />
         </div>
         {/* Navigation */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-end mb-4 gap-4">
           <Button
             asChild
             variant="ghost"

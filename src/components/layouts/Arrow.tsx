@@ -10,7 +10,7 @@ type ArrowProps = {
   id?: string;
   isMobileVisible?: boolean;
   isBackGround?: boolean;
-  isVisble?: boolean;
+  $isVisble?: boolean;
 };
 
 const ArrowCss = css`
@@ -29,7 +29,7 @@ const ArrowCss = css`
 
 const StyledBackArrowStyle = styled(ArrowBackIosIcon)<ArrowProps>`
   display: ${(props) =>
-    props.current !== 0 || props.isVisble ? "flex" : "none"} !important;
+    props.current !== 0 || props.$isVisble ? "flex" : "none"} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
   height: ${(props) => (props.size ? props.size : "24px")};
 
@@ -56,7 +56,7 @@ const StyledBackArrowStyle = styled(ArrowBackIosIcon)<ArrowProps>`
 
 const StyledForwardArrowStyle = styled(ArrowForwardIosIcon)<ArrowProps>`
   display: ${(props) =>
-    props.current < props.length - 1 || props.isVisble
+    props.current < props.length - 1 || props.$isVisble
       ? "flex"
       : "none"} !important;
   width: ${(props) => (props.size ? props.size : "24px")};
@@ -95,7 +95,7 @@ const StyledBackArrow = (
     id,
     isMobileVisible,
     isBackGround,
-    isVisble,
+    $isVisble,
     ...rest
   } = props;
 
@@ -109,7 +109,7 @@ const StyledBackArrow = (
       id={id}
       isMobileVisible={isMobileVisible}
       isBackGround={isBackGround}
-      isVisble={isVisble}
+      $isVisble={$isVisble}
       title="Previous"
       {...rest}
     />
@@ -129,7 +129,7 @@ const StyledForwardArrow = (
     id,
     isMobileVisible,
     isBackGround,
-    isVisble,
+    $isVisble,
     ...rest
   } = props;
   return (
@@ -142,7 +142,7 @@ const StyledForwardArrow = (
       id={id}
       isMobileVisible={isMobileVisible}
       isBackGround={isBackGround}
-      isVisble={isVisble}
+      $isVisble={$isVisble}
       title="Next"
       {...rest}
     />

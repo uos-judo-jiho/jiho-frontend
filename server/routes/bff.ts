@@ -74,7 +74,6 @@ router.use(
 router.use(
   "/api/admin*",
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.params);
     try {
       const path = req.params[0] || "";
       await proxyToBackend(`/admin${path}`, req, res);

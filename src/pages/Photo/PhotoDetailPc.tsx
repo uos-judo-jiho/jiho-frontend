@@ -60,8 +60,25 @@ export const PhotoDetailPc = () => {
                 훈련일지로 돌아가기
               </Link>
             </Button>
+          </div>
 
-            <div className="flex items-center gap-2">
+          {/* Main Content */}
+          <div className="flex flex-col flex-1">
+            {/* Image Slider */}
+            <div className="mb-6 md:mb-0 flex justify-center">
+              <Slider datas={info.imgSrcs} />
+            </div>
+
+            {/* Description Section */}
+            <div className="flex-1">
+              <ModalDescriptionSection
+                article={info}
+                titles={["작성자", "참여 인원", "훈련 날짜"]}
+              />
+            </div>
+
+            {/* Navigation */}
+            <div className="flex items-center justify-end gap-2">
               <Button
                 asChild
                 variant="link"
@@ -108,22 +125,6 @@ export const PhotoDetailPc = () => {
                   <ChevronRight className="h-4 w-4" />
                 </Link>
               </Button>
-            </div>
-          </div>
-
-          {/* Main Content */}
-          <div className="flex flex-col flex-1">
-            {/* Image Slider */}
-            <div className="mb-6 md:mb-0 flex justify-center">
-              <Slider datas={info.imgSrcs} />
-            </div>
-
-            {/* Description Section */}
-            <div className="flex-1">
-              <ModalDescriptionSection
-                article={info}
-                titles={["작성자", "참여 인원", "훈련 날짜"]}
-              />
             </div>
           </div>
         </SheetWrapper>
