@@ -7,6 +7,14 @@ import AppRouter from "./routers/AppRouter";
 import { lightTheme } from "./lib/theme/theme";
 import { getTrainings } from "./api/trainings/client";
 import { getNews } from "./api/news/client";
+import { HelmetContext } from "./helmet/MyHelmet";
+
+type HelmetData = {
+  title: string;
+  description: string;
+  imgUrl: string;
+  url?: string;
+};
 
 export async function render(url: string) {
   // Create a new QueryClient for each SSR request
@@ -63,18 +71,31 @@ export async function render(url: string) {
   // Create styled-components ServerStyleSheet to collect styles during SSR
   const sheet = new ServerStyleSheet();
 
+  // Helmet data collector for SSR
+  let helmetData: HelmetData = {
+    title: "서울시립대학교 유도부 지호",
+    description: "서울시립대학교 유도부 지호",
+    imgUrl: "/favicon-96x96.png",
+  };
+
+  const setHelmetData = (data: HelmetData) => {
+    helmetData = data;
+  };
+
   try {
     const html = renderToString(
       sheet.collectStyles(
-        <QueryClientProvider client={queryClient}>
-          <RecoilRoot>
-            <ThemeProvider theme={lightTheme}>
-              <StaticRouter location={url}>
-                <AppRouter />
-              </StaticRouter>
-            </ThemeProvider>
-          </RecoilRoot>
-        </QueryClientProvider>
+        <HelmetContext.Provider value={{ setHelmetData }}>
+          <QueryClientProvider client={queryClient}>
+            <RecoilRoot>
+              <ThemeProvider theme={lightTheme}>
+                <StaticRouter location={url}>
+                  <AppRouter />
+                </StaticRouter>
+              </ThemeProvider>
+            </RecoilRoot>
+          </QueryClientProvider>
+        </HelmetContext.Provider>
       )
     );
 
@@ -84,7 +105,9 @@ export async function render(url: string) {
     // Dehydrate the query cache to send to client
     const dehydratedState = dehydrate(queryClient);
 
-    return { html, dehydratedState, styleTags };
+    console.log("[SSR] Helmet data:", helmetData);
+
+    return { html, dehydratedState, styleTags, helmetData };
   } finally {
     // Always seal the sheet to prevent memory leaks
     sheet.seal();

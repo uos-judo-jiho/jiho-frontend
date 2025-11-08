@@ -180,7 +180,7 @@ app.use("*", async (req, res) => {
     let template: string;
     let render: (
       url: string
-    ) => Promise<{ html: string; dehydratedState: any; styleTags: string }>;
+    ) => Promise<{ html: string; dehydratedState: any; styleTags: string; helmetData: any }>;
 
     if (!isProduction) {
       // Always read fresh template in development
@@ -201,16 +201,59 @@ app.use("*", async (req, res) => {
       );
     }
 
-    const { html: rendered, dehydratedState, styleTags } = await render(url);
+    const { html: rendered, dehydratedState, styleTags, helmetData } = await render(url);
 
     // Inject dehydrated state into HTML
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
       dehydratedState
     ).replace(/</g, "\\u003c")};</script>`;
-    const html = template
+
+    // Inject metadata
+    let html = template
       .replace(`<!--app-html-->`, rendered)
       .replace(`<!--app-styles-->`, styleTags)
       .replace(`</head>`, `${stateScript}</head>`);
+
+    // Update meta tags with helmetData
+    if (helmetData) {
+      const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+
+      // Update title
+      html = html.replace(
+        /<title>.*?<\/title>/,
+        `<title>${helmetData.title}</title>`
+      );
+
+      // Update og:title
+      html = html.replace(
+        /<meta property="og:title" content=".*?" \/>/,
+        `<meta property="og:title" content="${helmetData.title}" />`
+      );
+
+      // Update description
+      html = html.replace(
+        /<meta name="description" content=".*?" \/>/,
+        `<meta name="description" content="${helmetData.description}" />`
+      );
+
+      // Update og:description
+      html = html.replace(
+        /<meta property="og:description" content=".*?" \/>/,
+        `<meta property="og:description" content="${helmetData.description}" />`
+      );
+
+      // Update og:url
+      html = html.replace(
+        /<meta property="og:url" content=".*?" \/>/,
+        `<meta property="og:url" content="${fullUrl}" />`
+      );
+
+      // Update og:image
+      html = html.replace(
+        /<meta property="og:image" content=".*?" \/>/,
+        `<meta property="og:image" content="${helmetData.imgUrl}" />`
+      );
+    }
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);
   } catch (e: any) {
