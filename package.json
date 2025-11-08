@@ -15,6 +15,7 @@
     "build:client": "vite build --outDir build/client",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir build/server",
     "build:server-ts": "tsc -p tsconfig.server.json",
+    "build:prerender": "node script/prerender.js",
     "build:docker": "npm run clean && npm run build && sh script/docker-build-local.sh",
     "preview": "cross-env NODE_ENV=production tsx server/index.ts",
     "start": "npm run preview",
@@ -23,7 +24,6 @@
     "type-check": "tsc --noEmit",
     "type-check:server": "tsc -p tsconfig.server.json --noEmit",
     "dev": "vite",
-    "dev:local": "sh script/dev-local.sh",
     "dev:server": "cross-env NODE_ENV=development tsx watch server/index.ts --local"
   },
   "dependencies": {
