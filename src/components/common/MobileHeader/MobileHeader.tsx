@@ -55,7 +55,11 @@ interface MobileHeaderProps {
   subTitleUrl: string;
 }
 
-const MobileHeader = ({ backUrl, subTitle, subTitleUrl }: MobileHeaderProps) => {
+const MobileHeader = ({
+  backUrl,
+  subTitle,
+  subTitleUrl,
+}: MobileHeaderProps) => {
   return (
     <MobileHeaderContainer>
       <div className="nav-icon">
