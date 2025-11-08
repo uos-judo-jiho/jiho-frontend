@@ -1,5 +1,6 @@
 import { useState } from "react";
 import SkeletonThumbnail from "../common/Skeletons/SkeletonThumbnail";
+import { cn } from "@/lib/utils";
 
 type ThumbnailCardProps = {
   imgSrc: string;
@@ -42,13 +43,15 @@ const ThumbnailCard = ({
           style={{ display: "none" }}
           onLoad={handleLoad}
         />
-        <div className="
-          absolute flex justify-center items-center
-          opacity-0 w-full h-full
-          text-theme-subtitle text-theme-bg
-          transition-opacity duration-[287ms]
-          sm:group-hover:opacity-100
-        ">
+        <div
+          className={cn(
+            "absolute flex justify-center items-center",
+            "opacity-0 w-full h-full",
+            "text-theme-title text-theme-bg text-white",
+            "transition-opacity duration-[287ms]",
+            "sm:group-hover:opacity-100"
+          )}
+        >
           {dateTime}
         </div>
       </a>

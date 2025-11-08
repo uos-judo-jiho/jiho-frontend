@@ -15,7 +15,7 @@ const GridContainer = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 
-  grid-gap: 4px;
+  grid-gap: 12px;
   margin-bottom: 4px;
 `;
 
