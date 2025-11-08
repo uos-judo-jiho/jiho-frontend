@@ -8,6 +8,7 @@ import { CloseIcon } from "@/components/icons";
 type DetailImageModalProps = {
   image: string;
   isOpen: boolean;
+  title?: string;
   onClose: () => void;
 };
 
@@ -56,6 +57,7 @@ const CloseButton = styled(CloseIcon)`
 const DetailImageModal = ({
   image,
   isOpen,
+  title,
   onClose,
 }: DetailImageModalProps) => {
   const modalRef = useRef<HTMLImageElement>(null);
@@ -66,7 +68,7 @@ const DetailImageModal = ({
     <Container id={`detail-image-${image}`} open={isOpen}>
       <CloseButton onClick={onClose} title="Close image modal" />
       <Inner>
-        <Img src={image} ref={modalRef} />
+        <Img src={image} ref={modalRef} alt={title || "상세 이미지"} />
       </Inner>
     </Container>,
     document.body

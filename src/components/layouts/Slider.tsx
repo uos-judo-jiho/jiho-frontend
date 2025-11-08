@@ -162,6 +162,7 @@ function Slider({ datas }: SliderProps) {
               src={img ? img : Constants.LOGO_BLACK}
               key={"thumbnail" + i}
               isImage={img ? true : false}
+              alt={`슬라이드 이미지 ${i + 1}`}
             />
           ))}
         </SliderContainer>

@@ -213,10 +213,10 @@ const Carousel = ({ datas }: CarouselProps) => {
       />
       <ScrollWrapper id={"scroll"} ref={targetContanier}>
         <CarouselWrapper id={"carousel"}>
-          {datas.map((img) => (
+          {datas.map((img, index) => (
             <CarouselItem key={img} onClick={() => handleItemClick(img)}>
               <ImgWrapper>
-                <Img src={img} />
+                <Img src={img} alt={`갤러리 이미지 ${index + 1}`} />
               </ImgWrapper>
             </CarouselItem>
           ))}
@@ -224,6 +224,7 @@ const Carousel = ({ datas }: CarouselProps) => {
       </ScrollWrapper>
       <DetailImageModal
         image={selectedDetailImage}
+        title={`갤러리 이미지 ${datas.indexOf(selectedDetailImage) + 1}`}
         isOpen={detailIsOpen}
         onClose={handleDetailClose}
       />

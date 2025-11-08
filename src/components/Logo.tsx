@@ -30,7 +30,7 @@ const Img = styled.img`
 const Logo = ({ size = "6rem", margin = "0rem", isDark = false }: LogoProps) => {
   return (
     <Container margin={margin} size={size}>
-      <Img src={isDark ? LogoBlack : LogoWhite} />
+      <Img src={isDark ? LogoBlack : LogoWhite} alt="서울시립대학교 유도부 지호 로고" />
     </Container>
   );
 };

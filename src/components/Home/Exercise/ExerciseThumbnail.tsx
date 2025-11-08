@@ -95,7 +95,7 @@ const ExerciseThumbnail = () => {
     <Container className="rounded-xl border-none">
       <Link to={`/photo/${lastTraningData.id}`} className="rounded-xl">
         <Stack>
-          <Thumbnail src={lastTraningData.imgSrcs[0]} />
+          <Thumbnail src={lastTraningData.imgSrcs[0]} alt={`훈련 일지 - ${lastTraningData.dateTime}`} />
           <HoveredContainer>
             <Col justifyContent="center" alignItems="center">
               <HoveredSpan>훈련 일지</HoveredSpan>

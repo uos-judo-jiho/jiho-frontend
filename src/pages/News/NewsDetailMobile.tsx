@@ -10,6 +10,7 @@ import MyHelmet from "@/helmet/MyHelmet";
 
 import { cn } from "@/lib/utils";
 import { NewsDetailPageProps } from "./types/NewsDetailPageProps";
+import Footer from "@/components/common/Footer/footer";
 
 export const NewsDetailMobile = ({
   news,
@@ -116,6 +117,7 @@ export const NewsDetailMobile = ({
           </Button>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
