@@ -51,7 +51,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         "[&>td]:border [&>td]:border-theme-light-grey [&>td]:p-2 [&>td]:text-left",
         // Horizontal rule
         "[&>hr]:border-0 [&>hr]:border-t [&>hr]:border-theme-light-grey [&>hr]:my-2",
-        className
+        className,
       )}
     >
       <ReactMarkdown

@@ -21,8 +21,8 @@ function MarkdownEditorField({
       type === "training"
         ? "훈련일지"
         : type === "news"
-        ? "지호지"
-        : "공지사항";
+          ? "지호지"
+          : "공지사항";
 
     return `마크다운으로 ${contentType} 내용을 작성하세요...
 

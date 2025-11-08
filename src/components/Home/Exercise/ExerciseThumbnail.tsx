@@ -85,7 +85,9 @@ const ExerciseThumbnail = () => {
   // 날짜순 정렬 후 첫 번째 항목
   const lastTraningData = useMemo(() => {
     if (!data || data.length === 0) return null;
-    const sorted = [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+    const sorted = [...data].sort((a, b) =>
+      b.dateTime.localeCompare(a.dateTime),
+    );
     return sorted[0];
   }, [data]);
 
@@ -95,7 +97,10 @@ const ExerciseThumbnail = () => {
     <Container className="rounded-xl border-none">
       <Link to={`/photo/${lastTraningData.id}`} className="rounded-xl">
         <Stack>
-          <Thumbnail src={lastTraningData.imgSrcs[0]} alt={`훈련 일지 - ${lastTraningData.dateTime}`} />
+          <Thumbnail
+            src={lastTraningData.imgSrcs[0]}
+            alt={`훈련 일지 - ${lastTraningData.dateTime}`}
+          />
           <HoveredContainer>
             <Col justifyContent="center" alignItems="center">
               <HoveredSpan>훈련 일지</HoveredSpan>

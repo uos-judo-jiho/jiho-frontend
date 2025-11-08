@@ -32,7 +32,7 @@ const useSession = () => {
       ? _session
       : JSON.parse(
           sessionStorage.getItem("session") ??
-            JSON.stringify(defaultSessionAtom)
+            JSON.stringify(defaultSessionAtom),
         );
 
   return { login, session };

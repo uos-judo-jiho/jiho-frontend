@@ -49,7 +49,7 @@ app.use("/api", async (req, res) => {
   try {
     const targetUrl = `https://uosjudo.com/api${req.path}`;
     const queryString = new URLSearchParams(
-      req.query as Record<string, string>
+      req.query as Record<string, string>,
     ).toString();
     const fullUrl = queryString ? `${targetUrl}?${queryString}` : targetUrl;
 
@@ -178,9 +178,7 @@ app.use("*", async (req, res) => {
     }
 
     let template: string;
-    let render: (
-      url: string
-    ) => Promise<{
+    let render: (url: string) => Promise<{
       html: string;
       dehydratedState: any;
       styleTags: string;
@@ -203,7 +201,7 @@ app.use("*", async (req, res) => {
       render = entryModule.render;
 
       customConsole.info(
-        `${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`
+        `${CONSOLE_PREFIX.INFO} ${req.method} ${req.originalUrl}`,
       );
     }
 
@@ -217,13 +215,13 @@ app.use("*", async (req, res) => {
 
     // Inject dehydrated state into HTML
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
-      dehydratedState
+      dehydratedState,
     ).replace(/</g, "\\u003c")};</script>`;
 
     // Create structured data script if available
     const structuredDataScript = structuredData
       ? `\n    <script type="application/ld+json">${JSON.stringify(
-          structuredData
+          structuredData,
         )}</script>`
       : "";
 
@@ -240,7 +238,7 @@ app.use("*", async (req, res) => {
       // Update title
       html = html.replace(
         /<title>.*?<\/title>/,
-        `<title>${helmetData.title}</title>`
+        `<title>${helmetData.title}</title>`,
       );
 
       // Update og:type
@@ -248,37 +246,37 @@ app.use("*", async (req, res) => {
         /<meta property="og:type" content=".*?" \/>/,
         `<meta property="og:type" content="${
           helmetData.articleType || "website"
-        }" />`
+        }" />`,
       );
 
       // Update og:title
       html = html.replace(
         /<meta property="og:title" content=".*?" \/>/,
-        `<meta property="og:title" content="${helmetData.title}" />`
+        `<meta property="og:title" content="${helmetData.title}" />`,
       );
 
       // Update description
       html = html.replace(
         /<meta name="description" content=".*?" \/>/,
-        `<meta name="description" content="${helmetData.description}" />`
+        `<meta name="description" content="${helmetData.description}" />`,
       );
 
       // Update og:description
       html = html.replace(
         /<meta property="og:description" content=".*?" \/>/,
-        `<meta property="og:description" content="${helmetData.description}" />`
+        `<meta property="og:description" content="${helmetData.description}" />`,
       );
 
       // Update og:url
       html = html.replace(
         /<meta property="og:url" content=".*?" \/>/,
-        `<meta property="og:url" content="${fullUrl}" />`
+        `<meta property="og:url" content="${fullUrl}" />`,
       );
 
       // Update og:image
       html = html.replace(
         /<meta property="og:image" content=".*?" \/>/,
-        `<meta property="og:image" content="${helmetData.imgUrl}" />`
+        `<meta property="og:image" content="${helmetData.imgUrl}" />`,
       );
 
       // Add article-specific meta tags for articles

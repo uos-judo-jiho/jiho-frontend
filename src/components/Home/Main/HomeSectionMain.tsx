@@ -9,7 +9,12 @@ import HomeTitle from "./HomeTitle";
 function HomeSectionMain() {
   return (
     <>
-      <HomeSectionBG bgImageSrc={BGImage} bgImageSrcWebp={BGImageWebp} bgImageAlt="main-background" id="sectionMain">
+      <HomeSectionBG
+        bgImageSrc={BGImage}
+        bgImageSrcWebp={BGImageWebp}
+        bgImageAlt="main-background"
+        id="sectionMain"
+      >
         <SheetWrapper>
           <HomeTitle />
         </SheetWrapper>

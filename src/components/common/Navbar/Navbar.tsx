@@ -17,7 +17,8 @@ const NavMenu = ({ isDark }: { isDark: boolean }) => {
       <MenuIcon
         className={cn(
           "cursor-pointer hover:opacity-60",
-          !isDark && "[filter:invert(100%)_sepia(3%)_saturate(607%)_hue-rotate(209deg)_brightness(116%)_contrast(87%)]"
+          !isDark &&
+            "[filter:invert(100%)_sepia(3%)_saturate(607%)_hue-rotate(209deg)_brightness(116%)_contrast(87%)]",
         )}
         title="Menu"
       />

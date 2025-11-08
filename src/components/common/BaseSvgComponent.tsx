@@ -87,8 +87,20 @@ export const BaseSvgComponent: React.FC<
     <svg
       xmlns={xmlns}
       viewBox={viewBox}
-      width={size !== undefined ? (typeof size === 'number' ? `${size}px` : size) : undefined}
-      height={size !== undefined ? (typeof size === 'number' ? `${size}px` : size) : undefined}
+      width={
+        size !== undefined
+          ? typeof size === "number"
+            ? `${size}px`
+            : size
+          : undefined
+      }
+      height={
+        size !== undefined
+          ? typeof size === "number"
+            ? `${size}px`
+            : size
+          : undefined
+      }
       fill={color || fill}
       className={className}
       role={computedRole}

@@ -1,4 +1,10 @@
-import type { CollectionPage, ImageGallery, ImageObject, Article, Organization } from "./types";
+import type {
+  CollectionPage,
+  ImageGallery,
+  ImageObject,
+  Article,
+  Organization,
+} from "./types";
 
 /**
  * Create ImageGallery structured data

@@ -4,7 +4,7 @@ import { ALLOWED_HOSTS, INTERNAL_API_TOKEN, isProduction } from "../config.js";
 export function bffSecurityMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   // _internal API 보안 검증
   const origin = req.headers.origin;
@@ -15,7 +15,7 @@ export function bffSecurityMiddleware(
   // 1. 커스텀 헤더 검증 (가장 강력한 방법)
   if (!customHeader || customHeader !== INTERNAL_API_TOKEN) {
     console.warn(
-      `[SECURITY] _internal API 접근 거부 - 잘못된 내부 토큰: ${req.method} ${req.originalUrl} from ${req.ip}`
+      `[SECURITY] _internal API 접근 거부 - 잘못된 내부 토큰: ${req.method} ${req.originalUrl} from ${req.ip}`,
     );
     console.warn(`Expected: ${INTERNAL_API_TOKEN}, Received: ${customHeader}`);
     res.status(403).json({
@@ -34,7 +34,7 @@ export function bffSecurityMiddleware(
         !contentType.includes("multipart/form-data"))
     ) {
       console.warn(
-        `[SECURITY] _internal API 접근 거부 - 잘못된 Content-Type: ${contentType}`
+        `[SECURITY] _internal API 접근 거부 - 잘못된 Content-Type: ${contentType}`,
       );
       res.status(403).json({
         error: "Forbidden",
@@ -52,7 +52,7 @@ export function bffSecurityMiddleware(
     userAgent.includes("Postman")
   ) {
     console.warn(
-      `[SECURITY] _internal API 접근 거부 - 의심스러운 User-Agent: ${userAgent}`
+      `[SECURITY] _internal API 접근 거부 - 의심스러운 User-Agent: ${userAgent}`,
     );
     res.status(403).json({
       error: "Forbidden",
@@ -63,7 +63,7 @@ export function bffSecurityMiddleware(
 
   // 4. Origin/Referer 이중 검증 (추가 보안층)
   const allowedOrigins = ALLOWED_HOSTS.map((h) => `http://${h}`).concat(
-    ALLOWED_HOSTS.map((h) => `https://${h}`)
+    ALLOWED_HOSTS.map((h) => `https://${h}`),
   );
 
   if (!isProduction) {
@@ -89,7 +89,7 @@ export function bffSecurityMiddleware(
     console.warn(
       `[SECURITY] _internal API 접근 거부 - 잘못된 Origin/Referer: ${
         origin || referer
-      } from ${req.ip}`
+      } from ${req.ip}`,
     );
     res.status(403).json({
       error: "Forbidden",

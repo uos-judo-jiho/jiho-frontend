@@ -6,7 +6,12 @@ import { uploadProgressMap } from "../utils/upload-progress.js";
 export function handleSSEProgress(req: Request, res: Response): void {
   const { uploadId, token } = req.query;
 
-  if (!uploadId || !token || typeof uploadId !== "string" || typeof token !== "string") {
+  if (
+    !uploadId ||
+    !token ||
+    typeof uploadId !== "string" ||
+    typeof token !== "string"
+  ) {
     res.status(400).json({ error: "uploadId and token are required" });
     return;
   }
@@ -15,7 +20,7 @@ export function handleSSEProgress(req: Request, res: Response): void {
   const validation = validateSSEToken(uploadId, token, req.ip || "");
   if (!validation.valid) {
     console.warn(
-      `[SECURITY] SSE _internal API 접근 거부 - ${validation.reason}: uploadId=${uploadId}, token=${token} from ${req.ip}`
+      `[SECURITY] SSE _internal API 접근 거부 - ${validation.reason}: uploadId=${uploadId}, token=${token} from ${req.ip}`,
     );
     res.status(403).json({
       error: "Invalid or expired token",
@@ -25,7 +30,7 @@ export function handleSSEProgress(req: Request, res: Response): void {
   }
 
   console.info(
-    `[SSE] 업로드 진행 상황 연결 성공: uploadId=${uploadId} from ${req.ip}`
+    `[SSE] 업로드 진행 상황 연결 성공: uploadId=${uploadId} from ${req.ip}`,
   );
 
   // SSE 헤더 설정
@@ -48,7 +53,7 @@ export function handleSSEProgress(req: Request, res: Response): void {
         `data: ${JSON.stringify({
           type: "progress",
           ...progress,
-        })}\n\n`
+        })}\n\n`,
       );
 
       // 완료되거나 에러가 발생한 경우 연결 종료

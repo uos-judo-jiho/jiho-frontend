@@ -27,7 +27,7 @@ const NewsDetail = () => {
   }, [fetch, id, news]);
 
   const currentPageNews = news.find(
-    (newsData) => newsData.year?.toString() === id?.toString()
+    (newsData) => newsData.year?.toString() === id?.toString(),
   );
 
   // SSG-friendly: 뉴스 데이터가 없어도 기본 메타 정보 제공
@@ -43,21 +43,28 @@ const NewsDetail = () => {
 
   // Create structured data for image gallery
   const structuredData = useMemo(() => {
-    if (!currentPageNews || !currentPageNews.articles || currentPageNews.articles.length === 0) {
+    if (
+      !currentPageNews ||
+      !currentPageNews.articles ||
+      currentPageNews.articles.length === 0
+    ) {
       return null;
     }
 
-    const currentUrl = typeof window !== "undefined"
-      ? window.location.href
-      : `https://uosjudo.com/news/${id}`;
+    const currentUrl =
+      typeof window !== "undefined"
+        ? window.location.href
+        : `https://uosjudo.com/news/${id}`;
 
     // Collect all images from all articles
     const allImages = currentPageNews.articles.flatMap((article) =>
       article.imgSrcs.slice(0, 5).map((imgSrc, imgIdx) => ({
         url: imgSrc,
         caption: `${article.title} - ${imgIdx + 1}`,
-        datePublished: article.dateTime ? new Date(article.dateTime).toISOString() : undefined,
-      }))
+        datePublished: article.dateTime
+          ? new Date(article.dateTime).toISOString()
+          : undefined,
+      })),
     );
 
     return createImageGalleryData({

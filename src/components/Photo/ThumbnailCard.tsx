@@ -49,7 +49,7 @@ const ThumbnailCard = ({
             "opacity-0 w-full h-full",
             "text-theme-title text-theme-bg text-white",
             "transition-opacity duration-[287ms]",
-            "sm:group-hover:opacity-100"
+            "sm:group-hover:opacity-100",
           )}
         >
           {dateTime}

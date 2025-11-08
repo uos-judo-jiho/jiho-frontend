@@ -4,10 +4,12 @@ import { BACKEND_URL } from "../config.js";
 export async function proxyToBackend(
   path: string,
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> {
   try {
-    const queryString = new URLSearchParams(req.query as Record<string, string>).toString();
+    const queryString = new URLSearchParams(
+      req.query as Record<string, string>,
+    ).toString();
     const fullUrl = queryString
       ? `${BACKEND_URL}${path}?${queryString}`
       : `${BACKEND_URL}${path}`;
@@ -33,7 +35,7 @@ export async function proxyToBackend(
     res.status(response.status);
     res.setHeader(
       "Content-Type",
-      response.headers.get("content-type") || "application/json"
+      response.headers.get("content-type") || "application/json",
     );
 
     // Copy relevant headers from backend response

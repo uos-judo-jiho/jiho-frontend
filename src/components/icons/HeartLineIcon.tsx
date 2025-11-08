@@ -2,7 +2,10 @@ import BaseSvgComponent, {
   BaseSvgProps,
 } from "@/components/common/BaseSvgComponent";
 
-export const HeartLineIcon: React.FC<BaseSvgProps> = ({ size = 24, ...props }) => {
+export const HeartLineIcon: React.FC<BaseSvgProps> = ({
+  size = 24,
+  ...props
+}) => {
   return (
     <BaseSvgComponent viewBox="0 0 100 100" size={size} {...props}>
       <g id="패스_1" data-name="패스 1" fill="none">

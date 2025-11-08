@@ -8,7 +8,12 @@ import ExerciseThumbnail from "./ExerciseThumbnail";
 
 const HomeSectionExercise = () => {
   return (
-    <HomeSectionBG bgImageSrc={BGImage} bgImageSrcWebp={BGImageWebp} bgImageAlt="exercise-background" id="sectionExercise">
+    <HomeSectionBG
+      bgImageSrc={BGImage}
+      bgImageSrcWebp={BGImageWebp}
+      bgImageAlt="exercise-background"
+      id="sectionExercise"
+    >
       <SheetWrapper>
         <div className="w-full relative">
           <ExerciseThumbnail />

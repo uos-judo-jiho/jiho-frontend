@@ -39,16 +39,19 @@ server/
 ## Running the Server
 
 ### Development Mode
+
 ```bash
 npm run dev:server
 ```
 
 ### Production Mode (Local)
+
 ```bash
 npm run preview  # Uses tsx for convenience
 ```
 
 ### Production Mode (Docker)
+
 ```bash
 # Build TypeScript first
 npm run build:server-ts
@@ -70,6 +73,7 @@ This outputs compiled JavaScript to `build/server-ts/`.
 ### Docker Build
 
 In Docker, the server runs as compiled JavaScript for better performance:
+
 - TypeScript is compiled during the Docker build stage
 - Production container runs `node build/server-ts/index.js`
 - No tsx dependency needed in production

@@ -71,7 +71,7 @@ const DetailImageModal = ({
         <Img src={image} ref={modalRef} alt={title || "상세 이미지"} />
       </Inner>
     </Container>,
-    document.body
+    document.body,
   );
 };
 

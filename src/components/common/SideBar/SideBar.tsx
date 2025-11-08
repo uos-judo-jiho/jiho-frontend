@@ -83,7 +83,7 @@ const SideBar = () => {
 
   useEffect(() => {
     // Only run on client-side to avoid SSR issues
-    if (typeof document === 'undefined') return;
+    if (typeof document === "undefined") return;
 
     const handlerOutside = (e: any) => {
       if (!outside.current.contains(e.target)) {
@@ -98,7 +98,7 @@ const SideBar = () => {
   }, [setOpen]);
 
   // Don't render during SSR to avoid document.body error
-  if (typeof document === 'undefined') {
+  if (typeof document === "undefined") {
     return null;
   }
 
@@ -113,7 +113,7 @@ const SideBar = () => {
         )}
       </NavWrapper>
     </Container>,
-    document.body
+    document.body,
   );
 };
 

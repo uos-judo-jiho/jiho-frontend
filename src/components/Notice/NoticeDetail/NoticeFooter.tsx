@@ -14,7 +14,7 @@ function NoticeFooter() {
             "px-3 py-2 border-radius-md",
             "hover:bg-gray-100 hover:text-theme-text",
             "active:scale-95",
-            "transition-all duration-500 ease-in-out animate-in fade-in"
+            "transition-all duration-500 ease-in-out animate-in fade-in",
           )}
         >
           <Link to="/notice" className="flex items-center gap-2">

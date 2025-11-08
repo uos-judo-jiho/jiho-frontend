@@ -20,7 +20,7 @@ function SheetWrapper({
         "sm:w-[540px]",
         "md:w-[768px]",
         "lg:w-[960px]",
-        className
+        className,
       )}
       style={{ paddingTop: `${paddingTop}px` }}
     >

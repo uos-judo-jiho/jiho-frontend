@@ -41,7 +41,7 @@ router.use(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // BFF API Routes - Notices
@@ -54,7 +54,7 @@ router.use(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // BFF API Routes - Trainings
@@ -67,7 +67,7 @@ router.use(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // BFF API Routes - Admin
@@ -80,7 +80,7 @@ router.use(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 export default router;

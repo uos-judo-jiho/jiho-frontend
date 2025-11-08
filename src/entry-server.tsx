@@ -116,8 +116,8 @@ export async function render(url: string) {
               </RecoilRoot>
             </QueryClientProvider>
           </HelmetContext.Provider>
-        </StructuredDataContext.Provider>
-      )
+        </StructuredDataContext.Provider>,
+      ),
     );
 
     // Extract the style tags from styled-components

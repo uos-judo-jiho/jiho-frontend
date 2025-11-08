@@ -1,4 +1,8 @@
-import express, { type Request, type Response, type NextFunction } from "express";
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import { v4 as uuidv4 } from "uuid";
 import { UPLOAD_MAX_SIZE, ALLOWED_EXTENSIONS, S3_BUCKET } from "../config.js";
 import { upload } from "../services/multer.js";
@@ -49,7 +53,7 @@ router.post(
       console.error("Upload error:", error);
       next(error);
     }
-  }
+  },
 );
 
 // Multiple file upload - Async with progress tracking
@@ -89,8 +93,8 @@ router.post(
       // 백그라운드에서 비동기 다중 업로드 수행
       Promise.all(
         req.files.map((file, index) =>
-          uploadToS3(file, folder, `${uploadId}-${index}`)
-        )
+          uploadToS3(file, folder, `${uploadId}-${index}`),
+        ),
       )
         .then((results) => {
           uploadProgressMap.set(uploadId, {
@@ -115,7 +119,7 @@ router.post(
       console.error("Multiple upload error:", error);
       next(error);
     }
-  }
+  },
 );
 
 // Generate presigned URL for direct client upload
@@ -139,7 +143,7 @@ router.post(
       console.error("Presigned URL error:", error);
       next(error);
     }
-  }
+  },
 );
 
 // Get upload configuration

@@ -35,7 +35,7 @@ export const PhotoDetailMobile = () => {
   }
 
   const metaDescription = [info.title, info.description.slice(0, 140)].join(
-    " | "
+    " | ",
   );
 
   const metaImgUrl = info.imgSrcs.at(0);
@@ -81,7 +81,7 @@ export const PhotoDetailMobile = () => {
             disabled={current === 0}
             className={cn(
               "flex items-center text-sm",
-              current === 0 && "opacity-50 cursor-not-allowed"
+              current === 0 && "opacity-50 cursor-not-allowed",
             )}
           >
             <Link
@@ -105,7 +105,7 @@ export const PhotoDetailMobile = () => {
             className={cn(
               "flex items-center text-sm",
               current === trainings.length - 1 &&
-                "opacity-50 cursor-not-allowed"
+                "opacity-50 cursor-not-allowed",
             )}
           >
             <Link

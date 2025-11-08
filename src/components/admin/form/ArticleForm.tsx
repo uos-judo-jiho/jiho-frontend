@@ -66,7 +66,7 @@ const LoadingContainer = styled.div`
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
-    data ?? initValues
+    data ?? initValues,
   );
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
@@ -93,28 +93,28 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     type === "news"
       ? createNewsMutation
       : type === "training"
-      ? createTrainingMutation
-      : createNoticeMutation;
+        ? createTrainingMutation
+        : createNoticeMutation;
 
   const updateBoardMutation =
     type === "news"
       ? updateNewsMutation
       : type === "training"
-      ? updateTrainingMutation
-      : updateNoticeMutation;
+        ? updateTrainingMutation
+        : updateNoticeMutation;
 
   const deleteBoardMutation =
     type === "news"
       ? deleteNewsMutation
       : type === "training"
-      ? deleteTrainingMutation
-      : deleteNoticeMutation;
+        ? deleteTrainingMutation
+        : deleteNoticeMutation;
 
   const handleSubmitOpen = () => setIsSubmitOpen(true);
 
   const handleDelete = async (
     id: string,
-    type: "news" | "training" | "notice"
+    type: "news" | "training" | "notice",
   ) => {
     try {
       await deleteBoardMutation.mutateAsync(id);
@@ -190,7 +190,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagsChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     const tagValue = event.target.value;
     setValues((prev) => {
@@ -202,7 +202,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagAdd = () => {
     const inputElement = document.getElementById(
-      "tagInput"
+      "tagInput",
     ) as HTMLInputElement;
 
     const inputValue = inputElement.value;
@@ -221,7 +221,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleDeleteTagClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    index: number
+    index: number,
   ) => {
     event.preventDefault();
 

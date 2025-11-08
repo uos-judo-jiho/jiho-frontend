@@ -84,7 +84,7 @@ const StyledForwardArrowStyle = styled(ArrowForwardIosIcon)<ArrowProps>`
 
 const StyledBackArrow = (
   props: ArrowProps &
-    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">
+    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">,
 ) => {
   const {
     current,
@@ -118,7 +118,7 @@ const StyledBackArrow = (
 
 const StyledForwardArrow = (
   props: ArrowProps &
-    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">
+    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">,
 ) => {
   const {
     current,

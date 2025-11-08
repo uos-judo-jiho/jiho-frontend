@@ -20,13 +20,8 @@ interface UpdateBoardParams {
  * Internal: Factory function for creating board mutation hook
  */
 const createBoardMutation = (
-  queryKey: string
-): (() => UseMutationResult<
-  void,
-  Error,
-  CreateBoardParams,
-  unknown
->) => {
+  queryKey: string,
+): (() => UseMutationResult<void, Error, CreateBoardParams, unknown>) => {
   return () => {
     const queryClient = useQueryClient();
 
@@ -44,13 +39,8 @@ const createBoardMutation = (
  * Internal: Factory function for updating board mutation hook
  */
 const updateBoardMutation = (
-  queryKey: string
-): (() => UseMutationResult<
-  void,
-  Error,
-  UpdateBoardParams,
-  unknown
->) => {
+  queryKey: string,
+): (() => UseMutationResult<void, Error, UpdateBoardParams, unknown>) => {
   return () => {
     const queryClient = useQueryClient();
 
@@ -68,7 +58,7 @@ const updateBoardMutation = (
  * Internal: Factory function for deleting board mutation hook
  */
 const deleteBoardMutation = (
-  queryKey: string
+  queryKey: string,
 ): (() => UseMutationResult<void, Error, string, unknown>) => {
   return () => {
     const queryClient = useQueryClient();

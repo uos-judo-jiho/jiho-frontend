@@ -40,7 +40,9 @@ const MobilePhotoCard = ({ articleInfo, id }: MobilePhotoCardProps) => {
           className="text-theme-default leading-theme-default tracking-[0.16px] break-words whitespace-pre-wrap"
           onClick={() => toggle()}
         >
-          {isMore ? articleInfo.description : `${articleInfo.description.slice(0, 40)}...`}
+          {isMore
+            ? articleInfo.description
+            : `${articleInfo.description.slice(0, 40)}...`}
           {!isMore && (
             <span className="text-theme-default leading-theme-default text-theme-grey tracking-[0.16px] ml-1">
               더보기

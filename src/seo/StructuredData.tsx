@@ -9,7 +9,9 @@ export interface StructuredDataContextType {
 }
 
 // Context for SSR
-export const StructuredDataContext = createContext<StructuredDataContextType>({});
+export const StructuredDataContext = createContext<StructuredDataContextType>(
+  {},
+);
 
 /**
  * Component to inject JSON-LD structured data into the page
@@ -33,7 +35,9 @@ const StructuredData = ({ data }: StructuredDataProps) => {
     const newDataString = JSON.stringify(data);
 
     // Check if SSR-generated script exists and has same data
-    const existingScript = document.querySelector('script[type="application/ld+json"]');
+    const existingScript = document.querySelector(
+      'script[type="application/ld+json"]',
+    );
     if (existingScript) {
       const existingData = existingScript.textContent;
       // If the data is the same, don't replace (avoid SSR/CSR duplication)
@@ -54,7 +58,9 @@ const StructuredData = ({ data }: StructuredDataProps) => {
 
     // Cleanup on unmount
     return () => {
-      const scriptToRemove = document.querySelector('script[type="application/ld+json"]');
+      const scriptToRemove = document.querySelector(
+        'script[type="application/ld+json"]',
+      );
       if (scriptToRemove && scriptToRemove.textContent === newDataString) {
         scriptToRemove.remove();
       }

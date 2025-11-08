@@ -29,7 +29,7 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
       className={cn(
         "flex w-full text-theme-description leading-theme-description",
         "border border-theme-light-grey rounded-[10px] p-4",
-        "xs:p-2"
+        "xs:p-2",
       )}
     >
       <a

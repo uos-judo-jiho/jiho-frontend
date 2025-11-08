@@ -19,9 +19,12 @@ export function generateSSEToken(uploadId: string, ipAddress: string): string {
   });
 
   // 5분 후 자동 정리
-  setTimeout(() => {
-    sseTokenMap.delete(uploadId);
-  }, 5 * 60 * 1000);
+  setTimeout(
+    () => {
+      sseTokenMap.delete(uploadId);
+    },
+    5 * 60 * 1000,
+  );
 
   return token;
 }
@@ -30,7 +33,7 @@ export function generateSSEToken(uploadId: string, ipAddress: string): string {
 export function validateSSEToken(
   uploadId: string,
   token: string,
-  ipAddress: string
+  ipAddress: string,
 ): TokenValidation {
   const tokenData = sseTokenMap.get(uploadId);
 

@@ -62,7 +62,9 @@ const Home = () => {
   }, []);
 
   // Create helmet metadata
-  const metaDescription = awardsData.awards.map((award) => award.title).join(", ");
+  const metaDescription = awardsData.awards
+    .map((award) => award.title)
+    .join(", ");
 
   return (
     <ThemeProvider theme={lightTheme}>

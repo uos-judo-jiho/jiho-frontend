@@ -5,7 +5,9 @@ const NavbarContext = createContext<{
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }>({
   open: false,
-  setOpen: ((condition: boolean) => condition) as React.Dispatch<React.SetStateAction<boolean>>,
+  setOpen: ((condition: boolean) => condition) as React.Dispatch<
+    React.SetStateAction<boolean>
+  >,
 });
 
 export const useNavbar = () => {
@@ -18,5 +20,9 @@ export const useNavbar = () => {
 
 export const NavbarProvider = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
-  return <NavbarContext.Provider value={{ open, setOpen }}>{children}</NavbarContext.Provider>;
+  return (
+    <NavbarContext.Provider value={{ open, setOpen }}>
+      {children}
+    </NavbarContext.Provider>
+  );
 };

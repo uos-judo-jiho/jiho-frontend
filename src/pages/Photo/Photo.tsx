@@ -29,7 +29,7 @@ const PhotoPC = () => {
   // SSR-friendly: Provide fallback meta data even when trainings is empty
   const metaDescription = trainings?.length
     ? [trainings.at(0)?.title, trainings.at(0)?.description.slice(0, 140)].join(
-        " | "
+        " | ",
       )
     : "서울시립대학교 유도부 지호 - 훈련일지";
 
@@ -39,9 +39,10 @@ const PhotoPC = () => {
   const structuredData = useMemo(() => {
     if (!trainings || trainings.length === 0) return null;
 
-    const currentUrl = typeof window !== "undefined"
-      ? window.location.href
-      : "https://uosjudo.com/photo";
+    const currentUrl =
+      typeof window !== "undefined"
+        ? window.location.href
+        : "https://uosjudo.com/photo";
 
     return createImageGalleryData({
       name: "서울시립대학교 유도부 지호 훈련일지",
@@ -50,7 +51,9 @@ const PhotoPC = () => {
       images: trainings.slice(0, 20).map((training) => ({
         url: training.imgSrcs[0] || "",
         caption: training.title,
-        datePublished: training.dateTime ? new Date(training.dateTime).toISOString() : undefined,
+        datePublished: training.dateTime
+          ? new Date(training.dateTime).toISOString()
+          : undefined,
       })),
     });
   }, [trainings, metaDescription]);
