@@ -1,8 +1,6 @@
-import Row from "@/components/layouts/Row";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 
 type MoreCardProps = {
   title: string;
@@ -12,42 +10,6 @@ type MoreCardProps = {
 };
 
 const DATA_LEN = 4;
-
-const ItemList = styled.ul`
-  width: 100%;
-  margin: 8px 0;
-`;
-
-const ItemWrapper = styled.div`
-  display: block;
-
-  flex: 1;
-
-  white-space: nowrap;
-  word-break: break-all;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  font-size: ${(props) => props.theme.descriptionFontSize};
-  line-height: ${(props) => props.theme.descriptionLineHeight};
-`;
-
-const TimeContent = styled.div`
-  min-width: 100px;
-
-  color: ${(props) => props.theme.greyColor};
-  text-align: right;
-`;
-
-const More = styled.p`
-  padding-left: 10px;
-  color: ${(props) => props.theme.greyColor};
-  line-height: ${(props) => props.theme.descriptionLineHeight};
-
-  &:hover {
-    color: ${(props) => props.theme.blackColor};
-  }
-`;
 
 const formatOnlyWord = (text: string, maxLength: number) => {
   // 문자, ".", ",", "!", "?", 괄호(),[],{},이모지만 허용하고 제거
@@ -63,16 +25,18 @@ const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
 
   return (
     <div className="w-full h-[260px]">
-      <div className="mb-4 border-b-[1px] border-gray-300 pb-2">
+      <div className="mb-4 border-b border-gray-300 pb-2">
         <Link to={linkTo}>
           <div className="flex items-center justify-start">
             <h3 className="text-base font-semibold">{title}</h3>
-            <More>+ 더보기</More>
+            <p className="pl-2.5 text-theme-grey leading-theme-description hover:text-theme-black transition-colors">
+              + 더보기
+            </p>
           </div>
         </Link>
       </div>
       <div>
-        <ItemList>
+        <ul className="w-full my-2">
           {boardData.map((item) => {
             return (
               <li
@@ -83,22 +47,28 @@ const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
                 )}
               >
                 <Link to={`${linkTo}/${item.id}`}>
-                  <Row
-                    justifyContent="space-between"
-                    alignItems="flex-end"
-                    gap={16}
-                  >
-                    <ItemWrapper>{`[${item.author}] ${formatOnlyWord(
-                      item.description,
-                      100
-                    )}`}</ItemWrapper>
-                    <TimeContent>{item.dateTime}</TimeContent>
-                  </Row>
+                  <div className="flex justify-between items-end gap-4">
+                    <div
+                      className="
+                      block flex-1
+                      whitespace-nowrap break-all overflow-hidden text-ellipsis
+                      text-theme-description leading-theme-description
+                    "
+                    >
+                      {`[${item.author}] ${formatOnlyWord(
+                        item.description,
+                        100
+                      )}`}
+                    </div>
+                    <div className="min-w-[100px] text-theme-grey text-right">
+                      {item.dateTime}
+                    </div>
+                  </div>
                 </Link>
               </li>
             );
           })}
-        </ItemList>
+        </ul>
       </div>
     </div>
   );

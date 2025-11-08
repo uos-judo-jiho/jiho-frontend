@@ -10,6 +10,7 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        // Shadcn/UI colors
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -50,6 +51,44 @@ module.exports = {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
+
+        // UOS Judo custom theme colors
+        theme: {
+          primary: "var(--theme-primary)",
+          bg: "var(--theme-bg)",
+          text: "var(--theme-text)",
+          accent: "var(--theme-accent)",
+          black: "var(--theme-black)",
+          grey: "var(--theme-grey)",
+          "light-grey": "var(--theme-light-grey)",
+          "dark-grey": "var(--theme-dark-grey)",
+          yellow: "var(--theme-yellow)",
+          pink: "var(--theme-pink)",
+          white: "var(--theme-white)",
+        },
+      },
+      fontSize: {
+        // UOS Judo custom font sizes
+        "theme-title": "var(--theme-font-title)",
+        "theme-subtitle": "var(--theme-font-subtitle)",
+        "theme-description": "var(--theme-font-description)",
+        "theme-default": "var(--theme-font-default)",
+        "theme-tiny": "var(--theme-font-tiny)",
+      },
+      lineHeight: {
+        // UOS Judo custom line heights
+        "theme-title": "var(--theme-line-title)",
+        "theme-subtitle": "var(--theme-line-subtitle)",
+        "theme-description": "var(--theme-line-description)",
+        "theme-default": "var(--theme-line-default)",
+        "theme-tiny": "var(--theme-line-tiny)",
+      },
+      screens: {
+        // Custom breakpoints matching existing MediaLayout
+        'xs': '340px',
+        'sm': '540px',
+        'md': '860px',
+        'lg': '1200px',
       },
     },
   },

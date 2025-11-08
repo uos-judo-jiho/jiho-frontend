@@ -9,6 +9,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Shadcn/UI variables */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -42,9 +43,37 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* UOS Judo Theme - Light Mode Colors */
+  --theme-primary: #448aff;
+  --theme-bg: #f5f5fa;
+  --theme-text: #121212;
+  --theme-accent: #ffb746;
+  --theme-black: #0f0c0c;
+  --theme-grey: #808080;
+  --theme-light-grey: #eeeeee;
+  --theme-dark-grey: #121212;
+  --theme-yellow: #ffb746;
+  --theme-pink: #ff4667;
+  --theme-white: #f5f5fa;
+
+  /* UOS Judo Theme - Typography Sizes */
+  --theme-font-title: 2rem;        /* 32px */
+  --theme-font-subtitle: 1.5rem;   /* 24px */
+  --theme-font-description: 1.125rem; /* 18px */
+  --theme-font-default: 1rem;      /* 16px */
+  --theme-font-tiny: 0.75rem;      /* 12px */
+
+  /* UOS Judo Theme - Line Heights */
+  --theme-line-title: 50px;
+  --theme-line-subtitle: 45px;
+  --theme-line-description: 28px;
+  --theme-line-default: 24px;
+  --theme-line-tiny: 18px;
 }
 
 .dark {
+  /* Shadcn/UI dark mode variables */
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.145 0 0);
@@ -77,6 +106,20 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+
+  /* UOS Judo Theme - Dark Mode Colors */
+  --theme-primary: #121212;
+  --theme-bg: #121212;
+  --theme-text: #f5f5fa;
+  --theme-accent: #ffb746;
+  /* Other colors remain the same */
+  --theme-black: #0f0c0c;
+  --theme-grey: #808080;
+  --theme-light-grey: #eeeeee;
+  --theme-dark-grey: #121212;
+  --theme-yellow: #ffb746;
+  --theme-pink: #ff4667;
+  --theme-white: #f5f5fa;
 }
 
 @theme inline {

@@ -1,16 +1,18 @@
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
+import { useTrainingListQuery } from "@/api/trainings/query";
+
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import Loading from "@/components/common/Skeletons/Loading";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Slider from "@/components/layouts/Slider";
 import { Button } from "@/components/ui/button";
-import MyHelmet from "@/helmet/MyHelmet";
 
+import MyHelmet from "@/helmet/MyHelmet";
 import { cn } from "@/lib/utils";
-import { useTrainingListQuery } from "@/api/trainings/query";
+
 import { useMemo } from "react";
 
 export const PhotoDetailPc = () => {
