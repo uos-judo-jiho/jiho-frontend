@@ -180,7 +180,7 @@ app.use("*", async (req, res) => {
     let template: string;
     let render: (
       url: string
-    ) => Promise<{ html: string; dehydratedState: any }>;
+    ) => Promise<{ html: string; dehydratedState: any; styleTags: string }>;
 
     if (!isProduction) {
       // Always read fresh template in development
@@ -201,7 +201,7 @@ app.use("*", async (req, res) => {
       );
     }
 
-    const { html: rendered, dehydratedState } = await render(url);
+    const { html: rendered, dehydratedState, styleTags } = await render(url);
 
     // Inject dehydrated state into HTML
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
@@ -209,6 +209,7 @@ app.use("*", async (req, res) => {
     ).replace(/</g, "\\u003c")};</script>`;
     const html = template
       .replace(`<!--app-html-->`, rendered)
+      .replace(`<!--app-styles-->`, styleTags)
       .replace(`</head>`, `${stateScript}</head>`);
 
     res.status(200).set({ "Content-Type": "text/html" }).send(html);

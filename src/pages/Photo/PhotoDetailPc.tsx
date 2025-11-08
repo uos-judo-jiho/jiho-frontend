@@ -50,16 +50,12 @@ export const PhotoDetailPc = () => {
         <SheetWrapper>
           {/* Header with Back Button and Navigation */}
           <div className="flex items-center justify-between mb-6">
-            <Button
-              asChild
-              variant="ghost"
-              className="flex items-center ext-gray-600 hover:text-gray-900"
-            >
+            <div className="flex items-center ext-gray-600 hover:text-gray-900">
               <Link to={`/photo`} className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 훈련일지로 돌아가기
               </Link>
-            </Button>
+            </div>
           </div>
 
           {/* Main Content */}

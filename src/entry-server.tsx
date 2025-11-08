@@ -2,7 +2,7 @@ import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider, dehydrate } from "@tanstack/react-query";
-import { ThemeProvider } from "styled-components";
+import { ServerStyleSheet, ThemeProvider } from "styled-components";
 import AppRouter from "./routers/AppRouter";
 import { lightTheme } from "./lib/theme/theme";
 import { getTrainings } from "./api/trainings/client";
@@ -60,20 +60,33 @@ export async function render(url: string) {
     // Continue rendering even if prefetch fails
   }
 
-  const html = renderToString(
-    <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <ThemeProvider theme={lightTheme}>
-          <StaticRouter location={url}>
-            <AppRouter />
-          </StaticRouter>
-        </ThemeProvider>
-      </RecoilRoot>
-    </QueryClientProvider>
-  );
+  // Create styled-components ServerStyleSheet to collect styles during SSR
+  const sheet = new ServerStyleSheet();
 
-  // Dehydrate the query cache to send to client
-  const dehydratedState = dehydrate(queryClient);
+  try {
+    const html = renderToString(
+      sheet.collectStyles(
+        <QueryClientProvider client={queryClient}>
+          <RecoilRoot>
+            <ThemeProvider theme={lightTheme}>
+              <StaticRouter location={url}>
+                <AppRouter />
+              </StaticRouter>
+            </ThemeProvider>
+          </RecoilRoot>
+        </QueryClientProvider>
+      )
+    );
 
-  return { html, dehydratedState };
+    // Extract the style tags from styled-components
+    const styleTags = sheet.getStyleTags();
+
+    // Dehydrate the query cache to send to client
+    const dehydratedState = dehydrate(queryClient);
+
+    return { html, dehydratedState, styleTags };
+  } finally {
+    // Always seal the sheet to prevent memory leaks
+    sheet.seal();
+  }
 }

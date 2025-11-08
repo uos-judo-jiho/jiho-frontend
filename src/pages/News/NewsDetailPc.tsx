@@ -51,16 +51,12 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
         <SheetWrapper>
           {/* Header with Back Button */}
           <div className="flex items-center justify-between mb-6">
-            <Button
-              asChild
-              variant="ghost"
-              className="flex items-center ext-gray-600 hover:text-gray-900"
-            >
+            <div className="flex items-center ext-gray-600 hover:text-gray-900">
               <Link to={`/news/${year}`} className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 {year}년 지호지로 돌아가기
               </Link>
-            </Button>
+            </div>
           </div>
 
           {/* Main Content */}
