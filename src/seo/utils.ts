@@ -61,6 +61,7 @@ export const createArticleData = ({
   datePublished,
   dateModified,
   author,
+  keywords,
 }: {
   headline: string;
   description: string;
@@ -68,6 +69,7 @@ export const createArticleData = ({
   datePublished?: string;
   dateModified?: string;
   author?: string;
+  keywords?: string[] | string;
 }): Article => {
   return {
     "@context": "https://schema.org",
@@ -83,6 +85,12 @@ export const createArticleData = ({
           name: author,
         }
       : undefined,
+    keywords:
+      typeof keywords === "string"
+        ? keywords
+        : Array.isArray(keywords)
+        ? keywords
+        : undefined,
   };
 };
 
