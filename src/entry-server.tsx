@@ -13,7 +13,7 @@ import { getTrainings } from "./api/trainings/client";
 import { getNews } from "./api/news/client";
 import { HelmetContext } from "./helmet/MyHelmet";
 import { StructuredDataContext } from "./seo/StructuredData";
-import Awards from "@/lib/assets/jsons/awards.json";
+import { awardsData } from "@/lib/assets/data/awards";
 
 type HelmetData = {
   title: string;
@@ -79,7 +79,7 @@ export async function render(url: string) {
 
   // Helmet data collector for SSR
   // Default metadata for home page
-  const defaultDescription = Awards.awards
+  const defaultDescription = awardsData.awards
     .map((award) => award.title)
     .join(", ");
 

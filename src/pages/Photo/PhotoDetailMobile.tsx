@@ -59,7 +59,7 @@ export const PhotoDetailMobile = () => {
 
       <MobileHeader backUrl="/photo" subTitle="훈련일지" subTitleUrl="/photo" />
 
-      <div className="flex-1 px-4 py-4">
+      <div className="flex-1">
         {/* Image Slider */}
         <div className="mb-4">
           <Slider datas={info.imgSrcs} />

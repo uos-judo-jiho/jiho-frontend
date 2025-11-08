@@ -40,3 +40,21 @@ export interface Article {
     name: string;
   };
 }
+
+export interface Organization {
+  "@context": "https://schema.org";
+  "@type": "SportsOrganization";
+  name: string;
+  description: string;
+  url: string;
+  logo?: string;
+  foundingDate?: string;
+  email?: string;
+  sameAs?: string[];
+  sport?: string;
+  memberOf?: {
+    "@type": "Organization";
+    name: string;
+  };
+  award?: string[];
+}

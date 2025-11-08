@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import MyHelmet from "@/helmet/MyHelmet";
-import Awards from "@/lib/assets/jsons/awards.json";
+import { awardsData } from "@/lib/assets/data/awards";
 import { AwardType } from "@/lib/types/AwardType";
 import { formatAwardsType } from "@/lib/utils/Utils";
 import styled from "styled-components";
@@ -48,7 +48,7 @@ const AwardItem = ({ award }: { award: AwardType }) => {
 };
 
 const HomeAwards = () => {
-  const awards: AwardType[] = Awards.awards;
+  const awards: AwardType[] = awardsData.awards;
 
   return (
     <AwardsContainer>

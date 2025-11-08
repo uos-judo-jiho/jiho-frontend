@@ -1,4 +1,4 @@
-import type { CollectionPage, ImageGallery, ImageObject, Article } from "./types";
+import type { CollectionPage, ImageGallery, ImageObject, Article, Organization } from "./types";
 
 /**
  * Create ImageGallery structured data
@@ -77,5 +77,55 @@ export const createArticleData = ({
           name: author,
         }
       : undefined,
+  };
+};
+
+/**
+ * Create Organization structured data
+ * @see https://schema.org/SportsOrganization
+ */
+export const createOrganizationData = ({
+  name,
+  description,
+  url,
+  logo,
+  foundingDate,
+  email,
+  sameAs,
+  sport,
+  memberOf,
+  award,
+}: {
+  name: string;
+  description: string;
+  url: string;
+  logo?: string;
+  foundingDate?: string;
+  email?: string;
+  sameAs?: string[];
+  sport?: string;
+  memberOf?: {
+    name: string;
+  };
+  award?: string[];
+}): Organization => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SportsOrganization",
+    name,
+    description,
+    url,
+    logo,
+    foundingDate,
+    email,
+    sameAs,
+    sport,
+    memberOf: memberOf
+      ? {
+          "@type": "Organization",
+          name: memberOf.name,
+        }
+      : undefined,
+    award,
   };
 };

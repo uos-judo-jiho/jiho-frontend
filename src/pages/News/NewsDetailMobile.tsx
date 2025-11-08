@@ -28,7 +28,9 @@ export const NewsDetailMobile = ({
 
   // Prepare metadata (before early return to satisfy React Hook rules)
   const metaDescription = currentArticle
-    ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(" | ")
+    ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(
+        " | "
+      )
     : "";
 
   const metaImgUrl = currentArticle?.imgSrcs.at(0);
@@ -71,11 +73,11 @@ export const NewsDetailMobile = ({
 
       <MobileHeader
         backUrl={`/news/${year}`}
-        subTitle="지호지"
+        subTitle={`${year} 지호지`}
         subTitleUrl={`/news/${year}`}
       />
 
-      <div className="flex-1 px-4 py-4">
+      <div className="flex-1">
         {/* Image Slider */}
         <div className="mb-4">
           <Slider datas={currentArticle.imgSrcs} />

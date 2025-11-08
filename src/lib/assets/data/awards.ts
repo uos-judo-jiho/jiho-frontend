@@ -1,0 +1,90 @@
+export interface Award {
+  title: string;
+  gold: number;
+  silver: number;
+  bronze: number;
+  menGroup: number;
+  womenGroup: number;
+  group: number;
+}
+
+export interface AwardsData {
+  awards: Award[];
+}
+
+export const awardsData: AwardsData = {
+  awards: [
+    {
+      title: "제34회 서울시유도협회장배 유도대회",
+      gold: 1,
+      silver: 2,
+      bronze: 1,
+      menGroup: 0,
+      womenGroup: 0,
+      group: 0,
+    },
+    {
+      title: "제36회 서울시장기 유도대회",
+      gold: 2,
+      silver: 1,
+      bronze: 1,
+      menGroup: 3,
+      womenGroup: 0,
+      group: 0,
+    },
+    {
+      title: "2018 서울컵 유도대회",
+      gold: 1,
+      silver: 1,
+      bronze: 1,
+      menGroup: 0,
+      womenGroup: 0,
+      group: 0,
+    },
+    {
+      title: "2019 서울시 교육감배 유도대회",
+      gold: 1,
+      silver: 0,
+      bronze: 0,
+      menGroup: 0,
+      womenGroup: 2,
+      group: 0,
+    },
+    {
+      title: "제38회 서울시회장배유도대회",
+      gold: 0,
+      silver: 1,
+      bronze: 0,
+      menGroup: 0,
+      womenGroup: 0,
+      group: 0,
+    },
+    {
+      title: "제39회 서울시회장배유도대회",
+      gold: 0,
+      silver: 1,
+      bronze: 0,
+      menGroup: 0,
+      womenGroup: 0,
+      group: 0,
+    },
+    {
+      title: "제 5회 강서구회장배 유도대회",
+      gold: 0,
+      silver: 1,
+      bronze: 1,
+      menGroup: 0,
+      womenGroup: 0,
+      group: 0,
+    },
+    {
+      title: "제40회 서울시회장배유도대회",
+      gold: 1,
+      silver: 0,
+      bronze: 0,
+      menGroup: 0,
+      womenGroup: 0,
+      group: 0,
+    },
+  ],
+} as const;
