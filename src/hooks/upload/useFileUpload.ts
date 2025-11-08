@@ -11,7 +11,13 @@ export interface UploadState {
   error: string | null;
 }
 
-export const useFileUpload = () => {
+export interface UseFileUploadOptions {
+  onComplete?: (uploadId: string, url: string) => void;
+  onError?: (uploadId: string, error: string) => void;
+}
+
+export const useFileUpload = (options?: UseFileUploadOptions) => {
+  const { onComplete, onError } = options || {};
   const [state, setState] = useState<UploadState>({
     isUploading: false,
     uploads: new Map(),
@@ -65,7 +71,7 @@ export const useFileUpload = () => {
                 error: data.error,
               });
 
-              // 완료되거나 에러가 발생한 경우 EventSource 정리
+              // 완료되거나 에러가 발생한 경우 EventSource 정리 및 콜백 호출
               if (data.status === "completed" || data.status === "error") {
                 eventSource.close();
                 eventSourcesRef.current.delete(uploadId);
@@ -78,6 +84,13 @@ export const useFileUpload = () => {
                       (u) => u.status === "uploading"
                     ),
                 }));
+
+                // 콜백 호출
+                if (data.status === "completed" && data.url && onComplete) {
+                  onComplete(data.uploadId, data.url);
+                } else if (data.status === "error" && onError) {
+                  onError(data.uploadId, data.error || "Unknown error");
+                }
               }
               break;
 
@@ -105,7 +118,7 @@ export const useFileUpload = () => {
 
       eventSourcesRef.current.set(uploadId, eventSource);
     },
-    [updateUpload]
+    [onComplete, onError, updateUpload]
   );
 
   const uploadFile = useCallback(

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Constants } from "@/lib/constant";
 import MyHelmet from "../../helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
@@ -6,15 +5,11 @@ import Line from "@/components/layouts/Line";
 import ListContainer from "@/components/layouts/ListContainer";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { useNotices } from "@/recoils/notices";
+import { useNoticesQuery } from "@/api/notices/query";
 
 function Notice() {
-  const { notices, fetch } = useNotices();
+  const { data: notices = [] } = useNoticesQuery();
 
-  useEffect(() => {
-    fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
     <>
       <MyHelmet title="Notice" />

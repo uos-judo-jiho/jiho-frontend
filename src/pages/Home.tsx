@@ -10,7 +10,7 @@ import HomeSectionNews from "@/components/Home/News/HomeSectionNews";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
 import { useNews } from "@/recoils/news";
-import { useNotices } from "@/recoils/notices";
+import { useNoticesQuery } from "@/api/notices/query";
 
 import MyHelmet from "@/helmet/MyHelmet";
 
@@ -21,7 +21,8 @@ import { ThemeProvider } from "styled-components";
 const Home = () => {
   const [isDark, setIsDark] = useState(false);
 
-  const { fetch: fetchNotices } = useNotices();
+  // React Query hooks - 자동으로 데이터 fetch
+  useNoticesQuery();
 
   const { fetch: fetchNews } = useNews();
 
@@ -29,9 +30,8 @@ const Home = () => {
   useEffect(() => {
     if (typeof window !== "undefined") {
       fetchNews(Constants.LATEST_NEWS_YEAR);
-      fetchNotices();
     }
-  }, [fetchNews, fetchNotices]);
+  }, [fetchNews]);
 
   return (
     <ThemeProvider theme={lightTheme}>

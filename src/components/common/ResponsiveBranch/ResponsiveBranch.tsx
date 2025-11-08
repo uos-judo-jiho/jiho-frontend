@@ -23,8 +23,8 @@ const ResponsiveBranch = ({
 }: ResponsiveBranchProps) => {
   return (
     <>
-      <PcContainer>{pcComponent}</PcContainer>
       <MobileContainer>{mobileComponent}</MobileContainer>
+      <PcContainer>{pcComponent}</PcContainer>
     </>
   );
 };

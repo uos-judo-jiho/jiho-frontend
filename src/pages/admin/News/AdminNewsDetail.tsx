@@ -2,24 +2,15 @@ import { useParams } from "react-router-dom";
 import NewsForm from "@/components/admin/form/NewsForm";
 import { Constants } from "@/lib/constant";
 import Title from "@/components/layouts/Title";
-import { useNews } from "@/recoils/news";
-import { useEffect } from "react";
+import { useNewsQuery } from "@/api/news/query";
 
 const AdminNewsDetail = () => {
-  const { id } = useParams();
+  const { year, id } = useParams<{ year: string; id: string }>();
 
-  const { news, refreshNew } = useNews();
-  const article = news
-    .find((newsData) =>
-      newsData.articles.find((item) => item.id.toString() === id)
-    )
-    ?.articles.find((item) => item.id.toString() === id);
+  const { data: newsData } = useNewsQuery(year || "2025");
+  const article = newsData?.articles.find((item) => item.id.toString() === id);
 
-  useEffect(() => {
-    refreshNew();
-  }, [refreshNew]);
-
-  if (!news || !article) return null;
+  if (!article) return null;
 
   return (
     <>

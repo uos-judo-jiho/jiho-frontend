@@ -3,15 +3,18 @@ import axios from "axios";
 import { Constants } from "@/lib/constant";
 
 const getBaseURL = () => {
-  // 서버 사이드에서는 항상 풀 URL 사용
+  // 서버 사이드에서는 항상 프로덕션 API URL 사용 (개발 환경에서도 실제 API 서버로 요청)
   if (typeof window === "undefined") {
-    return Constants.BASE_URL;
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[API Config] SSR mode - using production API URL");
+    }
+    return "https://uosjudo.com";
   }
 
   // 클라이언트 사이드에서만 hostname 체크
   const hostname = window.location.hostname;
 
-  // 로컬 개발 환경 (localhost, 127.0.0.1)
+  // 로컬 개발 환경 (localhost, 127.0.0.1) - 프록시 사용
   if (hostname === "localhost" || hostname === "127.0.0.1") {
     return "";
   }
@@ -35,6 +38,22 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Response interceptor to handle 401 errors
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // If 401 Unauthorized, redirect to admin login
+    if (error.response?.status === 401) {
+      // Only redirect if we're in a browser context and on an admin page
+      if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) {
+        console.warn("[Auth] Unauthorized - redirecting to login");
+        window.location.href = "/admin/login";
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 // _internal API 전용 axios 인스턴스 (서버에서 발급받은 토큰 사용)
 const serverInternalToken =

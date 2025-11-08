@@ -8,11 +8,18 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 
 import MyHelmet from "@/helmet/MyHelmet";
-import { useTrainings } from "@/recoils/tranings";
+import { useTrainingListQuery } from "@/api/trainings/query";
+import { useMemo } from "react";
 
 const PhotoPC = () => {
   const navigate = useNavigate();
-  const { trainings } = useTrainings();
+  const { data, isLoading } = useTrainingListQuery();
+
+  // 날짜순 정렬
+  const trainings = useMemo(() => {
+    if (!data) return [];
+    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+  }, [data]);
 
   const handleClickCard = (id: number | string) => {
     navigate(`/photo/${id}`);

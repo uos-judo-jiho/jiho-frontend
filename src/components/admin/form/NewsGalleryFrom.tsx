@@ -1,32 +1,25 @@
-import { useEffect } from "react";
-import { useNews } from "@/recoils/news";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import ArticleForm from "./ArticleForm";
+import { useNewsQuery } from "@/api/news/query";
 
 type NewsGalleryFromProps = {
   year: string;
 };
+
 const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
-  const { news, refreshNew } = useNews();
+  const { data: newsData } = useNewsQuery(year);
 
-  const galleryData: ArticleInfoType | undefined = news
-    .filter((newsData) => year.startsWith(newsData.year))
-    .map((newsData, index) => ({
-      id: `${newsData.year}${index}`,
-      imgSrcs: newsData.images,
-      title: "",
-      author: "",
-      dateTime: year,
-      tags: [],
-      description: "",
-    }))
-    .at(0);
-
-  useEffect(() => {
-    refreshNew();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const galleryData: ArticleInfoType | undefined = newsData
+    ? {
+        id: `${newsData.year}-gallery`,
+        imgSrcs: newsData.images,
+        title: "",
+        author: "",
+        dateTime: year,
+        tags: [],
+        description: "",
+      }
+    : undefined;
 
   return <ArticleForm data={galleryData} type={"news"} gallery />;
 };

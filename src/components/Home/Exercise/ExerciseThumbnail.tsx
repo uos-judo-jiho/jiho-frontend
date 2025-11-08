@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
-import { useTrainings } from "@/recoils/tranings";
+import { useTrainingListQuery } from "@/api/trainings/query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Col from "@/components/layouts/Col";
+import { useMemo } from "react";
 
 const Stack = styled.div`
   width: 100%;
@@ -79,9 +80,14 @@ const Thumbnail = styled.img`
 `;
 
 const ExerciseThumbnail = () => {
-  const { trainings } = useTrainings();
+  const { data } = useTrainingListQuery();
 
-  const lastTraningData = trainings[0];
+  // 날짜순 정렬 후 첫 번째 항목
+  const lastTraningData = useMemo(() => {
+    if (!data || data.length === 0) return null;
+    const sorted = [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+    return sorted[0];
+  }, [data]);
 
   if (!lastTraningData) return null;
 

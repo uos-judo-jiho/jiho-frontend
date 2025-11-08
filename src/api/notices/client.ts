@@ -1,5 +1,5 @@
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import axiosInstance from "./config";
+import axiosInstance from "../config";
 
 const METHOD_URL = "/api/notices";
 

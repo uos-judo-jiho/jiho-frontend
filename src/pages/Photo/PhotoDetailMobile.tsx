@@ -3,10 +3,17 @@ import Feed from "@/components/common/Feed/Feed";
 import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
 import Loading from "@/components/common/Skeletons/Loading";
-import { useTrainings } from "@/recoils/tranings";
+import { useTrainingListQuery } from "@/api/trainings/query";
+import { useMemo } from "react";
 
 export const PhotoDetailMobile = () => {
-  const { trainings, isLoading } = useTrainings();
+  const { data, isLoading } = useTrainingListQuery();
+
+  // 날짜순 정렬
+  const trainings = useMemo(() => {
+    if (!data) return [];
+    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+  }, [data]);
 
   if (!trainings && isLoading) {
     return <Loading />;

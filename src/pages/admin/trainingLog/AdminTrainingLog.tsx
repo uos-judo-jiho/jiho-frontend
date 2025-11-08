@@ -1,12 +1,27 @@
-import { useTrainings } from "@/recoils/tranings";
+import { useTrainingListQuery } from "@/api/trainings/query";
 import { Link } from "react-router-dom";
 import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
+import { useMemo } from "react";
+import Loading from "@/components/common/Skeletons/Loading";
 
 const AdminTrainingLog = () => {
-  const { trainings, refetch: refreshTraining } = useTrainings();
+  const {
+    data,
+    refetch: refreshTraining,
+    isLoading,
+    isRefetching,
+  } = useTrainingListQuery();
+
+  const isDataLoading = isLoading || isRefetching;
+
+  // 날짜순 정렬
+  const trainings = useMemo(() => {
+    if (!data) return [];
+    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+  }, [data]);
 
   return (
     <FormContainer title="훈련일지 관리">
@@ -18,11 +33,15 @@ const AdminTrainingLog = () => {
           새로고침
         </NewArticleButton>
       </Row>
-      <ListContainer
-        datas={trainings ?? []}
-        targetUrl={"/admin/training/"}
-        additionalTitle={true}
-      />
+      {isDataLoading ? (
+        <Loading loading={isDataLoading} />
+      ) : (
+        <ListContainer
+          datas={trainings ?? []}
+          targetUrl={"/admin/training/"}
+          additionalTitle={true}
+        />
+      )}
     </FormContainer>
   );
 };

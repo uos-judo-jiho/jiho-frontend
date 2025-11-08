@@ -5,9 +5,9 @@ export type LoginValuesType = {
   password: string;
 };
 
-export const login = async (values: LoginValuesType) => {
-  const METHOD_URL = "api/admin/login/";
+const METHOD_URL = "/api/admin/login";
 
+export const login = async (values: LoginValuesType) => {
   try {
     const res = await axiosInstance({
       url: METHOD_URL,
