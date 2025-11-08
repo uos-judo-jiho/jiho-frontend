@@ -1,56 +1,23 @@
 import fs from "fs";
+import { getSiteData, yearCandidates } from "./shared/siteData.js";
 
 const filePath = `${process.env.PWD}/public/sitemap.xml`;
 
-// 2022, 2023, 2024
-const yearCandidates = Array.from(
-  { length: new Date().getFullYear() - 2021 },
-  (_, i) => 2022 + i,
-);
-
-/**
- * 현재 년도까지의 뉴스 데이터를 불러와서 사이트맵에 추가
- * /news/{year}/{id} 형식으로 추가
- */
-const fetchHistoricalNews = async (year) => {
-  const res = await fetch(`https://uosjudo.com/api/news/${year}`);
-  if (!res.ok) {
-    console.warn(`Failed to fetch historical news for ${year}`);
-    return [];
-  }
-  return await res.json();
-};
-
-const fetchHistoricalTrainings = async () => {
-  const res = await fetch(`https://uosjudo.com/api/trainings`);
-
-  if (!res.ok) {
-    console.warn(`Failed to fetch historical trainings`);
-    return [];
-  }
-  return await res.json();
-};
-
 const generateSitemap = async () => {
-  const trainings = await fetchHistoricalTrainings();
+  const { trainings, newsByYear, notices } = await getSiteData();
 
-  const latestTrainingDate = trainings.trainingLogs.length
-    ? new Date(trainings.trainingLogs[0].dateTime).toISOString()
-    : null;
-
+  const trainingLogs = trainings?.trainingLogs ?? [];
+  const noticeList = notices?.notices ?? [];
   const currentYear = new Date().getFullYear();
 
-  const latestNews = await fetchHistoricalNews(currentYear);
-  const latestNewsDate = latestNews.length
-    ? new Date(latestNews[0].dateTime).toISOString()
+  const latestTrainingDate = trainingLogs.length
+    ? new Date(trainingLogs[0].dateTime).toISOString()
     : null;
 
-  const newsByYear = {};
-  for (const year of yearCandidates) {
-    newsByYear[year] = await fetchHistoricalNews(year).then(
-      (news) => news.articles,
-    );
-  }
+  const latestNewsArticles = newsByYear?.[currentYear] ?? [];
+  const latestNewsDate = latestNewsArticles.length
+    ? new Date(latestNewsArticles[0].dateTime).toISOString()
+    : null;
 
   /**
    * @type {{loc: string, lastmod?: string, Lastmod?: string, priority?: string}[]}
@@ -61,7 +28,7 @@ const generateSitemap = async () => {
       lastmod: latestTrainingDate,
       priority: "0.9",
     },
-    ...trainings.trainingLogs.map((training) => ({
+    ...trainingLogs.map((training) => ({
       loc: `https://uosjudo.com/photo/${training.id}`,
       lastmod: new Date(training.dateTime).toISOString(),
       priority: "0.7",
@@ -77,13 +44,24 @@ const generateSitemap = async () => {
       priority: "0.8",
     })),
     ...Object.entries(newsByYear).flatMap(([year, newsList]) =>
-      newsList.map((news) => ({
+      (newsList ?? []).map((news) => ({
         loc: `https://uosjudo.com/news/${year}/${news.id}`,
         lastmod: new Date(news.dateTime).toISOString(),
         priority: "0.8",
       })),
     ),
-    { loc: "https://uosjudo.com/notice" },
+    {
+      loc: "https://uosjudo.com/notice",
+      lastmod: noticeList.length
+        ? new Date(noticeList[0].dateTime).toISOString()
+        : undefined,
+      priority: "0.6",
+    },
+    ...noticeList.map((notice) => ({
+      loc: `https://uosjudo.com/notice/${notice.id}`,
+      lastmod: notice.dateTime ? new Date(notice.dateTime).toISOString() : undefined,
+      priority: "0.5",
+    })),
   ];
 
   const sitemapURL = sitemapMetaDataList

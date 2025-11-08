@@ -1,97 +1,37 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import { getSiteData, yearCandidates } from "./shared/siteData.js";
 
 const outputDir = path.join(process.env.PWD, "build", "prerendered");
-
-// 2022년부터 현재 연도까지
-const yearCandidates = Array.from(
-  { length: new Date().getFullYear() - 2021 },
-  (_, i) => 2022 + i,
-);
-
-/**
- * API에서 뉴스 데이터를 가져옴
- */
-const fetchNews = async (year) => {
-  try {
-    const res = await fetch(`https://uosjudo.com/api/news/${year}`);
-    if (!res.ok) {
-      console.warn(`Failed to fetch news for ${year}`);
-      return null;
-    }
-    return await res.json();
-  } catch (error) {
-    console.error(`Error fetching news for ${year}:`, error);
-    return null;
-  }
-};
-
-/**
- * API에서 트레이닝 로그 데이터를 가져옴
- */
-const fetchTrainings = async () => {
-  try {
-    const res = await fetch(`https://uosjudo.com/api/trainings`);
-    if (!res.ok) {
-      console.warn(`Failed to fetch trainings`);
-      return { trainingLogs: [] };
-    }
-    return await res.json();
-  } catch (error) {
-    console.error(`Error fetching trainings:`, error);
-    return { trainingLogs: [] };
-  }
-};
-
-/**
- * API에서 공지사항 데이터를 가져옴
- */
-const fetchNotices = async () => {
-  try {
-    const res = await fetch(`https://uosjudo.com/api/notices`);
-    if (!res.ok) {
-      console.warn(`Failed to fetch notices`);
-      return { notices: [] };
-    }
-    return await res.json();
-  } catch (error) {
-    console.error(`Error fetching notices:`, error);
-    return { notices: [] };
-  }
-};
 
 /**
  * SSG 대상 라우트를 결정
  */
-const getStaticRoutes = async () => {
+const getStaticRoutes = (siteData) => {
   const routes = [];
   const currentYear = new Date().getFullYear();
+  const newsByYear = siteData.newsByYear ?? {};
+  const trainingLogs = siteData.trainings?.trainingLogs ?? [];
+  const noticeList = siteData.notices?.notices ?? [];
 
   // 1. 과거 연도 뉴스 페이지 (현재 연도는 제외 - SSR로 처리)
-  const newsByYear = {};
   for (const year of yearCandidates) {
     if (year >= currentYear) continue; // 현재 연도는 SSR
 
-    const newsData = await fetchNews(year);
-    if (newsData && newsData.articles) {
-      newsByYear[year] = newsData.articles;
-
+    const articles = newsByYear[year] ?? [];
+    if (articles.length) {
       // /news/{year}
       routes.push({
         path: `/news/${year}`,
-        type: 'news-list',
+        type: "news-list",
         year: year.toString(),
       });
 
       // /news/{year}/{id}
-      newsData.articles.forEach((article) => {
+      articles.forEach((article) => {
         routes.push({
           path: `/news/${year}/${article.id}`,
-          type: 'news-detail',
+          type: "news-detail",
           year: year.toString(),
           id: article.id.toString(),
         });
@@ -100,33 +40,31 @@ const getStaticRoutes = async () => {
   }
 
   // 2. 트레이닝 로그 (사진) 페이지
-  const trainingsData = await fetchTrainings();
-  if (trainingsData.trainingLogs && trainingsData.trainingLogs.length > 0) {
+  if (trainingLogs.length > 0) {
     // /photo 페이지는 항상 최신 데이터를 보여주므로 SSR로 처리
     // /photo/{id} 상세 페이지만 SSG
-    trainingsData.trainingLogs.forEach((training) => {
+    trainingLogs.forEach((training) => {
       routes.push({
         path: `/photo/${training.id}`,
-        type: 'photo-detail',
+        type: "photo-detail",
         id: training.id.toString(),
       });
     });
   }
 
   // 3. 공지사항 페이지
-  const noticesData = await fetchNotices();
-  if (noticesData.notices && noticesData.notices.length > 0) {
+  if (noticeList.length > 0) {
     // /notice 목록 페이지
     routes.push({
       path: `/notice`,
-      type: 'notice-list',
+      type: "notice-list",
     });
 
     // /notice/{id} 상세 페이지
-    noticesData.notices.forEach((notice) => {
+    noticeList.forEach((notice) => {
       routes.push({
         path: `/notice/${notice.id}`,
-        type: 'notice-detail',
+        type: "notice-detail",
         id: notice.id.toString(),
       });
     });
@@ -142,23 +80,18 @@ const renderPage = async (route, render, template) => {
   try {
     console.log(`[SSG] Rendering: ${route.path}`);
 
-    const {
-      html,
-      dehydratedState,
-      styleTags,
-      helmetData,
-      structuredData,
-    } = await render(route.path);
+    const { html, dehydratedState, styleTags, helmetData, structuredData } =
+      await render(route.path);
 
     // React Query state 주입
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
-      dehydratedState,
+      dehydratedState
     ).replace(/</g, "\\u003c")};</script>`;
 
     // Structured data 주입
     const structuredDataScript = structuredData
       ? `\n    <script type="application/ld+json">${JSON.stringify(
-          structuredData,
+          structuredData
         )}</script>`
       : "";
 
@@ -176,27 +109,29 @@ const renderPage = async (route, render, template) => {
         .replace(/<title>.*?<\/title>/, `<title>${helmetData.title}</title>`)
         .replace(
           /<meta property="og:type" content=".*?" \/>/,
-          `<meta property="og:type" content="${helmetData.articleType || "website"}" />`,
+          `<meta property="og:type" content="${
+            helmetData.articleType || "website"
+          }" />`
         )
         .replace(
           /<meta property="og:title" content=".*?" \/>/,
-          `<meta property="og:title" content="${helmetData.title}" />`,
+          `<meta property="og:title" content="${helmetData.title}" />`
         )
         .replace(
           /<meta name="description" content=".*?" \/>/,
-          `<meta name="description" content="${helmetData.description}" />`,
+          `<meta name="description" content="${helmetData.description}" />`
         )
         .replace(
           /<meta property="og:description" content=".*?" \/>/,
-          `<meta property="og:description" content="${helmetData.description}" />`,
+          `<meta property="og:description" content="${helmetData.description}" />`
         )
         .replace(
           /<meta property="og:url" content=".*?" \/>/,
-          `<meta property="og:url" content="${fullUrl}" />`,
+          `<meta property="og:url" content="${fullUrl}" />`
         )
         .replace(
           /<meta property="og:image" content=".*?" \/>/,
-          `<meta property="og:image" content="${helmetData.imgUrl}" />`,
+          `<meta property="og:image" content="${helmetData.imgUrl}" />`
         );
 
       // Article-specific tags
@@ -235,12 +170,19 @@ const prerenderAll = async () => {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
+  const siteData = await getSiteData();
+
   // SSG 대상 라우트 가져오기
-  const routes = await getStaticRoutes();
+  const routes = getStaticRoutes(siteData);
   console.log(`[SSG] Found ${routes.length} routes to pre-render`);
 
   // SSR entry 모듈 로드
-  const serverBuildPath = path.join(process.env.PWD, "build", "server", "entry-server.js");
+  const serverBuildPath = path.join(
+    process.env.PWD,
+    "build",
+    "server",
+    "entry-server.js"
+  );
   if (!fs.existsSync(serverBuildPath)) {
     console.error("[SSG] Server build not found. Run build:server first.");
     process.exit(1);
@@ -249,7 +191,12 @@ const prerenderAll = async () => {
   const { render } = await import(serverBuildPath);
 
   // HTML 템플릿 로드
-  const templatePath = path.join(process.env.PWD, "build", "client", "index.html");
+  const templatePath = path.join(
+    process.env.PWD,
+    "build",
+    "client",
+    "index.html"
+  );
   if (!fs.existsSync(templatePath)) {
     console.error("[SSG] Client build not found. Run build:client first.");
     process.exit(1);
@@ -268,7 +215,7 @@ const prerenderAll = async () => {
       // 파일 경로 생성 (예: /news/2023 -> news/2023.html)
       const filePath = path.join(
         outputDir,
-        route.path.replace(/^\//, "") + ".html",
+        route.path.replace(/^\//, "") + ".html"
       );
 
       // 디렉토리 생성
