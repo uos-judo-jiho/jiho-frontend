@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import Slider from "@/components/layouts/Slider";
 import { useToggle } from "@/hooks/useToggle";
@@ -8,114 +7,48 @@ type MobilePhotoCardProps = {
   articleInfo: ArticleInfoType;
 };
 
-const MobilePhotoCardContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  margin: 4px 0;
-
-  border-top: 1px solid ${(props) => props.theme.lightGreyColor};
-  border-bottom: 1px solid ${(props) => props.theme.lightGreyColor};
-`;
-
-const CardHeader = styled.header`
-  padding: 14px 16px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  h3 {
-    font-size: ${(props) => props.theme.defaultFontSize};
-    line-height: ${(props) => props.theme.defaultLineHeight};
-    color: ${(props) => props.theme.textColor};
-    font-weight: 700;
-    letter-spacing: 0.16px;
-  }
-
-  .sub-info {
-    display: flex;
-    gap: 4px;
-    span {
-      font-size: ${(props) => props.theme.defaultFontSize};
-      line-height: ${(props) => props.theme.defaultLineHeight};
-      color: ${(props) => props.theme.textColor};
-      letter-spacing: 0.16px;
-
-      & .datetime {
-        color: ${(props) => props.theme.greyColor};
-      }
-    }
-  }
-`;
-
-const SliderContainer = styled.div`
-  flex-grow: 1;
-`;
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  padding: 14px 16px;
-  color: ${(props) => props.theme.textColor};
-
-  & .participants {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    font-size: ${(props) => props.theme.defaultFontSize};
-    line-height: ${(props) => props.theme.defaultLineHeight};
-    letter-spacing: 0.14px;
-  }
-
-  & .description {
-    font-size: ${(props) => props.theme.defaultFontSize};
-    line-height: ${(props) => props.theme.defaultLineHeight};
-    letter-spacing: 0.16px;
-
-    word-wrap: break-word;
-    white-space: pre-wrap;
-  }
-`;
-
-const MoreText = styled.span`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  line-height: ${(props) => props.theme.defaultLineHeight};
-  color: ${(props) => props.theme.greyColor};
-  letter-spacing: 0.16px;
-
-  margin-left: 4px;
-`;
-
 const MobilePhotoCard = ({ articleInfo, id }: MobilePhotoCardProps) => {
   const [isMore, toggle] = useToggle(false);
   return (
-    <MobilePhotoCardContainer id={id}>
-      <CardHeader>
-        <h3>{articleInfo.title}</h3>
-        <div className="sub-info">
-          <span>{articleInfo.author}</span>
-          <span className="datetime">{articleInfo.dateTime}</span>
+    <div
+      id={id}
+      className="flex flex-col my-1 border-t border-b border-theme-light-grey"
+    >
+      <header className="p-3.5 px-4 flex flex-col gap-1">
+        <h3 className="text-theme-default leading-theme-default text-theme-text font-bold tracking-[0.16px]">
+          {articleInfo.title}
+        </h3>
+        <div className="flex gap-1">
+          <span className="text-theme-default leading-theme-default text-theme-text tracking-[0.16px]">
+            {articleInfo.author}
+          </span>
+          <span className="text-theme-default leading-theme-default text-theme-grey tracking-[0.16px]">
+            {articleInfo.dateTime}
+          </span>
         </div>
-      </CardHeader>
-      <SliderContainer>
+      </header>
+      <div className="flex-grow">
         <Slider datas={articleInfo.imgSrcs} />
-      </SliderContainer>
-      <Content>
-        <div className="participants">
+      </div>
+      <div className="flex flex-col gap-2 p-3.5 px-4 text-theme-text">
+        <div className="flex flex-wrap gap-2 text-theme-default leading-theme-default tracking-[0.14px]">
           {articleInfo.tags.map((tag) => (
             <span key={tag}>{`#${tag}`}</span>
           ))}
         </div>
-        <p className="description" onClick={() => toggle()}>
+        <p
+          className="text-theme-default leading-theme-default tracking-[0.16px] break-words whitespace-pre-wrap"
+          onClick={() => toggle()}
+        >
           {isMore ? articleInfo.description : `${articleInfo.description.slice(0, 40)}...`}
-          {!isMore && <MoreText>더보기</MoreText>}
+          {!isMore && (
+            <span className="text-theme-default leading-theme-default text-theme-grey tracking-[0.16px] ml-1">
+              더보기
+            </span>
+          )}
         </p>
-      </Content>
-    </MobilePhotoCardContainer>
+      </div>
+    </div>
   );
 };
 

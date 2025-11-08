@@ -1,43 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
 import Line from "@/components/layouts/Line";
-
-const FadeIn = keyframes`
-    from {
-      opacity: 0.5;
-    }
-    to {
-      opacity: 1;
-    }
-`;
-
-const Container = styled.div`
-  width: max-content;
-
-  font-size: ${(props) => props.theme.defaultFontSize};
-  color: ${(props) => props.theme.greyColor};
-`;
-
-const LinkWrapper = styled.div`
-  padding: 8px 12px;
-  &:hover {
-    background-color: ${(props) => props.theme.lightGreyColor};
-    color: ${(props) => props.theme.textColor};
-    animation: ${FadeIn} 0.5s;
-    animation-timing-function: ease-in-out;
-  }
-`;
+import { Link } from "react-router-dom";
 
 function NoticeFooter() {
   return (
     <>
       <Line borderWidth="1px" margin="2rem 0" />
-      <Container>
-        <LinkWrapper>
+      <div className="w-max text-theme-default text-theme-grey">
+        <div className="px-3 py-2 hover:bg-theme-light-grey hover:text-theme-text transition-all duration-500 ease-in-out animate-in fade-in">
           <Link to="/notice">목록으로</Link>
-        </LinkWrapper>
-      </Container>
+        </div>
+      </div>
     </>
   );
 }
