@@ -10,6 +10,8 @@ import { NewsDetailPageProps } from "./types/NewsDetailPageProps";
 
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { StructuredData, createArticleData } from "@/seo";
 
 export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
   const articles = news.articles;
@@ -18,6 +20,32 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
   );
 
   const currentArticle = articles[currentIndex];
+
+  // Prepare metadata (before early return to satisfy React Hook rules)
+  const metaDescription = currentArticle
+    ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(" | ")
+    : "";
+
+  const metaImgUrl = currentArticle?.imgSrcs.at(0);
+
+  // Format date for meta tags (ISO 8601 format)
+  const publishedDate = currentArticle?.dateTime
+    ? new Date(currentArticle.dateTime).toISOString()
+    : undefined;
+
+  // Create structured data for article (must be before early return)
+  const structuredData = useMemo(() => {
+    if (!currentArticle) return null;
+
+    return createArticleData({
+      headline: `${year}년 지호지 - ${currentArticle.title}`,
+      description: metaDescription,
+      images: currentArticle.imgSrcs,
+      datePublished: publishedDate,
+      dateModified: publishedDate,
+      author: currentArticle.author,
+    });
+  }, [year, currentArticle, metaDescription, publishedDate]);
 
   if (!currentArticle) {
     return (
@@ -32,18 +60,6 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
     );
   }
 
-  const metaDescription = [
-    currentArticle.title,
-    currentArticle.description.slice(0, 140),
-  ].join(" | ");
-
-  const metaImgUrl = currentArticle.imgSrcs.at(0);
-
-  // Format date for meta tags (ISO 8601 format)
-  const publishedDate = currentArticle.dateTime
-    ? new Date(currentArticle.dateTime).toISOString()
-    : undefined;
-
   return (
     <div>
       <MyHelmet
@@ -55,6 +71,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
         author={currentArticle.author}
         articleType="article"
       />
+      {structuredData && <StructuredData data={structuredData} />}
 
       <DefaultLayout>
         <SheetWrapper>

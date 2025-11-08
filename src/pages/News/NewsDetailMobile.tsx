@@ -11,6 +11,8 @@ import MyHelmet from "@/helmet/MyHelmet";
 import { cn } from "@/lib/utils";
 import { NewsDetailPageProps } from "./types/NewsDetailPageProps";
 import Footer from "@/components/common/Footer/footer";
+import { useMemo } from "react";
+import { StructuredData, createArticleData } from "@/seo";
 
 export const NewsDetailMobile = ({
   news,
@@ -24,21 +26,35 @@ export const NewsDetailMobile = ({
 
   const currentArticle = articles[currentIndex];
 
+  // Prepare metadata (before early return to satisfy React Hook rules)
+  const metaDescription = currentArticle
+    ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(" | ")
+    : "";
+
+  const metaImgUrl = currentArticle?.imgSrcs.at(0);
+
+  // Format date for meta tags (ISO 8601 format)
+  const publishedDate = currentArticle?.dateTime
+    ? new Date(currentArticle.dateTime).toISOString()
+    : undefined;
+
+  // Create structured data for article (must be before early return)
+  const structuredData = useMemo(() => {
+    if (!currentArticle) return null;
+
+    return createArticleData({
+      headline: `${year}년 지호지 - ${currentArticle.title}`,
+      description: metaDescription,
+      images: currentArticle.imgSrcs,
+      datePublished: publishedDate,
+      dateModified: publishedDate,
+      author: currentArticle.author,
+    });
+  }, [year, currentArticle, metaDescription, publishedDate]);
+
   if (!currentArticle) {
     return <Loading />;
   }
-
-  const metaDescription = [
-    currentArticle.title,
-    currentArticle.description.slice(0, 140),
-  ].join(" | ");
-
-  const metaImgUrl = currentArticle.imgSrcs.at(0);
-
-  // Format date for meta tags (ISO 8601 format)
-  const publishedDate = currentArticle.dateTime
-    ? new Date(currentArticle.dateTime).toISOString()
-    : undefined;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -51,6 +67,7 @@ export const NewsDetailMobile = ({
         author={currentArticle.author}
         articleType="article"
       />
+      {structuredData && <StructuredData data={structuredData} />}
 
       <MobileHeader
         backUrl={`/news/${year}`}
