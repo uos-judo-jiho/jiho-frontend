@@ -24,7 +24,8 @@ const StructuredData = ({ data }: StructuredDataProps) => {
   const { setStructuredData } = useContext(StructuredDataContext);
 
   // SSR: Store structured data in context
-  if (setStructuredData) {
+  // This happens during render phase on server
+  if (typeof window === "undefined" && setStructuredData) {
     setStructuredData(data);
   }
 

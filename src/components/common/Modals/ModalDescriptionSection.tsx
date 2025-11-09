@@ -46,7 +46,7 @@ function ModalDescriptionSection({
         <Line margin={"1rem 0"} borderWidth={"1px"} />
       </div>
       <div className="flex-1 flex flex-col w-full overflow-y-auto overflow-x-hidden">
-        <h3 className="font-bold text-sm mb-[10px]">{article.title}</h3>
+        <h1 className="font-bold text-lg mb-[10px]">{article.title}</h1>
         <MarkdownRenderer content={article.description} />
       </div>
       <div className="flex-[0]">

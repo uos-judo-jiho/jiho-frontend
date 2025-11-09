@@ -59,7 +59,8 @@ const MyHelmet = ({
   );
 
   // SSR: Store metadata in context
-  if (setHelmetData) {
+  // This happens during render phase on server
+  if (typeof window === "undefined" && setHelmetData) {
     setHelmetData(helmetData);
   }
 
