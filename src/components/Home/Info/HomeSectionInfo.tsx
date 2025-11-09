@@ -17,7 +17,7 @@ function HomeSectionInfo() {
         id="sectionInfo"
       >
         <SheetWrapper>
-          <div style={{ color: "var(--theme-bg)" }}>
+          <div className="bg-theme mx-4">
             <MobileRowColLayout rowJustifyContent="space-between">
               <HomeInfo />
               <HomeAwards />

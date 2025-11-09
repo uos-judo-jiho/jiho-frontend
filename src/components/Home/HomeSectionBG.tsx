@@ -20,14 +20,7 @@ const HomeSectionBG = ({
 }: HomeSectionBGProps) => {
   return (
     <section id={id} className="relative w-screen h-screen">
-      <div
-        className="absolute top-0 left-0 w-full h-full before:content-[''] before:h-full before:absolute before:top-0 before:right-0 before:left-0"
-        style={{
-          backgroundColor: "var(--theme-black)",
-          background:
-            "radial-gradient(circle at 40% 20%, rgba(0, 0, 0, 0) 0%, rgb(18, 18, 18) 90.2%)",
-        }}
-      >
+      <div className="absolute top-0 left-0 w-full h-full bg-black">
         <picture className="border-none outline-none">
           <source srcSet={bgImageSrcWebp} type="image/webp" />
           <source srcSet={bgImageSrc} type="image/jpeg" />
@@ -36,10 +29,17 @@ const HomeSectionBG = ({
             alt={bgImageAlt}
             className={cn(
               "w-full h-full",
-              backgroundCover ? "object-cover" : "object-contain",
+              backgroundCover ? "object-cover" : "object-contain"
             )}
           />
         </picture>
+        <div
+          className="absolute top-0 left-0 w-full h-full"
+          style={{
+            background:
+              "radial-gradient(circle at 40% 20%, rgba(0, 0, 0, 0) 0%, rgb(18, 18, 18) 90.2%)",
+          }}
+        />
       </div>
       {children}
     </section>

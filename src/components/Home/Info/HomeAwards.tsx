@@ -6,18 +6,9 @@ import { formatAwardsType } from "@/lib/utils/Utils";
 
 const AwardItem = ({ award }: { award: AwardType }) => {
   return (
-    <li
-      className="flex flex-col gap-0.5 my-4 leading-none [&:nth-last-child(n+3)]:md:hidden"
-      style={{ fontSize: "var(--theme-font-description)" }}
-    >
+    <li className="flex flex-col gap-0.5 my-4 leading-none [&:nth-last-child(n+3)]:hidden [&:nth-last-child(n+3)]:md:flex">
       <b>{award.title}</b>
-      <span
-        style={{
-          fontSize: "var(--theme-font-default)",
-          lineHeight: "var(--theme-line-default)",
-          color: "var(--theme-light-grey)",
-        }}
-      >
+      <span className="text-sm text-theme-light-grey mt-0.5">
         {formatAwardsType(award)}
       </span>
     </li>
@@ -37,13 +28,7 @@ const HomeAwards = () => {
       <div className="flex flex-col">
         <Card className="bg-white/30 shadow-md backdrop-blur-sm border-none">
           <CardHeader>
-            <h3
-              className="mb-3"
-              style={{
-                fontSize: "var(--theme-font-subtitle)",
-                lineHeight: "var(--theme-line-subtitle)",
-              }}
-            >
+            <h3 className="mb-3 text-theme-dark-grey font-semibold text-lg">
               수상 이력
             </h3>
           </CardHeader>

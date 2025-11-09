@@ -16,31 +16,21 @@ function HomeInfo() {
           <Logo size={"100px"} isDark={true} />
         </div>
         <ul>
-          <li style={{ fontSize: "var(--theme-font-default)" }}>
+          <li className="text-white">
             <Title title={footerData.title.krTitle} heading={2} />
           </li>
-          <li style={{ fontSize: "var(--theme-font-default)" }}>
-            <h3
-              className="mb-3"
-              style={{ fontSize: "var(--theme-font-subtitle)" }}
-            >
+          <li className="text-white">
+            <h3 className="mb-3 text-theme-light-grey text-lg">
               {footerData.title.since}
             </h3>
           </li>
-          <li style={{ fontSize: "var(--theme-font-default)" }}>
-            <h3
-              className="mb-3"
-              style={{ fontSize: "var(--theme-font-subtitle)" }}
-            >
+          <li className="text-white">
+            <h3 className="mb-3 text-theme-light-grey text-lg ">
               {footerData.exercise.title}
             </h3>
           </li>
-          <li style={{ fontSize: "var(--theme-font-default)" }}>
-            {footerData.exercise.time}
-          </li>
-          <li style={{ fontSize: "var(--theme-font-default)" }}>
-            {footerData.exercise.place}
-          </li>
+          <li className="text-white">{footerData.exercise.time}</li>
+          <li className="text-white">{footerData.exercise.place}</li>
         </ul>
       </div>
     </div>

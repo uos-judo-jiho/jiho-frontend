@@ -11,7 +11,7 @@ const ExerciseThumbnail = () => {
   const lastTraningData = useMemo(() => {
     if (!data || data.length === 0) return null;
     const sorted = [...data].sort((a, b) =>
-      b.dateTime.localeCompare(a.dateTime),
+      b.dateTime.localeCompare(a.dateTime)
     );
     return sorted[0];
   }, [data]);
@@ -25,10 +25,10 @@ const ExerciseThumbnail = () => {
           <img
             src={lastTraningData.imgSrcs[0]}
             alt={`훈련 일지 - ${lastTraningData.dateTime}`}
-            className="w-full h-full rounded-inherit group-hover:brightness-50 sm:brightness-50"
+            className="w-full h-full rounded-inherit brightness-50 object-cover"
           />
           <div
-            className="absolute hidden sm:flex group-hover:flex justify-center items-center top-0 bottom-0 left-0 right-0"
+            className="absolute flex group-hover:flex justify-center items-center top-0 bottom-0 left-0 right-0"
             style={{ color: "var(--theme-bg)" }}
           >
             <Col justifyContent="center" alignItems="center">
