@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { UpperArrowIcon } from "@/components/icons";
 
-function StickyButton() {
-  const [visible, setVisible] = useState<boolean>(false);
-  const [isRender, setIsRender] = useState<boolean>(false);
+export const StickyButton = () => {
+  const [visible, setVisible] = useState(false);
+  const [isRender, setIsRender] = useState(false);
 
   function toggleVisible() {
     const scrolled = document.documentElement.scrollTop;
@@ -48,6 +48,4 @@ function StickyButton() {
       )}
     </div>
   );
-}
-
-export default StickyButton;
+};

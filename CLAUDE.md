@@ -86,8 +86,7 @@ jiho-frontend/
 │   │   ├── constant/         # Constants (colors, fonts, URLs)
 │   │   └── assets/           # Static assets (images, fonts, data)
 │   ├── hooks/                # Custom React hooks
-│   │   ├── upload/           # File upload hooks with SSE
-│   │   └── useToggle/        # Toggle state management
+│   │   └── upload/           # File upload hooks with SSE
 │   ├── recoils/              # Recoil state atoms
 │   │   ├── news.ts           # News state
 │   │   └── session.ts        # Session state
@@ -130,6 +129,7 @@ api/[feature]/
 ```
 
 **Example:**
+
 ```typescript
 // client.ts - Raw API function
 export const getNews = async (year: string): Promise<NewsType | null>
@@ -139,6 +139,7 @@ export const useNewsQuery = (year: string) => useQuery({...})
 ```
 
 **API Configuration:**
+
 - Central axios instance in `src/api/config/index.ts`
 - Smart base URL detection (SSR vs client, dev vs prod)
 - Automatic 401 redirect to admin login
@@ -148,6 +149,7 @@ export const useNewsQuery = (year: string) => useQuery({...})
 #### 2. Server-Side Rendering (SSR)
 
 **Complete SSR flow:**
+
 1. Express server receives request (`server/index.ts`)
 2. Server determines route and prefetches data via TanStack Query (`entry-server.tsx`)
 3. React app renders to string on server
@@ -156,11 +158,13 @@ export const useNewsQuery = (year: string) => useQuery({...})
 6. Client hydrates with same data (prevents flash of content)
 
 **Key SSR Files:**
+
 - `src/entry-server.tsx` - SSR render function with route-based prefetching (e.g., `/news/:year`, `/photo`)
 - `server/index.ts` - Express server with SSR middleware
 - Route-specific data prefetching prevents SSR mismatches
 
 **SEO Features:**
+
 - Dynamic meta tags via custom Helmet context (`src/helmet/`)
 - Structured data (JSON-LD) injection (`src/seo/`)
 - Sitemap generation script (`script/sitemap.js`)
@@ -168,18 +172,21 @@ export const useNewsQuery = (year: string) => useQuery({...})
 #### 3. BFF (Backend for Frontend) Pattern
 
 **Internal Routes (`/_internal/*`):**
+
 - S3 file upload handling with multer
 - Upload progress tracking via Server-Sent Events (SSE)
 - Security middleware with token validation (`INTERNAL_API_TOKEN`)
 - Proxy to backend API with request transformation
 
 **Benefits:**
+
 - Encapsulates S3 credentials on server (security)
 - Real-time progress tracking for large uploads
 - Authentication layer before backend
 - CORS handling
 
 **Files:**
+
 - `server/routes/upload.ts` - Upload endpoint
 - `server/services/s3-upload.ts` - S3 integration
 - `server/routes/sse-progress.ts` - SSE progress streaming
@@ -188,6 +195,7 @@ export const useNewsQuery = (year: string) => useQuery({...})
 #### 4. File Upload System Architecture
 
 **Upload Flow:**
+
 1. Client requests SSE token
 2. Client initiates upload with token
 3. Server receives file via multer
@@ -200,12 +208,14 @@ export const useNewsQuery = (year: string) => useQuery({...})
 **Three-tier approach:**
 
 1. **Server State (TanStack Query)**
+
    - All API data fetching and caching
    - 24-hour stale time for most queries
    - Automatic background refetching
    - SSR-compatible with hydration
 
 2. **Global Client State (Recoil)**
+
    - News selection state (`recoils/news.ts`)
    - Session/authentication state (`recoils/session.ts`)
    - UI state persisting across routes
@@ -219,39 +229,43 @@ export const useNewsQuery = (year: string) => useQuery({...})
 **Hybrid Approach:**
 
 **CSS Variables System (`index.css`):**
+
 - Shadcn/UI design tokens (--background, --foreground, etc.)
 - Custom UOS Judo theme variables (--theme-primary, --theme-bg, etc.)
 - Dark mode support via `.dark` class
 - Typography scales and line heights
 
 **TailwindCSS v4:**
+
 - Utility classes for spacing, layout, responsiveness
 - Custom breakpoints: `xs: 340px, sm: 540px, md: 860px, lg: 1200px`
 - Extended with custom theme colors and font sizes
 - `@tailwindcss/vite` plugin integration
 
 **Styled-components:**
+
 - Component-scoped styles with theme prop access
 - `MediaLayout` CSS helper for responsive breakpoints
 - SSR-compatible with style tag collection
 - Theme provider with light/dark theme objects
 
 **Typical Component Pattern:**
+
 ```typescript
 // Combines TailwindCSS utilities with styled-components
-<StyledComponent className="flex gap-4 p-8">
-  {children}
-</StyledComponent>
+<StyledComponent className="flex gap-4 p-8">{children}</StyledComponent>
 ```
 
 #### 7. Routing Architecture
 
 **Main Routes (`routers/AppRouter.tsx`):**
+
 - Public pages (Home, News, Photo, Notice, About)
 - Admin routes lazy-loaded via `WithSuspense` wrapper
 - 404 fallback
 
 **Admin Routes (`routers/AdminRouter.tsx`):**
+
 - Completely separate router for admin functionality
 - Lazy-loaded components for code splitting
 - Nested routes for different content types (news, training, notice)
@@ -260,12 +274,14 @@ export const useNewsQuery = (year: string) => useQuery({...})
 #### 8. Component Organization
 
 **UI Components (`components/ui/`):**
+
 - Radix UI-based primitives (button, dialog, input, textarea, calendar, card)
 - Consistent with Shadcn/UI patterns
 - Fully typed with TypeScript
 - Using `class-variance-authority` for variants
 
 **Layout Components (`components/layouts/`):**
+
 - `Row`, `Col` - Grid system components
 - `Carousel`, `Slider` - Image/content carousels
 - `ScrollSnap` - Touch-friendly scrolling
@@ -273,6 +289,7 @@ export const useNewsQuery = (year: string) => useQuery({...})
 - `Title` - Styled heading component
 
 **Common Components (`components/common/`):**
+
 - `Navbar`, `Footer` - Site-wide navigation
 - `MobileHeader` - Mobile-specific header
 - `Modals` - Various modal dialogs
@@ -303,12 +320,14 @@ export const useNewsQuery = (year: string) => useQuery({...})
 ### TypeScript Configuration
 
 **Multi-config setup:**
+
 - `tsconfig.json` - Base config with path aliases (`@/*` → `./src/*`)
 - `tsconfig.app.json` - Frontend app config (strict mode, React JSX)
 - `tsconfig.node.json` - Node.js config for Vite
 - `tsconfig.server.json` - Server-side code compilation
 
 **Key Settings:**
+
 - Strict mode enabled
 - ES2020 target with ESNext modules
 - Bundler module resolution
@@ -316,15 +335,18 @@ export const useNewsQuery = (year: string) => useQuery({...})
 ### Vite Configuration
 
 **Plugins:**
+
 - `@vitejs/plugin-react` - React Fast Refresh
 - `@tailwindcss/vite` - TailwindCSS v4 integration
 
 **Dev Server:**
+
 - Port 3000
 - API proxy: `/api` → `https://uosjudo.com/api`
 - WebSocket support for HMR
 
 **Build:**
+
 - ESBuild minification
 - Console/debugger removal in production
 - SSR externalization for styled-components
@@ -332,9 +354,11 @@ export const useNewsQuery = (year: string) => useQuery({...})
 ### Environment Variables
 
 **Build-time (required for build):**
+
 - `VITE_INTERNAL_API_TOKEN` - Internal API token for BFF authentication
 
 **Runtime (server):**
+
 - `NODE_ENV` - development/production
 - `PORT` - Server port (default: 3000)
 - `INTERNAL_API_TOKEN` - Server-side API token (must match VITE_INTERNAL_API_TOKEN)
@@ -386,11 +410,13 @@ export const useNewsQuery = (year: string) => useQuery({...})
 ### Docker Build
 
 **Multi-stage Dockerfile:**
+
 1. **deps** - Install all dependencies
 2. **builder** - Build client and server bundles
 3. **runner** - Production runtime with minimal dependencies
 
 **Production:**
+
 - Compiled TypeScript server (no tsx in production)
 - Non-root user for security
 - dumb-init for proper signal handling
