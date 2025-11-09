@@ -61,6 +61,12 @@ app.use("/_internal", bffErrorHandler);
 app.use("/api/admin", express.json({ limit: "10mb" }));
 app.use("/api/admin", express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Add X-Robots-Tag header to prevent crawling of API routes
+app.use("/api", (_req, res, next) => {
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  next();
+});
+
 app.use("/api", async (req, res) => {
   try {
     // 백엔드 URL 결정 로직
@@ -185,6 +191,9 @@ if (!isProduction) {
 
 // admin 페이지는 client 사이드 렌더링으로 처리
 app.use("/admin*", async (req, res) => {
+  // Add X-Robots-Tag header to prevent crawling of admin routes
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+
   const url = req.originalUrl.replace(base, "");
   customConsole.info(`${req.method} ${req.originalUrl}`);
   if (!isProduction) {
