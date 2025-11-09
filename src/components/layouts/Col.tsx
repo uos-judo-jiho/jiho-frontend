@@ -9,6 +9,7 @@ type ColProps = {
   full?: boolean;
   mobile?: boolean;
   pc?: boolean;
+  className?: string;
 };
 
 function Col({
@@ -19,6 +20,7 @@ function Col({
   gap,
   mobile,
   pc,
+  className,
 }: ColProps) {
   return (
     <Container
@@ -26,6 +28,7 @@ function Col({
       justifyContent={justifyContent}
       full={full}
       gap={gap}
+      className={className}
       $mobile={mobile}
       $pc={pc}
     >
@@ -61,10 +64,10 @@ const Container = styled.div<{
   ${({ $mobile }) =>
     $mobile &&
     css`
-      @media (min-width: 540px) {
+      @media (min-width: 560px) {
         display: none;
       }
-      @media (max-width: 540px) {
+      @media (max-width: 560px) {
         display: flex;
       }
     `}
@@ -72,10 +75,10 @@ const Container = styled.div<{
   ${({ $pc }) =>
     $pc &&
     css`
-      @media (max-width: 540px) {
+      @media (max-width: 560px) {
         display: none;
       }
-      @media (min-width: 540px) {
+      @media (min-width: 560px) {
         display: flex;
       }
     `}

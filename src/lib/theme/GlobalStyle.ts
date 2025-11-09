@@ -9,7 +9,7 @@ export const MediaLayout = css`
     width: 800px;
   }
   @media (max-width: 859px) {
-    width: 540px;
+    width: 560px;
   }
   @media (max-width: 539px) {
     width: 340px;

@@ -86,7 +86,7 @@ module.exports = {
       screens: {
         // Custom breakpoints matching existing MediaLayout
         xs: "340px",
-        sm: "540px",
+        sm: "560px",
         md: "860px",
         lg: "1200px",
       },

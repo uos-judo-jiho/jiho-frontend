@@ -238,7 +238,7 @@ export const useNewsQuery = (year: string) => useQuery({...})
 **TailwindCSS v4:**
 
 - Utility classes for spacing, layout, responsiveness
-- Custom breakpoints: `xs: 340px, sm: 540px, md: 860px, lg: 1200px`
+- Custom breakpoints: `xs: 340px, sm: 560px, md: 860px, lg: 1200px`
 - Extended with custom theme colors and font sizes
 - `@tailwindcss/vite` plugin integration
 

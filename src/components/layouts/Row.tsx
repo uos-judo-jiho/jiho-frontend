@@ -20,10 +20,10 @@ const Row = styled.div<
   ${({ $mobile }) =>
     $mobile &&
     css`
-      @media (min-width: 540px) {
+      @media (min-width: 560px) {
         display: none;
       }
-      @media (max-width: 540px) {
+      @media (max-width: 560px) {
         display: flex;
       }
     `}
@@ -31,10 +31,10 @@ const Row = styled.div<
   ${({ $pc }) =>
     $pc &&
     css`
-      @media (max-width: 540px) {
+      @media (max-width: 560px) {
         display: none;
       }
-      @media (min-width: 540px) {
+      @media (min-width: 560px) {
         display: flex;
       }
     `}

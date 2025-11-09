@@ -16,7 +16,7 @@ function SheetWrapper({
     <div
       className={cn(
         "relative mx-auto",
-        "w-[340px]",
+        "w-full",
         "sm:w-[640px]",
         "md:w-[768px]",
         "lg:w-[960px]",

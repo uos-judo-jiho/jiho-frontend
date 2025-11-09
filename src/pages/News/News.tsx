@@ -1,7 +1,7 @@
-import NewsDetail from "./NewsDetail";
+import NewsYear from "./NewsYear";
 
 const NewsPage = () => {
-  return <NewsDetail />;
+  return <NewsYear />;
 };
 
 export default NewsPage;

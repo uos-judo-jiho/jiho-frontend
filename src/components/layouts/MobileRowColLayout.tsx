@@ -8,6 +8,9 @@ type MobileRowColLayoutProps = {
   rowAlignItems?: string;
   colJustifyContent?: string;
   colAlignItems?: string;
+  mobileProps?: {
+    className?: string;
+  };
 };
 
 export function MobileRowColLayout({
@@ -16,13 +19,19 @@ export function MobileRowColLayout({
   rowJustifyContent,
   colAlignItems,
   colJustifyContent,
+  mobileProps,
 }: MobileRowColLayoutProps) {
   return (
     <>
       <Row justifyContent={rowJustifyContent} alignItems={rowAlignItems} $pc>
         {children}
       </Row>
-      <Col justifyContent={colJustifyContent} alignItems={colAlignItems} mobile>
+      <Col
+        justifyContent={colJustifyContent}
+        alignItems={colAlignItems}
+        className={mobileProps?.className}
+        mobile
+      >
         {children}
       </Col>
     </>

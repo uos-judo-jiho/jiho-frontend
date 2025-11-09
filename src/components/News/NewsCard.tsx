@@ -28,16 +28,16 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
       onClick={() => handleClickCard(article.id)}
       className={cn(
         "flex w-full text-theme-description leading-theme-description",
-        "border border-theme-light-grey p-4",
+        "border border-theme-light-grey p-4 sm:h-[320px] h-[400px]",
         "xs:p-2"
       )}
     >
       <a
         href={`/news/${year}/${article.id}`}
         onClick={(e) => e.preventDefault()}
-        className="w-full flex sm:flex-row flex-col items-center gap-4"
+        className="w-full h-full flex flex-row items-start gap-4"
       >
-        <div className="flex-1 rounded-[5px]">
+        <div className="flex-1 h-full">
           {isLoading ? (
             <img
               loading="lazy"
@@ -45,7 +45,7 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
               src={
                 article.imgSrcs[0] ? article.imgSrcs[0] : Constants.LOGO_BLACK
               }
-              className="w-full h-full rounded-inherit object-contain bg-theme-bg xs:h-auto xs:max-h-[200px]"
+              className="w-full h-full bg-black object-contain"
             />
           ) : (
             <SkeletonThumbnail />

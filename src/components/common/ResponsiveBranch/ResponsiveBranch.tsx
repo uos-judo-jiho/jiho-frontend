@@ -13,7 +13,7 @@ const ResponsiveBranch = ({
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 540);
+      setIsMobile(window.innerWidth < 560);
     };
 
     checkMobile();

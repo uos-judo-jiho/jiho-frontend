@@ -4,7 +4,7 @@ import { WithSuspense } from "@/components/utils/WithSuspense";
 
 import AdminHomePage from "@/pages/admin/AdminHomePage";
 import News from "@/pages/News/News";
-import NewsDetail from "@/pages/News/NewsDetail";
+import NewsYear from "@/pages/News/NewsYear";
 import NewsDetailPage from "@/pages/News/NewsDetailPage";
 import Photo from "@/pages/Photo/Photo";
 import PhotoDetail from "@/pages/Photo/PhotoDetail";
@@ -22,7 +22,7 @@ const AppRouter = () => {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/news" element={<News />} />
-      <Route path="/news/:id" element={<NewsDetail />} />
+      <Route path="/news/:id" element={<NewsYear />} />
       <Route path="/news/:id/:index" element={<NewsDetailPage />} />
       <Route path="/about" element={<About />} />
       <Route path="/photo" element={<Photo />} />

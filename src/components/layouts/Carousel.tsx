@@ -111,7 +111,7 @@ const Img = styled.img`
   transform: scale3d(1, 1, 1);
   transition: transform 0.5s;
 
-  @media (min-width: 540px) {
+  @media (min-width: 560px) {
     &:hover {
       transform: scale3d(1.2, 1.2, 1.2);
       transition: transform 0.5s;

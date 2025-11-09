@@ -25,7 +25,7 @@ const IMG = styled.img<IMGProps>`
   background-color: ${(props) =>
     props.isImage ? props.theme.blackColor : props.theme.bgColor};
 
-  @media (max-width: 539px) {
+  @media (max-width: 560px) {
     max-width: 60vw;
     max-height: 60vw;
   }
@@ -34,11 +34,14 @@ const IMG = styled.img<IMGProps>`
 const Container = styled.section`
   position: relative;
   overflow: hidden;
+
   display: flex;
-  width: 50vw;
   justify-content: center;
   align-items: center;
-  @media (max-width: 539px) {
+
+  width: 50vw;
+
+  @media (max-width: 560px) {
     width: 100%;
 
     height: inherit;

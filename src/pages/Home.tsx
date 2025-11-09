@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { ThemeProvider } from "styled-components";
 
 import Footer from "@/components/common/Footer/footer";
 import Navbar from "@/components/common/Navbar/Navbar";
@@ -17,7 +16,6 @@ import { useNews } from "@/recoils/news";
 import MyHelmet from "@/helmet/MyHelmet";
 import { awardsData } from "@/lib/assets/data/awards";
 import { Constants } from "@/lib/constant";
-import { lightTheme } from "@/lib/theme/theme";
 import { StructuredData, createOrganizationData } from "@/seo";
 
 const Home = () => {
@@ -67,7 +65,7 @@ const Home = () => {
     .join(", ");
 
   return (
-    <ThemeProvider theme={lightTheme}>
+    <>
       <MyHelmet
         title="서울시립대학교 유도부 지호 | Home"
         description={metaDescription}
@@ -76,6 +74,7 @@ const Home = () => {
       <StructuredData data={structuredData} />
 
       <Navbar isDark={isDark} />
+
       <ScrollSnap setIsDark={setIsDark}>
         <HomeSectionMain />
         <HomeSectionInfo />
@@ -84,7 +83,7 @@ const Home = () => {
         <HomeSectionMore />
         <Footer />
       </ScrollSnap>
-    </ThemeProvider>
+    </>
   );
 };
 
