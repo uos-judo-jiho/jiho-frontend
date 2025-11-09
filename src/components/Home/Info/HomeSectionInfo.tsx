@@ -1,5 +1,3 @@
-import styled from "styled-components";
-
 import BGImage from "@/lib/assets/images/background-img-event.jpg";
 import BGImageWebp from "@/lib/assets/images/background-img-event.webp";
 
@@ -8,10 +6,6 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 import HomeSectionBG from "../HomeSectionBG";
 import HomeAwards from "./HomeAwards";
 import HomeInfo from "./HomeInfo";
-
-const Container = styled.div`
-  color: ${(props) => props.theme.bgColor};
-`;
 
 function HomeSectionInfo() {
   return (
@@ -23,12 +17,12 @@ function HomeSectionInfo() {
         id="sectionInfo"
       >
         <SheetWrapper>
-          <Container>
+          <div style={{ color: "var(--theme-bg)" }}>
             <MobileRowColLayout rowJustifyContent="space-between">
               <HomeInfo />
               <HomeAwards />
             </MobileRowColLayout>
-          </Container>
+          </div>
         </SheetWrapper>
       </HomeSectionBG>
     </>

@@ -1,19 +1,10 @@
-import styled from "styled-components";
 import SkeletonItem from "./SkeletonItem";
-
-const Container = styled.div`
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  overflow: hidden;
-  position: relative;
-`;
 
 const SkeletonThumbnail = () => {
   return (
-    <Container>
+    <div className="w-full h-auto aspect-square overflow-hidden relative">
       <SkeletonItem></SkeletonItem>
-    </Container>
+    </div>
   );
 };
 

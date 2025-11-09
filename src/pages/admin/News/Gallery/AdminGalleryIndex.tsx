@@ -3,55 +3,6 @@ import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
 import { useNews } from "@/recoils/news";
 import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-
-const YearCard = styled.div`
-  padding: 24px;
-  border: 1px solid ${(props) => props.theme.greyColor};
-  border-radius: 8px;
-  background-color: ${(props) => props.theme.bgColor};
-  transition: all 0.2s ease;
-  cursor: pointer;
-
-  &:hover {
-    border-color: ${(props) => props.theme.primaryColor};
-    transform: translateY(-2px);
-  }
-`;
-
-const YearTitle = styled.h2`
-  font-size: ${(props) => props.theme.subTitleFontSize};
-  line-height: ${(props) => props.theme.subTitleLineHeight};
-  margin: 0;
-  color: ${(props) => props.theme.textColor};
-`;
-
-const ImageCount = styled.p`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  margin: 8px 0 0 0;
-  color: ${(props) => props.theme.greyColor};
-`;
-
-const YearGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
-`;
-
-const BackButton = styled.button`
-  padding: 8px 16px;
-  background-color: transparent;
-  border: 1px solid ${(props) => props.theme.greyColor};
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: ${(props) => props.theme.defaultFontSize};
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${(props) => props.theme.lightGreyColor};
-  }
-`;
 
 const AdminGalleryIndex = () => {
   const navigate = useNavigate();
@@ -67,33 +18,38 @@ const AdminGalleryIndex = () => {
   return (
     <FormContainer title="지호지 갤러리 - 년도 선택">
       <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
-        <BackButton onClick={() => navigate("/admin/news")}>
+        <button
+          onClick={() => navigate("/admin/news")}
+          className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
+        >
           ← 지호지 관리로 돌아가기
-        </BackButton>
+        </button>
       </Row>
 
       <Col gap={12}>
         <p style={{ margin: 0, color: "#666" }}>
           갤러리를 관리할 년도를 선택해주세요
         </p>
-        <YearGrid>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 mt-5">
           {galleries.map((gallery) => (
             <Link
               to={`/admin/news/${gallery.year}/gallery`}
               key={gallery.year}
               style={{ textDecoration: "none" }}
             >
-              <YearCard>
-                <YearTitle>{gallery.year}년</YearTitle>
-                <ImageCount>
+              <div className="p-6 border border-gray-500 rounded-lg bg-gray-50 transition-all cursor-pointer hover:border-blue-500 hover:-translate-y-0.5">
+                <h2 className="text-lg leading-normal m-0 text-gray-800">
+                  {gallery.year}년
+                </h2>
+                <p className="text-sm m-0 mt-2 text-gray-500">
                   {gallery.imageCount > 0
                     ? `${gallery.imageCount}개의 이미지`
                     : "이미지 없음"}
-                </ImageCount>
-              </YearCard>
+                </p>
+              </div>
             </Link>
           ))}
-        </YearGrid>
+        </div>
       </Col>
     </FormContainer>
   );

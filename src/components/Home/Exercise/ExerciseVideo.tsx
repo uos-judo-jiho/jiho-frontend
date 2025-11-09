@@ -1,18 +1,9 @@
 import React from "react";
-import styled from "styled-components";
-
-const Container = styled.div`
-  position: relative;
-  width: 40vw;
-  height: inherit;
-`;
-
-const VideoWrapper = styled.div``;
 
 function ExerciseVideo() {
   return (
-    <Container>
-      <VideoWrapper>
+    <div className="relative w-[40vw] h-auto">
+      <div>
         {/* <YouTube
           // TODO videoID 바꾸기
           videoId="-4mtPGtQGBQ"
@@ -30,8 +21,8 @@ function ExerciseVideo() {
             e.target.stopVideo(0);
           }}
         /> */}
-      </VideoWrapper>
-    </Container>
+      </div>
+    </div>
   );
 }
 

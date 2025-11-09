@@ -6,9 +6,7 @@ import {
   QueryClientProvider,
   dehydrate,
 } from "@tanstack/react-query";
-import { ServerStyleSheet, ThemeProvider } from "styled-components";
 import AppRouter from "./routers/AppRouter";
-import { lightTheme } from "./lib/theme/theme";
 import { getTrainings } from "./api/trainings/client";
 import { getNews } from "./api/news/client";
 import { HelmetContext } from "./helmet/MyHelmet";
@@ -74,9 +72,6 @@ export async function render(url: string) {
     // Continue rendering even if prefetch fails
   }
 
-  // Create styled-components ServerStyleSheet to collect styles during SSR
-  const sheet = new ServerStyleSheet();
-
   // Helmet data collector for SSR
   // Default metadata for home page
   const defaultDescription = awardsData.awards
@@ -101,38 +96,29 @@ export async function render(url: string) {
     structuredData = data;
   };
 
-  try {
-    const html = renderToString(
-      sheet.collectStyles(
-        <StructuredDataContext.Provider value={{ setStructuredData }}>
-          <HelmetContext.Provider value={{ setHelmetData }}>
-            <QueryClientProvider client={queryClient}>
-              <RecoilRoot>
-                <ThemeProvider theme={lightTheme}>
-                  <StaticRouter location={url}>
-                    <AppRouter />
-                  </StaticRouter>
-                </ThemeProvider>
-              </RecoilRoot>
-            </QueryClientProvider>
-          </HelmetContext.Provider>
-        </StructuredDataContext.Provider>,
-      ),
-    );
+  const html = renderToString(
+    <StructuredDataContext.Provider value={{ setStructuredData }}>
+      <HelmetContext.Provider value={{ setHelmetData }}>
+        <QueryClientProvider client={queryClient}>
+          <RecoilRoot>
+            <StaticRouter location={url}>
+              <AppRouter />
+            </StaticRouter>
+          </RecoilRoot>
+        </QueryClientProvider>
+      </HelmetContext.Provider>
+    </StructuredDataContext.Provider>,
+  );
 
-    // Extract the style tags from styled-components
-    const styleTags = sheet.getStyleTags();
+  // No styled-components, so styleTags is empty
+  const styleTags = "";
 
-    // Dehydrate the query cache to send to client
-    const dehydratedState = dehydrate(queryClient);
+  // Dehydrate the query cache to send to client
+  const dehydratedState = dehydrate(queryClient);
 
-    console.log("[SSR] Helmet data");
-    console.table(helmetData);
-    console.log("[SSR] Structured data:", structuredData ? "Present" : "None");
+  console.log("[SSR] Helmet data");
+  console.table(helmetData);
+  console.log("[SSR] Structured data:", structuredData ? "Present" : "None");
 
-    return { html, dehydratedState, styleTags, helmetData, structuredData };
-  } finally {
-    // Always seal the sheet to prevent memory leaks
-    sheet.seal();
-  }
+  return { html, dehydratedState, styleTags, helmetData, structuredData };
 }

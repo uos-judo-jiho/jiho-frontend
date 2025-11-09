@@ -1,19 +1,8 @@
 import React from "react";
-import styled from "styled-components";
 
 import { StickyButton } from "@/components/common/Buttons/StickyButton";
 import Footer from "@/components/common/Footer/footer";
 import Navbar from "@/components/common/Navbar/Navbar";
-
-const MainContainer = styled.main`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-`;
-
-const StretchedContainer = styled.div`
-  flex: 1;
-`;
 
 type DefaultLayoutProps = {
   children: React.ReactNode;
@@ -22,12 +11,12 @@ type DefaultLayoutProps = {
 function DefaultLayout({ children }: DefaultLayoutProps) {
   return (
     <>
-      <MainContainer>
+      <main className="flex flex-col min-h-screen">
         <Navbar />
-        <StretchedContainer>{children}</StretchedContainer>
+        <div className="flex-1">{children}</div>
         <StickyButton />
         <Footer />
-      </MainContainer>
+      </main>
     </>
   );
 }

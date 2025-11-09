@@ -1,4 +1,4 @@
-import { CSSProperties } from "styled-components";
+import { CSSProperties } from "react";
 
 export type MergeTypes<T, U> = {
   [K in keyof T | keyof U]: K extends keyof T

@@ -6,16 +6,15 @@ import { cn } from "@/lib/utils";
 import { HTMLProps } from "react";
 import { Link } from "react-router-dom";
 
-import styled from "styled-components";
-
-const DescriptionList = styled.ul`
-  margin-right: 20px;
-  margin-bottom: 12px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
+const DescriptionList = ({
+  className,
+  ...props
+}: HTMLProps<HTMLUListElement>) => (
+  <ul
+    className={cn("mr-5 mb-3 flex flex-col gap-2", className)}
+    {...props}
+  />
+);
 
 const DescriptionItem = ({
   className,

@@ -1,52 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
-import styled from "styled-components";
 import { CloseIcon } from "@/components/icons";
 import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
 import { SelectedType } from "./MenuStyledComponents";
+import { cn } from "@/lib/utils";
 
 import { useNavbar } from "../Navbar/NavBar.provider";
 
 const SIDEBAR_ANIMATION_DURATION = 500;
-
-const Container = styled.div`
-  z-index: 1;
-  padding: 50px 20px 20px 20px;
-
-  background-color: ${(props) => props.theme.bgColor};
-  box-shadow: 4px 10px 10px rgba(0, 0, 0, 0.2);
-
-  height: 100%;
-  min-width: 420px;
-
-  position: fixed;
-  left: -100%;
-  top: 0;
-
-  transition: ${SIDEBAR_ANIMATION_DURATION}ms;
-
-  &.open {
-    left: 0;
-    transition: ${SIDEBAR_ANIMATION_DURATION}ms;
-  }
-  @media (max-width: 539px) {
-    min-width: auto;
-    width: 100%;
-  }
-`;
-const NavWrapper = styled.nav``;
-
-const StyledClose = styled(CloseIcon)`
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  width: 20px;
-  height: 20px;
-  z-index: 1;
-  cursor: pointer;
-`;
 
 const SideBar = () => {
   const { open, setOpen } = useNavbar();
@@ -103,16 +66,32 @@ const SideBar = () => {
   }
 
   return createPortal(
-    <Container id="sidebar" ref={outside} className={open ? "open" : undefined}>
-      <StyledClose onClick={toggleSide} title="Close sidebar" />
-      <NavWrapper>
+    <div
+      id="sidebar"
+      ref={outside}
+      className={cn(
+        "z-[1] pt-[50px] px-5 pb-5",
+        "bg-theme-bg shadow-[4px_10px_10px_rgba(0,0,0,0.2)]",
+        "h-full min-w-[420px]",
+        "fixed -left-full top-0",
+        "transition-all duration-500",
+        "max-[539px]:min-w-0 max-[539px]:w-full",
+        open && "!left-0",
+      )}
+    >
+      <CloseIcon
+        onClick={toggleSide}
+        title="Close sidebar"
+        className="absolute top-3 left-3 w-5 h-5 z-[1] cursor-pointer"
+      />
+      <nav>
         {location.pathname.includes("/admin") ? (
           <AdminMenu />
         ) : (
           <ClientMenu selected={selected} setSelected={setSelected} />
         )}
-      </NavWrapper>
-    </Container>,
+      </nav>
+    </div>,
     document.body,
   );
 };

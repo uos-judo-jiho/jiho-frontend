@@ -1,122 +1,173 @@
-import styled from "styled-components";
+import React from "react";
+import { cn } from "@/lib/utils";
 
-export const StyledLabel = styled.label`
-  font-size: ${(props) => props.theme.defaultFontSize};
-`;
+// Convert styled-components to Tailwind-based components
 
-export const FormContainer = styled.div`
-  background-color: ${(props) => props.theme.bgColor};
-  padding: 20px;
-  margin-bottom: 20px;
-`;
+export const StyledLabel: React.FC<React.LabelHTMLAttributes<HTMLLabelElement>> = ({
+  className,
+  ...props
+}) => (
+  <label className={cn("text-sm", className)} {...props} />
+);
 
-export const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 10px;
-`;
+export const FormContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <div className={cn("bg-gray-50 p-5 mb-5", className)} {...props}>
+    {children}
+  </div>
+);
 
-export const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-`;
+export const InputContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <div className={cn("flex flex-col gap-2 m-2.5", className)} {...props}>
+    {children}
+  </div>
+);
 
-export const CancelButton = styled.button`
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: ${(props) => props.theme.defaultFontSize};
-  background: ${(props) => props.theme.accentColor};
-  border: 1px solid ${(props) => props.theme.accentColor};
-  color: #fff;
-  padding: 10px 20px;
-  margin-right: 10px;
+export const ButtonContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <div className={cn("flex justify-center gap-3", className)} {...props}>
+    {children}
+  </div>
+);
 
-  &:hover {
-    opacity: 0.6;
-  }
-`;
-export const StyledInput = styled.input`
-  &[type="text"],
-  &[type="password"] {
-    height: 25px;
-    padding: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-  }
+export const CancelButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <button
+    className={cn(
+      "mt-2.5 cursor-pointer text-sm bg-yellow-500 border border-yellow-500 text-white px-5 py-2.5 mr-2.5 hover:opacity-60",
+      className
+    )}
+    {...props}
+  >
+    {children}
+  </button>
+);
 
-  &[type="submit"] {
-    margin-top: 10px;
-    cursor: pointer;
-    font-size: ${(props) => props.theme.defaultFontSize};
-    background: ${(props) => props.theme.primaryColor};
-    border: 1px solid ${(props) => props.theme.primaryColor};
-    color: #fff;
-    padding: 10px 20px;
-  }
+export const StyledInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({
+  className,
+  type,
+  ...props
+}) => {
+  const baseClasses = type === "text" || type === "password"
+    ? "h-6 px-2 py-2 border border-black/20"
+    : type === "submit"
+    ? "mt-2.5 cursor-pointer text-sm bg-blue-500 border border-blue-500 text-white px-5 py-2.5 hover:opacity-60"
+    : "";
 
-  &[type="submit"]:hover {
-    opacity: 0.6;
-  }
+  return (
+    <input
+      type={type}
+      className={cn(baseClasses, className)}
+      {...props}
+    />
+  );
+};
 
-  &[type="date"] {
-  }
+export const StyledTextArea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = ({
+  className,
+  ...props
+}) => (
+  <textarea
+    className={cn(
+      "min-h-[300px] p-2 border border-black/20 resize-y leading-[160%]",
+      className
+    )}
+    {...props}
+  />
+);
 
-  &[type="file"] {
-  }
-`;
+export const TagsContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <div className={cn("flex justify-start items-center gap-2.5", className)} {...props}>
+    {children}
+  </div>
+);
 
-export const StyledTextArea = styled.textarea`
-  min-height: 300px;
-  padding: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  resize: vertical;
-  line-height: 160%;
-`;
+export const TagAddButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <button className={cn("", className)} {...props}>
+    {children}
+  </button>
+);
 
-export const TagsContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-`;
+export const TagDeleteButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <button className={cn("", className)} {...props}>
+    {children}
+  </button>
+);
 
-export const TagAddButton = styled.button``;
+export const PreviewContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <div className={cn("grid grid-rows-2 gap-2.5 grid-cols-5", className)} {...props}>
+    {children}
+  </div>
+);
 
-export const TagDeleteButton = styled.button``;
+export const PreviewImgContainer: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <div className={cn("flex flex-col justify-center items-center text-sm", className)} {...props}>
+    {children}
+  </div>
+);
 
-export const PreviewContainer = styled.div`
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-  gap: 10px;
-  grid-template-columns: repeat(5, 1fr);
-`;
-export const PreviewImgContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: ${(props) => props.theme.defaultFontSize};
-`;
-export const PreviewImg = styled.img`
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-`;
+export const PreviewImg: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = ({
+  className,
+  ...props
+}) => (
+  <img className={cn("w-full h-auto object-contain", className)} {...props} />
+);
 
-export const PreviewName = styled.span`
-  font-size: ${(props) => props.theme.defaultFontSize};
-`;
+export const PreviewName: React.FC<React.HTMLAttributes<HTMLSpanElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <span className={cn("text-sm", className)} {...props}>
+    {children}
+  </span>
+);
 
-export const NewArticleButton = styled.button`
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: ${(props) => props.theme.defaultFontSize};
-  background: ${(props) => props.theme.primaryColor};
-  border: 1px solid ${(props) => props.theme.primaryColor};
-  color: #fff;
-  padding: 10px 20px;
-  &:hover {
-    opacity: 0.6;
-  }
-`;
+export const NewArticleButton: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>> = ({
+  className,
+  children,
+  ...props
+}) => (
+  <button
+    className={cn(
+      "mt-2.5 cursor-pointer text-sm bg-blue-500 border border-blue-500 text-white px-5 py-2.5 hover:opacity-60",
+      className
+    )}
+    {...props}
+  >
+    {children}
+  </button>
+);

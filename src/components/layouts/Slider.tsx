@@ -1,98 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
-import styled from "styled-components";
 import useTouchScroll from "@/hooks/useTouchScroll";
 import { Constants } from "@/lib/constant";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
+import { cn } from "@/lib/utils";
 
 // TODO 페이지 넘길 때 사진이 흘러가는 에니메이션 막기
 
 type SliderProps = {
   datas: string[];
 };
-
-type IMGProps = {
-  isImage?: boolean;
-};
-
-const IMG = styled.img<IMGProps>`
-  max-width: 30vw;
-  max-height: 30vw;
-
-  min-width: 100%;
-
-  object-fit: contain;
-  background-color: ${(props) =>
-    props.isImage ? props.theme.blackColor : props.theme.bgColor};
-
-  @media (max-width: 560px) {
-    max-width: 60vw;
-    max-height: 60vw;
-  }
-`;
-
-const Container = styled.section`
-  position: relative;
-  overflow: hidden;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 50vw;
-
-  @media (max-width: 560px) {
-    width: 100%;
-
-    height: inherit;
-  }
-`;
-
-const SliderContainer = styled.div`
-  position: relative;
-
-  width: 100%;
-  height: inherit;
-
-  display: flex;
-  align-items: center;
-`;
-
-const SliderWrapper = styled.div`
-  width: 100%;
-  height: inherit;
-  display: block;
-
-  background: linear-gradient(to bottom, #fc9857, #a56826, #fc9857);
-`;
-
-const CircleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translate(0, -20px);
-  /* position: absolute;
-  bottom: 12px;
-  right: 0;
-  left: 0;*/
-`;
-
-const CurrentCircle = styled.div`
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: ${(props) => props.theme.lightGreyColor};
-  opacity: 0.3;
-
-  margin: 0 4px;
-
-  &.active {
-    background-color: ${(props) => props.theme.bgColor};
-    width: 6px;
-    height: 6px;
-    opacity: 1;
-  }
-`;
 
 function Slider({ datas }: SliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -139,7 +56,7 @@ function Slider({ datas }: SliderProps) {
     return null;
   }
   return (
-    <Container>
+    <section className="relative overflow-hidden flex justify-center items-center w-1/2 sm:w-full sm:h-full">
       <StyledBackArrow
         onClick={prevSlide}
         current={currentSlide}
@@ -154,35 +71,44 @@ function Slider({ datas }: SliderProps) {
         $isBackGround={true}
         $isMobileVisible={true}
       />
-      <SliderWrapper>
-        <SliderContainer
+      <div className="w-full h-full block bg-gradient-to-b from-[#fc9857] via-[#a56826] to-[#fc9857]">
+        <div
           ref={slideRef}
           onTouchStart={onTouchStart}
           onTouchEnd={onTouchEnd}
+          className="relative w-full h-full flex items-center"
         >
           {datas.map((img, i) => (
-            <IMG
+            <img
               src={img ? img : Constants.LOGO_BLACK}
               key={"thumbnail" + i}
-              isImage={img ? true : false}
               alt={`슬라이드 이미지 ${i + 1}`}
+              className="max-w-[30vw] max-h-[30vw] sm:max-w-[60vw] sm:max-h-[60vw] min-w-full object-contain"
+              style={{
+                backgroundColor: img ? 'hsl(var(--black))' : 'hsl(var(--background))',
+              }}
             />
           ))}
-        </SliderContainer>
-        <CircleWrapper>
+        </div>
+        <div className="flex items-center justify-center -translate-y-5">
           {datas.length === 1
             ? null
             : datas.map((_image, index) => {
                 return (
-                  <CurrentCircle
+                  <div
                     key={"circle" + index}
-                    className={index === currentSlide ? "active" : ""}
+                    className={cn(
+                      "w-1 h-1 rounded-full mx-1 opacity-30",
+                      index === currentSlide
+                        ? "w-1.5 h-1.5 opacity-100 bg-background"
+                        : "bg-muted"
+                    )}
                   />
                 );
               })}
-        </CircleWrapper>
-      </SliderWrapper>
-    </Container>
+        </div>
+      </div>
+    </section>
   );
 }
 
