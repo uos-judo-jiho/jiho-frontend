@@ -56,7 +56,7 @@ function Slider({ datas }: SliderProps) {
     return null;
   }
   return (
-    <section className="relative overflow-hidden flex justify-center items-center w-1/2 sm:w-full sm:h-full">
+    <section className="relative overflow-hidden flex justify-center items-center sm:w-1/2 w-full sm:h-full">
       <StyledBackArrow
         onClick={prevSlide}
         current={currentSlide}
@@ -83,10 +83,10 @@ function Slider({ datas }: SliderProps) {
               src={img ? img : Constants.LOGO_BLACK}
               key={"thumbnail" + i}
               alt={`슬라이드 이미지 ${i + 1}`}
-              className="max-w-[30vw] max-h-[30vw] sm:max-w-[60vw] sm:max-h-[60vw] min-w-full object-contain"
-              style={{
-                backgroundColor: img ? 'hsl(var(--black))' : 'hsl(var(--background))',
-              }}
+              className={cn(
+                "sm:max-w-[30vw] sm:max-h-[30vw] max-w-[60vw] max-h-[60vw] min-w-full object-contain",
+                img ? "bg-black" : "bg-background"
+              )}
             />
           ))}
         </div>

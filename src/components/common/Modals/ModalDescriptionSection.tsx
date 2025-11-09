@@ -26,20 +26,20 @@ function ModalDescriptionSection({
       <div className="w-full flex-[0_0_auto]">
         <table className="text-base w-full">
           <tbody>
-            <tr className="block">
-              <td className="w-[100px]">{titles[0]}</td>
-              <td className="break-keep-all">{article.author}</td>
+            <tr>
+              <td className="w-[100px] align-top py-1">{titles[0]}</td>
+              <td className="break-keep-all py-1">{article.author}</td>
             </tr>
-            <tr className="block">
-              <td className="w-[100px]">{titles[1]}</td>
-              <td className="break-keep-all">
+            <tr>
+              <td className="w-[100px] align-top py-1">{titles[1]}</td>
+              <td className="break-keep-all py-1">
                 {/* TODO html space 처리하기 */}
                 {article.tags.join(" ")}
               </td>
             </tr>
             <tr className={cn(!isDisplay && "hidden")}>
-              <td className="w-[100px]">{titles[2]}</td>
-              <td className="break-keep-all">{article.dateTime}</td>
+              <td className="w-[100px] align-top py-1">{titles[2]}</td>
+              <td className="break-keep-all py-1">{article.dateTime}</td>
             </tr>
           </tbody>
         </table>

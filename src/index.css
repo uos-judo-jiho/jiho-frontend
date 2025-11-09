@@ -123,6 +123,7 @@
 }
 
 @theme inline {
+  /* Shadcn/UI colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -159,6 +160,33 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* UOS Judo theme colors */
+  --color-theme-primary: var(--theme-primary);
+  --color-theme-bg: var(--theme-bg);
+  --color-theme-text: var(--theme-text);
+  --color-theme-accent: var(--theme-accent);
+  --color-theme-black: var(--theme-black);
+  --color-theme-grey: var(--theme-grey);
+  --color-theme-light-grey: var(--theme-light-grey);
+  --color-theme-dark-grey: var(--theme-dark-grey);
+  --color-theme-yellow: var(--theme-yellow);
+  --color-theme-pink: var(--theme-pink);
+  --color-theme-white: var(--theme-white);
+
+  /* UOS Judo font sizes */
+  --font-size-theme-title: var(--theme-font-title);
+  --font-size-theme-subtitle: var(--theme-font-subtitle);
+  --font-size-theme-description: var(--theme-font-description);
+  --font-size-theme-default: var(--theme-font-default);
+  --font-size-theme-tiny: var(--theme-font-tiny);
+
+  /* UOS Judo line heights */
+  --line-height-theme-title: var(--theme-line-title);
+  --line-height-theme-subtitle: var(--theme-line-subtitle);
+  --line-height-theme-description: var(--theme-line-description);
+  --line-height-theme-default: var(--theme-line-default);
+  --line-height-theme-tiny: var(--theme-line-tiny);
 }
 
 @layer base {

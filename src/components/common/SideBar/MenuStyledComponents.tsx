@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const MenuList = ({ className, ...props }: HTMLProps<HTMLUListElement>) => (
-  <ul className={cn("text-sm", className)} {...props} />
+  <ul className={cn("text-sm", "space-y-2", className)} {...props} />
 );
 
 const MenuToggle = ({
@@ -20,8 +20,8 @@ const MenuItemTitle = ({
 }: HTMLProps<HTMLSpanElement>) => (
   <span
     className={cn(
-      "leading-[200%] cursor-pointer hover:text-gray-500",
-      className,
+      "leading-[200%] cursor-pointer hover:text-gray-500 text-base",
+      className
     )}
     {...props}
   >
