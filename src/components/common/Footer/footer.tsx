@@ -10,10 +10,7 @@ const DescriptionList = ({
   className,
   ...props
 }: HTMLProps<HTMLUListElement>) => (
-  <ul
-    className={cn("mr-5 mb-3 flex flex-col gap-2", className)}
-    {...props}
-  />
+  <ul className={cn("mr-5 mb-3 flex flex-col gap-2", className)} {...props} />
 );
 
 const DescriptionItem = ({
@@ -24,7 +21,7 @@ const DescriptionItem = ({
   <li
     className={cn(
       "text-sm text-theme-black break-keep-all wrap-break",
-      className
+      className,
     )}
     {...rest}
   >

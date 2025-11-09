@@ -37,21 +37,21 @@ export const customConsole = {
     nodeConsole.log(
       `${COLOR.INFO}${CONSOLE_PREFIX.INFO}`,
       ...args,
-      COLOR.RESET
+      COLOR.RESET,
     );
   },
   error: (...args: any[]) => {
     nodeConsole.error(
       `${COLOR.ERROR}${CONSOLE_PREFIX.ERROR}`,
       ...args,
-      COLOR.RESET
+      COLOR.RESET,
     );
   },
   warn: (...args: any[]) => {
     nodeConsole.warn(
       `${COLOR.WARN}${CONSOLE_PREFIX.WARN}`,
       ...args,
-      COLOR.RESET
+      COLOR.RESET,
     );
   },
 };

@@ -73,7 +73,10 @@ app.use("/api", async (req, res) => {
     } else {
       // 프로덕션: 현재 호스트 기준 (www 제거)
       const hostname = host.replace(/^www\./, "");
-      const protocol = req.protocol === "https" || req.get("x-forwarded-proto") === "https" ? "https" : "http";
+      const protocol =
+        req.protocol === "https" || req.get("x-forwarded-proto") === "https"
+          ? "https"
+          : "http";
       backendBaseUrl = `${protocol}://${hostname}`;
     }
 
@@ -225,7 +228,6 @@ app.use("*", async (req, res) => {
     let render: (url: string) => Promise<{
       html: string;
       dehydratedState: any;
-      styleTags: string;
       helmetData: any;
       structuredData: any;
     }>;
@@ -250,7 +252,6 @@ app.use("*", async (req, res) => {
     const {
       html: rendered,
       dehydratedState,
-      styleTags,
       helmetData,
       structuredData,
     } = await render(url);
@@ -270,7 +271,6 @@ app.use("*", async (req, res) => {
     // Inject metadata
     let html = template
       .replace(`<!--app-html-->`, rendered)
-      .replace(`<!--app-styles-->`, styleTags)
       .replace(`</head>`, `${stateScript}${structuredDataScript}\n  </head>`);
 
     // Update meta tags with helmetData

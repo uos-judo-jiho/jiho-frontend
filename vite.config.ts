@@ -39,6 +39,6 @@ export default defineConfig({
     drop: process.env.NODE_ENV === "production" ? ["console", "debugger"] : [],
   },
   ssr: {
-    noExternal: ["styled-components", "@emotion/stylis", "@emotion/unitless"],
+    noExternal: ["@emotion/stylis", "@emotion/unitless"],
   },
 });

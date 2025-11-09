@@ -80,8 +80,9 @@ const renderPage = async (route, render, template) => {
   try {
     console.log(`[SSG] Rendering: ${route.path}`);
 
-    const { html, dehydratedState, styleTags, helmetData, structuredData } =
-      await render(route.path);
+    const { html, dehydratedState, helmetData, structuredData } = await render(
+      route.path
+    );
 
     // React Query state 주입
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
@@ -98,7 +99,6 @@ const renderPage = async (route, render, template) => {
     // HTML 조합
     let finalHtml = template
       .replace(`<!--app-html-->`, html)
-      .replace(`<!--app-styles-->`, styleTags)
       .replace(`</head>`, `${stateScript}${structuredDataScript}\n  </head>`);
 
     // Meta tags 업데이트

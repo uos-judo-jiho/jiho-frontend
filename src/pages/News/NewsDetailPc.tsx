@@ -16,7 +16,7 @@ import { StructuredData, createArticleData } from "@/seo";
 export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
   const articles = news.articles;
   const currentIndex = articles.findIndex(
-    (article) => article.id.toString() === newsId
+    (article) => article.id.toString() === newsId,
   );
 
   const currentArticle = articles[currentIndex];
@@ -24,7 +24,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
   // Prepare metadata (before early return to satisfy React Hook rules)
   const metaDescription = currentArticle
     ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(
-        " | "
+        " | ",
       )
     : "";
 
@@ -112,7 +112,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
               disabled={currentIndex === 0}
               className={cn(
                 "flex items-center",
-                currentIndex === 0 && "opacity-50 cursor-not-allowed"
+                currentIndex === 0 && "opacity-50 cursor-not-allowed",
               )}
             >
               <Link
@@ -140,7 +140,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
               className={cn(
                 "flex items-center",
                 currentIndex === articles.length - 1 &&
-                  "opacity-50 cursor-not-allowed"
+                  "opacity-50 cursor-not-allowed",
               )}
             >
               <Link

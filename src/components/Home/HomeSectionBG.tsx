@@ -36,7 +36,7 @@ const HomeSectionBG = ({
             alt={bgImageAlt}
             className={cn(
               "w-full h-full",
-              backgroundCover ? "object-cover" : "object-contain"
+              backgroundCover ? "object-cover" : "object-contain",
             )}
           />
         </picture>

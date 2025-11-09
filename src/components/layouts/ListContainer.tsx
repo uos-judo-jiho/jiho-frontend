@@ -36,7 +36,9 @@ function ListContainer({
                   </div>
                 </Link>
               </div>
-              <div className="whitespace-nowrap text-center flex-[10%]">{data.dateTime}</div>
+              <div className="whitespace-nowrap text-center flex-[10%]">
+                {data.dateTime}
+              </div>
             </li>
             <Line borderColor={Constants.LIGHT_GREY_COLOR} borderWidth="1px" />
           </div>

@@ -59,7 +59,9 @@ const generateSitemap = async () => {
     },
     ...noticeList.map((notice) => ({
       loc: `https://uosjudo.com/notice/${notice.id}`,
-      lastmod: notice.dateTime ? new Date(notice.dateTime).toISOString() : undefined,
+      lastmod: notice.dateTime
+        ? new Date(notice.dateTime).toISOString()
+        : undefined,
       priority: "0.5",
     })),
   ];

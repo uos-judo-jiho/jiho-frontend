@@ -11,7 +11,7 @@ const ExerciseThumbnail = () => {
   const lastTraningData = useMemo(() => {
     if (!data || data.length === 0) return null;
     const sorted = [...data].sort((a, b) =>
-      b.dateTime.localeCompare(a.dateTime)
+      b.dateTime.localeCompare(a.dateTime),
     );
     return sorted[0];
   }, [data]);

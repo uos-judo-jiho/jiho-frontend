@@ -45,7 +45,7 @@ const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
       {
         root: container,
         threshold: 0.2,
-      }
+      },
     );
 
     const childElements = Array.from(container.children);
@@ -67,9 +67,9 @@ const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
       ref={containerRef}
       className="scroll-smooth h-screen overflow-y-scroll [&>*]:snap-start"
       style={{
-        scrollSnapType: 'y mandatory',
-        scrollbarWidth: 'none',
-        msOverflowStyle: 'none',
+        scrollSnapType: "y mandatory",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
       }}
     >
       <style>{`

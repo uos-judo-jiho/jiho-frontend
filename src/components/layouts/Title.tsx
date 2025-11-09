@@ -23,7 +23,7 @@ function Title({
       className={cn(
         "mb-5 break-keep",
         color === "white" ? "text-background" : "text-black",
-        className
+        className,
       )}
       style={{ fontSize }}
     >

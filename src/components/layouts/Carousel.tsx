@@ -104,10 +104,10 @@ const Carousel = ({ datas }: CarouselProps) => {
         ref={targetContanier}
         className="relative h-full overflow-x-scroll whitespace-nowrap scroll-smooth"
         style={{
-          overscrollBehaviorX: 'contain',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          WebkitOverflowScrolling: 'touch',
+          overscrollBehaviorX: "contain",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
         }}
       >
         <style>{`
@@ -121,7 +121,7 @@ const Carousel = ({ datas }: CarouselProps) => {
               key={img}
               onClick={() => handleItemClick(img)}
               className="inline-block bg-black transition-all duration-500 rounded mr-3 cursor-pointer"
-              style={{ scrollSnapAlign: 'start' }}
+              style={{ scrollSnapAlign: "start" }}
             >
               <div className="w-full h-full rounded flex items-center justify-center overflow-hidden">
                 <img
@@ -144,10 +144,11 @@ const Carousel = ({ datas }: CarouselProps) => {
         <div
           className="absolute top-3 bottom-0 w-8 left-0 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
           style={{
-            height: 'calc(240px - 24px)',
-            background: 'linear-gradient(0.75turn, rgba(33, 33, 33, 0), rgb(33, 33, 33))',
-            backdropFilter: 'blur(2px)',
-            WebkitBackdropFilter: 'blur(2px)',
+            height: "calc(240px - 24px)",
+            background:
+              "linear-gradient(0.75turn, rgba(33, 33, 33, 0), rgb(33, 33, 33))",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
           }}
         />
       )}
@@ -155,10 +156,11 @@ const Carousel = ({ datas }: CarouselProps) => {
         <div
           className="absolute top-3 bottom-0 w-8 right-0 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
           style={{
-            height: 'calc(240px - 24px)',
-            background: 'linear-gradient(0.25turn, rgba(33, 33, 33, 0), rgb(33, 33, 33))',
-            backdropFilter: 'blur(2px)',
-            WebkitBackdropFilter: 'blur(2px)',
+            height: "calc(240px - 24px)",
+            background:
+              "linear-gradient(0.25turn, rgba(33, 33, 33, 0), rgb(33, 33, 33))",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
           }}
         />
       )}

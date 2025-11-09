@@ -85,7 +85,7 @@ function Slider({ datas }: SliderProps) {
               alt={`슬라이드 이미지 ${i + 1}`}
               className={cn(
                 "sm:max-w-[30vw] sm:max-h-[30vw] max-w-[60vw] max-h-[60vw] min-w-full object-contain",
-                img ? "bg-black" : "bg-background"
+                img ? "bg-black" : "bg-background",
               )}
             />
           ))}
@@ -101,7 +101,7 @@ function Slider({ datas }: SliderProps) {
                       "w-1 h-1 rounded-full mx-1 opacity-30",
                       index === currentSlide
                         ? "w-1.5 h-1.5 opacity-100 bg-background"
-                        : "bg-muted"
+                        : "bg-muted",
                     )}
                   />
                 );

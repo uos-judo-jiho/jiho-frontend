@@ -107,11 +107,8 @@ export async function render(url: string) {
           </RecoilRoot>
         </QueryClientProvider>
       </HelmetContext.Provider>
-    </StructuredDataContext.Provider>,
+    </StructuredDataContext.Provider>
   );
-
-  // No styled-components, so styleTags is empty
-  const styleTags = "";
 
   // Dehydrate the query cache to send to client
   const dehydratedState = dehydrate(queryClient);
@@ -120,5 +117,5 @@ export async function render(url: string) {
   console.table(helmetData);
   console.log("[SSR] Structured data:", structuredData ? "Present" : "None");
 
-  return { html, dehydratedState, styleTags, helmetData, structuredData };
+  return { html, dehydratedState, helmetData, structuredData };
 }

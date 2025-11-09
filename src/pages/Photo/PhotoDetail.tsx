@@ -23,7 +23,7 @@ const PhotoPage = () => {
   const info = trainings?.find((item) => item.id.toString() === id?.toString());
 
   const metaDescription = [info?.title, info?.description.slice(0, 140)].join(
-    " | "
+    " | ",
   );
 
   // Create structured data for image gallery
