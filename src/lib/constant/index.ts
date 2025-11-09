@@ -2,10 +2,13 @@ import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.webp";
 import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.webp";
 
 export const Constants = {
+  // 클라이언트에서는 상대 경로 사용 (CORS 방지)
   BASE_URL:
     process.env.NODE_ENV === "development"
       ? "http://localhost:3000"
-      : "https://uosjudo.com",
+      : typeof window !== "undefined"
+        ? window.location.origin
+        : "https://uosjudo.com",
 
   // 이미지
   LOGO_BLACK: LOGO_BLACK,

@@ -31,7 +31,9 @@ const Home = () => {
     if (typeof window !== "undefined") {
       fetchNews(Constants.LATEST_NEWS_YEAR);
     }
-  }, [fetchNews]);
+    // fetchNews는 queryClient.fetchQuery를 호출하므로 의존성에서 제외
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Create structured data for organization
   const structuredData = useMemo(() => {

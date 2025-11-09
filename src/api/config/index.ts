@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import { Constants } from "@/lib/constant";
-
 const getBaseURL = () => {
   // 서버 사이드에서는 항상 프로덕션 API URL 사용 (개발 환경에서도 실제 API 서버로 요청)
   if (typeof window === "undefined") {
@@ -11,24 +9,9 @@ const getBaseURL = () => {
     return "https://uosjudo.com";
   }
 
-  // 클라이언트 사이드에서만 hostname 체크
-  const hostname = window.location.hostname;
-
-  // 로컬 개발 환경 (localhost, 127.0.0.1) - 프록시 사용
-  if (hostname === "localhost" || hostname === "127.0.0.1") {
-    return "";
-  }
-
-  // Docker 환경에서 내부 네트워크 체크 (환경변수 활용)
-  if (
-    process.env.NODE_ENV === "development" ||
-    process.env.VITE_USE_PROXY === "true"
-  ) {
-    return "";
-  }
-
-  // 프로덕션 환경
-  return Constants.BASE_URL;
+  // 클라이언트 사이드에서는 항상 상대 경로 사용 (CORS 방지)
+  // 로컬 개발 환경과 프로덕션 모두 프록시를 통해 /api로 요청
+  return "";
 };
 
 const axiosInstance = axios.create({

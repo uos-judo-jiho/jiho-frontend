@@ -63,7 +63,21 @@ app.use("/api/admin", express.urlencoded({ extended: true, limit: "10mb" }));
 
 app.use("/api", async (req, res) => {
   try {
-    const targetUrl = `https://uosjudo.com/api${req.path}`;
+    // 백엔드 URL 결정 로직
+    let backendBaseUrl: string;
+    const host = req.get("host") || "";
+
+    // 로컬 개발 환경 (localhost, 127.0.0.1)
+    if (host.includes("localhost") || host.includes("127.0.0.1")) {
+      backendBaseUrl = "https://uosjudo.com";
+    } else {
+      // 프로덕션: 현재 호스트 기준 (www 제거)
+      const hostname = host.replace(/^www\./, "");
+      const protocol = req.protocol === "https" || req.get("x-forwarded-proto") === "https" ? "https" : "http";
+      backendBaseUrl = `${protocol}://${hostname}`;
+    }
+
+    const targetUrl = `${backendBaseUrl}/api${req.path}`;
     const queryString = new URLSearchParams(
       req.query as Record<string, string>
     ).toString();
