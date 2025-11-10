@@ -16,7 +16,7 @@
     "build:server": "vite build --ssr src/entry-server.tsx --outDir build/server",
     "build:server-ts": "tsc -p tsconfig.server.json",
     "build:prerender": "node script/prerender.js",
-    "build:docker": "npm run clean && npm run build && sh script/docker-build-local.sh",
+    "build:docker": "npm run clean && sh script/docker-build-local.sh",
     "preview": "cross-env NODE_ENV=production tsx server/index.ts",
     "start": "npm run preview",
     "start:prod": "node build/server-ts/index.js",
