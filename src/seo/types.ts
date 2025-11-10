@@ -44,13 +44,29 @@ export interface Article {
 
 export interface Organization {
   "@context": "https://schema.org";
-  "@type": "SportsOrganization";
+  "@type": "SportsOrganization" | ["SportsOrganization", "LocalBusiness"];
   name: string;
   description: string;
   url: string;
   logo?: string;
+  address?: {
+    "@type": "PostalAddress";
+    addressCountry: string;
+    addressLocality: string;
+    addressRegion: string;
+    postalCode: string;
+    streetAddress: string;
+    extendedAddress: string;
+  };
+  openingHoursSpecification?: {
+    "@type": "OpeningHoursSpecification";
+    dayOfWeek: string[];
+    opens: string;
+    closes: string;
+  }[];
   foundingDate?: string;
   email?: string;
+  telephone?: string;
   sameAs?: string[];
   sport?: string;
   memberOf?: {
@@ -58,4 +74,9 @@ export interface Organization {
     name: string;
   };
   award?: string[];
+  geo?: {
+    "@type": "GeoCoordinates";
+    latitude: number;
+    longitude: number;
+  };
 }

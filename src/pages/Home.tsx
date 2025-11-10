@@ -17,6 +17,7 @@ import MyHelmet from "@/helmet/MyHelmet";
 import { awardsData } from "@/lib/assets/data/awards";
 import { Constants } from "@/lib/constant";
 import { StructuredData, createOrganizationData } from "@/seo";
+import { footerData } from "@/lib/assets/data/footer";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);
@@ -35,7 +36,7 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Create structured data for organization
+  // Create structured data for organization with LocalBusiness
   const structuredData = useMemo(() => {
     const currentUrl =
       typeof window !== "undefined"
@@ -48,6 +49,21 @@ const Home = () => {
     return createOrganizationData({
       name: "서울시립대학교 유도부 지호",
       description,
+      address: {
+        addressCountry: "KR",
+        addressLocality: "서울특별시",
+        addressRegion: "동대문구",
+        postalCode: "02504",
+        streetAddress: footerData.exercise.address,
+        extendedAddress: footerData.exercise.place,
+      },
+      openingHours: [
+        {
+          dayOfWeek: ["Monday", "Wednesday", "Friday"],
+          opens: "18:00",
+          closes: "20:00",
+        },
+      ],
       url: currentUrl,
       logo: `${currentUrl}/favicon-96x96.png`,
       foundingDate: "1985",
@@ -58,6 +74,11 @@ const Home = () => {
         name: "서울시립대학교 (University of Seoul)",
       },
       award: awardTitles,
+      geo: {
+        latitude: 37.5837,
+        longitude: 127.0594,
+      },
+      includeLocalBusiness: true,
     });
   }, []);
 

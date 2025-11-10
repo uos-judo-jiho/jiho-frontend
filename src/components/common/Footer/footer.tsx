@@ -21,7 +21,7 @@ const DescriptionItem = ({
   <li
     className={cn(
       "text-sm text-theme-black break-keep-all wrap-break",
-      className,
+      className
     )}
     {...rest}
   >
@@ -112,6 +112,8 @@ const Footer = () => {
               {footerData.exercise.title}
             </DescriptionItemTitle>
             <DescriptionItem>{footerData.exercise.time}</DescriptionItem>
+            <DescriptionItem>{"장소 | "}</DescriptionItem>
+            <DescriptionItem>{footerData.exercise.address}</DescriptionItem>
             <DescriptionItem>{footerData.exercise.place}</DescriptionItem>
           </DescriptionList>
           {/* Connect Us */}
