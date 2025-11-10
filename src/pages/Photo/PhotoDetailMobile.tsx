@@ -43,7 +43,7 @@ export const PhotoDetailMobile = ({
           />
         </div>
         {/* Navigation */}
-        <div className="flex items-center justify-end mb-4 gap-4">
+        <div className="flex items-center justify-end mb-4 gap-4 border-b border-color-gray-200 pb-4">
           <Button
             asChild
             variant="ghost"
@@ -51,7 +51,7 @@ export const PhotoDetailMobile = ({
             disabled={current === 0}
             className={cn(
               "flex items-center text-sm",
-              current === 0 && "opacity-50 cursor-not-allowed",
+              current === 0 && "opacity-50 cursor-not-allowed"
             )}
           >
             <Link
@@ -75,7 +75,7 @@ export const PhotoDetailMobile = ({
             className={cn(
               "flex items-center text-sm",
               current === trainings.length - 1 &&
-                "opacity-50 cursor-not-allowed",
+                "opacity-50 cursor-not-allowed"
             )}
           >
             <Link

@@ -24,7 +24,7 @@ function ModalDescriptionSection({
   return (
     <section className="h-full w-full relative flex flex-col p-5">
       <div className="w-full flex-[0_0_auto]">
-        <table className="text-base w-full">
+        <table className="text-base w-full border-b border-color-gray-200 pb-2 mb-2">
           <tbody>
             <tr>
               <td className="w-[100px] align-top py-1">{titles[0]}</td>
