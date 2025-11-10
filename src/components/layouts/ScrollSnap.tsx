@@ -1,27 +1,9 @@
 import React, { useEffect, useRef } from "react";
 
-import styled from "styled-components";
-
 type ScrollSnapProps = {
   children: React.ReactNode;
   setIsDark: (isDark: boolean) => void;
 };
-
-const Container = styled.div`
-  scroll-behavior: smooth;
-  height: 100vh;
-  scroll-snap-type: y mandatory;
-
-  overflow-y: scroll;
-  &::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
-  }
-
-  & > * {
-    scroll-snap-align: start;
-  }
-`;
 
 const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,7 +45,7 @@ const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
       {
         root: container,
         threshold: 0.2,
-      }
+      },
     );
 
     const childElements = Array.from(container.children);
@@ -80,7 +62,25 @@ const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
     };
   }, [setIsDark]);
 
-  return <Container ref={containerRef}>{children}</Container>;
+  return (
+    <div
+      ref={containerRef}
+      className="scroll-smooth h-screen overflow-y-scroll [&>*]:snap-start"
+      style={{
+        scrollSnapType: "y mandatory",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}
+    >
+      <style>{`
+        div[class*="scroll-smooth"]::-webkit-scrollbar {
+          width: 0;
+          background: transparent;
+        }
+      `}</style>
+      {children}
+    </div>
+  );
 };
 
 export default ScrollSnap;

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import { LoginValuesType } from "@/api/admin/login";
 import { Constants } from "@/lib/constant";
 import Title from "@/components/layouts/Title";
@@ -11,17 +10,6 @@ import {
   InputContainer,
   StyledInput,
 } from "./StyledComponent/FormContainer";
-
-const BackDescription = styled.div`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  text-align: center;
-  margin: 1rem 0;
-  text-decoration-line: underline;
-
-  &:hover {
-    opacity: 0.6;
-  }
-`;
 
 function AdminLogin() {
   const { login } = useSession();
@@ -81,7 +69,9 @@ function AdminLogin() {
         </form>
       </FormContainer>
       <Link to={"/"}>
-        <BackDescription>홈으로 돌아가기</BackDescription>
+        <div className="text-center my-4 underline hover:opacity-60 transition-opacity">
+          홈으로 돌아가기
+        </div>
       </Link>
     </>
   );

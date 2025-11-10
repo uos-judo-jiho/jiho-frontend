@@ -3,51 +3,7 @@ import Carousel from "@/components/layouts/Carousel";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import { useNewsQuery } from "@/api/news/query";
-
-const EditButton = styled(Link)`
-  display: inline-block;
-  padding: 12px 24px;
-  background-color: ${(props) => props.theme.primaryColor};
-  color: white;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: ${(props) => props.theme.defaultFontSize};
-  transition: all 0.2s ease;
-  margin-bottom: 20px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-  &:active {
-    opacity: 0.8;
-    scale: 0.98;
-  }
-`;
-
-const EmptyImageText = styled.div`
-  padding: 16px;
-
-  font-size: ${(props) => props.theme.defaultFontSize};
-  line-height: ${(props) => props.theme.defaultLineHeight};
-  font-weight: bold;
-  text-align: center;
-`;
-
-const BackButton = styled.button`
-  padding: 8px 16px;
-  background-color: transparent;
-  border: 1px solid ${(props) => props.theme.greyColor};
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: ${(props) => props.theme.defaultFontSize};
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${(props) => props.theme.lightGreyColor};
-  }
-`;
 
 const AdminGallery = () => {
   const navigate = useNavigate();
@@ -59,18 +15,26 @@ const AdminGallery = () => {
   return (
     <FormContainer title={`지호지 갤러리 관리 (${year}년)`}>
       <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
-        <BackButton onClick={() => navigate(`/admin/news/${year}`)}>
+        <button
+          onClick={() => navigate(`/admin/news/${year}`)}
+          className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
+        >
           ← {year}년 게시판으로 돌아가기
-        </BackButton>
+        </button>
       </Row>
       <Col gap={20}>
-        <EditButton to={`/admin/news/${year}/gallery/write`}>
+        <Link
+          to={`/admin/news/${year}/gallery/write`}
+          className="inline-block px-6 py-3 bg-blue-500 text-white rounded no-underline text-sm transition-all mb-5 hover:opacity-90 active:opacity-80 active:scale-[0.98]"
+        >
           갤러리 이미지 수정하기
-        </EditButton>
+        </Link>
         {images.length > 0 ? (
           <Carousel datas={images} />
         ) : (
-          <EmptyImageText>해당 년도 사진이 없습니다</EmptyImageText>
+          <div className="p-4 text-sm leading-normal font-bold text-center">
+            해당 년도 사진이 없습니다
+          </div>
         )}
       </Col>
     </FormContainer>

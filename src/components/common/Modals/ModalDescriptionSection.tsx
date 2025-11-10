@@ -1,72 +1,13 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import Line from "@/components/layouts/Line";
 import MarkdownRenderer from "@/components/common/Markdown/MarkdownRenderer";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { cn } from "@/lib/utils";
 
 type ModalDescriptionSectionProps = {
   article: ArticleInfoType;
   titles: string[];
 };
-
-const DescriptionSection = styled.section`
-  height: inherit;
-  width: inherit;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-`;
-
-const DescriptionHeader = styled.div`
-  width: 100%;
-
-  flex: 0 0 auto;
-`;
-const DescriptionHeaderTable = styled.table`
-  font-size: ${(props) => props.theme.defaultFontSize};
-  width: 100%;
-`;
-
-type DescriptionHeaderTableTrProps = {
-  isDisplay: boolean;
-};
-
-const DescriptionHeaderTableTr = styled.tr<DescriptionHeaderTableTrProps>`
-  display: ${(props) => (props.isDisplay ? "block" : "none")};
-`;
-
-const DescriptionHeaderTableTdTitle = styled.td`
-  width: 100px;
-`;
-
-const DescriptionHeaderTdContent = styled.td`
-  word-break: keep-all;
-`;
-
-const DescriptionWrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-`;
-
-const DescriptionTitle = styled.h3`
-  font-weight: bold;
-  font-size: ${(props) => props.theme.descriptionFontSize};
-  margin-bottom: 10px;
-`;
-
-const DescriptionFooter = styled.div`
-  flex: 0;
-  /* position: absolute;
-  bottom: 0;
-  left: 1em;
-  right: 1em; */
-`;
 
 function ModalDescriptionSection({
   article,
@@ -81,47 +22,37 @@ function ModalDescriptionSection({
   }, [titles]);
 
   return (
-    <DescriptionSection>
-      <DescriptionHeader>
-        <DescriptionHeaderTable>
+    <section className="h-full w-full relative flex flex-col p-5">
+      <div className="w-full flex-[0_0_auto]">
+        <table className="text-base w-full border-b border-color-gray-200 pb-2 mb-2">
           <tbody>
-            <DescriptionHeaderTableTr isDisplay={true}>
-              <DescriptionHeaderTableTdTitle>
-                {titles[0]}
-              </DescriptionHeaderTableTdTitle>
-              <DescriptionHeaderTdContent>
-                {article.author}
-              </DescriptionHeaderTdContent>
-            </DescriptionHeaderTableTr>
-            <DescriptionHeaderTableTr isDisplay={true}>
-              <DescriptionHeaderTableTdTitle>
-                {titles[1]}
-              </DescriptionHeaderTableTdTitle>
-              <DescriptionHeaderTdContent>
+            <tr>
+              <td className="w-[100px] align-top py-1">{titles[0]}</td>
+              <td className="break-keep-all py-1">{article.author}</td>
+            </tr>
+            <tr>
+              <td className="w-[100px] align-top py-1">{titles[1]}</td>
+              <td className="break-keep-all py-1">
                 {/* TODO html space 처리하기 */}
                 {article.tags.join(" ")}
-              </DescriptionHeaderTdContent>
-            </DescriptionHeaderTableTr>
-            <DescriptionHeaderTableTr isDisplay={isDisplay}>
-              <DescriptionHeaderTableTdTitle>
-                {titles[2]}
-              </DescriptionHeaderTableTdTitle>
-              <DescriptionHeaderTdContent>
-                {article.dateTime}
-              </DescriptionHeaderTdContent>
-            </DescriptionHeaderTableTr>
+              </td>
+            </tr>
+            <tr className={cn(!isDisplay && "hidden")}>
+              <td className="w-[100px] align-top py-1">{titles[2]}</td>
+              <td className="break-keep-all py-1">{article.dateTime}</td>
+            </tr>
           </tbody>
-        </DescriptionHeaderTable>
+        </table>
         <Line margin={"1rem 0"} borderWidth={"1px"} />
-      </DescriptionHeader>
-      <DescriptionWrapper>
-        <DescriptionTitle>{article.title}</DescriptionTitle>
+      </div>
+      <div className="flex-1 flex flex-col w-full overflow-y-auto overflow-x-hidden">
+        <h1 className="font-bold text-lg mb-[10px]">{article.title}</h1>
         <MarkdownRenderer content={article.description} />
-      </DescriptionWrapper>
-      <DescriptionFooter>
+      </div>
+      <div className="flex-[0]">
         <Line margin={"10px 0"} borderWidth={"1px"} />
-      </DescriptionFooter>
-    </DescriptionSection>
+      </div>
+    </section>
   );
 }
 

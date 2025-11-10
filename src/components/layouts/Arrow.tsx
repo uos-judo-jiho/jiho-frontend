@@ -1,5 +1,5 @@
-import styled, { css } from "styled-components";
 import { ArrowBackIosIcon, ArrowForwardIosIcon } from "@/components/icons";
+import { cn } from "@/lib/utils";
 
 type ArrowProps = {
   current: number;
@@ -12,75 +12,6 @@ type ArrowProps = {
   $horizontalPosition?: string;
   $isVisible?: boolean;
 };
-
-const ArrowCss = css`
-  position: absolute;
-  z-index: 1;
-  top: 50%;
-  transform: translate(0, -50%);
-  user-select: none;
-
-  cursor: pointer;
-
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-const StyledBackArrowStyle = styled(ArrowBackIosIcon)<ArrowProps>`
-  display: ${(props) =>
-    props.current !== 0 || props.$isVisible ? "flex" : "none"} !important;
-  width: ${(props) => (props.size ? props.size : "24px")};
-  height: ${(props) => (props.size ? props.size : "24px")};
-
-  left: ${(props) =>
-    props.$horizontalPosition ? props.$horizontalPosition : "1.2rem"};
-  ${ArrowCss}
-
-  ${(props) =>
-    props.$isBackGround
-      ? css`
-          border-radius: 50%;
-          padding: 4px;
-          background-color: ${(props) => props.theme.lightGreyColor};
-          box-shadow: 0 0 0.2rem ${(props) => props.theme.blackColor};
-        `
-      : ``}
-
-  @media (max-width: 539px) {
-    width: ${(props) => (props.$mobileSize ? props.$mobileSize : "24px")};
-    height: ${(props) => (props.$mobileSize ? props.$mobileSize : "24px")};
-    display: ${(props) => (props.$isMobileVisible ? "flex" : "none")};
-  }
-`;
-
-const StyledForwardArrowStyle = styled(ArrowForwardIosIcon)<ArrowProps>`
-  display: ${(props) =>
-    props.current < props.length - 1 || props.$isVisible
-      ? "flex"
-      : "none"} !important;
-  width: ${(props) => (props.size ? props.size : "24px")};
-  height: ${(props) => (props.size ? props.size : "24px")};
-
-  right: ${(props) =>
-    props.$horizontalPosition ? props.$horizontalPosition : "1.2rem"};
-  ${ArrowCss}
-
-  ${(props) =>
-    props.$isBackGround
-      ? css`
-          border-radius: 50%;
-          padding: 4px;
-          background-color: ${(props) => props.theme.lightGreyColor};
-        `
-      : ``}
-
-  @media (max-width: 539px) {
-    width: ${(props) => (props.$mobileSize ? props.$mobileSize : "24px")};
-    height: ${(props) => (props.$mobileSize ? props.$mobileSize : "24px")};
-    display: ${(props) => (props.$isMobileVisible ? "flex" : "none")};
-  }
-`;
 
 const StyledBackArrow = (
   props: ArrowProps &
@@ -99,18 +30,31 @@ const StyledBackArrow = (
     ...rest
   } = props;
 
+  const isVisible = current !== 0 || $isVisible;
+  const displayClass = $isMobileVisible ? "flex" : "hidden sm:flex";
+
   return (
-    <StyledBackArrowStyle
-      current={current}
-      length={length}
-      $horizontalPosition={$horizontalPosition}
-      size={size}
-      $mobileSize={$mobileSize}
+    <ArrowBackIosIcon
       id={id}
-      $isMobileVisible={$isMobileVisible}
-      $isBackGround={$isBackGround}
-      $isVisible={$isVisible}
       title="Previous"
+      className={cn(
+        "absolute z-[1] top-1/2 -translate-y-1/2 select-none cursor-pointer hover:opacity-80",
+        isVisible ? displayClass : "!hidden",
+        $isBackGround &&
+          "rounded-full p-1 bg-muted shadow-[0_0_0.2rem_hsl(var(--black))]",
+        "max-sm:hidden",
+        $isMobileVisible && "max-sm:flex",
+      )}
+      style={{
+        width: size || "24px",
+        height: size || "24px",
+        left: $horizontalPosition || "1.2rem",
+        ...(typeof window !== "undefined" &&
+          window.innerWidth <= 539 && {
+            width: $mobileSize || "24px",
+            height: $mobileSize || "24px",
+          }),
+      }}
       {...rest}
     />
   );
@@ -132,18 +76,31 @@ const StyledForwardArrow = (
     $isVisible,
     ...rest
   } = props;
+
+  const isVisible = current < length - 1 || $isVisible;
+  const displayClass = $isMobileVisible ? "flex" : "hidden sm:flex";
+
   return (
-    <StyledForwardArrowStyle
-      current={current}
-      length={length}
-      $horizontalPosition={$horizontalPosition}
-      size={size}
-      $mobileSize={$mobileSize}
+    <ArrowForwardIosIcon
       id={id}
-      $isMobileVisible={$isMobileVisible}
-      $isBackGround={$isBackGround}
-      $isVisible={$isVisible}
       title="Next"
+      className={cn(
+        "absolute z-[1] top-1/2 -translate-y-1/2 select-none cursor-pointer hover:opacity-80",
+        isVisible ? displayClass : "!hidden",
+        $isBackGround && "rounded-full p-1 bg-muted",
+        "max-sm:hidden",
+        $isMobileVisible && "max-sm:flex",
+      )}
+      style={{
+        width: size || "24px",
+        height: size || "24px",
+        right: $horizontalPosition || "1.2rem",
+        ...(typeof window !== "undefined" &&
+          window.innerWidth <= 539 && {
+            width: $mobileSize || "24px",
+            height: $mobileSize || "24px",
+          }),
+      }}
       {...rest}
     />
   );

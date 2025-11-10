@@ -15,7 +15,6 @@ import Loading from "@/components/common/Skeletons/Loading";
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
@@ -46,23 +45,6 @@ const initValues: Omit<ArticleInfoType, "id"> = {
   dateTime: "",
   imgSrcs: [],
 };
-
-const LoadingWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.6);
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`;
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
@@ -448,11 +430,11 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
       )}
 
       {isSubmited && (
-        <LoadingWrapper>
-          <LoadingContainer>
+        <div className="fixed top-0 right-0 bottom-0 left-0 z-10 bg-black/60">
+          <div className="flex justify-center items-center h-full">
             <Loading />
-          </LoadingContainer>
-        </LoadingWrapper>
+          </div>
+        </div>
       )}
 
       {!gallery && (

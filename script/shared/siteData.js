@@ -16,7 +16,9 @@ export const yearCandidates = Array.from(
 );
 
 const cloneFallback = (value) =>
-  value && typeof value === "object" ? JSON.parse(JSON.stringify(value)) : value;
+  value && typeof value === "object"
+    ? JSON.parse(JSON.stringify(value))
+    : value;
 
 const fetchJson = async (url, fallbackValue) => {
   try {

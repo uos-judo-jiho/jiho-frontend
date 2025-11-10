@@ -10,32 +10,44 @@ const outputDir = path.join(process.env.PWD, "build", "prerendered");
 const getStaticRoutes = (siteData) => {
   const routes = [];
   const currentYear = new Date().getFullYear();
+  const isFirstHalf = new Date().getMonth() < 6;
   const newsByYear = siteData.newsByYear ?? {};
   const trainingLogs = siteData.trainings?.trainingLogs ?? [];
   const noticeList = siteData.notices?.notices ?? [];
 
   // 1. 과거 연도 뉴스 페이지 (현재 연도는 제외 - SSR로 처리)
   for (const year of yearCandidates) {
-    if (year >= currentYear) continue; // 현재 연도는 SSR
-
     const articles = newsByYear[year] ?? [];
+
     if (articles.length) {
       // /news/{year}
-      routes.push({
-        path: `/news/${year}`,
-        type: "news-list",
-        year: year.toString(),
-      });
+      if (year < currentYear) {
+        routes.push({
+          path: `/news/${year}`,
+          type: "news-list",
+          year: year.toString(),
+        });
+      }
 
       // /news/{year}/{id}
-      articles.forEach((article) => {
+
+      for (const article of articles) {
+        // 현재 연도이고, 현재 상반기이거나 지호지 작성일이 7월 이후이면 건너뜀
+        // 7월 이후의 기사는 SSR 처리하며 년도가 바뀌면 SSG로 다시 생성됨
+        if (
+          year === currentYear &&
+          (isFirstHalf || new Date(article.dateTime).getMonth() > 6)
+        ) {
+          continue;
+        }
+
         routes.push({
           path: `/news/${year}/${article.id}`,
           type: "news-detail",
           year: year.toString(),
           id: article.id.toString(),
         });
-      });
+      }
     }
   }
 
@@ -80,8 +92,9 @@ const renderPage = async (route, render, template) => {
   try {
     console.log(`[SSG] Rendering: ${route.path}`);
 
-    const { html, dehydratedState, styleTags, helmetData, structuredData } =
-      await render(route.path);
+    const { html, dehydratedState, helmetData, structuredData } = await render(
+      route.path
+    );
 
     // React Query state 주입
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
@@ -98,7 +111,6 @@ const renderPage = async (route, render, template) => {
     // HTML 조합
     let finalHtml = template
       .replace(`<!--app-html-->`, html)
-      .replace(`<!--app-styles-->`, styleTags)
       .replace(`</head>`, `${stateScript}${structuredDataScript}\n  </head>`);
 
     // Meta tags 업데이트

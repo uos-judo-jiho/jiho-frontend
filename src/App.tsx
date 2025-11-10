@@ -1,11 +1,8 @@
 import { QueryClientProvider, hydrate } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import { ThemeProvider } from "styled-components";
 import { queryClient } from "./context/QueryClient";
-import { GlobalStyle } from "./lib/theme/GlobalStyle";
-import { darkTheme, lightTheme } from "./lib/theme/theme";
 import AppRouter from "./routers/AppRouter";
 
 import "./index.css";
@@ -18,9 +15,6 @@ declare global {
 }
 
 const App = () => {
-  // TODO: dark mode
-  const [isDark] = useState(false);
-
   // Hydrate the React Query cache from SSR
   useEffect(() => {
     if (window.__REACT_QUERY_STATE__) {
@@ -33,12 +27,9 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
-        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-          <GlobalStyle />
-          <BrowserRouter>
-            <AppRouter />
-          </BrowserRouter>
-        </ThemeProvider>
+        <BrowserRouter>
+          <AppRouter />
+        </BrowserRouter>
       </RecoilRoot>
     </QueryClientProvider>
   );

@@ -61,6 +61,12 @@ app.use("/_internal", bffErrorHandler);
 app.use("/api/admin", express.json({ limit: "10mb" }));
 app.use("/api/admin", express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Add X-Robots-Tag header to prevent crawling of API routes
+app.use("/api", (_req, res, next) => {
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+  next();
+});
+
 app.use("/api", async (req, res) => {
   try {
     // 백엔드 URL 결정 로직
@@ -73,7 +79,10 @@ app.use("/api", async (req, res) => {
     } else {
       // 프로덕션: 현재 호스트 기준 (www 제거)
       const hostname = host.replace(/^www\./, "");
-      const protocol = req.protocol === "https" || req.get("x-forwarded-proto") === "https" ? "https" : "http";
+      const protocol =
+        req.protocol === "https" || req.get("x-forwarded-proto") === "https"
+          ? "https"
+          : "http";
       backendBaseUrl = `${protocol}://${hostname}`;
     }
 
@@ -182,6 +191,9 @@ if (!isProduction) {
 
 // admin 페이지는 client 사이드 렌더링으로 처리
 app.use("/admin*", async (req, res) => {
+  // Add X-Robots-Tag header to prevent crawling of admin routes
+  res.setHeader("X-Robots-Tag", "noindex, nofollow");
+
   const url = req.originalUrl.replace(base, "");
   customConsole.info(`${req.method} ${req.originalUrl}`);
   if (!isProduction) {
@@ -225,7 +237,6 @@ app.use("*", async (req, res) => {
     let render: (url: string) => Promise<{
       html: string;
       dehydratedState: any;
-      styleTags: string;
       helmetData: any;
       structuredData: any;
     }>;
@@ -250,7 +261,6 @@ app.use("*", async (req, res) => {
     const {
       html: rendered,
       dehydratedState,
-      styleTags,
       helmetData,
       structuredData,
     } = await render(url);
@@ -270,7 +280,6 @@ app.use("*", async (req, res) => {
     // Inject metadata
     let html = template
       .replace(`<!--app-html-->`, rendered)
-      .replace(`<!--app-styles-->`, styleTags)
       .replace(`</head>`, `${stateScript}${structuredDataScript}\n  </head>`);
 
     // Update meta tags with helmetData

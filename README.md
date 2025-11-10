@@ -86,7 +86,7 @@ See `server/README.md` for detailed server documentation.
 - React 18
 - TypeScript
 - Recoil
-- Styled-Components (JS-in-CSS)
+- TailwindCSS v4
 - Vite
 - TanStack Query (React Query)
 

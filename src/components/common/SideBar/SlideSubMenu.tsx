@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
 import { MenuItemInfoType } from "@/lib/types/menuItemInfoType";
 import { SelectedType } from "./MenuStyledComponents";
+import { cn } from "@/lib/utils";
 
 import { useNavbar } from "../Navbar/NavBar.provider";
 
@@ -11,67 +11,32 @@ type SlideSubMenuProps = {
   itemsInfo: MenuItemInfoType[];
 };
 
-const slideDown = (count: number) => keyframes`
-    from {
-      height: 0;
-    }
-    to {
-      height: ${count * 2 * 1}rem;
-    }
-`;
-
-const slideUp = (count: number) => keyframes`
-    from {
-        height: ${count * 2 * 1}rem;
-    }
-    to {
-      height: 0;
-      display: none;
-    }
-`;
-
-const ToggleMenuList = styled.ul<{ count: number }>`
-  width: 100%;
-  overflow: hidden;
-  font-size: ${(props) => props.theme.defaultFontSize};
-
-  &.selected {
-    display: block;
-    animation: ${(props) => slideDown(props.count)} 1s;
-  }
-
-  &.animate {
-    animation: ${(props) => slideUp(props.count)} 1s forwards;
-  }
-
-  &.closed {
-    height: 0;
-    display: none;
-  }
-`;
-
-const MenuItem = styled.li<{ isActive: boolean }>`
-  margin: 0 4px;
-  line-height: 200%;
-
-  &:hover {
-    ${({ theme }) => `color: ${theme.greyColor};`}
-  }
-
-  ${({ isActive }) =>
-    isActive && "text-decoration: underline; font-weight: bold;"}
-`;
-
 const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
   const location = useLocation();
   const { open, setOpen } = useNavbar();
 
   return (
-    <ToggleMenuList id={menuId} className={selected} count={itemsInfo.length}>
+    <ul
+      id={menuId}
+      className={cn(
+        "w-full overflow-hidden text-base",
+        selected === "selected" && "block animate-slide-down",
+        selected === "animate" && "animate-slide-up",
+        selected === "closed" && "h-0 hidden",
+      )}
+      style={
+        {
+          "--item-count": itemsInfo.length,
+        } as React.CSSProperties
+      }
+    >
       {itemsInfo.map((itemInfo) => (
-        <MenuItem
+        <li
           key={itemInfo.title}
-          isActive={location.pathname === itemInfo.href}
+          className={cn(
+            "mx-1 leading-[200%] hover:text-gray-500",
+            location.pathname === itemInfo.href && "underline font-bold",
+          )}
         >
           <Link
             to={itemInfo.href}
@@ -84,9 +49,9 @@ const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
           >
             {itemInfo.title}
           </Link>
-        </MenuItem>
+        </li>
       ))}
-    </ToggleMenuList>
+    </ul>
   );
 };
 

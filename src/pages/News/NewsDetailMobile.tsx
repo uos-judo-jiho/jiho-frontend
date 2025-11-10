@@ -92,7 +92,7 @@ export const NewsDetailMobile = ({
         </div>
 
         {/* Navigation */}
-        <div className="flex items-center justify-end mb-4 gap-4">
+        <div className="flex items-center justify-end mb-4 gap-4 border-b border-color-gray-200 pb-4">
           <Button
             asChild
             variant="ghost"

@@ -20,7 +20,7 @@ const HomeSectionMore = () => {
 
   return (
     <SheetWrapper>
-      <div>
+      <div className="flex flex-col w-full max-w-4xl mx-auto my-16 px-4">
         <Title
           title={"게시글 전체보기"}
           color={Constants.LOGO_BLACK}

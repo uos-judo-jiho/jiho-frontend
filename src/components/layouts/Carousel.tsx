@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 
 import DetailImageModal from "@/components/common/Modals/DetailImageModal/DetailImageModal";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
@@ -7,117 +6,6 @@ import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 type CarouselProps = {
   datas: string[];
 };
-
-const Window = styled.div`
-  height: 240px;
-  box-sizing: border-box;
-
-  margin-bottom: 24px;
-
-  overflow: hidden;
-  position: relative;
-
-  & .filter {
-    position: absolute;
-
-    &.right,
-    &.left {
-      top: 12px;
-      bottom: 0;
-
-      width: 32px;
-      height: calc(240px - 12 * 2px);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
-    }
-
-    &.right {
-      background: linear-gradient(
-        0.25turn,
-        rgba(33, 33, 33, 0),
-        rgb(33, 33, 33)
-      );
-      right: 0;
-    }
-
-    &.left {
-      background: linear-gradient(
-        0.75turn,
-        rgba(33, 33, 33, 0),
-        rgb(33, 33, 33)
-      );
-      left: 0;
-    }
-  }
-`;
-
-const CarouselWrapper = styled.div`
-  display: inline-flex;
-  height: inherit;
-
-  padding: 12px 0;
-`;
-
-const ScrollWrapper = styled.div`
-  position: relative;
-
-  height: inherit;
-  overflow-x: scroll;
-
-  white-space: nowrap;
-
-  overscroll-behavior-x: contain;
-  scroll-behavior: smooth;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  // TODO snap은 컨테이너의 크기를 조절한 후 활성화
-  /* scroll-snap-type: mandatory;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch; */
-`;
-
-const CarouselItem = styled.div`
-  scroll-snap-align: start;
-  display: inline-block;
-  background: black;
-  transition: all 0.5s;
-  border-radius: 4px;
-  margin-right: 12px;
-
-  cursor: pointer;
-`;
-
-const ImgWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
-`;
-
-const Img = styled.img`
-  min-width: 216px;
-  aspect-ratio: 1 / 1;
-  height: 100%;
-  object-fit: contain;
-  flex: none;
-
-  transform: scale3d(1, 1, 1);
-  transition: transform 0.5s;
-
-  @media (min-width: 560px) {
-    &:hover {
-      transform: scale3d(1.2, 1.2, 1.2);
-      transition: transform 0.5s;
-    }
-  }
-`;
 
 const Carousel = ({ datas }: CarouselProps) => {
   const [page, setPage] = useState<number>(0);
@@ -194,7 +82,7 @@ const Carousel = ({ datas }: CarouselProps) => {
   if (datas.length === 0) return null;
 
   return (
-    <Window>
+    <div className="h-60 box-border mb-6 overflow-hidden relative">
       <StyledBackArrow
         id="leftArrow"
         current={page}
@@ -211,26 +99,72 @@ const Carousel = ({ datas }: CarouselProps) => {
         $isBackGround={true}
         $isMobileVisible={false}
       />
-      <ScrollWrapper id={"scroll"} ref={targetContanier}>
-        <CarouselWrapper id={"carousel"}>
+      <div
+        id="scroll"
+        ref={targetContanier}
+        className="relative h-full overflow-x-scroll whitespace-nowrap scroll-smooth"
+        style={{
+          overscrollBehaviorX: "contain",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
+        <style>{`
+          #scroll::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+        <div id="carousel" className="inline-flex h-full py-3">
           {datas.map((img, index) => (
-            <CarouselItem key={img} onClick={() => handleItemClick(img)}>
-              <ImgWrapper>
-                <Img src={img} alt={`갤러리 이미지 ${index + 1}`} />
-              </ImgWrapper>
-            </CarouselItem>
+            <div
+              key={img}
+              onClick={() => handleItemClick(img)}
+              className="inline-block bg-black transition-all duration-500 rounded mr-3 cursor-pointer"
+              style={{ scrollSnapAlign: "start" }}
+            >
+              <div className="w-full h-full rounded flex items-center justify-center overflow-hidden">
+                <img
+                  src={img}
+                  alt={`갤러리 이미지 ${index + 1}`}
+                  className="min-w-[216px] aspect-square h-full object-contain flex-none transform scale-100 transition-transform duration-500 sm:hover:scale-110"
+                />
+              </div>
+            </div>
           ))}
-        </CarouselWrapper>
-      </ScrollWrapper>
+        </div>
+      </div>
       <DetailImageModal
         image={selectedDetailImage}
         title={`갤러리 이미지 ${datas.indexOf(selectedDetailImage) + 1}`}
         isOpen={detailIsOpen}
         onClose={handleDetailClose}
       />
-      <div className={`filter ${!isLeft ? "left" : ""}`} />
-      <div className={`filter ${!isRight ? "right" : ""}`} />
-    </Window>
+      {!isLeft && (
+        <div
+          className="absolute top-3 bottom-0 w-8 left-0 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+          style={{
+            height: "calc(240px - 24px)",
+            background:
+              "linear-gradient(0.75turn, rgba(33, 33, 33, 0), rgb(33, 33, 33))",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
+          }}
+        />
+      )}
+      {!isRight && (
+        <div
+          className="absolute top-3 bottom-0 w-8 right-0 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+          style={{
+            height: "calc(240px - 24px)",
+            background:
+              "linear-gradient(0.25turn, rgba(33, 33, 33, 0), rgb(33, 33, 33))",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
+          }}
+        />
+      )}
+    </div>
   );
 };
 

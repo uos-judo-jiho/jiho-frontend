@@ -1,5 +1,10 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Allow: /  
+Allow: /
+
+# Disallow API and admin routes from being crawled
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_internal/
 
 Sitemap: https://uosjudo.com/sitemap.xml

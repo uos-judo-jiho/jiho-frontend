@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import Title from "@/components/layouts/Title";
 
 type FormContainerProps = {
@@ -7,17 +6,12 @@ type FormContainerProps = {
   title: string;
 };
 
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-`;
-
 function FormContainer({ children, title }: FormContainerProps) {
   return (
-    <Container>
+    <div className="w-full h-full">
       <Title title={title} color="black" />
       {children}
-    </Container>
+    </div>
   );
 }
 

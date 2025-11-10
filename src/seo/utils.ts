@@ -95,13 +95,16 @@ export const createArticleData = ({
 };
 
 /**
- * Create Organization structured data
+ * Create Organization structured data with LocalBusiness
  * @see https://schema.org/SportsOrganization
+ * @see https://schema.org/LocalBusiness
  */
 export const createOrganizationData = ({
   name,
   description,
   url,
+  address,
+  openingHours,
   logo,
   foundingDate,
   email,
@@ -109,10 +112,25 @@ export const createOrganizationData = ({
   sport,
   memberOf,
   award,
+  geo,
+  includeLocalBusiness = true,
 }: {
   name: string;
   description: string;
   url: string;
+  address: {
+    addressCountry: string;
+    addressLocality: string;
+    addressRegion: string;
+    postalCode: string;
+    streetAddress: string;
+    extendedAddress: string;
+  };
+  openingHours?: Array<{
+    dayOfWeek: string[];
+    opens: string;
+    closes: string;
+  }>;
   logo?: string;
   foundingDate?: string;
   email?: string;
@@ -122,24 +140,55 @@ export const createOrganizationData = ({
     name: string;
   };
   award?: string[];
+  geo: {
+    latitude: number;
+    longitude: number;
+  };
+  includeLocalBusiness?: boolean;
 }): Organization => {
   return {
     "@context": "https://schema.org",
-    "@type": "SportsOrganization",
+    "@type": includeLocalBusiness
+      ? ["SportsOrganization", "LocalBusiness"]
+      : "SportsOrganization",
     name,
     description,
     url,
-    logo,
-    foundingDate,
-    email,
-    sameAs,
-    sport,
-    memberOf: memberOf
-      ? {
-          "@type": "Organization",
-          name: memberOf.name,
-        }
-      : undefined,
-    award,
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: address.addressCountry,
+      addressLocality: address.addressLocality,
+      addressRegion: address.addressRegion,
+      postalCode: address.postalCode,
+      streetAddress: address.streetAddress,
+      extendedAddress: address.extendedAddress,
+    },
+    ...(openingHours && {
+      openingHoursSpecification: openingHours.map((hours) => ({
+        "@type": "OpeningHoursSpecification" as const,
+        dayOfWeek: hours.dayOfWeek,
+        opens: hours.opens,
+        closes: hours.closes,
+      })),
+    }),
+    ...(logo && { logo }),
+    ...(foundingDate && { foundingDate }),
+    ...(email && { email }),
+    ...(sameAs && { sameAs }),
+    ...(sport && { sport }),
+    ...(memberOf && {
+      memberOf: {
+        "@type": "Organization" as const,
+        name: memberOf.name,
+      },
+    }),
+    ...(award && { award }),
+    ...(geo && {
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: geo.latitude,
+        longitude: geo.longitude,
+      },
+    }),
   };
 };

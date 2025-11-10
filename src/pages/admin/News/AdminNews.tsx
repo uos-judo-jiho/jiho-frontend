@@ -4,22 +4,7 @@ import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormCo
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
 import { useNewsQuery } from "@/api/news/query";
-import styled from "styled-components";
 import Loading from "@/components/common/Skeletons/Loading";
-
-const BackButton = styled.button`
-  padding: 8px 16px;
-  background-color: transparent;
-  border: 1px solid ${(props) => props.theme.greyColor};
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: ${(props) => props.theme.defaultFontSize};
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${(props) => props.theme.lightGreyColor};
-  }
-`;
 
 const AdminNews = () => {
   const navigate = useNavigate();
@@ -38,9 +23,12 @@ const AdminNews = () => {
   return (
     <FormContainer title={`지호지 관리 (${year}년)`}>
       <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
-        <BackButton onClick={() => navigate("/admin/news")}>
+        <button
+          onClick={() => navigate("/admin/news")}
+          className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
+        >
           ← 년도 선택으로 돌아가기
-        </BackButton>
+        </button>
       </Row>
       <Row justifyContent="space-between">
         <Row gap={12} style={{ width: "auto" }}>

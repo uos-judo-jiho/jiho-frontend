@@ -1,97 +1,25 @@
 import { UploadProgress as UploadProgressType } from "@/api/_internal/upload/client";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-
-const UploadProgressContainer = styled.div`
-  position: relative;
-
-  &:hover .close-icon-button {
-    opacity: 1;
-    transition: opacity 237ms ease;
-  }
-`;
-
-const ProgressContainer = styled.div`
-  margin: 10px 0;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-`;
-
-const ProgressHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const FileName = styled.span`
-  font-weight: 500;
-  color: #333;
-`;
-
-const StatusBadge = styled.span<{ status: UploadProgressType["status"] }>`
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  color: white;
-  background-color: ${({ status }) => {
-    switch (status) {
-      case "uploading":
-        return "#2196F3";
-      case "completed":
-        return "#4CAF50";
-      case "error":
-        return "#F44336";
-      default:
-        return "#999";
-    }
-  }};
-`;
-
-const ProgressBar = styled.div`
-  width: 100%;
-  height: 8px;
-  background-color: #e0e0e0;
-  border-radius: 4px;
-  overflow: hidden;
-`;
-
-const ProgressFill = styled.div<{ progress: number }>`
-  height: 100%;
-  background-color: #2196f3;
-  width: ${({ progress }) => progress}%;
-  transition: width 0.3s ease;
-`;
-
-const ErrorMessage = styled.div`
-  color: #f44336;
-  font-size: 12px;
-  margin-top: 5px;
-`;
-
-const CancelButton = styled.button`
-  background: #ff6b6b;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-
-  &:hover {
-    background: #ff5252;
-  }
-`;
 
 interface UploadProgressProps {
   uploads: UploadProgressType[];
   onCancel: (uploadId: string) => void;
   clearUploads: () => void;
 }
+
+const getStatusBadgeColor = (status: UploadProgressType["status"]) => {
+  switch (status) {
+    case "uploading":
+      return "bg-blue-500";
+    case "completed":
+      return "bg-green-500";
+    case "error":
+      return "bg-red-500";
+    default:
+      return "bg-gray-500";
+  }
+};
 
 export const UploadProgress = ({
   uploads,
@@ -123,13 +51,13 @@ export const UploadProgress = ({
   if (closeUploadProgress) return null;
 
   return (
-    <UploadProgressContainer className="relative ">
+    <div className="relative group">
       <button
         onClick={handleClose}
         className={cn(
-          "close-icon-button opacity-0",
+          "close-icon-button opacity-0 group-hover:opacity-100 transition-opacity duration-[237ms] ease-in-out",
           "absolute top-[-4px] right-[-12px]",
-          "bg-white border-radius-50 m-2 text-gray-500 hover:text-gray-800",
+          "bg-white rounded-full m-2 text-gray-500 hover:text-gray-800",
         )}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -150,36 +78,52 @@ export const UploadProgress = ({
         </svg>
       </button>
       {uploads.map((upload) => (
-        <ProgressContainer key={upload.uploadId}>
-          <ProgressHeader>
-            <FileName>{upload.fileName}</FileName>
-            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-              <StatusBadge status={upload.status}>
+        <div
+          key={upload.uploadId}
+          className="my-2.5 p-4 border border-gray-300 rounded-lg bg-gray-50"
+        >
+          <div className="flex justify-between items-center mb-2.5">
+            <span className="font-medium text-gray-800">{upload.fileName}</span>
+            <div className="flex gap-2 items-center">
+              <span
+                className={cn(
+                  "px-2 py-1 rounded text-xs font-medium text-white",
+                  getStatusBadgeColor(upload.status),
+                )}
+              >
                 {upload.status === "uploading" && "업로드 중"}
                 {upload.status === "completed" && "완료"}
                 {upload.status === "error" && "실패"}
-              </StatusBadge>
+              </span>
               {upload.status === "uploading" && (
-                <CancelButton onClick={() => onCancel(upload.uploadId)}>
+                <button
+                  onClick={() => onCancel(upload.uploadId)}
+                  className="bg-red-400 hover:bg-red-500 text-white border-none px-2 py-1 rounded text-xs cursor-pointer"
+                >
                   취소
-                </CancelButton>
+                </button>
               )}
             </div>
-          </ProgressHeader>
+          </div>
 
-          <ProgressBar>
-            <ProgressFill progress={upload.progress} />
-          </ProgressBar>
+          <div className="w-full h-2 bg-gray-300 rounded overflow-hidden">
+            <div
+              className="h-full bg-blue-500 transition-[width] duration-300 ease-in-out"
+              style={{ width: `${upload.progress}%` }}
+            />
+          </div>
 
-          {upload.error && <ErrorMessage>{upload.error}</ErrorMessage>}
+          {upload.error && (
+            <div className="text-red-500 text-xs mt-1.5">{upload.error}</div>
+          )}
 
           {upload.status === "completed" && upload.url && (
-            <div style={{ fontSize: "12px", color: "#666", marginTop: "5px" }}>
+            <div className="text-xs text-gray-600 mt-1.5">
               업로드 완료: {upload.url}
             </div>
           )}
-        </ProgressContainer>
+        </div>
       ))}
-    </UploadProgressContainer>
+    </div>
   );
 };

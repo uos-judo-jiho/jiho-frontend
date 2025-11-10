@@ -2,191 +2,9 @@ import "@uiw/react-markdown-preview/markdown.css";
 import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";
 import React, { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
 import { useFileUpload } from "@/hooks/upload/useFileUpload";
 import { HelpMarkdown } from "@/components/admin/form/Help/HelpMarkdown";
-
-const EditorContainer = styled.div`
-  width: 100%;
-  margin-bottom: 1rem;
-
-  .w-md-editor-text {
-    height: 100%;
-  }
-  .w-md-editor-text-pre .token.title {
-    color: #0969da;
-  }
-
-  .w-md-editor-text-pre .token.bold {
-    color: #1f2328;
-    font-weight: bold;
-  }
-
-  .w-md-editor-text-pre .token.code {
-    color: #cf222e;
-    background-color: rgba(175, 184, 193, 0.2);
-  }
-
-  /* 툴바 스타일 */
-  .w-md-editor-toolbar {
-    background-color: #f6f8fa;
-    border-bottom: 1px solid #d1d9e0;
-  }
-
-  .w-md-editor-toolbar-child > button {
-    color: #656d76;
-  }
-
-  .w-md-editor-toolbar-child > button:hover {
-    background-color: #d1d9e0;
-    color: #1f2328;
-  }
-
-  /* 프리뷰 영역 */
-  .wmde-markdown {
-    background-color: white;
-    font-size: ${(props) => props.theme.defaultFontSize || "14px"};
-    line-height: 1.6;
-  }
-
-  .wmde-markdown h1,
-  .wmde-markdown h2,
-  .wmde-markdown h3,
-  .wmde-markdown h4,
-  .wmde-markdown h5,
-  .wmde-markdown h6 {
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-  }
-
-  .wmde-markdown p {
-    margin-bottom: 1em;
-    text-indent: 0.4em;
-  }
-
-  .wmde-markdown ul,
-  .wmde-markdown ol {
-    margin-bottom: 1em;
-    padding-left: 1.5em;
-    // 마커 표시
-    list-style-type: disc;
-  }
-
-  .wmde-markdown li {
-    margin-bottom: 0.3em;
-  }
-
-  .wmde-markdown blockquote {
-    border-left: 4px solid #d1d9e0;
-    margin: 1em 0;
-    padding-left: 1em;
-    font-style: italic;
-    color: #656d76;
-  }
-
-  .wmde-markdown code {
-    background-color: rgba(175, 184, 193, 0.2);
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-family:
-      "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    font-size: 0.9em;
-  }
-
-  .wmde-markdown pre {
-    background-color: #f6f8fa;
-    padding: 1em;
-    border-radius: 5px;
-    overflow-x: auto;
-    margin: 1em 0;
-  }
-
-  .wmde-markdown pre code {
-    background-color: transparent;
-    padding: 0;
-  }
-
-  .wmde-markdown table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1em 0;
-  }
-
-  .wmde-markdown th,
-  .wmde-markdown td {
-    border: 1px solid #d1d9e0;
-    padding: 0.5em;
-    text-align: left;
-  }
-
-  .wmde-markdown th {
-    background-color: #f6f8fa;
-    font-weight: bold;
-  }
-
-  /* 드래그 앤 드롭 스타일 */
-  .md-editor-wrapper {
-    transition: all 0.2s ease;
-    border: 2px dashed transparent;
-    border-radius: 8px;
-  }
-
-  .md-editor-wrapper.drag-over {
-    border-color: #0969da;
-    background-color: rgba(9, 105, 218, 0.05);
-  }
-
-  .md-editor-wrapper.drag-over::before {
-    content: "📁 이미지를 여기에 드롭하세요";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(9, 105, 218, 0.9);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 500;
-    z-index: 10;
-    pointer-events: none;
-  }
-`;
-
-const CharacterCount = styled.div`
-  text-align: right;
-  margin-top: 0.5rem;
-  color: #656d76;
-  font-size: 0.9em;
-`;
-
-const ModeToggle = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-`;
-
-const ModeButtons = styled.div`
-  display: flex;
-  gap: 0.5rem;
-`;
-
-const ModeButton = styled.button<{ active: boolean }>`
-  padding: 0.5rem 1rem;
-  border: 1px solid #d1d9e0;
-  border-radius: 4px;
-  background-color: ${(props) => (props.active ? "#0969da" : "white")};
-  color: ${(props) => (props.active ? "white" : "#1f2328")};
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: ${(props) => (props.active ? "#0550ae" : "#f6f8fa")};
-  }
-`;
+import { cn } from "@/lib/utils";
 
 interface MarkdownEditorProps {
   value: string;
@@ -333,49 +151,70 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
   if (disabled) {
     return (
-      <EditorContainer>
+      <div className="w-full mb-4 markdown-editor-styles">
         <MDEditor.Markdown source={internalValue} />
-        <CharacterCount>{internalValue.length}자</CharacterCount>
-      </EditorContainer>
+        <div className="text-right mt-2 text-gray-600 text-sm">
+          {internalValue.length}자
+        </div>
+      </div>
     );
   }
 
   return (
-    <EditorContainer className="markdown-editor-container">
-      <ModeToggle>
-        <ModeButtons>
-          <ModeButton
-            active={mode === "edit"}
+    <div className="w-full mb-4 markdown-editor-container markdown-editor-styles">
+      <div className="flex justify-between items-center gap-2 mb-4">
+        <div className="flex gap-2">
+          <button
+            className={cn(
+              "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
+              mode === "edit"
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-white text-gray-800 hover:bg-gray-100",
+            )}
             onClick={() => setMode("edit")}
             type="button"
           >
             편집
-          </ModeButton>
-          <ModeButton
-            active={mode === "live"}
+          </button>
+          <button
+            className={cn(
+              "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
+              mode === "live"
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-white text-gray-800 hover:bg-gray-100",
+            )}
             onClick={() => setMode("live")}
             type="button"
           >
             실시간 프리뷰
-          </ModeButton>
-          <ModeButton
-            active={mode === "preview"}
+          </button>
+          <button
+            className={cn(
+              "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
+              mode === "preview"
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-white text-gray-800 hover:bg-gray-100",
+            )}
             onClick={() => setMode("preview")}
             type="button"
           >
             프리뷰
-          </ModeButton>
-        </ModeButtons>
+          </button>
+        </div>
         <HelpMarkdown />
-      </ModeToggle>
+      </div>
 
       <div
-        className={`md-editor-wrapper ${isDragOver ? "drag-over" : ""}`}
+        className={cn(
+          "transition-all duration-200 ease-in-out border-2 border-dashed rounded-lg relative",
+          isDragOver
+            ? "border-blue-600 bg-blue-50 before:content-['📁_이미지를_여기에_드롭하세요'] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-blue-600/90 before:text-white before:px-6 before:py-3 before:rounded-lg before:font-medium before:z-10 before:pointer-events-none"
+            : "border-transparent",
+        )}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
-        style={{ position: "relative" }}
       >
         <MDEditor
           value={internalValue}
@@ -393,8 +232,10 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         />
       </div>
 
-      <CharacterCount>{internalValue.length}자</CharacterCount>
-    </EditorContainer>
+      <div className="text-right mt-2 text-gray-600 text-sm">
+        {internalValue.length}자
+      </div>
+    </div>
   );
 };
 

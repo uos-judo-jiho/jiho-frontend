@@ -23,7 +23,7 @@ export function MobileRowColLayout({
 }: MobileRowColLayoutProps) {
   return (
     <>
-      <Row justifyContent={rowJustifyContent} alignItems={rowAlignItems} $pc>
+      <Row justifyContent={rowJustifyContent} alignItems={rowAlignItems} pc>
         {children}
       </Row>
       <Col

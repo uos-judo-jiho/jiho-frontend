@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the frontend for the University of Seoul (UOS) Judo club website "Jiho" (지호), built with React 18, TypeScript, and Vite. The application serves as a comprehensive platform for the judo club with features including news articles ("지호지"), training logs, photo galleries, notices, and administrative functions.
 
-**Key Technologies:** React 18, TypeScript, Vite, Server-Side Rendering (SSR), Node.js/Express BFF server, Recoil, TanStack Query, Styled-components, TailwindCSS v4, Radix UI.
+**Key Technologies:** React 18, TypeScript, Vite, Server-Side Rendering (SSR), Node.js/Express BFF server, Recoil, TanStack Query, TailwindCSS v4, Radix UI.
 
 **Backend Integration:** Java Spring backend API at `https://uosjudo.com/api` (documented at `/api/docs`).
 
@@ -42,7 +42,7 @@ This is the frontend for the University of Seoul (UOS) Judo club website "Jiho" 
 
 - **Frontend**: React 18, TypeScript, Vite 6
 - **State Management**: Recoil (client state), TanStack Query v5 (server state)
-- **Styling**: Styled-components 5.3.9 + TailwindCSS v4
+- **Styling**: TailwindCSS v4
 - **Routing**: React Router v6
 - **UI Components**: Radix UI primitives + custom components
 - **Server**: Node.js + Express with TypeScript (BFF pattern)
@@ -80,7 +80,6 @@ jiho-frontend/
 │   │   ├── AppRouter.tsx     # Main app routes
 │   │   └── AdminRouter.tsx   # Admin routes (lazy-loaded)
 │   ├── lib/                  # Utilities and configuration
-│   │   ├── theme/            # Styled-components theme system
 │   │   ├── types/            # TypeScript type definitions
 │   │   ├── utils/            # Utility functions
 │   │   ├── constant/         # Constants (colors, fonts, URLs)
@@ -153,9 +152,8 @@ export const useNewsQuery = (year: string) => useQuery({...})
 1. Express server receives request (`server/index.ts`)
 2. Server determines route and prefetches data via TanStack Query (`entry-server.tsx`)
 3. React app renders to string on server
-4. Styled-components collects styles during SSR
-5. Query cache is dehydrated and injected into HTML
-6. Client hydrates with same data (prevents flash of content)
+4. Query cache is dehydrated and injected into HTML
+5. Client hydrates with same data (prevents flash of content)
 
 **Key SSR Files:**
 
@@ -241,20 +239,6 @@ export const useNewsQuery = (year: string) => useQuery({...})
 - Custom breakpoints: `xs: 340px, sm: 560px, md: 860px, lg: 1200px`
 - Extended with custom theme colors and font sizes
 - `@tailwindcss/vite` plugin integration
-
-**Styled-components:**
-
-- Component-scoped styles with theme prop access
-- `MediaLayout` CSS helper for responsive breakpoints
-- SSR-compatible with style tag collection
-- Theme provider with light/dark theme objects
-
-**Typical Component Pattern:**
-
-```typescript
-// Combines TailwindCSS utilities with styled-components
-<StyledComponent className="flex gap-4 p-8">{children}</StyledComponent>
-```
 
 #### 7. Routing Architecture
 
@@ -349,7 +333,6 @@ export const useNewsQuery = (year: string) => useQuery({...})
 
 - ESBuild minification
 - Console/debugger removal in production
-- SSR externalization for styled-components
 
 ### Environment Variables
 
@@ -390,7 +373,6 @@ export const useNewsQuery = (year: string) => useQuery({...})
 
 ### Styling Guidelines
 
-- Use styled-components for component-specific styles with theme access
 - TailwindCSS for spacing, colors, and responsive utilities
 - Follow existing theme structure for colors and typography (`src/lib/theme/`)
 - Maintain responsive design patterns using `MediaLayout` helper

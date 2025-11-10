@@ -1,5 +1,5 @@
+import { cn } from "@/lib/utils";
 import React from "react";
-import styled, { css } from "styled-components";
 
 type ColProps = {
   children: React.ReactNode;
@@ -12,74 +12,67 @@ type ColProps = {
   className?: string;
 };
 
-function Col({
-  children,
-  alignItems,
-  justifyContent,
-  full = false,
-  gap,
-  mobile,
-  pc,
-  className,
-}: ColProps) {
-  return (
-    <Container
-      alignItems={alignItems}
-      justifyContent={justifyContent}
-      full={full}
-      gap={gap}
-      className={className}
-      $mobile={mobile}
-      $pc={pc}
-    >
-      {children}
-    </Container>
-  );
-}
+const Col = React.forwardRef<HTMLDivElement, ColProps>(
+  (
+    {
+      children,
+      alignItems,
+      justifyContent,
+      full = false,
+      gap,
+      mobile,
+      pc,
+      className,
+    },
+    ref,
+  ) => {
+    // Map CSS values to Tailwind classes
+    const alignItemsMap: Record<string, string> = {
+      normal: "items-normal",
+      start: "items-start",
+      center: "items-center",
+      end: "items-end",
+      stretch: "items-stretch",
+      baseline: "items-baseline",
+    };
+
+    const justifyContentMap: Record<string, string> = {
+      normal: "justify-normal",
+      start: "justify-start",
+      center: "justify-center",
+      end: "justify-end",
+      between: "justify-between",
+      around: "justify-around",
+      evenly: "justify-evenly",
+      "space-between": "justify-between",
+      "space-around": "justify-around",
+      "space-evenly": "justify-evenly",
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          "flex flex-col",
+          full && "h-full w-full",
+          alignItems
+            ? alignItemsMap[alignItems] || "items-normal"
+            : "items-normal",
+          justifyContent
+            ? justifyContentMap[justifyContent] || "justify-normal"
+            : "justify-normal",
+          mobile && "sm:hidden flex",
+          pc && "max-sm:hidden sm:flex",
+          className,
+        )}
+        style={gap !== undefined ? { gap: `${gap}px` } : undefined}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
+Col.displayName = "Col";
 
 export default Col;
-
-const Container = styled.div<{
-  alignItems?: string;
-  justifyContent?: string;
-  full: boolean;
-  gap?: number;
-  $mobile?: boolean;
-  $pc?: boolean;
-}>`
-  ${(props) =>
-    props.full
-      ? css`
-          height: 100%;
-          width: 100%;
-        `
-      : ""}
-
-  display: flex;
-  flex-direction: column;
-  align-items: ${(props) => props.alignItems || "normal"};
-  justify-content: ${(props) => props.justifyContent || "normal"};
-  gap: ${(props) => `${props.gap}px`};
-
-  ${({ $mobile }) =>
-    $mobile &&
-    css`
-      @media (min-width: 560px) {
-        display: none;
-      }
-      @media (max-width: 560px) {
-        display: flex;
-      }
-    `}
-
-  ${({ $pc }) =>
-    $pc &&
-    css`
-      @media (max-width: 560px) {
-        display: none;
-      }
-      @media (min-width: 560px) {
-        display: flex;
-      }
-    `}
-`;

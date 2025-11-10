@@ -7,172 +7,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { HelpCircle } from "lucide-react";
-import styled from "styled-components";
-
-const HelpContent = styled.div`
-  max-height: 70vh;
-  overflow-y: auto;
-  font-size: 14px;
-  line-height: 1.6;
-
-  h3.help-title {
-    color: #0969da;
-    margin: 1.5rem 0 0.5rem 0;
-    font-weight: 600;
-    font-size: 16px;
-  }
-
-  h3:first-child {
-    margin-top: 0;
-  }
-
-  p {
-    margin: 0.8rem 0;
-    color: #1f2328;
-  }
-
-  .example-section {
-    background-color: #f6f8fa;
-    border: 1px solid #d1d9e0;
-    border-radius: 6px;
-    padding: 1rem;
-    margin: 0.8rem 0;
-  }
-
-  .markdown-input {
-    background-color: #ffffff;
-    border: 1px solid #d1d9e0;
-    border-radius: 4px;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    font-family:
-      "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    font-size: 12px;
-    color: #cf222e;
-  }
-
-  .markdown-output {
-    background-color: #ffffff;
-    border: 1px solid #d1d9e0;
-    border-radius: 4px;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-
-    h1,
-    h2 {
-      border-bottom: 1px solid hsl(210, 18%, 87%);
-      padding-bottom: 0.3em;
-      margin-top: 1.5em;
-    }
-
-    h1 {
-      font-size: 2em;
-    }
-
-    h2 {
-      font-size: 1.5em;
-    }
-
-    h3 {
-      font-size: 1.25em;
-    }
-    h4 {
-      font-size: 1em;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      margin: 0.5rem 0;
-      font-weight: bold;
-    }
-
-    p {
-      margin: 0.5rem 0;
-    }
-
-    ul,
-    ol {
-      padding-left: 1.5rem;
-      margin: 0.5rem 0;
-    }
-
-    ul {
-      list-style-type: disc;
-    }
-
-    ol {
-      list-style-type: decimal;
-    }
-
-    blockquote {
-      border-left: 4px solid #d1d9e0;
-      margin: 0.5rem 0;
-      padding-left: 1rem;
-      color: #656d76;
-      font-style: italic;
-    }
-
-    code {
-      background-color: rgba(175, 184, 193, 0.2);
-      padding: 0.2rem 0.4rem;
-      border-radius: 3px;
-      font-family:
-        "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-      font-size: 11px;
-    }
-
-    pre {
-      background-color: #f6f8fa;
-      padding: 0.8rem;
-      border-radius: 4px;
-      overflow-x: auto;
-      margin: 0.5rem 0;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 0.5rem 0;
-      font-size: 12px;
-    }
-
-    th,
-    td {
-      border: 1px solid #d1d9e0;
-      padding: 0.3rem;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f6f8fa;
-      font-weight: bold;
-    }
-
-    a {
-      color: #0969da;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .tip-box {
-    background-color: #dbeafe;
-    border: 1px solid #3b82f6;
-    border-radius: 6px;
-    padding: 1rem;
-    margin: 1rem 0;
-    color: #1e40af;
-  }
-
-  .tip-box strong {
-    color: #1e3a8a;
-  }
-`;
 
 export const HelpMarkdown = () => {
   return (
@@ -188,7 +22,7 @@ export const HelpMarkdown = () => {
           <DialogTitle>마크다운 사용법 가이드</DialogTitle>
         </DialogHeader>
 
-        <HelpContent>
+        <div className="max-h-[70vh] overflow-y-auto text-sm leading-relaxed help-markdown-content">
           <div className="tip-box">
             <strong>💡 팁:</strong> 아래 예시들을 복사해서 에디터에 붙여넣고
             실시간 프리뷰로 결과를 확인해보세요!
@@ -411,7 +245,7 @@ export const HelpMarkdown = () => {
               저장됩니다
             </li>
           </ul>
-        </HelpContent>
+        </div>
       </DialogContent>
     </Dialog>
   );
