@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import MyHelmet from "@/helmet/MyHelmet";
+import MyHelmet from "@/seo/helmet/MyHelmet";
 import { awardsData } from "@/lib/assets/data/awards";
 import { AwardType } from "@/lib/types/AwardType";
 import { formatAwardsType } from "@/lib/utils/Utils";

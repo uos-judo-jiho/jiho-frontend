@@ -13,7 +13,7 @@ import { useNoticesQuery } from "@/api/notices/query";
 
 import { useNews } from "@/recoils/news";
 
-import MyHelmet from "@/helmet/MyHelmet";
+import MyHelmet from "@/seo/helmet/MyHelmet";
 import { awardsData } from "@/lib/assets/data/awards";
 import { Constants } from "@/lib/constant";
 import { StructuredData, createOrganizationData } from "@/seo";

@@ -9,7 +9,7 @@ import {
 import AppRouter from "./routers/AppRouter";
 import { getTrainings } from "./api/trainings/client";
 import { getNews } from "./api/news/client";
-import { HelmetContext } from "./helmet/MyHelmet";
+import { HelmetContext } from "./seo/helmet/MyHelmet";
 import { StructuredDataContext } from "./seo/StructuredData";
 import { awardsData } from "@/lib/assets/data/awards";
 

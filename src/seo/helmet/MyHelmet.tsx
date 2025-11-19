@@ -8,6 +8,7 @@ type MyHelmetProps = {
   dateModified?: string;
   author?: string;
   articleType?: "article" | "website";
+  canonicalUrl?: string;
 };
 
 export type HelmetData = {
@@ -19,6 +20,7 @@ export type HelmetData = {
   dateModified?: string;
   author?: string;
   articleType?: "article" | "website";
+  canonicalUrl?: string;
 };
 
 // Context for SSR
@@ -34,8 +36,17 @@ const MyHelmet = ({
   dateModified,
   author,
   articleType = "website",
+  canonicalUrl: _canonicalUrl,
 }: MyHelmetProps) => {
   const { setHelmetData } = useContext(HelmetContext);
+
+  // Determine canonical URL
+  // remove query parameters for canonical URL
+  const canonicalUrl = _canonicalUrl
+    ? _canonicalUrl
+    : typeof window !== "undefined"
+    ? window.location.href.split("?")[0]
+    : undefined;
 
   const helmetData: HelmetData = useMemo(
     () => ({
@@ -46,6 +57,7 @@ const MyHelmet = ({
       dateModified,
       author,
       articleType,
+      canonicalUrl,
     }),
     [
       title,
@@ -55,7 +67,8 @@ const MyHelmet = ({
       dateModified,
       author,
       articleType,
-    ],
+      canonicalUrl,
+    ]
   );
 
   // SSR: Store metadata in context
@@ -92,11 +105,21 @@ const MyHelmet = ({
       .querySelector('meta[property="og:type"]')
       ?.setAttribute("content", helmetData.articleType || "website");
 
+    if (helmetData.canonicalUrl) {
+      let canonicalLink = document.querySelector('link[rel="canonical"]');
+      if (!canonicalLink) {
+        canonicalLink = document.createElement("link");
+        canonicalLink.setAttribute("rel", "canonical");
+        document.head.appendChild(canonicalLink);
+      }
+      canonicalLink.setAttribute("href", helmetData.canonicalUrl);
+    }
+
     // Update or create article meta tags
     if (helmetData.articleType === "article") {
       if (helmetData.datePublished) {
         let publishedMeta = document.querySelector(
-          'meta[property="article:published_time"]',
+          'meta[property="article:published_time"]'
         );
         if (!publishedMeta) {
           publishedMeta = document.createElement("meta");
@@ -108,7 +131,7 @@ const MyHelmet = ({
 
       if (helmetData.dateModified) {
         let modifiedMeta = document.querySelector(
-          'meta[property="article:modified_time"]',
+          'meta[property="article:modified_time"]'
         );
         if (!modifiedMeta) {
           modifiedMeta = document.createElement("meta");
@@ -120,7 +143,7 @@ const MyHelmet = ({
 
       if (helmetData.author) {
         let authorMeta = document.querySelector(
-          'meta[property="article:author"]',
+          'meta[property="article:author"]'
         );
         if (!authorMeta) {
           authorMeta = document.createElement("meta");

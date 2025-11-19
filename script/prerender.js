@@ -108,10 +108,22 @@ const renderPage = async (route, render, template) => {
         )}</script>`
       : "";
 
+    // canonical URL 주입
+    let canonicalLinkTag = "";
+    if (helmetData && helmetData.canonicalUrl) {
+      canonicalLinkTag = `\n    <link rel="canonical" href="${helmetData.canonicalUrl}" />`;
+    } else {
+      const fullUrl = `https://uosjudo.com${route.path.split("?")[0]}`;
+      canonicalLinkTag = `\n    <link rel="canonical" href="${fullUrl}" />`;
+    }
+
     // HTML 조합
     let finalHtml = template
       .replace(`<!--app-html-->`, html)
-      .replace(`</head>`, `${stateScript}${structuredDataScript}\n  </head>`);
+      .replace(
+        `</head>`,
+        `${canonicalLinkTag}${stateScript}${structuredDataScript}\n  </head>`
+      );
 
     // Meta tags 업데이트
     if (helmetData) {

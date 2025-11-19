@@ -6,9 +6,9 @@ import { NewsParamsType } from "@/lib/types/NewsParamsType";
 import { vaildNewsYearList } from "@/lib/utils/Utils";
 import { useNews } from "@/recoils/news";
 import { StructuredData, createImageGalleryData } from "@/seo";
+import MyHelmet from "@/seo/helmet/MyHelmet";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import MyHelmet from "../../helmet/MyHelmet";
 import NotFound from "../NotFound";
 
 const NewsYear = () => {
@@ -26,7 +26,7 @@ const NewsYear = () => {
   }, [fetch, id, news]);
 
   const currentPageNews = news.find(
-    (newsData) => newsData.year?.toString() === id?.toString(),
+    (newsData) => newsData.year?.toString() === id?.toString()
   );
 
   // SSG-friendly: 뉴스 데이터가 없어도 기본 메타 정보 제공
@@ -63,7 +63,7 @@ const NewsYear = () => {
         datePublished: article.dateTime
           ? new Date(article.dateTime).toISOString()
           : undefined,
-      })),
+      }))
     );
 
     return createImageGalleryData({

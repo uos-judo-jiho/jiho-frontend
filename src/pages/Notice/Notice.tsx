@@ -1,5 +1,5 @@
 import { Constants } from "@/lib/constant";
-import MyHelmet from "../../helmet/MyHelmet";
+import MyHelmet from "@/seo/helmet/MyHelmet";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import Line from "@/components/layouts/Line";
 import ListContainer from "@/components/layouts/ListContainer";

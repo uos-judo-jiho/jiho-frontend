@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { lazy } from "react";
 
 import { WithSuspense } from "@/components/utils/WithSuspense";
-import AdminHelmet from "@/helmet/AdminHelmet";
+import AdminHelmet from "@/seo/helmet/AdminHelmet";
 
 import AdminNavPage from "../pages/admin/AdminNavPage";
 import AdminNews from "../pages/admin/News/AdminNews";

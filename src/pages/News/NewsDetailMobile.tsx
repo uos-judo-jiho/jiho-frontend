@@ -1,18 +1,20 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
+import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import Loading from "@/components/common/Skeletons/Loading";
 import Slider from "@/components/layouts/Slider";
 import { Button } from "@/components/ui/button";
-import MyHelmet from "@/helmet/MyHelmet";
+
+import { StructuredData, createArticleData } from "@/seo";
+import MyHelmet from "@/seo/helmet/MyHelmet";
 
 import { cn } from "@/lib/utils";
+
 import { NewsDetailPageProps } from "./types/NewsDetailPageProps";
-import Footer from "@/components/common/Footer/footer";
-import { useMemo } from "react";
-import { StructuredData, createArticleData } from "@/seo";
 
 export const NewsDetailMobile = ({
   news,

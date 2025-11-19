@@ -277,6 +277,18 @@ app.use("*", async (req, res) => {
         )}</script>`
       : "";
 
+    // Inject canonical URL
+    // remove query parameters for canonical URL
+    const currentUrl = `${req.protocol}://${req.get("host")}${
+      req.originalUrl.split("?")[0]
+    }`;
+
+    const canonicalLinkTag = `<link rel="canonical" href="${
+      helmetData?.canonicalUrl || currentUrl
+    }" />`;
+
+    template = template.replace("<head>", `<head>\n${canonicalLinkTag}`);
+
     // Inject metadata
     let html = template
       .replace(`<!--app-html-->`, rendered)
