@@ -109,11 +109,12 @@ const renderPage = async (route, render, template) => {
       : "";
 
     // canonical URL 주입
+    const canonicalDomain = process.env.CANONICAL_DOMAIN || "https://uosjudo.com";
     let canonicalLinkTag = "";
     if (helmetData && helmetData.canonicalUrl) {
       canonicalLinkTag = `\n    <link rel="canonical" href="${helmetData.canonicalUrl}" />`;
     } else {
-      const fullUrl = `https://uosjudo.com${route.path.split("?")[0]}`;
+      const fullUrl = `${canonicalDomain}${route.path.split("?")[0]}`;
       canonicalLinkTag = `\n    <link rel="canonical" href="${fullUrl}" />`;
     }
 
@@ -127,7 +128,7 @@ const renderPage = async (route, render, template) => {
 
     // Meta tags 업데이트
     if (helmetData) {
-      const fullUrl = `https://uosjudo.com${route.path}`;
+      const fullUrl = `${canonicalDomain}${route.path}`;
 
       finalHtml = finalHtml
         .replace(/<title>.*?<\/title>/, `<title>${helmetData.title}</title>`)

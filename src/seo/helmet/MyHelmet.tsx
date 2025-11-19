@@ -42,10 +42,12 @@ const MyHelmet = ({
 
   // Determine canonical URL
   // remove query parameters for canonical URL
+  const canonicalDomain =
+    import.meta.env.VITE_CANONICAL_DOMAIN || "https://uosjudo.com";
   const canonicalUrl = _canonicalUrl
     ? _canonicalUrl
     : typeof window !== "undefined"
-    ? window.location.href.split("?")[0]
+    ? `${canonicalDomain}${window.location.pathname}`
     : undefined;
 
   const helmetData: HelmetData = useMemo(

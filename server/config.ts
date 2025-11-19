@@ -88,3 +88,5 @@ export const INTERNAL_API_TOKEN =
 export const ALLOWED_HOSTS = (
   process.env.ALLOWED_HOSTS || `localhost:${port},127.0.0.1:${port}`
 ).split(",");
+export const CANONICAL_DOMAIN =
+  process.env.CANONICAL_DOMAIN || "https://uosjudo.com";
