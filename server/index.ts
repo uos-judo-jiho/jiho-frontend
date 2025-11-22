@@ -2,7 +2,13 @@ import express from "express";
 import fs from "node:fs/promises";
 import path from "path";
 import type { ViteDevServer } from "vite";
-import { base, customConsole, isProduction, port } from "./config.js";
+import {
+  base,
+  CANONICAL_DOMAIN,
+  customConsole,
+  isProduction,
+  port,
+} from "./config.js";
 import { bffErrorHandler } from "./middleware/error-handler.js";
 import { bffLogger } from "./middleware/logger.js";
 import { bffSecurityMiddleware } from "./middleware/security.js";
@@ -278,14 +284,13 @@ app.use("*", async (req, res) => {
       : "";
 
     // Inject canonical URL
+    // Always use CANONICAL_DOMAIN to ensure consistency between server and client
     // remove query parameters for canonical URL
-    const currentUrl = `${req.protocol}://${req.get("host")}${
-      req.originalUrl.split("?")[0]
-    }`;
+    const canonicalUrl =
+      helmetData?.canonicalUrl ||
+      `${CANONICAL_DOMAIN}${req.originalUrl.split("?")[0]}`;
 
-    const canonicalLinkTag = `<link rel="canonical" href="${
-      helmetData?.canonicalUrl || currentUrl
-    }" />`;
+    const canonicalLinkTag = `<link rel="canonical" href="${canonicalUrl}" />`;
 
     template = template.replace("<head>", `<head>\n${canonicalLinkTag}`);
 
