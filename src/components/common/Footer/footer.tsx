@@ -1,3 +1,4 @@
+import Line from "@/components/layouts/Line";
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import { footerData } from "@/lib/assets/data/footer";
@@ -10,7 +11,13 @@ const DescriptionList = ({
   className,
   ...props
 }: HTMLProps<HTMLUListElement>) => (
-  <ul className={cn("mr-5 mb-3 flex flex-col gap-2", className)} {...props} />
+  <ul
+    className={cn(
+      "mr-2 mb-2 flex flex-col gap-2 py-2 sm:p-0 sm:border-none border-t border-theme-light-grey ",
+      className
+    )}
+    {...props}
+  />
 );
 
 const DescriptionItem = ({
@@ -65,39 +72,6 @@ const Footer = () => {
             className: "px-4",
           }}
         >
-          {/* MARK: Home 훈련 일지 지호지 */}
-          <DescriptionList>
-            <DescriptionItemTitle>
-              <HyperLink to={"/"}>HOME으로 바로가기</HyperLink>
-            </DescriptionItemTitle>
-            <DescriptionItem>
-              <HyperLink to={"/photo"}>훈련 일지로 바로가기</HyperLink>
-            </DescriptionItem>
-            <DescriptionItem>
-              <HyperLink
-                to={`/news/${Constants.LATEST_NEWS_YEAR}`}
-              >{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</HyperLink>
-            </DescriptionItem>
-            {/* 관리자 페이지로 */}
-            <DescriptionItem>
-              <HyperLink
-                to={"/admin"}
-                className="text-gray-500 hover:text-gray-600 hover:underline"
-              >
-                {`관리자 페이지`}
-              </HyperLink>
-            </DescriptionItem>
-            {/* 사이트맵 */}
-            <DescriptionItem>
-              <HyperLink
-                to={"https://uosjudo.com/sitemap.xml"}
-                target="_blank"
-                className="text-gray-500 hover:text-gray-600 hover:underline"
-              >
-                {`사이트맵`}
-              </HyperLink>
-            </DescriptionItem>
-          </DescriptionList>
           {/* 지호 이름 */}
           <DescriptionList>
             <DescriptionItemTitle>
@@ -144,6 +118,40 @@ const Footer = () => {
             </DescriptionItem>
           </DescriptionList>
         </MobileRowColLayout>
+        {/* MARK: Home 훈련 일지 지호지 */}
+        <Line className="h-[1px] bg-theme-light-grey" />
+        <ul className="flex flex-wrap gap-3 sm:px-0 px-4 mt-4">
+          <DescriptionItemTitle>
+            <HyperLink to={"/"}>HOME으로 바로가기</HyperLink>
+          </DescriptionItemTitle>
+          <DescriptionItem>
+            <HyperLink to={"/photo"}>훈련 일지로 바로가기</HyperLink>
+          </DescriptionItem>
+          <DescriptionItem>
+            <HyperLink
+              to={`/news/${Constants.LATEST_NEWS_YEAR}`}
+            >{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</HyperLink>
+          </DescriptionItem>
+          {/* 관리자 페이지로 */}
+          <DescriptionItem>
+            <HyperLink
+              to={"/admin"}
+              className="text-gray-500 hover:text-gray-600 hover:underline"
+            >
+              {`관리자 페이지`}
+            </HyperLink>
+          </DescriptionItem>
+          {/* 사이트맵 */}
+          <DescriptionItem>
+            <HyperLink
+              to={"https://uosjudo.com/sitemap.xml"}
+              target="_blank"
+              className="text-gray-500 hover:text-gray-600 hover:underline"
+            >
+              {`사이트맵`}
+            </HyperLink>
+          </DescriptionItem>
+        </ul>
       </SheetWrapper>
     </footer>
   );

@@ -1,7 +1,5 @@
-import NewsYear from "./NewsYear";
-
 const NewsPage = () => {
-  return <NewsYear />;
+  return null;
 };
 
 export default NewsPage;

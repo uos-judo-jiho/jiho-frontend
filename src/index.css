@@ -187,6 +187,7 @@
   --line-height-theme-description: var(--theme-line-description);
   --line-height-theme-default: var(--theme-line-default);
   --line-height-theme-tiny: var(--theme-line-tiny);
+
 }
 
 @layer base {
@@ -377,13 +378,12 @@
     }
   }
 
-  @keyframes loading-shimmer {
+  @keyframes shimmer {
     0% {
-      transform: translateX(0);
+      transform: translateX(-100%);
     }
-    50%,
     100% {
-      transform: translateX(460px);
+      transform: translateX(100%);
     }
   }
 
@@ -399,8 +399,8 @@
     animation: ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
   }
 
-  .animate-loading-shimmer {
-    animation: loading-shimmer 2s infinite linear;
+  .animate-shimmer {
+    animation: shimmer 2s linear infinite;
   }
 
   /* Markdown Editor Styles */

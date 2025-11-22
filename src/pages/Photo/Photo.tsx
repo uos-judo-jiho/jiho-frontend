@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Suspense, useMemo } from "react";
 
 import PhotoCardContainer from "@/components/Photo/PhotoCardContainer";
 import ThumbnailCard from "@/components/Photo/ThumbnailCard";
@@ -7,14 +8,13 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 
-import MyHelmet from "@/seo/helmet/MyHelmet";
 import { useTrainingListQuery } from "@/api/trainings/query";
-import { useMemo } from "react";
 import { StructuredData, createImageGalleryData } from "@/seo";
+import MyHelmet from "@/seo/helmet/MyHelmet";
 
 const PhotoPC = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = useTrainingListQuery();
+  const { data } = useTrainingListQuery();
 
   // 날짜순 정렬
   const trainings = useMemo(() => {
@@ -70,19 +70,16 @@ const PhotoPC = () => {
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />
           <PhotoCardContainer>
-            {!isLoading && trainings.length > 0
-              ? trainings.map((trainingLog) => (
-                  <ThumbnailCard
-                    key={trainingLog.id}
-                    imgSrc={trainingLog?.imgSrcs.at(0) ?? ""}
-                    dateTime={trainingLog.dateTime}
-                    handleClickCard={handleClickCard}
-                    id={trainingLog.id}
-                  />
-                ))
-              : Array.from({ length: 9 }).map((_, index) => (
-                  <SkeletonThumbnail key={index} />
-                ))}
+            {trainings.map((trainingLog) => (
+              <Suspense key={trainingLog.id} fallback={<SkeletonThumbnail />}>
+                <ThumbnailCard
+                  imgSrc={trainingLog?.imgSrcs.at(0) ?? ""}
+                  dateTime={trainingLog.dateTime}
+                  handleClickCard={handleClickCard}
+                  id={trainingLog.id}
+                />
+              </Suspense>
+            ))}
           </PhotoCardContainer>
         </SheetWrapper>
       </DefaultLayout>

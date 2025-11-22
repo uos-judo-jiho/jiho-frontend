@@ -6,6 +6,8 @@ import NewsCardContainer from "./NewsCardContainer";
 
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import { ClientOnly } from "../ClientOnly";
+import { Suspense } from "react";
+import SkeletonThumbnail from "../common/Skeletons/SkeletonThumbnail";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];
@@ -35,13 +37,15 @@ const NewsIndex = ({
       </ClientOnly>
       <NewsCardContainer>
         {articles.map((article) => (
-          <NewsCard
-            key={article.id}
-            year={year}
-            article={article}
-            selectedIndex={selectedIndex}
-            handleClickCard={handleClickCard}
-          />
+          <Suspense key={article.id} fallback={<SkeletonThumbnail />}>
+            <NewsCard
+              key={article.id}
+              year={year}
+              article={article}
+              selectedIndex={selectedIndex}
+              handleClickCard={handleClickCard}
+            />
+          </Suspense>
         ))}
       </NewsCardContainer>
     </>
