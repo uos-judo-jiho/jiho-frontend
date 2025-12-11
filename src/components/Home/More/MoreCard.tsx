@@ -15,7 +15,7 @@ const formatOnlyWord = (text: string, maxLength: number) => {
   // 문자, ".", ",", "!", "?", 괄호(),[],{},이모지만 허용하고 제거
   const pattern = new RegExp(
     `[^a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ.,!?()\\[\\]{}\\s]`,
-    "g",
+    "g"
   );
   return `${text.replace(pattern, "").slice(0, maxLength)}...`;
 };
@@ -43,7 +43,7 @@ const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
                 key={item.id}
                 className={cn(
                   "hover:bg-gray-100 active:bg-gray-200",
-                  "p-2 rounded-md transition-colors duration-200",
+                  "p-2 rounded-md transition-colors duration-200"
                 )}
               >
                 <Link to={`${linkTo}/${item.id}`}>
@@ -57,7 +57,7 @@ const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
                     >
                       {`[${item.author}] ${formatOnlyWord(
                         item.description,
-                        100,
+                        100
                       )}`}
                     </div>
                     <div className="min-w-[100px] text-theme-grey text-right">

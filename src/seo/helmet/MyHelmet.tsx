@@ -1,4 +1,4 @@
-import { useEffect, useContext, createContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 
 type MyHelmetProps = {
   title: string;
@@ -47,8 +47,8 @@ const MyHelmet = ({
   const canonicalUrl = _canonicalUrl
     ? _canonicalUrl
     : typeof window !== "undefined"
-    ? `${canonicalDomain}${window.location.pathname}`
-    : undefined;
+      ? `${canonicalDomain}${window.location.pathname}`
+      : undefined;
 
   const helmetData: HelmetData = useMemo(
     () => ({
