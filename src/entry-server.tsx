@@ -1,17 +1,18 @@
-import { renderToString } from "react-dom/server";
-import { StaticRouter } from "react-router-dom/server";
-import { RecoilRoot } from "recoil";
+import { awardsData } from "@/lib/assets/data/awards";
 import {
   QueryClient,
   QueryClientProvider,
   dehydrate,
 } from "@tanstack/react-query";
-import AppRouter from "./routers/AppRouter";
-import { getTrainings } from "./api/trainings/client";
+import { renderToString } from "react-dom/server";
+import { StaticRouter } from "react-router-dom/server";
+import { RecoilRoot } from "recoil";
 import { getNews } from "./api/news/client";
+import { getTrainings } from "./api/trainings/client";
+import { vaildNewsYearList } from "./lib/utils/Utils";
+import AppRouter from "./routers/AppRouter";
 import { HelmetContext } from "./seo/helmet/MyHelmet";
 import { StructuredDataContext } from "./seo/StructuredData";
-import { awardsData } from "@/lib/assets/data/awards";
 
 type HelmetData = {
   title: string;
@@ -49,9 +50,31 @@ export async function render(url: string) {
       });
     }
 
-    // Match news routes: /news/:year or /news/:year/:index
+    // Match news routes:
+    // - /news
+    // - /news/:year
+    // - /news/:year/:index
     const newsMatch = url.match(/^\/news\/(\d{4})/);
-    if (newsMatch) {
+    const newsMatchRoot = url === "/news";
+    if (newsMatchRoot) {
+      console.log("[SSR] Prefetching latest news for news root page");
+
+      const allNewsQueryPromises = vaildNewsYearList().map((year) =>
+        queryClient.prefetchQuery({
+          queryKey: ["news", year],
+          queryFn: async () => {
+            const data = await getNews(year);
+            console.log(
+              "[SSR] Prefetched news for year:",
+              data?.year || "Not found"
+            );
+            return data;
+          },
+        })
+      );
+
+      await Promise.all(allNewsQueryPromises);
+    } else if (newsMatch) {
       const year = newsMatch[1];
       console.log("[SSR] Prefetching news for year:", year);
       await queryClient.prefetchQuery({

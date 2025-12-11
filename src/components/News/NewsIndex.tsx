@@ -1,12 +1,10 @@
-import { useNavigate } from "react-router-dom";
-
 import Carousel from "@/components/layouts/Carousel";
 import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
 import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import { ClientOnly } from "../ClientOnly";
 import { Suspense } from "react";
+import { ClientOnly } from "../ClientOnly";
 import SkeletonThumbnail from "../common/Skeletons/SkeletonThumbnail";
 
 type NewsIndexProps = {
@@ -24,12 +22,6 @@ const NewsIndex = ({
 
   year,
 }: NewsIndexProps) => {
-  const navigate = useNavigate();
-
-  const handleClickCard = (index: string) => {
-    navigate(`/news/${year}/${index}`);
-  };
-
   return (
     <>
       <ClientOnly>
@@ -43,7 +35,6 @@ const NewsIndex = ({
               year={year}
               article={article}
               selectedIndex={selectedIndex}
-              handleClickCard={handleClickCard}
             />
           </Suspense>
         ))}

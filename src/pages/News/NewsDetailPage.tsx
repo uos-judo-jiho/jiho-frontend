@@ -7,7 +7,7 @@ import { NewsDetailPc } from "./NewsDetailPc";
 
 const NewsDetailPage = () => {
   const { id, index } = useParams<NewsParamsType>();
-  const { data: news } = useNewsQuery(id || "");
+  const { data: news } = useNewsQuery(id);
 
   if (!news || !id || !index) {
     return null;

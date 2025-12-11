@@ -33,8 +33,11 @@ const HomeSectionMore = () => {
           {news && (
             <MoreCard
               title="지호지"
-              linkTo={`/news/${news.year}`}
-              data={news.articles}
+              linkTo={`/news`}
+              data={news.articles.map((article) => ({
+                ...article,
+                id: `${news.year}/${article.id}`,
+              }))}
             />
           )}
           <MoreCard title="공지사항" linkTo="/notice" data={notices || []} />

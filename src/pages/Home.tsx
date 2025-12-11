@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+
+import BGImageWebp from "@/lib/assets/images/background-img-group.webp";
 
 import Footer from "@/components/common/Footer/footer";
 import Navbar from "@/components/common/Navbar/Navbar";
@@ -9,32 +11,14 @@ import HomeSectionMore from "@/components/Home/More/HomeSectionMore";
 import HomeSectionNews from "@/components/Home/News/HomeSectionNews";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
-import { useNoticesQuery } from "@/api/notices/query";
-
-import { useNews } from "@/recoils/news";
-
-import MyHelmet from "@/seo/helmet/MyHelmet";
 import { awardsData } from "@/lib/assets/data/awards";
-import { Constants } from "@/lib/constant";
-import { StructuredData, createOrganizationData } from "@/seo";
 import { footerData } from "@/lib/assets/data/footer";
+
+import { StructuredData, createOrganizationData } from "@/seo";
+import MyHelmet from "@/seo/helmet/MyHelmet";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);
-
-  // React Query hooks - 자동으로 데이터 fetch
-  useNoticesQuery();
-
-  const { fetch: fetchNews } = useNews();
-
-  // 클라이언트에서만 API 호출 (SSR 최적화)
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      fetchNews(Constants.LATEST_NEWS_YEAR);
-    }
-    // fetchNews는 queryClient.fetchQuery를 호출하므로 의존성에서 제외
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Create structured data for organization with LocalBusiness
   const structuredData = useMemo(() => {
@@ -92,7 +76,7 @@ const Home = () => {
       <MyHelmet
         title="서울시립대학교 유도부 지호 | Home"
         description={metaDescription}
-        imgUrl="/favicon-96x96.png"
+        imgUrl={BGImageWebp}
       />
       <StructuredData data={structuredData} />
 

@@ -11,10 +11,9 @@ type NewsCardProps = {
   year: string;
   article: ArticleInfoType;
   selectedIndex?: number;
-  handleClickCard: (index: string) => void;
 };
 
-const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
+const NewsCard = ({ article, year }: NewsCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const commenter = article.description.slice(0, 100);
@@ -25,7 +24,6 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
 
   return (
     <div
-      onClick={() => handleClickCard(article.id)}
       className={cn(
         "flex w-full text-theme-description leading-theme-description",
         "border border-theme-light-grey p-4 sm:h-[320px] h-[400px]",
@@ -34,7 +32,6 @@ const NewsCard = ({ article, handleClickCard, year }: NewsCardProps) => {
     >
       <a
         href={`/news/${year}/${article.id}`}
-        onClick={(e) => e.preventDefault()}
         className="w-full h-full flex flex-row items-start gap-4"
       >
         <div className="flex-1 h-full">
