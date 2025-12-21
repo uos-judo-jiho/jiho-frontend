@@ -22,7 +22,7 @@ export const useAllNewsQuery = (): UseQueryResult<NewsType[]> => {
         queryClient.fetchQuery({
           queryKey: ["news", year],
           queryFn: () => getNews(year),
-        })
+        }),
       );
 
       const newsData = await Promise.all(allNewsQuery);

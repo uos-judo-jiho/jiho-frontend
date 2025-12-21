@@ -27,7 +27,7 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
       className={cn(
         "flex w-full text-theme-description leading-theme-description",
         "border border-theme-light-grey p-4 sm:h-[320px] h-[400px]",
-        "xs:p-2"
+        "xs:p-2",
       )}
     >
       <a

@@ -21,7 +21,7 @@ const NoticeDetail = () => {
   }
 
   const metaDescription = [data.title, data.description.slice(0, 140)].join(
-    " | "
+    " | ",
   );
 
   const metaImgUrl = data.imgSrcs[0];

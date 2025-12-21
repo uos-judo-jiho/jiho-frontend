@@ -206,14 +206,12 @@ export const useNewsQuery = (year: string) => useQuery({...})
 **Three-tier approach:**
 
 1. **Server State (TanStack Query)**
-
    - All API data fetching and caching
    - 24-hour stale time for most queries
    - Automatic background refetching
    - SSR-compatible with hydration
 
 2. **Global Client State (Recoil)**
-
    - News selection state (`recoils/news.ts`)
    - Session/authentication state (`recoils/session.ts`)
    - UI state persisting across routes

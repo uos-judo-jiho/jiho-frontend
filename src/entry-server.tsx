@@ -66,11 +66,11 @@ export async function render(url: string) {
             const data = await getNews(year);
             console.log(
               "[SSR] Prefetched news for year:",
-              data?.year || "Not found"
+              data?.year || "Not found",
             );
             return data;
           },
-        })
+        }),
       );
 
       await Promise.all(allNewsQueryPromises);
@@ -130,7 +130,7 @@ export async function render(url: string) {
           </RecoilRoot>
         </QueryClientProvider>
       </HelmetContext.Provider>
-    </StructuredDataContext.Provider>
+    </StructuredDataContext.Provider>,
   );
 
   // Dehydrate the query cache to send to client
