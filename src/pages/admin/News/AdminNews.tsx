@@ -1,10 +1,10 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useNewsQuery } from "@/api/news/query";
 import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
+import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { useNewsQuery } from "@/api/news/query";
-import Loading from "@/components/common/Skeletons/Loading";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminNews = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const AdminNews = () => {
     refetch,
     isLoading,
     isRefetching,
-  } = useNewsQuery(year || "2025");
+  } = useNewsQuery(year);
 
   const isDataLoading = isLoading || isRefetching;
 
