@@ -187,7 +187,6 @@
   --line-height-theme-description: var(--theme-line-description);
   --line-height-theme-default: var(--theme-line-default);
   --line-height-theme-tiny: var(--theme-line-tiny);
-
 }
 
 @layer base {

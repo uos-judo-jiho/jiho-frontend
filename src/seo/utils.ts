@@ -89,8 +89,8 @@ export const createArticleData = ({
       typeof keywords === "string"
         ? keywords
         : Array.isArray(keywords)
-        ? keywords
-        : undefined,
+          ? keywords
+          : undefined,
   };
 };
 

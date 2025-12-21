@@ -29,7 +29,7 @@ const PhotoPC = () => {
   // SSR-friendly: Provide fallback meta data even when trainings is empty
   const metaDescription = trainings?.length
     ? [trainings.at(0)?.title, trainings.at(0)?.description.slice(0, 140)].join(
-        " | "
+        " | ",
       )
     : "서울시립대학교 유도부 지호 - 훈련일지";
 

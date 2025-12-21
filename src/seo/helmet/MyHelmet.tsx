@@ -70,7 +70,7 @@ const MyHelmet = ({
       author,
       articleType,
       canonicalUrl,
-    ]
+    ],
   );
 
   // SSR: Store metadata in context
@@ -121,7 +121,7 @@ const MyHelmet = ({
     if (helmetData.articleType === "article") {
       if (helmetData.datePublished) {
         let publishedMeta = document.querySelector(
-          'meta[property="article:published_time"]'
+          'meta[property="article:published_time"]',
         );
         if (!publishedMeta) {
           publishedMeta = document.createElement("meta");
@@ -133,7 +133,7 @@ const MyHelmet = ({
 
       if (helmetData.dateModified) {
         let modifiedMeta = document.querySelector(
-          'meta[property="article:modified_time"]'
+          'meta[property="article:modified_time"]',
         );
         if (!modifiedMeta) {
           modifiedMeta = document.createElement("meta");
@@ -145,7 +145,7 @@ const MyHelmet = ({
 
       if (helmetData.author) {
         let authorMeta = document.querySelector(
-          'meta[property="article:author"]'
+          'meta[property="article:author"]',
         );
         if (!authorMeta) {
           authorMeta = document.createElement("meta");

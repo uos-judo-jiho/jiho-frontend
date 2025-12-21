@@ -14,7 +14,7 @@ const DescriptionList = ({
   <ul
     className={cn(
       "mr-2 mb-2 flex flex-col gap-2 py-2 sm:p-0 sm:border-none border-t border-theme-light-grey ",
-      className
+      className,
     )}
     {...props}
   />
@@ -28,7 +28,7 @@ const DescriptionItem = ({
   <li
     className={cn(
       "text-sm text-theme-black break-keep-all wrap-break",
-      className
+      className,
     )}
     {...rest}
   >

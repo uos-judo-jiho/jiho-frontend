@@ -93,23 +93,24 @@ const renderPage = async (route, render, template) => {
     console.log(`[SSG] Rendering: ${route.path}`);
 
     const { html, dehydratedState, helmetData, structuredData } = await render(
-      route.path
+      route.path,
     );
 
     // React Query state 주입
     const stateScript = `<script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
-      dehydratedState
+      dehydratedState,
     ).replace(/</g, "\\u003c")};</script>`;
 
     // Structured data 주입
     const structuredDataScript = structuredData
       ? `\n    <script type="application/ld+json">${JSON.stringify(
-          structuredData
+          structuredData,
         )}</script>`
       : "";
 
     // canonical URL 주입
-    const canonicalDomain = process.env.CANONICAL_DOMAIN || "https://uosjudo.com";
+    const canonicalDomain =
+      process.env.CANONICAL_DOMAIN || "https://uosjudo.com";
     let canonicalLinkTag = "";
     if (helmetData && helmetData.canonicalUrl) {
       canonicalLinkTag = `\n    <link rel="canonical" href="${helmetData.canonicalUrl}" />`;
@@ -123,7 +124,7 @@ const renderPage = async (route, render, template) => {
       .replace(`<!--app-html-->`, html)
       .replace(
         `</head>`,
-        `${canonicalLinkTag}${stateScript}${structuredDataScript}\n  </head>`
+        `${canonicalLinkTag}${stateScript}${structuredDataScript}\n  </head>`,
       );
 
     // Meta tags 업데이트
@@ -136,27 +137,27 @@ const renderPage = async (route, render, template) => {
           /<meta property="og:type" content=".*?" \/>/,
           `<meta property="og:type" content="${
             helmetData.articleType || "website"
-          }" />`
+          }" />`,
         )
         .replace(
           /<meta property="og:title" content=".*?" \/>/,
-          `<meta property="og:title" content="${helmetData.title}" />`
+          `<meta property="og:title" content="${helmetData.title}" />`,
         )
         .replace(
           /<meta name="description" content=".*?" \/>/,
-          `<meta name="description" content="${helmetData.description}" />`
+          `<meta name="description" content="${helmetData.description}" />`,
         )
         .replace(
           /<meta property="og:description" content=".*?" \/>/,
-          `<meta property="og:description" content="${helmetData.description}" />`
+          `<meta property="og:description" content="${helmetData.description}" />`,
         )
         .replace(
           /<meta property="og:url" content=".*?" \/>/,
-          `<meta property="og:url" content="${fullUrl}" />`
+          `<meta property="og:url" content="${fullUrl}" />`,
         )
         .replace(
           /<meta property="og:image" content=".*?" \/>/,
-          `<meta property="og:image" content="${helmetData.imgUrl}" />`
+          `<meta property="og:image" content="${helmetData.imgUrl}" />`,
         );
 
       // Article-specific tags
@@ -206,7 +207,7 @@ const prerenderAll = async () => {
     process.env.PWD,
     "build",
     "server",
-    "entry-server.js"
+    "entry-server.js",
   );
   if (!fs.existsSync(serverBuildPath)) {
     console.error("[SSG] Server build not found. Run build:server first.");
@@ -220,7 +221,7 @@ const prerenderAll = async () => {
     process.env.PWD,
     "build",
     "client",
-    "index.html"
+    "index.html",
   );
   if (!fs.existsSync(templatePath)) {
     console.error("[SSG] Client build not found. Run build:client first.");
@@ -240,7 +241,7 @@ const prerenderAll = async () => {
       // 파일 경로 생성 (예: /news/2023 -> news/2023.html)
       const filePath = path.join(
         outputDir,
-        route.path.replace(/^\//, "") + ".html"
+        route.path.replace(/^\//, "") + ".html",
       );
 
       // 디렉토리 생성
