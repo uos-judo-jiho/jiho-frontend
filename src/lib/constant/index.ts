@@ -1,5 +1,5 @@
-import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.webp";
 import LOGO_WHITE from "@/lib/assets/images/logo/logo-removebg-white.webp";
+import LOGO_BLACK from "@/lib/assets/images/logo/logo-removebg.webp";
 
 export const Constants = {
   // 클라이언트에서는 상대 경로 사용 (CORS 방지)
@@ -57,7 +57,7 @@ export const Constants = {
   /**
    * lastest news
    */
-  LATEST_NEWS_YEAR: "2025",
+  LATEST_NEWS_YEAR: "2026",
 } as const;
 
 type T = typeof Constants;

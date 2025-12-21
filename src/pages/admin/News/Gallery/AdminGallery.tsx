@@ -1,14 +1,14 @@
+import { useNewsQuery } from "@/api/news/query";
 import FormContainer from "@/components/admin/form/FormContainer";
 import Carousel from "@/components/layouts/Carousel";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { useNewsQuery } from "@/api/news/query";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminGallery = () => {
   const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
-  const { data: newsData } = useNewsQuery(year || "2025");
+  const { data: newsData } = useNewsQuery(year);
 
   const images = newsData?.images || [];
 

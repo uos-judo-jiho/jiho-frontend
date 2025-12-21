@@ -1,3 +1,4 @@
+import { Constants } from "../constant";
 import { AwardType } from "../types/AwardType";
 
 /**
@@ -65,7 +66,7 @@ export const toBase64 = async (file: File): Promise<string> => {
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result as string);
         reader.onerror = reject;
-      },
+      }
     );
 
     return data;
@@ -81,9 +82,9 @@ export const toBase64 = async (file: File): Promise<string> => {
  * @example ["2022", "2023", "2024", ...]
  */
 export const vaildNewsYearList = () => {
-  const currentYear = new Date().getFullYear();
-  const yearList = Array.from({ length: currentYear - 2021 }, (_, i) =>
-    String(2022 + i),
+  const yearList = Array.from(
+    { length: Number(Constants.LATEST_NEWS_YEAR) - 2021 },
+    (_, i) => String(2022 + i)
   );
   return yearList;
 };
