@@ -120,7 +120,7 @@ const Footer = () => {
         </MobileRowColLayout>
         {/* MARK: Home 훈련 일지 지호지 */}
         <Line className="h-[1px] bg-theme-light-grey" />
-        <ul className="flex flex-wrap gap-3 sm:px-0 px-4 mt-4">
+        <ul className="flex flex-wrap gap-3 sm:px-0 px-4 mt-4 mb-16">
           <DescriptionItemTitle>
             <HyperLink to={"/"}>HOME으로 바로가기</HyperLink>
           </DescriptionItemTitle>

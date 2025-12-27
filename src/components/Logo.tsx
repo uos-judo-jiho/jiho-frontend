@@ -1,5 +1,4 @@
-import LogoWhite from "@/shared/lib/assets/images/logo/logo-removebg-white.webp";
-import LogoBlack from "@/shared/lib/assets/images/logo/logo-removebg.webp";
+import { Constants } from "@/shared/lib/constant";
 
 type LogoProps = {
   size?: string;
@@ -12,6 +11,7 @@ const Logo = ({
   margin = "0rem",
   isDark = false,
 }: LogoProps) => {
+  const { LOGO_BLACK, LOGO_WHITE } = Constants;
   return (
     <div
       className="flex"
@@ -22,7 +22,7 @@ const Logo = ({
       }}
     >
       <img
-        src={isDark ? LogoBlack : LogoWhite}
+        src={isDark ? LOGO_BLACK : LOGO_WHITE}
         alt="서울시립대학교 유도부 지호 로고"
         className="w-full h-full"
       />

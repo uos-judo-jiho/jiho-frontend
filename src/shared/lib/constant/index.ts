@@ -11,8 +11,8 @@ export const Constants = {
         : "https://uosjudo.com",
 
   // 이미지
-  LOGO_BLACK: LOGO_BLACK,
-  LOGO_WHIET: LOGO_WHITE,
+  LOGO_BLACK,
+  LOGO_WHITE,
 
   BLACK_COLOR: "#0f0c0c",
   YELLOW_COLOR: "#ffb746",
@@ -56,9 +56,8 @@ export const Constants = {
 
   /**
    * lastest news
-   * TODO: 매년 수동 업데이트 필요
    */
-  LATEST_NEWS_YEAR: "2025",
+  LATEST_NEWS_YEAR: "2026",
 } as const;
 
 type T = typeof Constants;

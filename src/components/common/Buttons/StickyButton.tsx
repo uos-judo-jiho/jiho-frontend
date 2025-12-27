@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { UpperArrowIcon } from "@/components/icons";
+import { useEffect, useState } from "react";
 
 export const StickyButton = () => {
   const [visible, setVisible] = useState(false);
@@ -31,7 +31,7 @@ export const StickyButton = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-5 right-5 bg-transparent">
+    <div className="fixed bottom-5 right-5 bg-transparent z-50">
       {isRender && (
         <div
           className={`origin-center ${
