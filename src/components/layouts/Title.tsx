@@ -21,7 +21,7 @@ function Title({
   return (
     <Tag
       className={cn(
-        "mb-5 break-keep",
+        "mb-5 break-keep px-2 md:px-0",
         color === "white" ? "text-background" : "text-black",
         className
       )}
