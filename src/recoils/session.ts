@@ -1,6 +1,6 @@
-import { atom, useRecoilState } from "recoil";
-import { LoginValuesType, login as loginApi } from "@/api/admin/login";
+import { LoginValuesType, login as loginApi } from "@/features/api/admin/login";
 import { Cookies } from "react-cookie";
+import { atom, useRecoilState } from "recoil";
 
 type SessionType = { isLogin: boolean };
 
@@ -32,7 +32,7 @@ const useSession = () => {
       ? _session
       : JSON.parse(
           sessionStorage.getItem("session") ??
-            JSON.stringify(defaultSessionAtom),
+            JSON.stringify(defaultSessionAtom)
         );
 
   return { login, session };

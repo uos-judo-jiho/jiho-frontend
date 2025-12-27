@@ -1,9 +1,9 @@
 import { CloseIcon } from "@/components/icons";
+import useClickOutside from "@/shared/hooks/useClickOutside";
+import useKeyEscClose from "@/shared/hooks/useKeyEscClose";
 import { cn } from "@/shared/lib/utils";
 import { useRef } from "react";
 import { createPortal } from "react-dom";
-import useClickOutside from "../../../../shared/hooks/useClickOutside";
-import useKeyEscClose from "../../../../shared/hooks/useKeyEscClose";
 
 type DetailImageModalProps = {
   image: string;

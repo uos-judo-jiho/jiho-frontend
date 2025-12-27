@@ -7,7 +7,7 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 
-import { useAllNewsQuery } from "@/api/news/query";
+import { useAllNewsQuery } from "@/features/api/news/query";
 
 import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";

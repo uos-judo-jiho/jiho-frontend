@@ -1,5 +1,5 @@
-import { getNews } from "@/api/news/client";
-import { useNewsQuery } from "@/api/news/query";
+import { getNews } from "@/features/api/news/client";
+import { useNewsQuery } from "@/features/api/news/query";
 import { NewsType } from "@/shared/lib/types/NewsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { useQueryClient } from "@tanstack/react-query";

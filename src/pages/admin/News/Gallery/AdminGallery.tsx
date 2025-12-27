@@ -1,8 +1,8 @@
-import { useNewsQuery } from "@/api/news/query";
 import FormContainer from "@/components/admin/form/FormContainer";
 import Carousel from "@/components/layouts/Carousel";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
+import { useNewsQuery } from "@/features/api/news/query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminGallery = () => {

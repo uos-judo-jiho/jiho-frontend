@@ -1,6 +1,6 @@
-import { useTrainingListQuery } from "@/api/trainings/query";
 import ResponsiveBranch from "@/components/common/ResponsiveBranch/ResponsiveBranch";
 import Loading from "@/components/common/Skeletons/Loading";
+import { useTrainingListQuery } from "@/features/api/trainings/query";
 import { createArticleData, StructuredData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { useMemo } from "react";

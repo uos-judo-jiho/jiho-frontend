@@ -1,8 +1,8 @@
-import { useNewsQuery } from "@/api/news/query";
-import { useNoticesQuery } from "@/api/notices/query";
-import { useTrainingListQuery } from "@/api/trainings/query";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
+import { useNewsQuery } from "@/features/api/news/query";
+import { useNoticesQuery } from "@/features/api/notices/query";
+import { useTrainingListQuery } from "@/features/api/trainings/query";
 import { Constants } from "@/shared/lib/constant";
 import { useMemo } from "react";
 import MoreCard from "./MoreCard";

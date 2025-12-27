@@ -1,5 +1,5 @@
+import axiosInstance from "@/shared/lib/api/config";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
-import axiosInstance from "../../config";
 
 const METHOD_URL = "/api/admin/board";
 

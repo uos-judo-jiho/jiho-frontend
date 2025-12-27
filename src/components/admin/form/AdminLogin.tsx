@@ -1,5 +1,5 @@
-import { LoginValuesType } from "@/api/admin/login";
 import Title from "@/components/layouts/Title";
+import { LoginValuesType } from "@/features/api/admin/login";
 import useSession from "@/recoils/session";
 import { Constants } from "@/shared/lib/constant";
 import React, { useState } from "react";

@@ -1,4 +1,4 @@
-import { useNewsQuery } from "@/api/news/query";
+import { useNewsQuery } from "@/features/api/news/query";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import ArticleForm from "./ArticleForm";
 

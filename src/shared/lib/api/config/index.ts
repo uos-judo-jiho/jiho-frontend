@@ -38,7 +38,7 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 // _internal API 전용 axios 인스턴스 (서버에서 발급받은 토큰 사용)

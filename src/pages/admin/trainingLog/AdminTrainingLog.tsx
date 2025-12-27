@@ -1,11 +1,11 @@
-import { useTrainingListQuery } from "@/api/trainings/query";
-import { Link } from "react-router-dom";
 import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
+import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
+import { useTrainingListQuery } from "@/features/api/trainings/query";
 import { useMemo } from "react";
-import Loading from "@/components/common/Skeletons/Loading";
+import { Link } from "react-router-dom";
 
 const AdminTrainingLog = () => {
   const {

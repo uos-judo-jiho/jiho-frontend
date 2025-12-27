@@ -1,4 +1,4 @@
-import { queryClient } from "@/context/QueryClient";
+import { queryClient } from "@/shared/context/QueryClient";
 import { Constants } from "@/shared/lib/constant";
 import { NewsType } from "@/shared/lib/types/NewsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";

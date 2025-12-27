@@ -2,7 +2,7 @@ import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { useNoticesQuery } from "@/api/notices/query";
+import { useNoticesQuery } from "@/features/api/notices/query";
 import { Link } from "react-router-dom";
 
 const AdminNotice = () => {
