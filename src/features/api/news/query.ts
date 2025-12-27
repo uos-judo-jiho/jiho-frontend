@@ -7,15 +7,7 @@ import { getNews } from "./client";
 
 const newQueryOptions = (year: string) => ({
   queryKey: ["news", year],
-  queryFn: async () => {
-    const data = await getNews(year);
-    return {
-      ...data,
-      articles: data?.articles.sort((a, b) =>
-        b.dateTime.localeCompare(a.dateTime)
-      ),
-    };
-  },
+  queryFn: () => getNews(year),
 });
 
 export const useNewsQuery = (year: string = Constants.LATEST_NEWS_YEAR) =>
