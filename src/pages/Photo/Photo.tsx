@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { Suspense, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 
 import PhotoCardContainer from "@/components/Photo/PhotoCardContainer";
 import ThumbnailCard from "@/components/Photo/ThumbnailCard";
@@ -9,8 +9,8 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 
 import { useTrainingListQuery } from "@/api/trainings/query";
-import { StructuredData, createImageGalleryData } from "@/seo";
-import MyHelmet from "@/seo/helmet/MyHelmet";
+import { StructuredData, createImageGalleryData } from "@/features/seo";
+import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
 const PhotoPC = () => {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const PhotoPC = () => {
   // SSR-friendly: Provide fallback meta data even when trainings is empty
   const metaDescription = trainings?.length
     ? [trainings.at(0)?.title, trainings.at(0)?.description.slice(0, 140)].join(
-        " | ",
+        " | "
       )
     : "서울시립대학교 유도부 지호 - 훈련일지";
 

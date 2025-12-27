@@ -8,8 +8,8 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Slider from "@/components/layouts/Slider";
 import { Button } from "@/components/ui/button";
 
-import { StructuredData, createArticleData } from "@/seo";
-import MyHelmet from "@/seo/helmet/MyHelmet";
+import { StructuredData, createArticleData } from "@/features/seo";
+import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
 import { cn } from "@/lib/utils";
 
@@ -18,7 +18,7 @@ import { NewsDetailPageProps } from "./types/NewsDetailPageProps";
 export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
   const articles = news.articles;
   const currentIndex = articles.findIndex(
-    (article) => article.id.toString() === newsId,
+    (article) => article.id.toString() === newsId
   );
 
   const currentArticle = articles[currentIndex];
@@ -26,7 +26,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
   // Prepare metadata (before early return to satisfy React Hook rules)
   const metaDescription = currentArticle
     ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(
-        " | ",
+        " | "
       )
     : "";
 
@@ -114,7 +114,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
               disabled={currentIndex === 0}
               className={cn(
                 "flex items-center",
-                currentIndex === 0 && "opacity-50 cursor-not-allowed",
+                currentIndex === 0 && "opacity-50 cursor-not-allowed"
               )}
             >
               <Link
@@ -142,7 +142,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
               className={cn(
                 "flex items-center",
                 currentIndex === articles.length - 1 &&
-                  "opacity-50 cursor-not-allowed",
+                  "opacity-50 cursor-not-allowed"
               )}
             >
               <Link

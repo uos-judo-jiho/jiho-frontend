@@ -9,10 +9,10 @@ import { StaticRouter } from "react-router-dom/server";
 import { RecoilRoot } from "recoil";
 import { getNews } from "./api/news/client";
 import { getTrainings } from "./api/trainings/client";
+import { HelmetContext } from "./features/seo/helmet/MyHelmet";
+import { StructuredDataContext } from "./features/seo/StructuredData";
 import { vaildNewsYearList } from "./lib/utils/Utils";
 import AppRouter from "./routers/AppRouter";
-import { HelmetContext } from "./seo/helmet/MyHelmet";
-import { StructuredDataContext } from "./seo/StructuredData";
 
 type HelmetData = {
   title: string;
@@ -66,11 +66,11 @@ export async function render(url: string) {
             const data = await getNews(year);
             console.log(
               "[SSR] Prefetched news for year:",
-              data?.year || "Not found",
+              data?.year || "Not found"
             );
             return data;
           },
-        }),
+        })
       );
 
       await Promise.all(allNewsQueryPromises);
@@ -130,7 +130,7 @@ export async function render(url: string) {
           </RecoilRoot>
         </QueryClientProvider>
       </HelmetContext.Provider>
-    </StructuredDataContext.Provider>,
+    </StructuredDataContext.Provider>
   );
 
   // Dehydrate the query cache to send to client

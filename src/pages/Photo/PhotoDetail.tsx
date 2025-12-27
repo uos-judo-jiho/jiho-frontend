@@ -1,8 +1,8 @@
 import { useTrainingListQuery } from "@/api/trainings/query";
 import ResponsiveBranch from "@/components/common/ResponsiveBranch/ResponsiveBranch";
 import Loading from "@/components/common/Skeletons/Loading";
-import MyHelmet from "@/seo/helmet/MyHelmet";
-import { createArticleData, StructuredData } from "@/seo";
+import { createArticleData, StructuredData } from "@/features/seo";
+import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { PhotoDetailMobile } from "./PhotoDetailMobile";
@@ -23,7 +23,7 @@ const PhotoPage = () => {
   const info = trainings?.find((item) => item.id.toString() === id?.toString());
 
   const metaDescription = [info?.title, info?.description.slice(0, 140)].join(
-    " | ",
+    " | "
   );
 
   // Create structured data for image gallery

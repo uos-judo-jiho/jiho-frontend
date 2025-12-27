@@ -1,7 +1,7 @@
 import Col from "@/components/layouts/Col";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { Link } from "react-router-dom";
-import MyHelmet from "../seo/helmet/MyHelmet";
+import MyHelmet from "../features/seo/helmet/MyHelmet";
 
 const NotFound = () => {
   return (
