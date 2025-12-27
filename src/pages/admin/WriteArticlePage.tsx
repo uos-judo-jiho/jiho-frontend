@@ -2,8 +2,8 @@ import NewsForm from "@/components/admin/form/NewsForm";
 import NewsGalleryFrom from "@/components/admin/form/NewsGalleryFrom";
 import NoticeForm from "@/components/admin/form/NoticeForm";
 import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
-import { Constants } from "@/lib/constant";
 import Title from "@/components/layouts/Title";
+import { Constants } from "@/shared/lib/constant";
 
 const WriteArticlePage = () => {
   const pathname = window.location.pathname;

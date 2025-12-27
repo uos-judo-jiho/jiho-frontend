@@ -1,7 +1,7 @@
 import { getNews } from "@/api/news/client";
 import { useNewsQuery } from "@/api/news/query";
-import { NewsType } from "@/lib/types/NewsType";
-import { vaildNewsYearList } from "@/lib/utils/Utils";
+import { NewsType } from "@/shared/lib/types/NewsType";
+import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
 
@@ -39,21 +39,21 @@ export const useNews = (year?: string) => {
         staleTime: 24 * 60 * 60 * 1000, // 1 day
       });
     },
-    [queryClient],
+    [queryClient]
   );
 
   const refreshNew = useCallback(async () => {
     await Promise.all(
       vaildNewsYearList().map(async (year) => {
         await fetch(year);
-      }),
+      })
     );
   }, [fetch]);
 
   // 중복 제거된 뉴스 목록 반환
   const uniqueNews = useMemo(() => {
     return allNews.filter(
-      (v, i, a) => a.findIndex((v2) => v2.year === v.year) === i,
+      (v, i, a) => a.findIndex((v2) => v2.year === v.year) === i
     );
   }, [allNews]);
 

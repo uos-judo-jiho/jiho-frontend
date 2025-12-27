@@ -1,11 +1,11 @@
+import { CloseIcon } from "@/components/icons";
+import { cn } from "@/shared/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
-import { CloseIcon } from "@/components/icons";
 import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
 import { SelectedType } from "./MenuStyledComponents";
-import { cn } from "@/lib/utils";
 
 import { useNavbar } from "../Navbar/NavBar.provider";
 
@@ -76,7 +76,7 @@ const SideBar = () => {
         "fixed -left-full top-0",
         "transition-all duration-500",
         "max-[539px]:min-w-0 max-[539px]:w-full",
-        open && "!left-0",
+        open && "!left-0"
       )}
     >
       <CloseIcon
@@ -92,7 +92,7 @@ const SideBar = () => {
         )}
       </nav>
     </div>,
-    document.body,
+    document.body
   );
 };
 

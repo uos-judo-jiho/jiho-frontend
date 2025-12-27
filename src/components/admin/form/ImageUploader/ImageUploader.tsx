@@ -1,4 +1,4 @@
-import { getImageFileFromSrc, toBase64 } from "@/lib/utils/Utils";
+import { getImageFileFromSrc, toBase64 } from "@/shared/lib/utils/Utils";
 import React, { useEffect, useState } from "react";
 import {
   InputContainer,

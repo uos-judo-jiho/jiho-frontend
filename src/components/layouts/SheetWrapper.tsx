@@ -1,5 +1,5 @@
+import { cn } from "@/shared/lib/utils";
 import React from "react";
-import { cn } from "@/lib/utils";
 
 type SheetWrapperProps = {
   children: React.ReactNode;
@@ -20,7 +20,7 @@ function SheetWrapper({
         "sm:w-[640px]",
         "md:w-[768px]",
         "lg:w-[960px]",
-        className,
+        className
       )}
       style={{ paddingTop: `${paddingTop}px` }}
     >

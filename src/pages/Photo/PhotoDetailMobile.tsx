@@ -8,8 +8,8 @@ import Loading from "@/components/common/Skeletons/Loading";
 import Slider from "@/components/layouts/Slider";
 import { Button } from "@/components/ui/button";
 
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import { cn } from "@/lib/utils";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import { cn } from "@/shared/lib/utils";
 
 type PhotoDetailMobileProps = {
   trainings: ArticleInfoType[];
@@ -51,7 +51,7 @@ export const PhotoDetailMobile = ({
             disabled={current === 0}
             className={cn(
               "flex items-center text-sm",
-              current === 0 && "opacity-50 cursor-not-allowed",
+              current === 0 && "opacity-50 cursor-not-allowed"
             )}
           >
             <Link
@@ -75,7 +75,7 @@ export const PhotoDetailMobile = ({
             className={cn(
               "flex items-center text-sm",
               current === trainings.length - 1 &&
-                "opacity-50 cursor-not-allowed",
+                "opacity-50 cursor-not-allowed"
             )}
           >
             <Link

@@ -1,6 +1,6 @@
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import ArticleForm from "./ArticleForm";
 import { useNewsQuery } from "@/api/news/query";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import ArticleForm from "./ArticleForm";
 
 type NewsGalleryFromProps = {
   year: string;

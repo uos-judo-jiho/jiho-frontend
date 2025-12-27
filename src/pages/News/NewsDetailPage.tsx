@@ -1,6 +1,6 @@
 import { useNewsQuery } from "@/api/news/query";
 import ResponsiveBranch from "@/components/common/ResponsiveBranch/ResponsiveBranch";
-import { NewsParamsType } from "@/lib/types/NewsParamsType";
+import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
 import { useParams } from "react-router-dom";
 import { NewsDetailMobile } from "./NewsDetailMobile";
 import { NewsDetailPc } from "./NewsDetailPc";

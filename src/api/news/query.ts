@@ -1,7 +1,7 @@
 import { queryClient } from "@/context/QueryClient";
-import { Constants } from "@/lib/constant";
-import { NewsType } from "@/lib/types/NewsType";
-import { vaildNewsYearList } from "@/lib/utils/Utils";
+import { Constants } from "@/shared/lib/constant";
+import { NewsType } from "@/shared/lib/types/NewsType";
+import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { getNews } from "./client";
 
@@ -22,7 +22,7 @@ export const useAllNewsQuery = (): UseQueryResult<NewsType[]> => {
         queryClient.fetchQuery({
           queryKey: ["news", year],
           queryFn: () => getNews(year),
-        }),
+        })
       );
 
       const newsData = await Promise.all(allNewsQuery);

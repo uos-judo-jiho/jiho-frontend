@@ -12,7 +12,7 @@ import {
 import { uploadPicture } from "@/api/admin/pictures";
 import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageUploader from "./ImageUploader/ImageUploader";
@@ -28,7 +28,7 @@ import {
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toBase64 } from "@/lib/utils/Utils";
+import { toBase64 } from "@/shared/lib/utils/Utils";
 import MarkdownEditorField from "./MarkdownEditor/MarkdownEditorField";
 
 type ArticleFormProps = {
@@ -48,7 +48,7 @@ const initValues: Omit<ArticleInfoType, "id"> = {
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
-    data ?? initValues,
+    data ?? initValues
   );
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
@@ -96,7 +96,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleDelete = async (
     id: string,
-    type: "news" | "training" | "notice",
+    type: "news" | "training" | "notice"
   ) => {
     try {
       await deleteBoardMutation.mutateAsync(id);
@@ -172,7 +172,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagsChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    index: number,
+    index: number
   ) => {
     const tagValue = event.target.value;
     setValues((prev) => {
@@ -184,7 +184,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagAdd = () => {
     const inputElement = document.getElementById(
-      "tagInput",
+      "tagInput"
     ) as HTMLInputElement;
 
     const inputValue = inputElement.value;
@@ -203,7 +203,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleDeleteTagClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    index: number,
+    index: number
   ) => {
     event.preventDefault();
 

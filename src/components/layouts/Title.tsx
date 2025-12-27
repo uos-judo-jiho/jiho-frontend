@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { Constants } from "@/lib/constant";
+import { Constants } from "@/shared/lib/constant";
+import { cn } from "@/shared/lib/utils";
 
 type TitleProps = {
   title: string;
@@ -23,7 +23,7 @@ function Title({
       className={cn(
         "mb-5 break-keep",
         color === "white" ? "text-background" : "text-black",
-        className,
+        className
       )}
       style={{ fontSize }}
     >

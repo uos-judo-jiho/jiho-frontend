@@ -1,8 +1,8 @@
 import { useTrainingListQuery } from "@/api/trainings/query";
-import { useParams } from "react-router-dom";
 import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
-import { Constants } from "@/lib/constant";
 import Title from "@/components/layouts/Title";
+import { Constants } from "@/shared/lib/constant";
+import { useParams } from "react-router-dom";
 
 const AdminTrainingLogDetail = () => {
   const { id } = useParams();

@@ -1,7 +1,7 @@
 import { useNewsQuery } from "@/api/news/query";
 import NewsForm from "@/components/admin/form/NewsForm";
 import Title from "@/components/layouts/Title";
-import { Constants } from "@/lib/constant";
+import { Constants } from "@/shared/lib/constant";
 import { useParams } from "react-router-dom";
 
 const AdminNewsDetail = () => {

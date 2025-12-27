@@ -1,7 +1,7 @@
-import React from "react";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
+import React from "react";
 
 type SubmitModalProps = {
   confirmText: string;
@@ -38,7 +38,7 @@ function SubmitModal({
                 className={cn(
                   "mt-[10px] cursor-pointer text-base border px-5 py-[10px] mr-[10px]",
                   "bg-theme-accent border-theme-accent text-white",
-                  "hover:opacity-60",
+                  "hover:opacity-60"
                 )}
               >
                 {cancelText}
@@ -48,7 +48,7 @@ function SubmitModal({
                 className={cn(
                   "mt-[10px] cursor-pointer text-base border px-5 py-[10px] mr-[10px]",
                   "bg-theme-primary border-theme-primary text-white",
-                  "hover:opacity-60",
+                  "hover:opacity-60"
                 )}
               >
                 {confirmText}

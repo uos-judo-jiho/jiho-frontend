@@ -1,8 +1,8 @@
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import Slider from "@/components/layouts/Slider";
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import { cn } from "@/shared/lib/utils";
 import ModalDescriptionSection from "./ModalDescriptionSection";
-import { cn } from "@/lib/utils";
 
 type ModalArticleContainerProps = {
   info: ArticleInfoType;
@@ -16,7 +16,7 @@ function ModalArticleContainer({ info, titles }: ModalArticleContainerProps) {
       className={cn(
         "w-full h-full bg-white rounded-lg overflow-hidden",
         "md:w-auto md:h-auto md:max-w-4xl md:max-h-[85vh]",
-        "flex flex-col",
+        "flex flex-col"
       )}
     >
       {/* Main Content */}

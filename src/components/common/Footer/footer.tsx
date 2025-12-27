@@ -1,9 +1,9 @@
 import Line from "@/components/layouts/Line";
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
-import { footerData } from "@/lib/assets/data/footer";
-import { Constants } from "@/lib/constant";
-import { cn } from "@/lib/utils";
+import { footerData } from "@/shared/lib/assets/data/footer";
+import { Constants } from "@/shared/lib/constant";
+import { cn } from "@/shared/lib/utils";
 import { HTMLProps } from "react";
 import { Link } from "react-router-dom";
 
@@ -14,7 +14,7 @@ const DescriptionList = ({
   <ul
     className={cn(
       "mr-2 mb-2 flex flex-col gap-2 py-2 sm:p-0 sm:border-none border-t border-theme-light-grey ",
-      className,
+      className
     )}
     {...props}
   />
@@ -28,7 +28,7 @@ const DescriptionItem = ({
   <li
     className={cn(
       "text-sm text-theme-black break-keep-all wrap-break",
-      className,
+      className
     )}
     {...rest}
   >
