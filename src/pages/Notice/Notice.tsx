@@ -5,7 +5,7 @@ import ListContainer from "@/components/layouts/ListContainer";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
-import { Constants } from "@/lib/constant";
+import { Constants } from "@/shared/lib/constant";
 
 function Notice() {
   const { data: notices = [] } = useNoticesQuery();

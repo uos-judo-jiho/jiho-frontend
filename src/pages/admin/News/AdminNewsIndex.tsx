@@ -1,6 +1,6 @@
 import FormContainer from "@/components/admin/form/FormContainer";
 import Col from "@/components/layouts/Col";
-import { vaildNewsYearList } from "@/lib/utils/Utils";
+import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { Link } from "react-router-dom";
 
 const AdminNewsIndex = () => {

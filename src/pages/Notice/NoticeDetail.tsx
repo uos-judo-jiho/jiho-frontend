@@ -5,7 +5,7 @@ import Title from "@/components/layouts/Title";
 import NoticeDescription from "@/components/Notice/NoticeDetail/NoticeDescription";
 import NoticeFooter from "@/components/Notice/NoticeDetail/NoticeFooter";
 import NoticeTitle from "@/components/Notice/NoticeDetail/NoticeTitle";
-import { Constants } from "@/lib/constant";
+import { Constants } from "@/shared/lib/constant";
 import { Link, redirect, useParams } from "react-router-dom";
 import MyHelmet from "../../features/seo/helmet/MyHelmet";
 

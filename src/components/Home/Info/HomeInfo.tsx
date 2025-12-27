@@ -1,5 +1,5 @@
-import { footerData } from "@/lib/assets/data/footer";
 import Title from "@/components/layouts/Title";
+import { footerData } from "@/shared/lib/assets/data/footer";
 import Logo from "../../Logo";
 
 function HomeInfo() {

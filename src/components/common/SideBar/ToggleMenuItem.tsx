@@ -1,5 +1,5 @@
 import Row from "@/components/layouts/Row";
-import { MenuIdType } from "@/lib/types/MenuIdType";
+import { MenuIdType } from "@/shared/lib/types/MenuIdType";
 import {
   MenuItemTitle,
   MenuToggle,

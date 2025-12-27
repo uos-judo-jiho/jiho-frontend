@@ -1,6 +1,6 @@
+import { cn } from "@/shared/lib/utils";
 import { HTMLProps } from "react";
 import { Link } from "react-router-dom";
-import { cn } from "@/lib/utils";
 
 const MenuList = ({ className, ...props }: HTMLProps<HTMLUListElement>) => (
   <ul className={cn("text-sm", "space-y-2", className)} {...props} />
@@ -21,7 +21,7 @@ const MenuItemTitle = ({
   <span
     className={cn(
       "leading-[200%] cursor-pointer hover:text-gray-500 text-base",
-      className,
+      className
     )}
     {...props}
   >

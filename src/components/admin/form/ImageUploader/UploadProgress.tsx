@@ -1,5 +1,5 @@
 import { UploadProgress as UploadProgressType } from "@/api/_internal/upload/client";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
 interface UploadProgressProps {
@@ -57,7 +57,7 @@ export const UploadProgress = ({
         className={cn(
           "close-icon-button opacity-0 group-hover:opacity-100 transition-opacity duration-[237ms] ease-in-out",
           "absolute top-[-4px] right-[-12px]",
-          "bg-white rounded-full m-2 text-gray-500 hover:text-gray-800",
+          "bg-white rounded-full m-2 text-gray-500 hover:text-gray-800"
         )}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -88,7 +88,7 @@ export const UploadProgress = ({
               <span
                 className={cn(
                   "px-2 py-1 rounded text-xs font-medium text-white",
-                  getStatusBadgeColor(upload.status),
+                  getStatusBadgeColor(upload.status)
                 )}
               >
                 {upload.status === "uploading" && "업로드 중"}

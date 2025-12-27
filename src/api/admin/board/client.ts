@@ -1,4 +1,4 @@
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import axiosInstance from "../../config";
 
 const METHOD_URL = "/api/admin/board";
@@ -38,7 +38,7 @@ export interface UpdateBoardRequest extends CreateBoardRequest {
  */
 export const createBoard = async (
   articleInfo: Omit<ArticleInfoType, "id">,
-  boardType: BoardType,
+  boardType: BoardType
 ): Promise<void> => {
   await axiosInstance({
     url: METHOD_URL,
@@ -75,14 +75,14 @@ export const createBoard = async (
  */
 export const updateBoard = async (
   articleInfo: ArticleInfoType,
-  boardType: BoardType,
+  boardType: BoardType
 ): Promise<void> => {
   console.log("[updateBoard] Request details:", {
     url: `${METHOD_URL}/${articleInfo.id}`,
     boardType,
     imgSrcsCount: articleInfo.imgSrcs.length,
     imgSrcsTypes: articleInfo.imgSrcs.map((src) =>
-      src.startsWith("data:") ? "base64" : "url",
+      src.startsWith("data:") ? "base64" : "url"
     ),
   });
 

@@ -1,10 +1,10 @@
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import {
   useMutation,
-  useQueryClient,
   UseMutationResult,
+  useQueryClient,
 } from "@tanstack/react-query";
-import { createBoard, updateBoard, deleteBoard, BoardType } from "./client";
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { BoardType, createBoard, deleteBoard, updateBoard } from "./client";
 
 interface CreateBoardParams {
   articleInfo: Omit<ArticleInfoType, "id">;
@@ -20,7 +20,7 @@ interface UpdateBoardParams {
  * Internal: Factory function for creating board mutation hook
  */
 const createBoardMutation = (
-  queryKey: string,
+  queryKey: string
 ): (() => UseMutationResult<void, Error, CreateBoardParams, unknown>) => {
   return () => {
     const queryClient = useQueryClient();
@@ -39,7 +39,7 @@ const createBoardMutation = (
  * Internal: Factory function for updating board mutation hook
  */
 const updateBoardMutation = (
-  queryKey: string,
+  queryKey: string
 ): (() => UseMutationResult<void, Error, UpdateBoardParams, unknown>) => {
   return () => {
     const queryClient = useQueryClient();
@@ -58,7 +58,7 @@ const updateBoardMutation = (
  * Internal: Factory function for deleting board mutation hook
  */
 const deleteBoardMutation = (
-  queryKey: string,
+  queryKey: string
 ): (() => UseMutationResult<void, Error, string, unknown>) => {
   return () => {
     const queryClient = useQueryClient();

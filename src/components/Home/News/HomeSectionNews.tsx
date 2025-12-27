@@ -4,9 +4,9 @@ import BGImageWebp from "@/lib/assets/images/background-img-mono.webp";
 import Title from "@/components/layouts/Title";
 import HomeSectionBG from "../HomeSectionBG";
 
-import { Link } from "react-router-dom";
-import { Constants } from "@/lib/constant";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
+import { Constants } from "@/shared/lib/constant";
+import { Link } from "react-router-dom";
 
 const HomeSectionNews = () => {
   return (

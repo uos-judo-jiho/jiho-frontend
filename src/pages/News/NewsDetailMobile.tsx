@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { StructuredData, createArticleData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 import { NewsDetailPageProps } from "./types/NewsDetailPageProps";
 

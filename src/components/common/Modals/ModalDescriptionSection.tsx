@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import Line from "@/components/layouts/Line";
 import MarkdownRenderer from "@/components/common/Markdown/MarkdownRenderer";
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
-import { cn } from "@/lib/utils";
+import Line from "@/components/layouts/Line";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import { cn } from "@/shared/lib/utils";
+import { useEffect, useState } from "react";
 
 type ModalDescriptionSectionProps = {
   article: ArticleInfoType;

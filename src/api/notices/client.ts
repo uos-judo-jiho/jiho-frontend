@@ -1,4 +1,4 @@
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import axiosInstance from "../config";
 
 const METHOD_URL = "/api/notices";

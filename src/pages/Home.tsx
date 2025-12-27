@@ -11,8 +11,8 @@ import HomeSectionMore from "@/components/Home/More/HomeSectionMore";
 import HomeSectionNews from "@/components/Home/News/HomeSectionNews";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
-import { awardsData } from "@/lib/assets/data/awards";
-import { footerData } from "@/lib/assets/data/footer";
+import { awardsData } from "@/shared/lib/assets/data/awards";
+import { footerData } from "@/shared/lib/assets/data/footer";
 
 import { StructuredData, createOrganizationData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";

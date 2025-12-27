@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
-import { awardsData } from "@/lib/assets/data/awards";
-import { AwardType } from "@/lib/types/AwardType";
-import { formatAwardsType } from "@/lib/utils/Utils";
+import { awardsData } from "@/shared/lib/assets/data/awards";
+import { AwardType } from "@/shared/lib/types/AwardType";
+import { formatAwardsType } from "@/shared/lib/utils/Utils";
 
 const AwardItem = ({ award }: { award: AwardType }) => {
   return (

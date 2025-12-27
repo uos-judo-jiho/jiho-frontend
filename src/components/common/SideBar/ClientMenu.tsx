@@ -1,7 +1,8 @@
+import { MENU_ID, MenuIdType } from "@/shared/lib/types/MenuIdType";
 import { Link, useLocation } from "react-router-dom";
-import { MENU_ID, MenuIdType } from "@/lib/types/MenuIdType";
 
-import { vaildNewsYearList } from "@/lib/utils/Utils";
+import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
+import { useNavbar } from "../Navbar/NavBar.provider";
 import {
   MenuItem,
   MenuItemTitle,
@@ -9,7 +10,6 @@ import {
   MenuProps,
 } from "./MenuStyledComponents";
 import ToggleMenuItem from "./ToggleMenuItem";
-import { useNavbar } from "../Navbar/NavBar.provider";
 
 const ClientMenu = ({ selected, setSelected }: MenuProps) => {
   const location = useLocation();
@@ -36,7 +36,7 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
 
   const handleClickLink = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string,
+    href: string
   ) => {
     if (open && location.pathname === href) {
       e.preventDefault();

@@ -1,4 +1,4 @@
-import { NewsType } from "@/lib/types/NewsType";
+import { NewsType } from "@/shared/lib/types/NewsType";
 
 export type NewsDetailPageProps = {
   year: string;

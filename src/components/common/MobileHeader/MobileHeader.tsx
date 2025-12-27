@@ -1,5 +1,5 @@
 import { ArrowBackIosIcon } from "@/components/icons";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 interface MobileHeaderProps {
   backUrl: string;
@@ -17,7 +17,7 @@ const MobileHeader = ({
       className={cn(
         "sticky top-0 left-0 z-[2]",
         "flex justify-center items-center gap-4 h-10",
-        "px-4 py-2 border-b border-theme-light-grey bg-white",
+        "px-4 py-2 border-b border-theme-light-grey bg-white"
       )}
     >
       <div className="w-6 h-6">

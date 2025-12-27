@@ -1,6 +1,6 @@
+import { Constants } from "@/shared/lib/constant";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { Link } from "react-router-dom";
-import { Constants } from "@/lib/constant";
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
 import Line from "./Line";
 
 type ListContainerProps = {

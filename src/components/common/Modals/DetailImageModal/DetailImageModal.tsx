@@ -1,5 +1,5 @@
 import { CloseIcon } from "@/components/icons";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { useRef } from "react";
 import { createPortal } from "react-dom";
 import useClickOutside from "../../../../shared/hooks/useClickOutside";

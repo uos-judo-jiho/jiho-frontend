@@ -5,9 +5,9 @@ import { MenuIcon } from "@/components/icons";
 import SideBar from "@/components/common/SideBar/SideBar";
 import Logo from "@/components/Logo";
 
-import { NavbarProvider, useNavbar } from "./NavBar.provider";
 import { ClientOnly } from "@/components/ClientOnly";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
+import { NavbarProvider, useNavbar } from "./NavBar.provider";
 
 const NavMenu = ({ isDark }: { isDark: boolean }) => {
   const { setOpen } = useNavbar();
@@ -18,7 +18,7 @@ const NavMenu = ({ isDark }: { isDark: boolean }) => {
         className={cn(
           "cursor-pointer hover:opacity-60",
           !isDark &&
-            "[filter:invert(100%)_sepia(3%)_saturate(607%)_hue-rotate(209deg)_brightness(116%)_contrast(87%)]",
+            "[filter:invert(100%)_sepia(3%)_saturate(607%)_hue-rotate(209deg)_brightness(116%)_contrast(87%)]"
         )}
         title="Menu"
       />

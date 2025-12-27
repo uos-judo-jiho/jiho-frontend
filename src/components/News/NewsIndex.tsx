@@ -2,7 +2,7 @@ import Carousel from "@/components/layouts/Carousel";
 import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
-import { ArticleInfoType } from "@/lib/types/ArticleInfoType";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { Suspense } from "react";
 import { ClientOnly } from "../ClientOnly";
 import SkeletonThumbnail from "../common/Skeletons/SkeletonThumbnail";

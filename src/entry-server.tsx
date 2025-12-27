@@ -1,4 +1,4 @@
-import { awardsData } from "@/lib/assets/data/awards";
+import { awardsData } from "@/shared/lib/assets/data/awards";
 import {
   QueryClient,
   QueryClientProvider,
@@ -11,8 +11,8 @@ import { getNews } from "./api/news/client";
 import { getTrainings } from "./api/trainings/client";
 import { HelmetContext } from "./features/seo/helmet/MyHelmet";
 import { StructuredDataContext } from "./features/seo/StructuredData";
-import { vaildNewsYearList } from "./lib/utils/Utils";
 import AppRouter from "./routers/AppRouter";
+import { vaildNewsYearList } from "./shared/lib/utils/Utils";
 
 type HelmetData = {
   title: string;

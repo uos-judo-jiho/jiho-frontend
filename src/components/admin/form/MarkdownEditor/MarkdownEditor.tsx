@@ -1,6 +1,6 @@
 import { HelpMarkdown } from "@/components/admin/form/Help/HelpMarkdown";
-import { cn } from "@/lib/utils";
 import { useFileUpload } from "@/shared/hooks/useFileUpload";
+import { cn } from "@/shared/lib/utils";
 import "@uiw/react-markdown-preview/markdown.css";
 import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";

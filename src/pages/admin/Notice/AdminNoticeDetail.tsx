@@ -1,7 +1,7 @@
+import { useNoticesQuery } from "@/api/notices/query";
 import NoticeForm from "@/components/admin/form/NoticeForm";
 import Title from "@/components/layouts/Title";
-import { Constants } from "@/lib/constant";
-import { useNoticesQuery } from "@/api/notices/query";
+import { Constants } from "@/shared/lib/constant";
 import { useParams } from "react-router-dom";
 
 const AdminNoticeDetail = () => {
