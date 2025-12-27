@@ -74,10 +74,10 @@ const NewsPage = () => {
               }
               return (
                 <Suspense key={news.year} fallback={<SkeletonThumbnail />}>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-4">
                     <a className="hover:underline" href={`/news/${news.year}`}>
-                      <h2 className="text-xl font-semibold">
-                        {news.year}년 지호지 더보기
+                      <h2 className="text-xl font-semibold px-2 md:px-0">
+                        {news.year}년 지호지 더보기 &gt;
                       </h2>
                     </a>
                     <NewsCardContainer>

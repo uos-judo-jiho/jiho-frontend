@@ -7,7 +7,7 @@ type NewsCardContainerProps = {
 
 const NewsCardContainer = ({ children }: NewsCardContainerProps) => {
   return (
-    <div className="w-full">
+    <div className="w-full mb-10">
       <div className={cn("grid grid-cols-1 gap-4", "lg:grid-cols-2")}>
         {children}
       </div>

@@ -16,7 +16,7 @@ type NewsCardProps = {
 const NewsCard = ({ article, year }: NewsCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const commenter = article.description.slice(0, 100);
+  const commenter = article.description;
 
   const handleLoding = () => {
     setIsLoading(true);
@@ -65,7 +65,7 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
             </div>
           </Col>
         </div>
-        <div className="flex flex-col flex-1 h-full text-theme-default leading-theme-description w-full indent-1 xs:hidden">
+        <div className="flex flex-col flex-1 h-full text-theme-default leading-theme-description w-full indent-1 xs:hidden @container">
           <div className="mb-2.5">
             <Col>
               <h3 className="indent-0 text-theme-description leading-theme-description font-bold">
@@ -81,14 +81,13 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
               </Col>
             </Col>
           </div>
-          <div>
-            {`${commenter}...`}
-            <span>
-              <button className="mt-0.5 text-theme-tiny leading-theme-tiny text-theme-text hover:text-theme-grey">
-                자세히 보기
-              </button>
-            </span>
+          <div className="overflow-hidden h-[20cqh] leading-normal">
+            {commenter}
           </div>
+
+          <button className="mt-4 text-theme-tiny leading-theme-tiny text-theme-grey text-left">
+            ...자세히 보기
+          </button>
         </div>
       </a>
     </div>
