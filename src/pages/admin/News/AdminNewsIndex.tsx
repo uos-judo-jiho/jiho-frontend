@@ -4,7 +4,8 @@ import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { Link } from "react-router-dom";
 
 const AdminNewsIndex = () => {
-  const yearList = vaildNewsYearList().reverse(); // 최신 년도가 먼저 오도록
+  // TODO: 최신 년도 상수로 관리
+  const yearList = [2026, ...vaildNewsYearList().reverse()]; // 최신 년도가 먼저 오도록
 
   return (
     <FormContainer title="지호지 관리 - 년도 선택">

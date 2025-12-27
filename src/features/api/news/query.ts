@@ -5,12 +5,21 @@ import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { getNews } from "./client";
 
-export const useNewsQuery = (year: string = Constants.LATEST_NEWS_YEAR) => {
-  return useQuery({
-    queryKey: ["news", year],
-    queryFn: () => getNews(year),
-  });
-};
+const newQueryOptions = (year: string) => ({
+  queryKey: ["news", year],
+  queryFn: async () => {
+    const data = await getNews(year);
+    return {
+      ...data,
+      articles: data?.articles.sort((a, b) =>
+        b.dateTime.localeCompare(a.dateTime)
+      ),
+    };
+  },
+});
+
+export const useNewsQuery = (year: string = Constants.LATEST_NEWS_YEAR) =>
+  useQuery(newQueryOptions(year));
 
 export const useAllNewsQuery = (): UseQueryResult<NewsType[]> => {
   return useQuery({
@@ -19,10 +28,7 @@ export const useAllNewsQuery = (): UseQueryResult<NewsType[]> => {
       const years = vaildNewsYearList();
 
       const allNewsQuery = years.map((year) =>
-        queryClient.fetchQuery({
-          queryKey: ["news", year],
-          queryFn: () => getNews(year),
-        })
+        queryClient.fetchQuery(newQueryOptions(year))
       );
 
       const newsData = await Promise.all(allNewsQuery);
