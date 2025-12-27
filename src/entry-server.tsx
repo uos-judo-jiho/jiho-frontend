@@ -7,11 +7,11 @@ import {
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { RecoilRoot } from "recoil";
+import AppRouter from "./app/routers/AppRouter";
 import { getNews } from "./features/api/news/client";
 import { getTrainings } from "./features/api/trainings/client";
 import { HelmetContext } from "./features/seo/helmet/MyHelmet";
 import { StructuredDataContext } from "./features/seo/StructuredData";
-import AppRouter from "./routers/AppRouter";
 import { vaildNewsYearList } from "./shared/lib/utils/Utils";
 
 type HelmetData = {

@@ -4,7 +4,7 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import useSession from "@/recoils/session";
 import { useEffect, useState } from "react";
-import AdminRouter from "../../routers/AdminRouter";
+import AdminRouter from "../../app/routers/AdminRouter";
 
 const AdminHomePage = () => {
   const [isClient, setIsClient] = useState(false);
