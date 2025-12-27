@@ -155,11 +155,11 @@ export const NewArticleButton: React.FC<
 > = ({ className, children, ...props }) => (
   <button
     className={cn(
-      "mt-2.5 cursor-pointer text-sm bg-blue-500 border border-blue-500 text-white px-5 py-2.5 hover:opacity-60",
+      "cursor-pointer text-sm bg-blue-500 border border-blue-500 text-white px-4 py-2 hover:opacity-60",
       className
     )}
     {...props}
   >
-    {children}
+    <span>{children}</span>
   </button>
 );
