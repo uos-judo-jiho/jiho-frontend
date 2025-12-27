@@ -7,7 +7,7 @@ import NoticeFooter from "@/components/Notice/NoticeDetail/NoticeFooter";
 import NoticeTitle from "@/components/Notice/NoticeDetail/NoticeTitle";
 import { Constants } from "@/lib/constant";
 import { Link, redirect, useParams } from "react-router-dom";
-import MyHelmet from "../../seo/helmet/MyHelmet";
+import MyHelmet from "../../features/seo/helmet/MyHelmet";
 
 const NoticeDetail = () => {
   const { id } = useParams();
@@ -21,7 +21,7 @@ const NoticeDetail = () => {
   }
 
   const metaDescription = [data.title, data.description.slice(0, 140)].join(
-    " | ",
+    " | "
   );
 
   const metaImgUrl = data.imgSrcs[0];

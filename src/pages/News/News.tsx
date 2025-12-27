@@ -9,8 +9,8 @@ import Title from "@/components/layouts/Title";
 
 import { useAllNewsQuery } from "@/api/news/query";
 
-import { StructuredData, createImageGalleryData } from "@/seo";
-import MyHelmet from "@/seo/helmet/MyHelmet";
+import { StructuredData, createImageGalleryData } from "@/features/seo";
+import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
 const NewsPage = () => {
   const { data: newsList = [] } = useAllNewsQuery();

@@ -14,8 +14,8 @@ import ScrollSnap from "@/components/layouts/ScrollSnap";
 import { awardsData } from "@/lib/assets/data/awards";
 import { footerData } from "@/lib/assets/data/footer";
 
-import { StructuredData, createOrganizationData } from "@/seo";
-import MyHelmet from "@/seo/helmet/MyHelmet";
+import { StructuredData, createOrganizationData } from "@/features/seo";
+import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);

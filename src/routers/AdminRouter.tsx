@@ -1,33 +1,33 @@
-import { Route, Routes } from "react-router-dom";
 import { lazy } from "react";
+import { Route, Routes } from "react-router-dom";
 
 import { WithSuspense } from "@/components/utils/WithSuspense";
-import AdminHelmet from "@/seo/helmet/AdminHelmet";
+import AdminHelmet from "@/features/seo/helmet/AdminHelmet";
 
 import AdminNavPage from "../pages/admin/AdminNavPage";
 import AdminNews from "../pages/admin/News/AdminNews";
+import AdminNewsIndex from "../pages/admin/News/AdminNewsIndex";
 import AdminNotice from "../pages/admin/Notice/AdminNotice";
 import AdminTrainingLog from "../pages/admin/trainingLog/AdminTrainingLog";
-import AdminNewsIndex from "../pages/admin/News/AdminNewsIndex";
 
 const WriteArticlePage = lazy(() => import("../pages/admin/WriteArticlePage"));
 const AdminGallery = lazy(
-  () => import("../pages/admin/News/Gallery/AdminGallery"),
+  () => import("../pages/admin/News/Gallery/AdminGallery")
 );
 const AdminGalleryIndex = lazy(
-  () => import("../pages/admin/News/Gallery/AdminGalleryIndex"),
+  () => import("../pages/admin/News/Gallery/AdminGalleryIndex")
 );
 const AdminGalleryWrite = lazy(
-  () => import("../pages/admin/News/Gallery/AdminGalleryWrite"),
+  () => import("../pages/admin/News/Gallery/AdminGalleryWrite")
 );
 const AdminTrainingLogDetail = lazy(
-  () => import("../pages/admin/trainingLog/AdminTrainingLogDetail"),
+  () => import("../pages/admin/trainingLog/AdminTrainingLogDetail")
 );
 const AdminNewsDetail = lazy(
-  () => import("../pages/admin/News/AdminNewsDetail"),
+  () => import("../pages/admin/News/AdminNewsDetail")
 );
 const AdminNoticeDetail = lazy(
-  () => import("../pages/admin/Notice/AdminNoticeDetail"),
+  () => import("../pages/admin/Notice/AdminNoticeDetail")
 );
 
 const AdminRouter = () => {
