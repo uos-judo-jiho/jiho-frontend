@@ -56,8 +56,9 @@ export const Constants = {
 
   /**
    * lastest news
+   * TODO: 매년 수동 업데이트 필요
    */
-  LATEST_NEWS_YEAR: "2026",
+  LATEST_NEWS_YEAR: "2025",
 } as const;
 
 type T = typeof Constants;
