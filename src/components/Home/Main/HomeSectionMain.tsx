@@ -1,5 +1,5 @@
-import BGImage from "@/lib/assets/images/background-img-group.jpg";
-import BGImageWebp from "@/lib/assets/images/background-img-group.webp";
+import BGImage from "@/shared/lib/assets/images/background-img-group.jpg";
+import BGImageWebp from "@/shared/lib/assets/images/background-img-group.webp";
 
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import HomeSectionBG from "../HomeSectionBG";

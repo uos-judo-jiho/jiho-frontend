@@ -1,5 +1,5 @@
-import BGImage from "@/lib/assets/images/background-img-event.jpg";
-import BGImageWebp from "@/lib/assets/images/background-img-event.webp";
+import BGImage from "@/shared/lib/assets/images/background-img-event.jpg";
+import BGImageWebp from "@/shared/lib/assets/images/background-img-event.webp";
 
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
