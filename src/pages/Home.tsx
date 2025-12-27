@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import BGImageWebp from "@/lib/assets/images/background-img-group.webp";
+import BGImageWebp from "@/shared/lib/assets/images/background-img-group.webp";
 
 import Footer from "@/components/common/Footer/footer";
 import Navbar from "@/components/common/Navbar/Navbar";

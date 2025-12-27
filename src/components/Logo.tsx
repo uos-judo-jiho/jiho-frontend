@@ -1,5 +1,5 @@
-import LogoWhite from "@/lib/assets/images/logo/logo-removebg-white.webp";
-import LogoBlack from "@/lib/assets/images/logo/logo-removebg.webp";
+import LogoWhite from "@/shared/lib/assets/images/logo/logo-removebg-white.webp";
+import LogoBlack from "@/shared/lib/assets/images/logo/logo-removebg.webp";
 
 type LogoProps = {
   size?: string;

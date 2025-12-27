@@ -1,5 +1,5 @@
-import BGImage from "@/lib/assets/images/background-img-training.jpg";
-import BGImageWebp from "@/lib/assets/images/background-img-training.webp";
+import BGImage from "@/shared/lib/assets/images/background-img-training.jpg";
+import BGImageWebp from "@/shared/lib/assets/images/background-img-training.webp";
 
 import HomeSectionBG from "../HomeSectionBG";
 

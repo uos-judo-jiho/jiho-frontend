@@ -1,5 +1,5 @@
-import BGImage from "@/lib/assets/images/background-img-mono.jpg";
-import BGImageWebp from "@/lib/assets/images/background-img-mono.webp";
+import BGImage from "@/shared/lib/assets/images/background-img-mono.jpg";
+import BGImageWebp from "@/shared/lib/assets/images/background-img-mono.webp";
 
 import Title from "@/components/layouts/Title";
 import HomeSectionBG from "../HomeSectionBG";
