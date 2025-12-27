@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { WithSuspense } from "@/components/utils/WithSuspense";
 
-import { useScrollToTop } from "@/hooks/useScolltoTop";
+import { useScrollToTop } from "@/shared/hooks/useScolltoTop";
 
 import About from "@/pages/About";
 import AdminHomePage from "@/pages/admin/AdminHomePage";
