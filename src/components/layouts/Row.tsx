@@ -9,11 +9,12 @@ type RowProps = {
   mobile?: boolean;
   pc?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 };
 
 const Row = React.forwardRef<HTMLDivElement, RowProps>(
   (
-    { children, alignItems, justifyContent, gap, mobile, pc, className },
+    { children, alignItems, justifyContent, gap, mobile, pc, className, style },
     ref
   ) => {
     // Map CSS values to Tailwind classes
@@ -54,7 +55,7 @@ const Row = React.forwardRef<HTMLDivElement, RowProps>(
           pc && "max-sm:hidden sm:flex",
           className
         )}
-        style={gap !== undefined ? { gap: `${gap}px` } : undefined}
+        style={gap !== undefined ? { gap: `${gap}px`, ...style } : style}
       >
         {children}
       </div>
