@@ -1,6 +1,6 @@
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { useNewsQuery } from "@/features/api/news/query";
+import { useAllNewsQuery } from "@/features/api/news/query";
 import { useNoticesQuery } from "@/features/api/notices/query";
 import { useTrainingListQuery } from "@/features/api/trainings/query";
 import { Constants } from "@/shared/lib/constant";
@@ -8,7 +8,7 @@ import { useMemo } from "react";
 import MoreCard from "./MoreCard";
 
 const HomeSectionMore = () => {
-  const { data: news } = useNewsQuery(Constants.LATEST_NEWS_YEAR);
+  const { data: news } = useAllNewsQuery();
   const { data } = useTrainingListQuery();
   const { data: notices } = useNoticesQuery();
 
@@ -34,10 +34,13 @@ const HomeSectionMore = () => {
             <MoreCard
               title="지호지"
               linkTo={`/news`}
-              data={news.articles.map((article) => ({
-                ...article,
-                id: `${news.year}/${article.id}`,
-              }))}
+              //
+              data={news.flatMap((item) =>
+                item.articles.map((article) => ({
+                  ...article,
+                  id: `${item.year}/${article.id}`,
+                }))
+              )}
             />
           )}
           <MoreCard title="공지사항" linkTo="/notice" data={notices || []} />
