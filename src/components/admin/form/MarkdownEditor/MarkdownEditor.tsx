@@ -1,10 +1,10 @@
+import { HelpMarkdown } from "@/components/admin/form/Help/HelpMarkdown";
+import { cn } from "@/lib/utils";
+import { useFileUpload } from "@/shared/hooks/useFileUpload";
 import "@uiw/react-markdown-preview/markdown.css";
 import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";
-import React, { useEffect, useState, useRef } from "react";
-import { useFileUpload } from "@/hooks/upload/useFileUpload";
-import { HelpMarkdown } from "@/components/admin/form/Help/HelpMarkdown";
-import { cn } from "@/lib/utils";
+import React, { useEffect, useRef, useState } from "react";
 
 interface MarkdownEditorProps {
   value: string;
@@ -39,14 +39,14 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     uploadsArray.forEach((upload) => {
       if (upload.status === "completed" && upload.url) {
         const placeholder = uploadingPlaceholdersRef.current.get(
-          upload.uploadId,
+          upload.uploadId
         );
         if (placeholder) {
           // 업로드 중 플레이스홀더를 실제 이미지로 교체
           const imageMarkdown = `![Image](${upload.url})`;
           const updatedValue = internalValue.replace(
             placeholder,
-            imageMarkdown,
+            imageMarkdown
           );
 
           setInternalValue(updatedValue);
@@ -57,7 +57,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         }
       } else if (upload.status === "error") {
         const placeholder = uploadingPlaceholdersRef.current.get(
-          upload.uploadId,
+          upload.uploadId
         );
         if (placeholder) {
           // 에러 시 플레이스홀더를 에러 메시지로 교체
@@ -169,7 +169,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
               "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
               mode === "edit"
                 ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-white text-gray-800 hover:bg-gray-100",
+                : "bg-white text-gray-800 hover:bg-gray-100"
             )}
             onClick={() => setMode("edit")}
             type="button"
@@ -181,7 +181,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
               "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
               mode === "live"
                 ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-white text-gray-800 hover:bg-gray-100",
+                : "bg-white text-gray-800 hover:bg-gray-100"
             )}
             onClick={() => setMode("live")}
             type="button"
@@ -193,7 +193,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
               "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
               mode === "preview"
                 ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-white text-gray-800 hover:bg-gray-100",
+                : "bg-white text-gray-800 hover:bg-gray-100"
             )}
             onClick={() => setMode("preview")}
             type="button"
@@ -209,7 +209,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           "transition-all duration-200 ease-in-out border-2 border-dashed rounded-lg relative",
           isDragOver
             ? "border-blue-600 bg-blue-50 before:content-['📁_이미지를_여기에_드롭하세요'] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-blue-600/90 before:text-white before:px-6 before:py-3 before:rounded-lg before:font-medium before:z-10 before:pointer-events-none"
-            : "border-transparent",
+            : "border-transparent"
         )}
         onDrop={handleDrop}
         onDragOver={handleDragOver}

@@ -1,9 +1,9 @@
-import { useRef } from "react";
-import { createPortal } from "react-dom";
-import useClickOutside from "../../../../hooks/useClickOutside";
-import useKeyEscClose from "../../../../hooks/useKeyEscClose";
 import { CloseIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { useRef } from "react";
+import { createPortal } from "react-dom";
+import useClickOutside from "../../../../shared/hooks/useClickOutside";
+import useKeyEscClose from "../../../../shared/hooks/useKeyEscClose";
 
 type DetailImageModalProps = {
   image: string;
@@ -27,7 +27,7 @@ const DetailImageModal = ({
       id={`detail-image-${image}`}
       className={cn(
         "fixed w-screen h-screen top-0 right-0 bottom-0 left-0 z-[1] bg-black/90",
-        !isOpen && "hidden",
+        !isOpen && "hidden"
       )}
     >
       <CloseIcon
@@ -44,7 +44,7 @@ const DetailImageModal = ({
         />
       </div>
     </div>,
-    document.body,
+    document.body
   );
 };
 
