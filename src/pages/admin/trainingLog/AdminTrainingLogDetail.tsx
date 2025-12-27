@@ -1,6 +1,6 @@
-import { useTrainingListQuery } from "@/api/trainings/query";
 import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
 import Title from "@/components/layouts/Title";
+import { useTrainingListQuery } from "@/features/api/trainings/query";
 import { Constants } from "@/shared/lib/constant";
 import { useParams } from "react-router-dom";
 

@@ -1,3 +1,5 @@
+import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
+import Loading from "@/components/common/Skeletons/Loading";
 import {
   useCreateNewsBoard,
   useCreateNoticeBoard,
@@ -8,10 +10,8 @@ import {
   useUpdateNewsBoard,
   useUpdateNoticeBoard,
   useUpdateTrainingBoard,
-} from "@/api/admin/board/query";
-import { uploadPicture } from "@/api/admin/pictures";
-import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
-import Loading from "@/components/common/Skeletons/Loading";
+} from "@/features/api/admin/board/query";
+import { uploadPicture } from "@/features/api/admin/pictures";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

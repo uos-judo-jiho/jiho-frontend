@@ -1,4 +1,4 @@
-import { internalAxiosInstance } from "../../config";
+import { internalAxiosInstance } from "@/shared/lib/api/config";
 
 export interface UploadResponse {
   success: boolean;
@@ -47,7 +47,7 @@ export interface UploadStartResponse {
 export class InternalUploadClient {
   async uploadFile(
     file: File,
-    folder: string = "uploads",
+    folder: string = "uploads"
   ): Promise<UploadStartResponse> {
     const formData = new FormData();
     formData.append("file", file);
@@ -60,7 +60,7 @@ export class InternalUploadClient {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      },
+      }
     );
 
     return response.data;
@@ -68,7 +68,7 @@ export class InternalUploadClient {
 
   async uploadMultipleFiles(
     files: File[],
-    folder: string = "uploads",
+    folder: string = "uploads"
   ): Promise<UploadStartResponse> {
     const formData = new FormData();
     files.forEach((file) => {
@@ -83,7 +83,7 @@ export class InternalUploadClient {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-      },
+      }
     );
 
     return response.data;
@@ -92,14 +92,14 @@ export class InternalUploadClient {
   async generatePresignedUrl(
     fileName: string,
     folder: string = "uploads",
-    expiresIn: number = 3600,
+    expiresIn: number = 3600
   ): Promise<PresignedUrlResponse> {
     const response = await internalAxiosInstance.post(
       `/_internal/api/upload-url/${fileName}`,
       {
         folder,
         expiresIn,
-      },
+      }
     );
 
     return response.data;
@@ -107,7 +107,7 @@ export class InternalUploadClient {
 
   async getUploadConfig(): Promise<UploadConfig> {
     const response = await internalAxiosInstance.get(
-      "/_internal/api/upload/config",
+      "/_internal/api/upload/config"
     );
     return response.data;
   }
@@ -115,7 +115,7 @@ export class InternalUploadClient {
   createUploadEventSource(uploadId: string, sseToken: string): EventSource {
     const url = new URL(
       "/_internal/api/upload/progress",
-      window.location.origin,
+      window.location.origin
     );
     url.searchParams.set("uploadId", uploadId);
     url.searchParams.set("token", sseToken);

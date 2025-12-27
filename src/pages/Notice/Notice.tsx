@@ -1,9 +1,9 @@
-import { useNoticesQuery } from "@/api/notices/query";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import Line from "@/components/layouts/Line";
 import ListContainer from "@/components/layouts/ListContainer";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
+import { useNoticesQuery } from "@/features/api/notices/query";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { Constants } from "@/shared/lib/constant";
 

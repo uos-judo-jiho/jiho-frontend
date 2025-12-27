@@ -1,4 +1,4 @@
-import { UploadProgress as UploadProgressType } from "@/api/_internal/upload/client";
+import { UploadProgress as UploadProgressType } from "@/features/api/_internal/upload/client";
 import { cn } from "@/shared/lib/utils";
 import { useEffect, useRef, useState } from "react";
 

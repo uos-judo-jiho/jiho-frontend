@@ -1,9 +1,9 @@
-import { useNewsQuery } from "@/api/news/query";
 import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
 import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
+import { useNewsQuery } from "@/features/api/news/query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminNews = () => {

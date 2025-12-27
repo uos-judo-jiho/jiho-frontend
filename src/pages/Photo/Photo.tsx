@@ -8,7 +8,7 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 
-import { useTrainingListQuery } from "@/api/trainings/query";
+import { useTrainingListQuery } from "@/features/api/trainings/query";
 import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 

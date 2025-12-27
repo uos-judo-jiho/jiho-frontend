@@ -1,8 +1,8 @@
-import { Card } from "@/components/ui/card";
-import { useTrainingListQuery } from "@/api/trainings/query";
-import { Link } from "react-router-dom";
 import Col from "@/components/layouts/Col";
+import { Card } from "@/components/ui/card";
+import { useTrainingListQuery } from "@/features/api/trainings/query";
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 
 const ExerciseThumbnail = () => {
   const { data } = useTrainingListQuery();
@@ -11,7 +11,7 @@ const ExerciseThumbnail = () => {
   const lastTraningData = useMemo(() => {
     if (!data || data.length === 0) return null;
     const sorted = [...data].sort((a, b) =>
-      b.dateTime.localeCompare(a.dateTime),
+      b.dateTime.localeCompare(a.dateTime)
     );
     return sorted[0];
   }, [data]);

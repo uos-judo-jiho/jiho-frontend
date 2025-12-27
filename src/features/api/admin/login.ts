@@ -1,4 +1,4 @@
-import axiosInstance from "../config";
+import axiosInstance from "@/shared/lib/api/config";
 
 export type LoginValuesType = {
   username: string;
