@@ -36,8 +36,9 @@ const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const sectionId = entry.target.getAttribute("data-section-id");
+
             if (sectionId) {
-              setIsDark(sectionId === "more" || sectionId === "footer");
+              setIsDark(sectionId === "footer");
             }
           }
         });
@@ -45,7 +46,7 @@ const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
       {
         root: container,
         threshold: 0.2,
-      },
+      }
     );
 
     const childElements = Array.from(container.children);

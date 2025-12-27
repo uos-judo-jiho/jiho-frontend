@@ -38,7 +38,7 @@ function Navbar({ isDark }: { isDark?: boolean }) {
             <NavMenu isDark={isDark || currentPath !== "/"} />
             <div className="flex items-center justify-center">
               <Link to={"/"}>
-                <Logo size={"48px"} isDark={isDark || currentPath !== "/"} />
+                <Logo size={"52px"} isDark={isDark || currentPath !== "/"} />
               </Link>
             </div>
           </div>
