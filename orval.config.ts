@@ -1,4 +1,5 @@
 import { defineConfig } from "orval";
+import responseTransformer from "./orval.transformer";
 
 export default defineConfig({
   jiho: {
@@ -13,6 +14,7 @@ export default defineConfig({
       clean: true,
       baseUrl: "https://uosjudo.com",
       override: {
+        transformer: responseTransformer,
         query: {
           version: 5,
           useQuery: true,
