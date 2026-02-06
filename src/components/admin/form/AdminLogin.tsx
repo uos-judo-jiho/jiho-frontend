@@ -1,80 +1,64 @@
-import Title from "@/components/layouts/Title";
-import { LoginValuesType } from "@/features/api/admin/login";
-import useSession from "@/recoils/session";
-import { Constants } from "@/shared/lib/constant";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  ButtonContainer,
-  FormContainer,
-  InputContainer,
-  StyledInput,
-} from "./StyledComponent/FormContainer";
+import { useState } from "react";
+import { useLoginMutation } from "@/features/api/admin/hooks";
 
-function AdminLogin() {
-  const { login } = useSession();
-  const [loginValue, setloginValue] = useState<LoginValuesType>({
-    username: "",
+const AdminLogin = () => {
+  const [formState, setFormState] = useState({
+    email: "",
     password: "",
   });
 
-  function handleUsernameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setloginValue((prev) => {
-      return { ...prev, username: event.target.value };
-    });
-  }
-  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setloginValue((prev) => {
-      return { ...prev, password: event.target.value };
-    });
-  }
+  const loginMutation = useLoginMutation();
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    loginMutation.mutate({ ...formState });
+  };
 
-    await login(loginValue);
-  }
   return (
-    <>
-      <Title title={"관리자 로그인"} color={Constants.BLACK_COLOR} />
-      <FormContainer>
-        <form onSubmit={handleSubmit}>
-          <InputContainer>
-            <label htmlFor="uname">Username </label>
-            <StyledInput
-              id="uname"
-              type="text"
-              name="uname"
-              onChange={handleUsernameChange}
-              required
-            />
-
-            {/* {renderErrorMessage("uname")} */}
-          </InputContainer>
-          <InputContainer>
-            <label htmlFor="password">Password </label>
-            <StyledInput
-              id="password"
-              type="password"
-              name="password"
-              onChange={handlePasswordChange}
-              required
-            />
-
-            {/* {renderErrorMessage("pass")} */}
-          </InputContainer>
-          <ButtonContainer>
-            <StyledInput type="submit" />
-          </ButtonContainer>
-        </form>
-      </FormContainer>
-      <Link to={"/"}>
-        <div className="text-center my-4 underline hover:opacity-60 transition-opacity">
-          홈으로 돌아가기
+    <div>
+      <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>관리자 로그인</h1>
+      <form onSubmit={handleSubmit} className="admin-input-form">
+        <div id="username-wrapper" className="admin-input-wrapper">
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            name="username"
+            value={formState.email}
+            onChange={(event) =>
+              setFormState({
+                ...formState,
+                email: event.currentTarget.value,
+              })
+            }
+            required={true}
+          />
         </div>
-      </Link>
-    </>
+        <div id="password-wrapper" className="admin-input-wrapper">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            value={formState.password}
+            onChange={(event) =>
+              setFormState({
+                ...formState,
+                password: event.currentTarget.value,
+              })
+            }
+            required={true}
+          />
+        </div>
+        <button
+          className="admin-login-button"
+          type="submit"
+          disabled={loginMutation.isPending}
+        >
+          로그인
+        </button>
+      </form>
+    </div>
   );
-}
+};
 
 export default AdminLogin;
