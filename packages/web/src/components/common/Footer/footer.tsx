@@ -4,7 +4,7 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 import { footerData } from "@/shared/lib/assets/data/footer";
 import { Constants } from "@/shared/lib/constant";
 import { cn } from "@/shared/lib/utils";
-import { HTMLProps } from "react";
+import { HTMLProps, ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 const DescriptionList = ({
@@ -51,16 +51,41 @@ const HyperLink = ({
   className,
   children,
   target,
+  reload = false,
 }: {
   to: string;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   target?: string;
-}) => (
-  <Link to={to} target={target} className={cn("hover:opacity-60", className)}>
-    {children}
-  </Link>
-);
+  reload?: boolean;
+}) => {
+  const shouldUseAnchor =
+    reload ||
+    /^(https?:)?\/\//.test(to) ||
+    to.startsWith("mailto:") ||
+    to.startsWith("tel:");
+
+  if (shouldUseAnchor) {
+    return (
+      <a
+        href={to}
+        target={target}
+        rel={
+          target === "_blank" ? "noopener noreferrer" : undefined
+        }
+        className={cn("hover:opacity-60", className)}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={to} target={target} className={cn("hover:opacity-60", className)}>
+      {children}
+    </Link>
+  );
+};
 
 const Footer = () => {
   return (
@@ -136,6 +161,7 @@ const Footer = () => {
           <DescriptionItem>
             <HyperLink
               to={"/admin"}
+              reload
               className="text-gray-500 hover:text-gray-600 hover:underline"
             >
               {`관리자 페이지`}

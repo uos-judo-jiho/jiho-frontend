@@ -1,11 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 
-import { WithSuspense } from "@/components/utils/WithSuspense";
-
 import { useScrollToTop } from "@/shared/hooks/useScolltoTop";
 
 import About from "@/pages/About";
-import AdminHomePage from "@/pages/admin/AdminHomePage";
 import Home from "@/pages/Home";
 import News from "@/pages/News/News";
 import NewsDetailPage from "@/pages/News/NewsDetailPage";
@@ -31,14 +28,6 @@ const AppRouter = () => {
       <Route path="/notice" element={<Notice />} />
       <Route path="/notice/:id" element={<NoticeDetail />} />
       <Route path="*" element={<NotFound />} />
-      <Route
-        path="/admin/*"
-        element={
-          <WithSuspense>
-            <AdminHomePage />
-          </WithSuspense>
-        }
-      />
     </Routes>
   );
 };

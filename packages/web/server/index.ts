@@ -195,27 +195,6 @@ if (!isProduction) {
   app.use(base, sirv("./build/client", { extensions: [] }));
 }
 
-// admin 페이지는 client 사이드 렌더링으로 처리
-app.use("/admin*", async (req, res) => {
-  // Add X-Robots-Tag header to prevent crawling of admin routes
-  res.setHeader("X-Robots-Tag", "noindex, nofollow");
-
-  const url = req.originalUrl.replace(base, "");
-  customConsole.info(`${req.method} ${req.originalUrl}`);
-  if (!isProduction) {
-    try {
-      const html = await fs.readFile("index.html", "utf-8");
-      res.send(await vite!.transformIndexHtml(url, html));
-      return;
-    } catch (error) {
-      console.error(`Error reading index.html:`, error);
-      res.status(500).send("Internal Server Error");
-      return;
-    }
-  }
-  res.sendFile(path.resolve("./build/client/index.html"));
-});
-
 // Serve HTML
 app.use("*", async (req, res) => {
   customConsole.log(req.originalUrl);
