@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 
 import AdminHomePage from "@/pages/admin/AdminHomePage";
-import { queryClient } from "./../shared/context/QueryClient";
+import { queryClient } from "../shared/context/QueryClient";
 
 const AdminStandaloneApp = () => {
   useEffect(() => {
