@@ -5,17 +5,17 @@ Static React build that renders the admin dashboard UI. The codebase now lives e
 ## Scripts
 
 ```bash
-npm run dev      # start Vite dev server on http://localhost:4175
-npm run build    # output static assets to dist/
-npm run preview  # preview production build locally
+yarn workspace @uos-judo/admin dev      # start Vite dev server on http://localhost:4175
+yarn workspace @uos-judo/admin build    # output static assets to dist/
+yarn workspace @uos-judo/admin preview  # preview production build locally
 ```
 
 Run these commands from the repo root:
 
 ```bash
-npm run dev:admin
-npm run build:admin
-npm run preview:admin
+yarn dev:admin
+yarn build:admin
+yarn preview:admin
 ```
 
 The build output in `dist/` can be uploaded to any CDN or object storage and then served behind `/admin`.

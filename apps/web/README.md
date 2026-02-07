@@ -38,31 +38,31 @@ Node 18.x
 1. install dependency
 
 ```bash
-npm install
+yarn install
 ```
 
 2. dev run
 
 ```bash
-npm run dev
+yarn workspace @uos-judo/web dev
 ```
 
 3. dev server (with SSR)
 
 ```bash
-npm run dev:server
+yarn workspace @uos-judo/web dev:server
 ```
 
 4. production build
 
 ```bash
-npm run build
+yarn workspace @uos-judo/web build
 ```
 
 5. production run
 
 ```bash
-npm run start
+yarn workspace @uos-judo/web start
 ```
 
 ## Server Architecture
