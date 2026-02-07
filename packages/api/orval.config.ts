@@ -4,7 +4,7 @@ import responseTransformer from "./orval.transformer";
 export default defineConfig({
   jiho: {
     input: {
-      target: "http://localhost:4000/api/v1/docs/json",
+      target: "http://localhost:4000/api/docs/json",
     },
     output: {
       target: "src/_generated/index.ts",

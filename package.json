@@ -35,5 +35,8 @@
     "type-check:server": "yarn workspace @uos-judo/web type-check:server",
     "type-check:admin": "yarn workspace @uos-judo/admin type-check"
   },
-  "packageManager": "yarn@3.6.4"
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  },
+  "packageManager": "yarn@4.12.0"
 }

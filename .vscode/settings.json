@@ -5,5 +5,11 @@
     "source.fixAll.eslint": "explicit",
     "source.addMissingImports": "explicit",
     "source.organizeImports": "explicit"
-  }
+  },
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
