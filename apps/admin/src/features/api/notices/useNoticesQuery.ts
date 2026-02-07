@@ -1,10 +1,12 @@
-import { getGetNoticeQueryOptions, useGetNotice } from "@packages/api";
-import { BoardResponseDto } from "@packages/api/model";
+import { v1Api } from "@packages/api";
+import { v1ApiModel } from "@packages/api/model";
 import { useMemo } from "react";
 
 const TRANSFORMED_QUERY_KEY = ["notices"] as const;
 
-const mapNoticeResponse = (response: unknown): BoardResponseDto[] => {
+const mapNoticeResponse = (
+  response: unknown,
+): v1ApiModel.GetApiV1Notices200NoticesItem[] => {
   if (!response || typeof response !== "object") {
     return [];
   }
@@ -13,16 +15,23 @@ const mapNoticeResponse = (response: unknown): BoardResponseDto[] => {
     "notices" in response &&
     Array.isArray((response as Record<string, unknown>).notices)
   ) {
-    return (response as { notices: BoardResponseDto[] }).notices ?? [];
+    return (
+      (response as { notices: v1ApiModel.GetApiV1Notices200NoticesItem[] })
+        .notices ?? []
+    );
   }
 
   return [];
 };
 
 export const useNoticesQuery = () => {
-  const { queryFn, ...queryOptions } = getGetNoticeQueryOptions();
+  const { queryFn, ...queryOptions } = v1Api.getGetApiV1NoticesQueryOptions();
 
-  const result = useGetNotice(undefined, { query: queryOptions }, undefined);
+  const result = v1Api.useGetApiV1Notices(
+    undefined,
+    { query: queryOptions },
+    undefined,
+  );
 
   const notices = useMemo(() => mapNoticeResponse(result.data), [result.data]);
 

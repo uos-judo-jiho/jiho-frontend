@@ -1,5 +1,5 @@
-import { getGetTrainingQueryOptions, useGetTraining } from "@packages/api";
-import { BoardResponseDto } from "@packages/api/model";
+import { v1Api } from "@packages/api";
+import { v1ApiModel } from "@packages/api/model";
 import { useMemo } from "react";
 
 type TrainingFilters = {
@@ -10,27 +10,19 @@ const TRANSFORMED_QUERY_KEY = ["trainings"] as const;
 
 const mapTrainingResponse = (
   response: unknown,
-  year?: number | "all",
-): BoardResponseDto[] => {
+): v1ApiModel.GetApiV1Trainings200TrainingLogsItem[] => {
   if (!response || typeof response !== "object") {
     return [];
   }
 
-  if (
-    year === "all" ||
-    (typeof year === "undefined" &&
-      Array.isArray((response as any).trainingLogs))
-  ) {
+  if ("trainingLogs" in response) {
     return (
-      (response as { trainingLogs?: BoardResponseDto[] }).trainingLogs ?? []
+      (
+        response as {
+          trainingLogs?: v1ApiModel.GetApiV1Trainings200TrainingLogsItem[];
+        }
+      ).trainingLogs ?? []
     );
-  }
-
-  if (typeof year === "number") {
-    const yearKey = String(year);
-    if (yearKey in (response as Record<string, BoardResponseDto[]>)) {
-      return (response as Record<string, BoardResponseDto[]>)[yearKey] ?? [];
-    }
   }
 
   return [];
@@ -38,13 +30,14 @@ const mapTrainingResponse = (
 
 export const useTrainingsQuery = ({ year = "all" }: TrainingFilters = {}) => {
   const params = year === "all" ? undefined : { year: Number(year) };
-  const { queryFn, ...queryOptions } = getGetTrainingQueryOptions(params);
+  const { queryFn, ...queryOptions } =
+    v1Api.getGetApiV1TrainingsQueryOptions(params);
 
-  const result = useGetTraining(params, { query: queryOptions });
+  const result = v1Api.useGetApiV1Trainings(params, { query: queryOptions });
 
   const trainings = useMemo(
-    () => mapTrainingResponse(result.data, year),
-    [result.data, year],
+    () => mapTrainingResponse(result.data),
+    [result.data],
   );
 
   return {

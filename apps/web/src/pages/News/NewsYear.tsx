@@ -3,11 +3,12 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 import NewsIndex from "@/components/News/NewsIndex";
-import { useNewsQuery } from "@/features/api/news/query";
 import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
+import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
+import { v1Api } from "@packages/api";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import NotFound from "../NotFound";
@@ -15,7 +16,17 @@ import NotFound from "../NotFound";
 const NewsYear = () => {
   const { id, index } = useParams<NewsParamsType>();
 
-  const { data: news, isLoading } = useNewsQuery(id);
+  const { data: response, isLoading } = v1Api.useGetApiV1NewsYear(Number(id), {
+    query: {
+      enabled: Boolean(id),
+      select: (result) => result.data,
+    },
+  });
+
+  const news = useMemo(
+    () => normalizeNewsResponse(response, id ?? ""),
+    [response, id],
+  );
 
   // SSG-friendly: 뉴스 데이터가 없어도 기본 메타 정보 제공
   const metaDescription = news
@@ -47,7 +58,7 @@ const NewsYear = () => {
         datePublished: article.dateTime
           ? new Date(article.dateTime).toISOString()
           : undefined,
-      }))
+      })),
     );
 
     return createImageGalleryData({

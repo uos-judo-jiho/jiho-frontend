@@ -1,39 +1,35 @@
 import { queryClient } from "@/shared/context/QueryClient";
+import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { NewsType } from "@/shared/lib/types/NewsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
-import { getGetNewsQueryOptions } from "@packages/api";
-import { GetNewsResponse } from "@packages/api/model";
+import { v1Api } from "@packages/api";
+import { v1ApiModel } from "@packages/api/model";
 import { useMemo } from "react";
 
 const normalizeNewsResponse = (
-  response: GetNewsResponse | undefined,
+  response: v1ApiModel.GetApiV1NewsYearResponse | undefined,
   year: string,
 ): NewsType | null => {
   if (!response || typeof response !== "object") {
     return null;
   }
 
-  const newsEntries = Object.entries(response);
-  if (!newsEntries.length) {
-    return null;
-  }
-
-  const newsObject = newsEntries[0][1];
-  const articles = Array.isArray(newsObject?.articles)
-    ? newsObject.articles
-    : undefined;
-  const images = Array.isArray(newsObject?.images)
-    ? newsObject.images
-    : undefined;
-
-  if (!articles || !images) {
-    return null;
-  }
+  const articles = (response.articles ?? []).map<ArticleInfoType>(
+    (article) => ({
+      id: String(article.id),
+      imgSrcs: article.imgSrcs ?? [],
+      title: article.title ?? "",
+      author: article.author ?? "",
+      dateTime: article.dateTime ?? "",
+      tags: article.tags ?? [],
+      description: article.description ?? "",
+    }),
+  );
 
   return {
-    year,
+    year: String(response.year ?? year),
     articles,
-    images,
+    images: response.images ?? [],
   };
 };
 
@@ -42,12 +38,13 @@ export const useAllNewsQuery = () => {
 
   const promises = years.map(async (year) => {
     const numericYear = Number(year);
-    const options = getGetNewsQueryOptions(numericYear);
-
-    const data = await queryClient.fetchQuery({
-      queryKey: options.queryKey,
-      queryFn: options.queryFn,
+    const options = v1Api.getGetApiV1NewsYearQueryOptions(numericYear, {
+      query: {
+        select: (response) => response.data,
+      },
     });
+
+    const data = await queryClient.fetchQuery(options);
 
     return normalizeNewsResponse(data, year);
   });

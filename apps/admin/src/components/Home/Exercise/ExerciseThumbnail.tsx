@@ -1,17 +1,21 @@
 import Col from "@/components/layouts/Col";
 import { Card } from "@/components/ui/card";
-import { useTrainingListQuery } from "@/features/api/trainings/query";
+import { v1Api } from "@packages/api";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 const ExerciseThumbnail = () => {
-  const { data } = useTrainingListQuery();
+  const { data } = v1Api.useGetApiV1Trainings(undefined, {
+    query: {
+      select: (response) => response.data.trainingLogs,
+    },
+  });
 
   // 날짜순 정렬 후 첫 번째 항목
   const lastTraningData = useMemo(() => {
     if (!data || data.length === 0) return null;
     const sorted = [...data].sort((a, b) =>
-      b.dateTime.localeCompare(a.dateTime)
+      b.dateTime.localeCompare(a.dateTime),
     );
     return sorted[0];
   }, [data]);

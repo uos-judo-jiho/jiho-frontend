@@ -8,36 +8,37 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 
-import { useTrainingListQuery } from "@/features/api/trainings/query";
 import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
+import { v1Api } from "@packages/api";
 
 const PhotoPC = () => {
   const navigate = useNavigate();
-  const { data } = useTrainingListQuery();
-
-  // 날짜순 정렬
-  const trainings = useMemo(() => {
-    if (!data) return [];
-    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
-  }, [data]);
+  const {
+    data: { trainingLogs },
+  } = v1Api.useGetApiV1TrainingsSuspense(undefined, {
+    query: {
+      select: (response) => response.data,
+    },
+  });
 
   const handleClickCard = (id: number | string) => {
     navigate(`/photo/${id}`);
   };
 
   // SSR-friendly: Provide fallback meta data even when trainings is empty
-  const metaDescription = trainings?.length
-    ? [trainings.at(0)?.title, trainings.at(0)?.description.slice(0, 140)].join(
-        " | "
-      )
+  const metaDescription = trainingLogs?.length
+    ? [
+        trainingLogs.at(0)?.title,
+        trainingLogs?.at(0)?.description?.slice(0, 140),
+      ].join(" | ")
     : "서울시립대학교 유도부 지호 - 훈련일지";
 
-  const metaImgUrl = trainings?.at(0)?.imgSrcs.at(0);
+  const metaImgUrl = trainingLogs?.at(0)?.imgSrcs.at(0);
 
   // Create structured data for image gallery
   const structuredData = useMemo(() => {
-    if (!trainings || trainings.length === 0) return null;
+    if (!trainingLogs || trainingLogs.length === 0) return null;
 
     const currentUrl =
       typeof window !== "undefined"
@@ -48,7 +49,7 @@ const PhotoPC = () => {
       name: "서울시립대학교 유도부 지호 훈련일지",
       description: metaDescription,
       url: currentUrl,
-      images: trainings.slice(0, 20).map((training) => ({
+      images: trainingLogs.slice(0, 20).map((training) => ({
         url: training.imgSrcs[0] || "",
         caption: training.title,
         datePublished: training.dateTime
@@ -56,7 +57,7 @@ const PhotoPC = () => {
           : undefined,
       })),
     });
-  }, [trainings, metaDescription]);
+  }, [trainingLogs, metaDescription]);
 
   return (
     <div>
@@ -70,11 +71,11 @@ const PhotoPC = () => {
         <SheetWrapper>
           <Title title={"훈련일지"} color="black" />
           <PhotoCardContainer>
-            {trainings.map((trainingLog) => (
+            {trainingLogs.map((trainingLog) => (
               <Suspense key={trainingLog.id} fallback={<SkeletonThumbnail />}>
                 <ThumbnailCard
                   imgSrc={trainingLog?.imgSrcs.at(0) ?? ""}
-                  dateTime={trainingLog.dateTime}
+                  dateTime={trainingLog.dateTime ?? ""}
                   handleClickCard={handleClickCard}
                   id={trainingLog.id}
                 />

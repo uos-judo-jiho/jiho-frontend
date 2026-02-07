@@ -28,15 +28,16 @@
     "start": "pnpm -C apps/web start",
     "start:prod": "pnpm -C apps/web start:prod",
     "start:docker": "pnpm -C apps/web start:docker",
-    "orval": "pnpm -C packages/api orval",
-    "orval:watch": "pnpm -C packages/api orval:watch",
+    "orval": "pnpm -C packages/api generate",
+    "orval:watch": "pnpm -C packages/api generate:watch",
     "type-check": "pnpm type-check:web && pnpm type-check:admin",
     "type-check:web": "pnpm -C apps/web type-check",
     "type-check:server": "pnpm -C apps/web type-check:server",
     "type-check:admin": "pnpm -C apps/admin type-check"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "@types/node": "^25.2.1"
   },
   "packageManager": "pnpm@9.15.2"
 }

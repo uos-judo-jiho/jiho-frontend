@@ -5,12 +5,20 @@ type RenameMap = Record<string, string>;
 
 const RESPONSE_NAME_PATTERN = /^(.*?)(\d{3})$/;
 
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&");
+
 const renameText = (value: string | undefined, renames: RenameMap) => {
   if (!value) return value;
-  return Object.entries(renames).reduce((acc, [from, to]) => {
-    const pattern = new RegExp(`\\b${from}\\b`, "g");
-    return acc.replace(pattern, to);
-  }, value);
+  const keys = Object.keys(renames);
+  if (!keys.length) return value;
+
+  const pattern = new RegExp(
+    `\\b(?:${keys.map(escapeRegExp).join("|")})\\b`,
+    "g",
+  );
+
+  return value.replace(pattern, (match) => renames[match] ?? match);
 };
 
 const renameResponseSchemas = (
@@ -48,14 +56,15 @@ const renameResponseSchemas = (
     ...verb,
     response: {
       ...verb.response,
-      imports: verb.response.imports.map((imp) => ({
-        ...imp,
-        name: imp.name && renames[imp.name] ? renames[imp.name] : imp.name,
-        schemaName:
-          imp.schemaName && renames[imp.schemaName]
-            ? renames[imp.schemaName]
-            : imp.schemaName,
-      })),
+      imports:
+        verb.response.imports?.map((imp) => ({
+          ...imp,
+          name: imp.name && renames[imp.name] ? renames[imp.name] : imp.name,
+          schemaName:
+            imp.schemaName && renames[imp.schemaName]
+              ? renames[imp.schemaName]
+              : imp.schemaName,
+        })) ?? [],
       definition: {
         success:
           replace(verb.response.definition.success) ??

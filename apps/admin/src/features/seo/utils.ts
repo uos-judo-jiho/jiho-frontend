@@ -1,8 +1,8 @@
 import type {
+  Article,
   CollectionPage,
   ImageGallery,
   ImageObject,
-  Article,
   Organization,
 } from "./types";
 
@@ -21,14 +21,14 @@ export const createImageGalleryData = ({
   url: string;
   images: Array<{
     url: string;
-    caption?: string;
+    caption?: string | null;
     datePublished?: string;
   }>;
 }): CollectionPage => {
   const imageObjects: ImageObject[] = images.map((img) => ({
     "@type": "ImageObject",
     url: img.url,
-    caption: img.caption,
+    caption: img.caption ?? undefined,
     datePublished: img.datePublished,
   }));
 

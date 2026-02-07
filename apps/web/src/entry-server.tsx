@@ -1,4 +1,5 @@
 import { awardsData } from "@/shared/lib/assets/data/awards";
+import { v1Api } from "@packages/api";
 import {
   QueryClient,
   QueryClientProvider,
@@ -8,10 +9,9 @@ import { renderToString } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
 import { RecoilRoot } from "recoil";
 import AppRouter from "./app/routers/AppRouter";
-import { getNews } from "./features/api/news/client";
-import { getTrainings } from "./features/api/trainings/client";
 import { HelmetContext } from "./features/seo/helmet/MyHelmet";
 import { StructuredDataContext } from "./features/seo/StructuredData";
+import { normalizeNewsResponse } from "./shared/lib/api/news";
 import { vaildNewsYearList } from "./shared/lib/utils/Utils";
 
 type HelmetData = {
@@ -40,14 +40,10 @@ export async function render(url: string) {
     const photoMatch = url.match(/^\/photo/);
     if (photoMatch) {
       console.log("[SSR] Prefetching trainings for photo page");
-      await queryClient.prefetchQuery({
-        queryKey: ["trainings", "all"],
-        queryFn: async () => {
-          const data = await getTrainings();
-          console.log("[SSR] Prefetched trainings count:", data.length);
-          return data;
-        },
-      });
+      const trainingOptions = v1Api.getGetApiV1TrainingsQueryOptions();
+      const response = await queryClient.fetchQuery(trainingOptions);
+      const trainings = response.data.trainingLogs ?? [];
+      console.log("[SSR] Prefetched trainings count:", trainings.length);
     }
 
     // Match news routes:
@@ -59,32 +55,25 @@ export async function render(url: string) {
     if (newsMatchRoot) {
       console.log("[SSR] Prefetching latest news for news root page");
 
-      const allNewsQueryPromises = vaildNewsYearList().map((year) =>
-        queryClient.prefetchQuery({
-          queryKey: ["news", year],
-          queryFn: async () => {
-            const data = await getNews(year);
-            console.log(
-              "[SSR] Prefetched news for year:",
-              data?.year || "Not found"
-            );
-            return data;
-          },
-        })
-      );
+      const allNewsQueryPromises = vaildNewsYearList().map(async (year) => {
+        const newsOptions = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
+        const response = await queryClient.fetchQuery(newsOptions);
+        const data = normalizeNewsResponse(response.data, year);
+        console.log(
+          "[SSR] Prefetched news for year:",
+          data?.year || "Not found",
+        );
+        return data;
+      });
 
       await Promise.all(allNewsQueryPromises);
     } else if (newsMatch) {
       const year = newsMatch[1];
       console.log("[SSR] Prefetching news for year:", year);
-      await queryClient.prefetchQuery({
-        queryKey: ["news", year],
-        queryFn: async () => {
-          const data = await getNews(year);
-          console.log("[SSR] Prefetched news:", data?.year || "Not found");
-          return data;
-        },
-      });
+      const newsOptions = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
+      const response = await queryClient.fetchQuery(newsOptions);
+      const data = normalizeNewsResponse(response.data, year);
+      console.log("[SSR] Prefetched news:", data?.year || "Not found");
     }
 
     // Add more route-specific prefetching as needed
@@ -130,7 +119,7 @@ export async function render(url: string) {
           </RecoilRoot>
         </QueryClientProvider>
       </HelmetContext.Provider>
-    </StructuredDataContext.Provider>
+    </StructuredDataContext.Provider>,
   );
 
   // Dehydrate the query cache to send to client

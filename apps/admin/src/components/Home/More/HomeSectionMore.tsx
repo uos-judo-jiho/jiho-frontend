@@ -1,16 +1,44 @@
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { useAllNewsQuery } from "@/features/api/news/query";
-import { useNoticesQuery } from "@/features/api/notices/query";
-import { useTrainingListQuery } from "@/features/api/trainings/query";
+import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { Constants } from "@/shared/lib/constant";
+import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
+import { v1Api } from "@packages/api";
+import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import MoreCard from "./MoreCard";
 
 const HomeSectionMore = () => {
-  const { data: news } = useAllNewsQuery();
-  const { data } = useTrainingListQuery();
-  const { data: notices } = useNoticesQuery();
+  const { data: news } = useQuery({
+    queryKey: ["news", "all"],
+    queryFn: async () => {
+      const years = vaildNewsYearList();
+      const responses = await Promise.all(
+        years.map(async (year) => {
+          const options = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
+          const response = await options.queryFn({
+            queryKey: options.queryKey,
+          } as never);
+
+          return normalizeNewsResponse(response.data, year);
+        }),
+      );
+
+      return responses
+        .filter((item): item is NonNullable<typeof item> => Boolean(item))
+        .sort((a, b) => parseInt(b.year) - parseInt(a.year));
+    },
+  });
+  const { data } = v1Api.useGetApiV1Trainings(undefined, {
+    query: {
+      select: (response) => response.data.trainingLogs,
+    },
+  });
+  const { data: notices } = v1Api.useGetApiV1Notices(undefined, {
+    query: {
+      select: (response) => response.data.notices ?? [],
+    },
+  });
 
   // 날짜순 정렬
   const trainings = useMemo(() => {
@@ -39,7 +67,7 @@ const HomeSectionMore = () => {
                 item.articles.map((article) => ({
                   ...article,
                   id: `${item.year}/${article.id}`,
-                }))
+                })),
               )}
             />
           )}

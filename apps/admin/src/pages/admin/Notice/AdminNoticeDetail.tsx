@@ -1,12 +1,16 @@
 import NoticeForm from "@/components/admin/form/NoticeForm";
 import Title from "@/components/layouts/Title";
-import { useNoticesQuery } from "@/features/api/notices/query";
 import { Constants } from "@/shared/lib/constant";
+import { v1Api } from "@packages/api";
 import { useParams } from "react-router-dom";
 
 const AdminNoticeDetail = () => {
   const { id } = useParams();
-  const { data: notices = [] } = useNoticesQuery();
+  const { data: notices = [] } = v1Api.useGetApiV1Notices(undefined, {
+    query: {
+      select: (response) => response.data.notices ?? [],
+    },
+  });
 
   const targetArticle = notices.find((item) => item.id.toString() === id);
 

@@ -1,5 +1,7 @@
-import { useNewsQuery } from "@/features/api/news/query";
+import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import { v1Api } from "@packages/api";
+import { useMemo } from "react";
 import ArticleForm from "./ArticleForm";
 
 type NewsGalleryFromProps = {
@@ -7,7 +9,17 @@ type NewsGalleryFromProps = {
 };
 
 const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
-  const { data: newsData } = useNewsQuery(year);
+  const { data: response } = v1Api.useGetApiV1NewsYear(Number(year), {
+    query: {
+      enabled: Boolean(year),
+      select: (result) => result.data,
+    },
+  });
+
+  const newsData = useMemo(
+    () => normalizeNewsResponse(response, year),
+    [response, year],
+  );
 
   const galleryData: ArticleInfoType | undefined = newsData
     ? {

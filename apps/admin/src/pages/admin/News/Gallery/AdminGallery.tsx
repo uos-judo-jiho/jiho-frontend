@@ -2,13 +2,25 @@ import FormContainer from "@/components/admin/form/FormContainer";
 import Carousel from "@/components/layouts/Carousel";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
-import { useNewsQuery } from "@/features/api/news/query";
+import { normalizeNewsResponse } from "@/shared/lib/api/news";
+import { v1Api } from "@packages/api";
+import { useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminGallery = () => {
   const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
-  const { data: newsData } = useNewsQuery(year);
+  const { data: response } = v1Api.useGetApiV1NewsYear(Number(year), {
+    query: {
+      enabled: Boolean(year),
+      select: (result) => result.data,
+    },
+  });
+
+  const newsData = useMemo(
+    () => normalizeNewsResponse(response, year ?? ""),
+    [response, year],
+  );
 
   const images = newsData?.images || [];
 

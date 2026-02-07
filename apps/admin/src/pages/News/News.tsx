@@ -7,13 +7,34 @@ import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 
-import { useAllNewsQuery } from "@/features/api/news/query";
-
 import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
+import { normalizeNewsResponse } from "@/shared/lib/api/news";
+import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
+import { v1Api } from "@packages/api";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const NewsPage = () => {
-  const { data: newsList = [] } = useAllNewsQuery();
+  const { data: newsList = [] } = useSuspenseQuery({
+    queryKey: ["news", "all"],
+    queryFn: async () => {
+      const years = vaildNewsYearList();
+      const responses = await Promise.all(
+        years.map(async (year) => {
+          const options = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
+          const response = await options.queryFn({
+            queryKey: options.queryKey,
+          } as never);
+
+          return normalizeNewsResponse(response.data, year);
+        }),
+      );
+
+      return responses
+        .filter((item): item is NonNullable<typeof item> => Boolean(item))
+        .sort((a, b) => parseInt(b.year) - parseInt(a.year));
+    },
+  });
 
   const firstYearArticles =
     newsList.length && newsList[0].articles.length

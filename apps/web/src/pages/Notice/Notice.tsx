@@ -3,12 +3,16 @@ import Line from "@/components/layouts/Line";
 import ListContainer from "@/components/layouts/ListContainer";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { useNoticesQuery } from "@/features/api/notices/query";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { Constants } from "@/shared/lib/constant";
+import { v1Api } from "@packages/api";
 
 function Notice() {
-  const { data: notices = [] } = useNoticesQuery();
+  const { data: notices = [] } = v1Api.useGetApiV1Notices(undefined, {
+    query: {
+      select: (response) => response.data.notices ?? [],
+    },
+  });
 
   return (
     <>

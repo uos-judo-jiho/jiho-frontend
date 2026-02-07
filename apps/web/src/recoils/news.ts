@@ -1,23 +1,42 @@
-import { getNews } from "@/features/api/news/client";
-import { useNewsQuery } from "@/features/api/news/query";
+import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { NewsType } from "@/shared/lib/types/NewsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
+import { v1Api } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
 
 export const useNews = (year?: string) => {
   const queryClient = useQueryClient();
+  const selectedYear = year || vaildNewsYearList().at(-1) || "";
 
   // React Query를 사용하여 현재 year의 데이터 가져오기
-  const { data } = useNewsQuery(year || vaildNewsYearList().at(-1));
+  const { data: response } = v1Api.useGetApiV1NewsYear(Number(selectedYear), {
+    query: {
+      enabled: Boolean(selectedYear),
+      select: (result) => result.data,
+    },
+  });
+
+  const data = useMemo(
+    () => normalizeNewsResponse(response, selectedYear),
+    [response, selectedYear],
+  );
 
   // 모든 캐시된 뉴스 데이터 가져오기
   const allNews = useMemo(() => {
     const newsData: NewsType[] = [];
     vaildNewsYearList().forEach((yearKey) => {
-      const cachedData = queryClient.getQueryData<NewsType>(["news", yearKey]);
-      if (cachedData) {
-        newsData.push(cachedData);
+      const options = v1Api.getGetApiV1NewsYearQueryOptions(Number(yearKey));
+      const cachedResponse = queryClient.getQueryData<{
+        data: unknown;
+      }>(options.queryKey);
+      const normalized = normalizeNewsResponse(
+        cachedResponse?.data as any,
+        yearKey,
+      );
+
+      if (normalized) {
+        newsData.push(normalized);
       }
     });
 
@@ -32,28 +51,24 @@ export const useNews = (year?: string) => {
   // 특정 연도의 뉴스를 가져오는 함수
   const fetch = useCallback(
     async (fetchYear: string) => {
-      // React Query 캐시에서 가져오거나 새로 fetch
-      await queryClient.fetchQuery({
-        queryKey: ["news", fetchYear],
-        queryFn: () => getNews(fetchYear),
-        staleTime: 24 * 60 * 60 * 1000, // 1 day
-      });
+      const options = v1Api.getGetApiV1NewsYearQueryOptions(Number(fetchYear));
+      await queryClient.fetchQuery(options);
     },
-    [queryClient]
+    [queryClient],
   );
 
   const refreshNew = useCallback(async () => {
     await Promise.all(
       vaildNewsYearList().map(async (year) => {
         await fetch(year);
-      })
+      }),
     );
   }, [fetch]);
 
   // 중복 제거된 뉴스 목록 반환
   const uniqueNews = useMemo(() => {
     return allNews.filter(
-      (v, i, a) => a.findIndex((v2) => v2.year === v.year) === i
+      (v, i, a) => a.findIndex((v2) => v2.year === v.year) === i,
     );
   }, [allNews]);
 

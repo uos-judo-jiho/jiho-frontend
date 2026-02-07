@@ -4,14 +4,18 @@ import Title from "@/components/layouts/Title";
 import NoticeDescription from "@/components/Notice/NoticeDetail/NoticeDescription";
 import NoticeFooter from "@/components/Notice/NoticeDetail/NoticeFooter";
 import NoticeTitle from "@/components/Notice/NoticeDetail/NoticeTitle";
-import { useNoticesQuery } from "@/features/api/notices/query";
 import { Constants } from "@/shared/lib/constant";
+import { v1Api } from "@packages/api";
 import { Link, redirect, useParams } from "react-router-dom";
 import MyHelmet from "../../features/seo/helmet/MyHelmet";
 
 const NoticeDetail = () => {
   const { id } = useParams();
-  const { data: notices = [] } = useNoticesQuery();
+  const { data: notices = [] } = v1Api.useGetApiV1Notices(undefined, {
+    query: {
+      select: (response) => response.data.notices ?? [],
+    },
+  });
 
   const data = notices.find((value) => value.id.toString() === id?.toString());
 
@@ -21,7 +25,7 @@ const NoticeDetail = () => {
   }
 
   const metaDescription = [data.title, data.description.slice(0, 140)].join(
-    " | "
+    " | ",
   );
 
   const metaImgUrl = data.imgSrcs[0];

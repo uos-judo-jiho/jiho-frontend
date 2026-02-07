@@ -5,8 +5,8 @@ import SkeletonThumbnail from "../common/Skeletons/SkeletonThumbnail";
 type ThumbnailCardProps = {
   imgSrc: string;
   dateTime: string;
-  id: string;
-  handleClickCard: (index: string) => void;
+  id: number;
+  handleClickCard: (index: number) => void;
 };
 
 const ThumbnailCard = ({
@@ -49,7 +49,7 @@ const ThumbnailCard = ({
             "opacity-0 w-full h-full",
             "text-theme-title text-theme-bg text-white",
             "transition-opacity duration-[287ms]",
-            "sm:group-hover:opacity-100"
+            "sm:group-hover:opacity-100",
           )}
         >
           {dateTime}

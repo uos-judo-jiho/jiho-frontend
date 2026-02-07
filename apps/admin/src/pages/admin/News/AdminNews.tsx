@@ -3,18 +3,30 @@ import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormCo
 import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { useNewsQuery } from "@/features/api/news/query";
+import { normalizeNewsResponse } from "@/shared/lib/api/news";
+import { v1Api } from "@packages/api";
+import { useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const AdminNews = () => {
   const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
   const {
-    data: newsData,
+    data: response,
     refetch,
     isLoading,
     isRefetching,
-  } = useNewsQuery(year);
+  } = v1Api.useGetApiV1NewsYear(Number(year), {
+    query: {
+      enabled: Boolean(year),
+      select: (result) => result.data,
+    },
+  });
+
+  const newsData = useMemo(
+    () => normalizeNewsResponse(response, year ?? ""),
+    [response, year],
+  );
 
   const isDataLoading = isLoading || isRefetching;
 

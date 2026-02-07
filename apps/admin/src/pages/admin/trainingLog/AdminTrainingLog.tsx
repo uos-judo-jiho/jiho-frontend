@@ -3,7 +3,7 @@ import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormCo
 import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { useTrainingListQuery } from "@/features/api/trainings/query";
+import { v1Api } from "@packages/api";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
@@ -13,7 +13,11 @@ const AdminTrainingLog = () => {
     refetch: refreshTraining,
     isLoading,
     isRefetching,
-  } = useTrainingListQuery();
+  } = v1Api.useGetApiV1Trainings(undefined, {
+    query: {
+      select: (response) => response.data.trainingLogs,
+    },
+  });
 
   const isDataLoading = isLoading || isRefetching;
 
