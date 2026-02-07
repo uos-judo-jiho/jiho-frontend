@@ -1,13 +1,13 @@
-import { useMemo } from "react";
 import { queryClient } from "@/shared/context/QueryClient";
 import { NewsType } from "@/shared/lib/types/NewsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
-import { getGetNewsQueryOptions } from "@/shared/api/_generated";
-import { GetNewsResponse } from "@/shared/api/_generated/model";
+import { getGetNewsQueryOptions } from "@uos-judo/api";
+import { GetNewsResponse } from "@uos-judo/api/model";
+import { useMemo } from "react";
 
 const normalizeNewsResponse = (
   response: GetNewsResponse | undefined,
-  year: string
+  year: string,
 ): NewsType | null => {
   if (!response || typeof response !== "object") {
     return null;
@@ -19,10 +19,12 @@ const normalizeNewsResponse = (
   }
 
   const newsObject = newsEntries[0][1];
-  const articles =
-    Array.isArray(newsObject?.articles) ? newsObject.articles : undefined;
-  const images =
-    Array.isArray(newsObject?.images) ? newsObject.images : undefined;
+  const articles = Array.isArray(newsObject?.articles)
+    ? newsObject.articles
+    : undefined;
+  const images = Array.isArray(newsObject?.images)
+    ? newsObject.images
+    : undefined;
 
   if (!articles || !images) {
     return null;
@@ -53,6 +55,6 @@ export const useAllNewsQuery = () => {
   return Promise.all(promises).then((news) =>
     news
       .filter((item): item is NewsType => Boolean(item))
-      .sort((a, b) => parseInt(b.year) - parseInt(a.year))
+      .sort((a, b) => parseInt(b.year) - parseInt(a.year)),
   );
 };

@@ -1,4 +1,5 @@
 import { internalAxiosInstance } from "@/shared/lib/api/config";
+import type { AxiosProgressEvent } from "axios";
 
 export interface UploadResponse {
   success: boolean;
@@ -37,29 +38,30 @@ export interface UploadProgress {
   error?: string;
 }
 
-export interface UploadStartResponse {
-  uploadId: string;
-  sseToken: string;
-  message: string;
-  fileCount?: number;
+export interface UploadRequestOptions {
+  signal?: AbortSignal;
+  onUploadProgress?: (event: AxiosProgressEvent) => void;
 }
 
 export class InternalUploadClient {
   async uploadFile(
     file: File,
-    folder: string = "uploads"
-  ): Promise<UploadStartResponse> {
+    folder: string = "uploads",
+    options?: UploadRequestOptions
+  ): Promise<UploadResponse> {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("folder", folder);
 
-    const response = await internalAxiosInstance.post(
+    const response = await internalAxiosInstance.post<UploadResponse>(
       "/_internal/api/upload",
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        signal: options?.signal,
+        onUploadProgress: options?.onUploadProgress,
       }
     );
 
@@ -68,21 +70,24 @@ export class InternalUploadClient {
 
   async uploadMultipleFiles(
     files: File[],
-    folder: string = "uploads"
-  ): Promise<UploadStartResponse> {
+    folder: string = "uploads",
+    options?: UploadRequestOptions
+  ): Promise<MultipleUploadResponse> {
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("files", file);
     });
     formData.append("folder", folder);
 
-    const response = await internalAxiosInstance.post(
+    const response = await internalAxiosInstance.post<MultipleUploadResponse>(
       "/_internal/api/upload/multiple",
       formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        signal: options?.signal,
+        onUploadProgress: options?.onUploadProgress,
       }
     );
 
@@ -110,21 +115,6 @@ export class InternalUploadClient {
       "/_internal/api/upload/config"
     );
     return response.data;
-  }
-
-  createUploadEventSource(uploadId: string, sseToken: string): EventSource {
-    const url = new URL(
-      "/_internal/api/upload/progress",
-      window.location.origin
-    );
-    url.searchParams.set("uploadId", uploadId);
-    url.searchParams.set("token", sseToken);
-
-    return new EventSource(url.toString());
-  }
-
-  async cancelUpload(uploadId: string): Promise<void> {
-    await internalAxiosInstance.delete(`/_internal/api/upload/${uploadId}`);
   }
 }
 

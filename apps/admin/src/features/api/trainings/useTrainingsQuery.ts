@@ -1,9 +1,6 @@
+import { getGetTrainingQueryOptions, useGetTraining } from "@uos-judo/api";
+import { BoardResponseDto } from "@uos-judo/api/model";
 import { useMemo } from "react";
-import {
-  getGetTrainingQueryOptions,
-  useGetTraining,
-} from "@/shared/api/_generated";
-import { BoardResponseDto } from "@/shared/api/_generated/model";
 
 type TrainingFilters = {
   year?: number | "all";
@@ -13,7 +10,7 @@ const TRANSFORMED_QUERY_KEY = ["trainings"] as const;
 
 const mapTrainingResponse = (
   response: unknown,
-  year?: number | "all"
+  year?: number | "all",
 ): BoardResponseDto[] => {
   if (!response || typeof response !== "object") {
     return [];
@@ -21,9 +18,12 @@ const mapTrainingResponse = (
 
   if (
     year === "all" ||
-    (typeof year === "undefined" && Array.isArray((response as any).trainingLogs))
+    (typeof year === "undefined" &&
+      Array.isArray((response as any).trainingLogs))
   ) {
-    return (response as { trainingLogs?: BoardResponseDto[] }).trainingLogs ?? [];
+    return (
+      (response as { trainingLogs?: BoardResponseDto[] }).trainingLogs ?? []
+    );
   }
 
   if (typeof year === "number") {
@@ -42,10 +42,10 @@ export const useTrainingsQuery = ({ year = "all" }: TrainingFilters = {}) => {
 
   const result = useGetTraining(params, { query: queryOptions });
 
-  const trainings = useMemo(() => mapTrainingResponse(result.data, year), [
-    result.data,
-    year,
-  ]);
+  const trainings = useMemo(
+    () => mapTrainingResponse(result.data, year),
+    [result.data, year],
+  );
 
   return {
     ...result,

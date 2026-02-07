@@ -1,21 +1,32 @@
 import axios from "axios";
 
-const getBaseURL = () => {
-  // 서버 사이드에서는 항상 프로덕션 API URL 사용 (개발 환경에서도 실제 API 서버로 요청)
-  if (typeof window === "undefined") {
-    if (process.env.NODE_ENV !== "production") {
-      console.log("[API Config] SSR mode - using production API URL");
-    }
-    return "https://uosjudo.com";
+const DEFAULT_API_BASE_URL = "http://localhost:4000/api/v1";
+
+const resolveApiBaseUrl = () => {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
   }
 
-  // 클라이언트 사이드에서는 항상 상대 경로 사용 (CORS 방지)
-  // 로컬 개발 환경과 프로덕션 모두 프록시를 통해 /api로 요청
+  if (typeof window === "undefined") {
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[API Config] CSR mode - using default API URL");
+    }
+    return DEFAULT_API_BASE_URL;
+  }
+
   return "";
 };
 
+const resolveInternalApiBaseUrl = () => {
+  if (import.meta.env.VITE_INTERNAL_API_BASE_URL) {
+    return import.meta.env.VITE_INTERNAL_API_BASE_URL;
+  }
+
+  return resolveApiBaseUrl();
+};
+
 const axiosInstance = axios.create({
-  baseURL: getBaseURL(),
+  baseURL: resolveApiBaseUrl(),
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -38,7 +49,7 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 // _internal API 전용 axios 인스턴스 (서버에서 발급받은 토큰 사용)
@@ -46,7 +57,7 @@ const serverInternalToken =
   import.meta.env.VITE_INTERNAL_API_TOKEN || "jiho-internal-2024";
 
 export const internalAxiosInstance = axios.create({
-  baseURL: "",
+  baseURL: resolveInternalApiBaseUrl(),
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",

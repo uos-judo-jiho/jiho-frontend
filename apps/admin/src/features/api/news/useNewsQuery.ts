@@ -1,17 +1,14 @@
-import { useMemo } from "react";
 import { queryClient } from "@/shared/context/QueryClient";
 import { Constants } from "@/shared/lib/constant";
 import { NewsType } from "@/shared/lib/types/NewsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
-import {
-  getGetNewsQueryOptions,
-  useGetNews,
-} from "@/shared/api/_generated";
-import { GetNewsResponse } from "@/shared/api/_generated/model";
+import { getGetNewsQueryOptions, useGetNews } from "@uos-judo/api";
+import { GetNewsResponse } from "@uos-judo/api/model";
+import { useMemo } from "react";
 
 const normalizeNewsResponse = (
   response: GetNewsResponse | undefined,
-  fallbackYear: string
+  fallbackYear: string,
 ): NewsType | null => {
   if (!response || typeof response !== "object") {
     return null;
@@ -24,10 +21,12 @@ const normalizeNewsResponse = (
 
   const [yearKey, newsObject] = newsEntries[0];
   const year = yearKey ?? fallbackYear;
-  const articles =
-    Array.isArray(newsObject?.articles) ? newsObject.articles : undefined;
-  const images =
-    Array.isArray(newsObject?.images) ? newsObject.images : undefined;
+  const articles = Array.isArray(newsObject?.articles)
+    ? newsObject.articles
+    : undefined;
+  const images = Array.isArray(newsObject?.images)
+    ? newsObject.images
+    : undefined;
 
   if (!articles || !images) {
     return null;
@@ -55,10 +54,10 @@ export const useNewsQuery = (year: string = Constants.LATEST_NEWS_YEAR) => {
 
   const result = useGetNews(numericYear, { query: queryOptions });
 
-  const news = useMemo(() => normalizeNewsResponse(result.data, year), [
-    result.data,
-    year,
-  ]);
+  const news = useMemo(
+    () => normalizeNewsResponse(result.data, year),
+    [result.data, year],
+  );
 
   return {
     ...result,
@@ -85,7 +84,7 @@ export const useAllNewsQuery = () => {
     return Promise.all(newsPromises).then((news) =>
       news
         .filter((item): item is NewsType => Boolean(item))
-        .sort((a, b) => parseInt(b.year) - parseInt(a.year))
+        .sort((a, b) => parseInt(b.year) - parseInt(a.year)),
     );
   }, []);
 };

@@ -1,8 +1,8 @@
 import {
   uploadClient,
   UploadProgress,
-  UploadStartResponse,
 } from "@/features/api/_internal/upload/client";
+import type { AxiosProgressEvent } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface UploadState {
@@ -16,6 +16,44 @@ export interface UseFileUploadOptions {
   onError?: (uploadId: string, error: string) => void;
 }
 
+const hasActiveUploads = (uploads: Map<string, UploadProgress>) => {
+  return Array.from(uploads.values()).some(
+    (upload) => upload.status === "uploading",
+  );
+};
+
+const generateUploadId = () => {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+};
+
+const calculateProgress = (event?: AxiosProgressEvent) => {
+  if (!event || typeof event.total !== "number" || event.total === 0) {
+    return 0;
+  }
+
+  return Math.min(100, Math.round((event.loaded / event.total) * 100));
+};
+
+const isAbortError = (error: unknown) => {
+  if (error instanceof DOMException && error.name === "AbortError") {
+    return true;
+  }
+
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "name" in error &&
+    (error as { name?: string }).name === "CanceledError"
+  ) {
+    return true;
+  }
+
+  return false;
+};
+
 export const useFileUpload = (options?: UseFileUploadOptions) => {
   const { onComplete, onError } = options || {};
   const [state, setState] = useState<UploadState>({
@@ -24,7 +62,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
     error: null,
   });
 
-  const eventSourcesRef = useRef<Map<string, EventSource>>(new Map());
+  const controllersRef = useRef<Map<string, AbortController>>(new Map());
 
   const updateUpload = useCallback(
     (uploadId: string, progress: Partial<UploadProgress>) => {
@@ -39,203 +77,200 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
         return {
           ...prev,
           uploads: newUploads,
+          isUploading: hasActiveUploads(newUploads),
         };
       });
     },
-    []
+    [],
   );
 
-  const startProgressTracking = useCallback(
-    (uploadId: string, sseToken: string) => {
-      const eventSource = uploadClient.createUploadEventSource(
-        uploadId,
-        sseToken
-      );
+  const removeUpload = useCallback((uploadId: string) => {
+    setState((prev) => {
+      const newUploads = new Map(prev.uploads);
+      newUploads.delete(uploadId);
 
-      eventSource.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-
-          switch (data.type) {
-            case "connected":
-              console.log("Upload progress tracking connected:", data.uploadId);
-              break;
-
-            case "progress":
-              updateUpload(uploadId, {
-                uploadId: data.uploadId,
-                fileName: data.fileName,
-                progress: data.progress,
-                status: data.status,
-                url: data.url,
-                error: data.error,
-              });
-
-              // 완료되거나 에러가 발생한 경우 EventSource 정리 및 콜백 호출
-              if (data.status === "completed" || data.status === "error") {
-                eventSource.close();
-                eventSourcesRef.current.delete(uploadId);
-
-                setState((prev) => ({
-                  ...prev,
-                  isUploading:
-                    prev.uploads.size > 1 ||
-                    Array.from(prev.uploads.values()).some(
-                      (u) => u.status === "uploading"
-                    ),
-                }));
-
-                // 콜백 호출
-                if (data.status === "completed" && data.url && onComplete) {
-                  onComplete(data.uploadId, data.url);
-                } else if (data.status === "error" && onError) {
-                  onError(data.uploadId, data.error || "Unknown error");
-                }
-              }
-              break;
-
-            case "close":
-            case "timeout":
-              eventSource.close();
-              eventSourcesRef.current.delete(uploadId);
-              break;
-          }
-        } catch (error) {
-          console.error("Error parsing SSE data:", error);
-        }
+      return {
+        ...prev,
+        uploads: newUploads,
+        isUploading: hasActiveUploads(newUploads),
       };
+    });
+  }, []);
 
-      eventSource.onerror = (error) => {
-        console.error("EventSource error:", error);
-        eventSource.close();
-        eventSourcesRef.current.delete(uploadId);
+  const handleUploadError = useCallback(
+    (uploadId: string, message: string) => {
+      updateUpload(uploadId, {
+        status: "error",
+        error: message,
+      });
 
-        updateUpload(uploadId, {
-          status: "error",
-          error: "업로드 상태 추적 연결이 끊어졌습니다.",
-        });
-      };
+      setState((prev) => ({
+        ...prev,
+        error: message,
+      }));
 
-      eventSourcesRef.current.set(uploadId, eventSource);
+      if (onError) {
+        onError(uploadId, message);
+      }
     },
-    [onComplete, onError, updateUpload]
+    [onError, updateUpload],
   );
 
   const uploadFile = useCallback(
     async (file: File, folder?: string) => {
+      const uploadId = generateUploadId();
+      const controller = new AbortController();
+      controllersRef.current.set(uploadId, controller);
+
+      setState((prev) => ({
+        ...prev,
+        isUploading: true,
+        error: null,
+      }));
+
+      updateUpload(uploadId, {
+        uploadId,
+        fileName: file.name,
+        progress: 0,
+        status: "uploading",
+      });
+
       try {
-        setState((prev) => ({
-          ...prev,
-          isUploading: true,
-          error: null,
-        }));
-
-        const response: UploadStartResponse = await uploadClient.uploadFile(
-          file,
-          folder
-        );
-
-        // 초기 업로드 상태 설정
-        updateUpload(response.uploadId, {
-          uploadId: response.uploadId,
-          fileName: file.name,
-          progress: 0,
-          status: "uploading",
+        const response = await uploadClient.uploadFile(file, folder, {
+          signal: controller.signal,
+          onUploadProgress: (event) => {
+            updateUpload(uploadId, {
+              progress: calculateProgress(event),
+              status: "uploading",
+            });
+          },
         });
 
-        // 진행 상황 추적 시작 (임시 토큰 사용)
-        startProgressTracking(response.uploadId, response.sseToken);
+        updateUpload(uploadId, {
+          status: "completed",
+          progress: 100,
+          url: response.url,
+        });
 
-        return response.uploadId;
+        if (response.url && onComplete) {
+          onComplete(uploadId, response.url);
+        }
+
+        return uploadId;
       } catch (error) {
-        setState((prev) => ({
-          ...prev,
-          isUploading: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : "업로드 중 오류가 발생했습니다.",
-        }));
+        if (isAbortError(error)) {
+          removeUpload(uploadId);
+          setState((prev) => ({
+            ...prev,
+            error: "업로드가 취소되었습니다.",
+          }));
+          return uploadId;
+        }
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "업로드 중 오류가 발생했습니다.";
+        handleUploadError(uploadId, message);
         throw error;
+      } finally {
+        controllersRef.current.delete(uploadId);
       }
     },
-    [updateUpload, startProgressTracking]
+    [handleUploadError, onComplete, removeUpload, updateUpload],
   );
 
   const uploadMultipleFiles = useCallback(
     async (files: File[], folder?: string) => {
+      const uploadId = generateUploadId();
+      const controller = new AbortController();
+      controllersRef.current.set(uploadId, controller);
+
+      setState((prev) => ({
+        ...prev,
+        isUploading: true,
+        error: null,
+      }));
+
+      updateUpload(uploadId, {
+        uploadId,
+        fileName: `${files.length}개 파일`,
+        progress: 0,
+        status: "uploading",
+      });
+
       try {
-        setState((prev) => ({
-          ...prev,
-          isUploading: true,
-          error: null,
-        }));
-
-        const response: UploadStartResponse =
-          await uploadClient.uploadMultipleFiles(files, folder);
-
-        // 초기 업로드 상태 설정
-        updateUpload(response.uploadId, {
-          uploadId: response.uploadId,
-          fileName: `${files.length}개 파일`,
-          progress: 0,
-          status: "uploading",
+        const response = await uploadClient.uploadMultipleFiles(files, folder, {
+          signal: controller.signal,
+          onUploadProgress: (event) => {
+            updateUpload(uploadId, {
+              progress: calculateProgress(event),
+              status: "uploading",
+            });
+          },
         });
 
-        // 진행 상황 추적 시작 (임시 토큰 사용)
-        startProgressTracking(response.uploadId, response.sseToken);
+        if (!response.success) {
+          throw new Error("파일 업로드에 실패했습니다.");
+        }
 
-        return response.uploadId;
+        const firstUrl = response.files?.[0]?.url;
+
+        updateUpload(uploadId, {
+          status: "completed",
+          progress: 100,
+          url: firstUrl,
+        });
+
+        if (response.files?.length && onComplete) {
+          response.files.forEach((fileResponse) => {
+            if (fileResponse.url) {
+              onComplete(uploadId, fileResponse.url);
+            }
+          });
+        }
+
+        return uploadId;
       } catch (error) {
-        setState((prev) => ({
-          ...prev,
-          isUploading: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : "다중 업로드 중 오류가 발생했습니다.",
-        }));
+        if (isAbortError(error)) {
+          removeUpload(uploadId);
+          setState((prev) => ({
+            ...prev,
+            error: "업로드가 취소되었습니다.",
+          }));
+          return uploadId;
+        }
+
+        const message =
+          error instanceof Error
+            ? error.message
+            : "다중 업로드 중 오류가 발생했습니다.";
+        handleUploadError(uploadId, message);
         throw error;
+      } finally {
+        controllersRef.current.delete(uploadId);
       }
     },
-    [updateUpload, startProgressTracking]
+    [handleUploadError, onComplete, removeUpload, updateUpload],
   );
 
-  const cancelUpload = useCallback(async (uploadId: string) => {
-    try {
-      // EventSource 정리
-      const eventSource = eventSourcesRef.current.get(uploadId);
-      if (eventSource) {
-        eventSource.close();
-        eventSourcesRef.current.delete(uploadId);
+  const cancelUpload = useCallback(
+    (uploadId: string) => {
+      const controller = controllersRef.current.get(uploadId);
+      if (controller) {
+        controller.abort();
+        controllersRef.current.delete(uploadId);
+        return;
       }
 
-      // 서버에 취소 요청
-      await uploadClient.cancelUpload(uploadId);
-
-      // 로컬 상태에서 제거
-      setState((prev) => {
-        const newUploads = new Map(prev.uploads);
-        newUploads.delete(uploadId);
-
-        return {
-          ...prev,
-          uploads: newUploads,
-          isUploading:
-            newUploads.size > 0 &&
-            Array.from(newUploads.values()).some(
-              (u) => u.status === "uploading"
-            ),
-        };
-      });
-    } catch (error) {
-      console.error("Upload cancellation error:", error);
-    }
-  }, []);
+      removeUpload(uploadId);
+    },
+    [removeUpload],
+  );
 
   const clearCompleted = useCallback(() => {
     setState((prev) => {
-      const newUploads = new Map();
+      const newUploads = new Map<string, UploadProgress>();
 
       for (const [uploadId, upload] of prev.uploads) {
         if (upload.status === "uploading") {
@@ -246,6 +281,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
       return {
         ...prev,
         uploads: newUploads,
+        isUploading: hasActiveUploads(newUploads),
       };
     });
   }, []);
@@ -253,20 +289,16 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
   const getUploadByStatus = useCallback(
     (status: UploadProgress["status"]) => {
       return Array.from(state.uploads.values()).filter(
-        (upload) => upload.status === status
+        (upload) => upload.status === status,
       );
     },
-    [state.uploads]
+    [state.uploads],
   );
 
-  // 컴포넌트 언마운트 시 모든 EventSource 정리
   useEffect(() => {
-    const eventSources = eventSourcesRef.current;
     return () => {
-      eventSources.forEach((eventSource) => {
-        eventSource.close();
-      });
-      eventSources.clear();
+      controllersRef.current.forEach((controller) => controller.abort());
+      controllersRef.current.clear();
     };
   }, []);
 
@@ -279,13 +311,13 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
     getUploadByStatus,
     uploadsArray: Array.from(state.uploads.values()),
     completedUploads: Array.from(state.uploads.values()).filter(
-      (u) => u.status === "completed"
+      (u) => u.status === "completed",
     ),
     failedUploads: Array.from(state.uploads.values()).filter(
-      (u) => u.status === "error"
+      (u) => u.status === "error",
     ),
     uploadingCount: Array.from(state.uploads.values()).filter(
-      (u) => u.status === "uploading"
+      (u) => u.status === "uploading",
     ).length,
   };
 };
