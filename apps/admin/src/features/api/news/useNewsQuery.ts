@@ -2,8 +2,8 @@ import { queryClient } from "@/shared/context/QueryClient";
 import { Constants } from "@/shared/lib/constant";
 import { NewsType } from "@/shared/lib/types/NewsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
-import { getGetNewsQueryOptions, useGetNews } from "@uos-judo/api";
-import { GetNewsResponse } from "@uos-judo/api/model";
+import { getGetNewsQueryOptions, useGetNews } from "@packages/api";
+import { GetNewsResponse } from "@packages/api/model";
 import { useMemo } from "react";
 
 const normalizeNewsResponse = (

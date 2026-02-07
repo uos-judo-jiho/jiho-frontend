@@ -1,5 +1,5 @@
-import { getGetTrainingQueryOptions, useGetTraining } from "@uos-judo/api";
-import { BoardResponseDto } from "@uos-judo/api/model";
+import { getGetTrainingQueryOptions, useGetTraining } from "@packages/api";
+import { BoardResponseDto } from "@packages/api/model";
 import { useMemo } from "react";
 
 type TrainingFilters = {
