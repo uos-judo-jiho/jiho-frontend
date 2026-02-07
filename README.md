@@ -4,9 +4,9 @@ This repository now hosts the public web experience and the standalone admin con
 
 ## Apps
 
-| Package | Path | Description |
-| --- | --- | --- |
-| `@uos-judo/web` | `apps/web` | Express + Vite SSR app that powers https://uosjudo.com including the BFF middleware. |
+| Package           | Path         | Description                                                                                                              |
+| ----------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `@uos-judo/web`   | `apps/web`   | Express + Vite SSR app that powers https://uosjudo.com including the BFF middleware.                                     |
 | `@uos-judo/admin` | `apps/admin` | Static React build that renders the admin dashboard entirely on the client. It now carries its own copy of the admin UI. |
 
 Reusable modules that both apps consume should live under `packages/*` (reserved for future shared packages).
@@ -14,25 +14,25 @@ Reusable modules that both apps consume should live under `packages/*` (reserved
 ## Install
 
 ```bash
-yarn install
+pnpm install
 ```
 
 ## Common scripts
 
 ```bash
 # Web (SSR)
-yarn dev:web
-yarn dev:server
-yarn build:web
-yarn start
+pnpm dev:web
+pnpm dev:server
+pnpm build:web
+pnpm start
 
 # Admin (static)
-yarn dev:admin
-yarn build:admin
-yarn preview:admin
+pnpm dev:admin
+pnpm build:admin
+pnpm preview:admin
 ```
 
-`yarn build` runs both apps so you get `apps/web/build` for the SSR bundle and `apps/admin/dist` for the static dashboard artifacts (useful for CDN/S3 uploads).
+`pnpm build` runs both apps so you get `apps/web/build` for the SSR bundle and `apps/admin/dist` for the static dashboard artifacts (useful for CDN/S3 uploads).
 
 ## Deploying Admin
 

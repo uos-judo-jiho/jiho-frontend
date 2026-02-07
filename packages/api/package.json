@@ -16,8 +16,5 @@
   "devDependencies": {
     "@orval/core": "^8.2.0",
     "orval": "^8.2.0"
-  },
-  "dependencies": {
-    "typescript": "4.9.3"
   }
 }
