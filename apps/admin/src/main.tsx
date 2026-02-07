@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
-import "@web/app/index.css";
+import "@/app/index.css";
 
-import AdminStandaloneApp from "@web/app/AdminStandaloneApp";
+import AdminStandaloneApp from "@/app/AdminStandaloneApp";
 
 const rootElement = document.getElementById("root");
 

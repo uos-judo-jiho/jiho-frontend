@@ -1,0 +1,20 @@
+export const footerData = {
+  title: {
+    krTitle: "서울시립대학교 유도 동아리 지호 志豪",
+    enTitle: "University of Seoul Judo Team 志豪",
+    since: "Since 1985",
+  },
+  exercise: {
+    title: "정규 운동",
+    time: "시간 | 매주 월, 수, 금 18:00-20:00",
+    place: "서울시립대 건설공학관 지하 1층",
+    address: "서울특별시 동대문구 서울시립대로 163 (전농동)",
+  },
+  connetUs: {
+    title: "Connect Us",
+    instagram: { title: "인스타그램 | ", href: "@uos_judo" },
+    email: { title: "이메일 | ", href: "uosjudojiho@gmail.com" },
+    tel: { title: "연락처 | ", href: "010-2222-3333" },
+    dev: { title: "개발자 연락처 | ", href: "uosjudojiho@gmail.com" },
+  },
+} as const;

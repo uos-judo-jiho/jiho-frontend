@@ -1,6 +1,6 @@
 # UOS Judo Admin
 
-Static React build that renders the admin dashboard UI using the shared components from `@uos-judo/web`.
+Static React build that renders the admin dashboard UI. The codebase now lives entirely inside `apps/admin`, so it can evolve independently from the public web app.
 
 ## Scripts
 

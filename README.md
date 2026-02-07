@@ -2,12 +2,12 @@
 
 This repository now hosts the public web experience and the standalone admin console as npm workspaces. The two apps share the same React component library so fixes and UI tweaks stay in sync.
 
-## Packages
+## Apps
 
 | Package | Path | Description |
 | --- | --- | --- |
-| `@uos-judo/web` | `packages/web` | Existing Express + Vite SSR app that powers https://uosjudo.com including the BFF middleware. |
-| `@uos-judo/admin` | `packages/admin` | Static React build that renders the admin dashboard entirely on the client. It reuses the admin pages that live in the web package. |
+| `@uos-judo/web` | `apps/web` | Express + Vite SSR app that powers https://uosjudo.com including the BFF middleware. |
+| `@uos-judo/admin` | `apps/admin` | Static React build that renders the admin dashboard entirely on the client. It now carries its own copy of the admin UI. |
 
 ## Install
 
@@ -30,7 +30,7 @@ npm run build:admin
 npm run preview:admin
 ```
 
-`npm run build` runs both apps so you get `packages/web/build` for the SSR bundle and `packages/admin/dist` for the static dashboard artifacts (useful for CDN/S3 uploads).
+`npm run build` runs both apps so you get `apps/web/build` for the SSR bundle and `apps/admin/dist` for the static dashboard artifacts (useful for CDN/S3 uploads).
 
 ## Deploying Admin
 
@@ -38,4 +38,4 @@ The admin build is completely static and can be served from any static host. Dep
 
 ## Legacy docs
 
-The original web README now lives in `packages/web/README.md` with all existing development details.
+The original web README now lives in `apps/web/README.md` with all existing development details.

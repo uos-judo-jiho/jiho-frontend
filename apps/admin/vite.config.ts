@@ -5,24 +5,18 @@ import tailwindcss from "@tailwindcss/vite";
 
 import { defineConfig } from "vite";
 
-const workspaceRoot = path.resolve(__dirname, "..");
-const sharedSrc = path.resolve(workspaceRoot, "web/src");
+const srcDir = path.resolve(__dirname, "src");
 
 export default defineConfig({
   base: "/admin/",
   plugins: [tailwindcss(), react()],
   resolve: {
     alias: {
-      "@": sharedSrc,
-      "@web": sharedSrc,
+      "@": srcDir,
     },
   },
   server: {
     port: 4175,
-    fs: {
-      // Allow importing source files from the shared web package
-      allow: [workspaceRoot],
-    },
   },
   build: {
     outDir: "dist",

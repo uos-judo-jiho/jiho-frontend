@@ -2,8 +2,6 @@ import { CloseIcon } from "@/components/icons";
 import { cn } from "@/shared/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useLocation } from "react-router-dom";
-import AdminMenu from "./AdminMenu";
 import ClientMenu from "./ClientMenu";
 import { SelectedType } from "./MenuStyledComponents";
 
@@ -15,8 +13,6 @@ const SideBar = () => {
   const { open, setOpen } = useNavbar();
 
   const outside = useRef<any>();
-
-  const location = useLocation();
 
   const [selected, setSelected] = useState<[SelectedType, SelectedType]>([
     "closed",
@@ -85,11 +81,7 @@ const SideBar = () => {
         className="absolute top-3 left-3 w-5 h-5 z-[1] cursor-pointer"
       />
       <nav>
-        {location.pathname.includes("/admin") ? (
-          <AdminMenu />
-        ) : (
-          <ClientMenu selected={selected} setSelected={setSelected} />
-        )}
+        <ClientMenu selected={selected} setSelected={setSelected} />
       </nav>
     </div>,
     document.body
