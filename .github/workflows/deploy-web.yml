@@ -9,15 +9,41 @@ on:
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "package.json"
-      - ".github/workflows/deploy.yml"
+      - ".github/workflows/deploy-web.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read
   packages: write
 
 jobs:
+  wait-for-admin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for admin deploy
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const adminWorkflow = 'deploy-admin.yml';
+            const owner = process.env.GITHUB_REPOSITORY.split('/')[0];
+            const repo = process.env.GITHUB_REPOSITORY.split('/')[1];
+            const runs = await github.rest.actions.listWorkflowRuns({ owner, repo, workflow_id: adminWorkflow, status: 'in_progress' });
+            if (runs.data.total_count > 0) {
+              console.log('Waiting for admin deploy to finish...');
+              // Wait up to 30 minutes
+              let waited = 0;
+              while (waited < 1800 && runs.data.total_count > 0) {
+                await new Promise(r => setTimeout(r, 30000));
+                waited += 30;
+                const check = await github.rest.actions.listWorkflowRuns({ owner, repo, workflow_id: adminWorkflow, status: 'in_progress' });
+                if (check.data.total_count === 0) break;
+              }
+            }
+            console.log('Admin deploy finished or not running.');
+
   build-and-deploy:
     runs-on: ubuntu-latest
+    needs: wait-for-admin
     steps:
       - name: Checkout
         uses: actions/checkout@v4
