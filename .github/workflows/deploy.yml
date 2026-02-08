@@ -53,8 +53,8 @@ jobs:
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           port: 22
           script: |
-            if [ ! -f /opt/uos-judo/web/.env ]; then
-              echo "Missing /opt/uos-judo/web/.env on server" >&2
+            if [ ! -f /opt/uos-jiho-judo/web/.env ]; then
+              echo "Missing /opt/uos-jiho-judo/web/.env on server" >&2
               exit 1
             fi
             docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
@@ -63,5 +63,5 @@ jobs:
             docker rm uos-judo-web || true
             docker run -d --name uos-judo-web \
               -p 3000:3000 \
-              --env-file /opt/uos-judo/web/.env \
+              --env-file /opt/uos-jiho-judo/web/.env \
               ghcr.io/${{ github.repository }}:latest
