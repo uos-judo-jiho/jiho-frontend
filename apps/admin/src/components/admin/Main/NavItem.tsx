@@ -10,7 +10,7 @@ type NavItemProps = {
 
 function NavItem({ linkTo, title, external }: NavItemProps) {
   return (
-    <div className="flex items-center">
+    <li className="flex items-center">
       <Link
         to={linkTo}
         target={external ? "_blank" : "_self"}
@@ -25,7 +25,7 @@ function NavItem({ linkTo, title, external }: NavItemProps) {
           )}
         </div>
       </Link>
-    </div>
+    </li>
   );
 }
 

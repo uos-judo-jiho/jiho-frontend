@@ -1,4 +1,4 @@
-import type { AxiosInstance } from "axios";
+import type { AxiosInstance, AxiosRequestConfig } from "axios";
 import axios from "axios";
 
 const DEFAULT_API_BASE_URL = "http://localhost:4000/api/v1";
@@ -34,19 +34,79 @@ const resolveApiOrigin = () => {
   }
 };
 
+type RetryableRequestConfig = AxiosRequestConfig & { _retry?: boolean };
+
+let refreshPromise: Promise<boolean> | null = null;
+
+const resolveRefreshUrl = () => {
+  const apiOrigin = resolveApiOrigin();
+  if (apiOrigin) {
+    return `${apiOrigin}/api/v2/admin/refresh`;
+  }
+
+  return "/api/v2/admin/refresh";
+};
+
+const refreshSession = async () => {
+  try {
+    await axios.post(resolveRefreshUrl(), undefined, {
+      withCredentials: true,
+    });
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 const attachUnauthorizedInterceptor = (instance: AxiosInstance) => {
   instance.interceptors.response.use(
     (response) => response,
-    (error) => {
-      // If 401 Unauthorized, redirect to admin login
-      if (error.response?.status === 401) {
-        // Only redirect if we're in a browser context and on an admin page
-        if (typeof window !== "undefined") {
+    async (error) => {
+      const status = error.response?.status;
+      const originalRequest = error.config as
+        | RetryableRequestConfig
+        | undefined;
+
+      if (status !== 401 || !originalRequest) {
+        return Promise.reject(error);
+      }
+
+      const requestUrl = originalRequest.url ?? "";
+      const isRefreshRequest =
+        typeof requestUrl === "string" &&
+        requestUrl.includes("/api/v2/admin/refresh");
+      const isMeRequest =
+        typeof requestUrl === "string" &&
+        requestUrl.includes("/api/v2/admin/me");
+      const shouldRedirect = !isMeRequest;
+
+      if (isRefreshRequest || originalRequest._retry) {
+        if (typeof window !== "undefined" && shouldRedirect) {
           console.warn("[Auth] Unauthorized - redirecting to login");
           window.location.href = "/";
         }
+        return Promise.reject(error);
       }
-      return Promise.reject(error);
+
+      originalRequest._retry = true;
+
+      if (!refreshPromise) {
+        refreshPromise = refreshSession().finally(() => {
+          refreshPromise = null;
+        });
+      }
+
+      const refreshed = await refreshPromise;
+      if (!refreshed) {
+        if (typeof window !== "undefined" && shouldRedirect) {
+          console.warn("[Auth] Refresh failed - redirecting to login");
+          window.location.href = "/";
+        }
+        return Promise.reject(error);
+      }
+
+      return axios.request(originalRequest);
     },
   );
 };
