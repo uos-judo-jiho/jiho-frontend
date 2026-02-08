@@ -1,4 +1,4 @@
-import { v1Api, v2Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import {
   QueryClient,
   QueryClientProvider,
@@ -68,7 +68,7 @@ export async function render(url: string) {
     const photoMatch = url.match(/^\/photo/);
     if (photoMatch) {
       console.log("[SSR] Prefetching trainings for photo page");
-      const trainingOptions = v1Api.getGetApiV1TrainingsQueryOptions();
+      const trainingOptions = v2Api.getGetApiV2TrainingsQueryOptions();
       const trainingsResponse = await queryClient.fetchQuery(trainingOptions);
       const trainings = trainingsResponse.data.trainingLogs ?? [];
       console.log("[SSR] Prefetched trainings count:", trainings.length);
@@ -84,7 +84,7 @@ export async function render(url: string) {
       console.log("[SSR] Prefetching latest news for news root page");
 
       const allNewsQueryPromises = vaildNewsYearList().map(async (year) => {
-        const newsOptions = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
+        const newsOptions = v2Api.getGetApiV2NewsYearQueryOptions(Number(year));
         const newsResponse = await queryClient.fetchQuery(newsOptions);
         const data = normalizeNewsResponse(newsResponse.data, year);
         console.log(
@@ -98,7 +98,7 @@ export async function render(url: string) {
     } else if (newsMatch) {
       const year = newsMatch[1];
       console.log("[SSR] Prefetching news for year:", year);
-      const newsOptions = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
+      const newsOptions = v2Api.getGetApiV2NewsYearQueryOptions(Number(year));
       const newsResponse = await queryClient.fetchQuery(newsOptions);
       const data = normalizeNewsResponse(newsResponse.data, year);
       console.log("[SSR] Prefetched news:", data?.year || "Not found");

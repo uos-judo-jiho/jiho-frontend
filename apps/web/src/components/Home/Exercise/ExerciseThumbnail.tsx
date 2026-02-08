@@ -1,11 +1,11 @@
 import Col from "@/components/layouts/Col";
 import { Card } from "@/components/ui/card";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 const ExerciseThumbnail = () => {
-  const { data } = v1Api.useGetApiV1Trainings(undefined, {
+  const { data } = v2Api.useGetApiV2Trainings(undefined, {
     query: {
       select: (response) => response.data.trainingLogs,
     },

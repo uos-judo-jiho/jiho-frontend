@@ -14,12 +14,12 @@ import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
 import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
 import { cn } from "@/shared/lib/utils";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 
 export const NewsDetailMobile = () => {
   const { id: year, index: newsId } = useParams<NewsParamsType>();
 
-  const { data } = v1Api.useGetApiV1NewsYearSuspense(Number(year));
+  const { data } = v2Api.useGetApiV2NewsYearSuspense(Number(year));
 
   const news = data.data;
 

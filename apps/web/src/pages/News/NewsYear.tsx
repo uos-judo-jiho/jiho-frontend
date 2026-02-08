@@ -7,7 +7,7 @@ import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import { Suspense, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import NotFound from "../NotFound";
@@ -17,7 +17,7 @@ const NewsYear = () => {
 
   const {
     data: { data: news },
-  } = v1Api.useGetApiV1NewsYearSuspense(Number(id));
+  } = v2Api.useGetApiV2NewsYearSuspense(Number(id));
 
   // SSG-friendly: 뉴스 데이터가 없어도 기본 메타 정보 제공
   const metaDescription = news

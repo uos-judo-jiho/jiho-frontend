@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Line from "./Line";
 
 type ListContainerProps = {
-  datas: Partial<v2ApiModel.GetApiV1NewsYear200ArticlesItem>[];
+  datas: Partial<v2ApiModel.GetApiV2NewsYear200ArticlesItem>[];
   targetUrl: string;
   additionalTitle?: boolean;
 };

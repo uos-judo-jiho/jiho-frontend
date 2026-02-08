@@ -10,12 +10,12 @@ import Title from "@/components/layouts/Title";
 
 import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 
 const PhotoPC = () => {
   const navigate = useNavigate();
 
-  const { data } = v1Api.useGetApiV1TrainingsSuspense(undefined, {
+  const { data } = v2Api.useGetApiV2TrainingsSuspense(undefined, {
     query: {
       select: (response) => response.data.trainingLogs,
     },

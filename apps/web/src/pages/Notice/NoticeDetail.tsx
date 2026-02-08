@@ -5,13 +5,13 @@ import NoticeDescription from "@/components/Notice/NoticeDetail/NoticeDescriptio
 import NoticeFooter from "@/components/Notice/NoticeDetail/NoticeFooter";
 import NoticeTitle from "@/components/Notice/NoticeDetail/NoticeTitle";
 import { Constants } from "@/shared/lib/constant";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import { Link, redirect, useParams } from "react-router-dom";
 import MyHelmet from "../../features/seo/helmet/MyHelmet";
 
 const NoticeDetail = () => {
   const { id } = useParams();
-  const { data: notices = [] } = v1Api.useGetApiV1Notices(undefined, {
+  const { data: notices = [] } = v2Api.useGetApiV2Notices(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],
     },

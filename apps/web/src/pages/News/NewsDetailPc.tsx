@@ -11,12 +11,12 @@ import { StructuredData, createArticleData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
 import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 
 export const NewsDetailPc = () => {
   const { id, index } = useParams<NewsParamsType>();
 
-  const { data: news } = v1Api.useGetApiV1NewsYearIdSuspense(
+  const { data: news } = v2Api.useGetApiV2NewsYearIdSuspense(
     Number(id),
     Number(index),
     {
