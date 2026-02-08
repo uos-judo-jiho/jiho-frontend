@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
@@ -12,18 +12,20 @@ import { Button } from "@/components/ui/button";
 import { StructuredData, createArticleData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
+import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
 import { cn } from "@/shared/lib/utils";
+import { v1Api } from "@packages/api";
 
-import { NewsDetailPageProps } from "./types/NewsDetailPageProps";
+export const NewsDetailMobile = () => {
+  const { id: year, index: newsId } = useParams<NewsParamsType>();
 
-export const NewsDetailMobile = ({
-  news,
-  year,
-  newsId,
-}: NewsDetailPageProps) => {
+  const { data } = v1Api.useGetApiV1NewsYearSuspense(Number(year));
+
+  const news = data.data;
+
   const articles = news.articles;
   const currentIndex = articles.findIndex(
-    (article) => article.id.toString() === newsId
+    (article) => article.id.toString() === newsId,
   );
 
   const currentArticle = articles[currentIndex];
@@ -31,7 +33,7 @@ export const NewsDetailMobile = ({
   // Prepare metadata (before early return to satisfy React Hook rules)
   const metaDescription = currentArticle
     ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(
-        " | "
+        " | ",
       )
     : "";
 
@@ -102,7 +104,7 @@ export const NewsDetailMobile = ({
             disabled={currentIndex === 0}
             className={cn(
               "flex items-center text-sm",
-              currentIndex === 0 && "opacity-50 cursor-not-allowed"
+              currentIndex === 0 && "opacity-50 cursor-not-allowed",
             )}
           >
             <Link
@@ -130,7 +132,7 @@ export const NewsDetailMobile = ({
             className={cn(
               "flex items-center text-sm",
               currentIndex === articles.length - 1 &&
-                "opacity-50 cursor-not-allowed"
+                "opacity-50 cursor-not-allowed",
             )}
           >
             <Link

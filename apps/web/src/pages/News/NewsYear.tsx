@@ -5,28 +5,19 @@ import Title from "@/components/layouts/Title";
 import NewsIndex from "@/components/News/NewsIndex";
 import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
-import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { v1Api } from "@packages/api";
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import NotFound from "../NotFound";
 
 const NewsYear = () => {
   const { id, index } = useParams<NewsParamsType>();
 
-  const { data: response, isLoading } = v1Api.useGetApiV1NewsYear(Number(id), {
-    query: {
-      enabled: Boolean(id),
-      select: (result) => result.data,
-    },
-  });
-
-  const news = useMemo(
-    () => normalizeNewsResponse(response, id ?? ""),
-    [response, id],
-  );
+  const {
+    data: { data: news },
+  } = v1Api.useGetApiV1NewsYearSuspense(Number(id));
 
   // SSG-friendly: 뉴스 데이터가 없어도 기본 메타 정보 제공
   const metaDescription = news
@@ -84,15 +75,17 @@ const NewsYear = () => {
       <DefaultLayout>
         <SheetWrapper>
           <Title title={`${id}년 지호지`} color="black" />
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <SkeletonItem key={index}>
-                  <div className="sm:h-[320px] h-[400px] w-full" />
-                </SkeletonItem>
-              ))}
-            </div>
-          ) : (
+          <Suspense
+            fallback={
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <SkeletonItem key={index}>
+                    <div className="sm:h-[320px] h-[400px] w-full" />
+                  </SkeletonItem>
+                ))}
+              </div>
+            }
+          >
             <NewsIndex
               articles={news?.articles || []}
               images={news?.images || []}
@@ -100,7 +93,7 @@ const NewsYear = () => {
               index={index ?? ""}
               year={id}
             />
-          )}
+          </Suspense>
         </SheetWrapper>
       </DefaultLayout>
     </div>

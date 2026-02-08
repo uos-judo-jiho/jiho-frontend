@@ -1,57 +1,60 @@
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Slider from "@/components/layouts/Slider";
-import { Button } from "@/components/ui/button";
 
 import { StructuredData, createArticleData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 
-import { cn } from "@/shared/lib/utils";
+import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
+import { v1Api } from "@packages/api";
 
-import { NewsDetailPageProps } from "./types/NewsDetailPageProps";
+export const NewsDetailPc = () => {
+  const { id, index } = useParams<NewsParamsType>();
 
-export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
-  const articles = news.articles;
-  const currentIndex = articles.findIndex(
-    (article) => article.id.toString() === newsId
+  const { data: news } = v1Api.useGetApiV1NewsYearIdSuspense(
+    Number(id),
+    Number(index),
+    {
+      query: {
+        select: (result) => result.data,
+      },
+    },
   );
 
-  const currentArticle = articles[currentIndex];
+  const { article, year } = news ?? { article: null, year: Number(id) };
 
   // Prepare metadata (before early return to satisfy React Hook rules)
-  const metaDescription = currentArticle
-    ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(
-        " | "
-      )
+  const metaDescription = article
+    ? [article.title, article.description?.slice(0, 140)].join(" | ")
     : "";
 
-  const metaImgUrl = currentArticle?.imgSrcs.at(0);
+  const metaImgUrl = article?.imgSrcs.at(0);
 
   // Format date for meta tags (ISO 8601 format)
-  const publishedDate = currentArticle?.dateTime
-    ? new Date(currentArticle.dateTime).toISOString()
+  const publishedDate = article?.dateTime
+    ? new Date(article.dateTime).toISOString()
     : undefined;
 
   // Create structured data for article (must be before early return)
   const structuredData = useMemo(() => {
-    if (!currentArticle) return null;
+    if (!article) return null;
 
     return createArticleData({
-      headline: `${year}년 지호지 - ${currentArticle.title}`,
+      headline: `${year}년 지호지 - ${article.title}`,
       description: metaDescription,
-      images: currentArticle.imgSrcs,
+      images: article.imgSrcs,
       datePublished: publishedDate,
       dateModified: publishedDate,
-      author: currentArticle.author,
+      author: article.author,
     });
-  }, [year, currentArticle, metaDescription, publishedDate]);
+  }, [year, article, metaDescription, publishedDate]);
 
-  if (!currentArticle) {
+  if (!article) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <div className="text-lg font-semibold">
@@ -67,12 +70,12 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
   return (
     <div>
       <MyHelmet
-        title={`${year}년 지호지 - ${currentArticle.title}`}
+        title={`${year}년 지호지 - ${article.title}`}
         description={metaDescription}
         imgUrl={metaImgUrl}
         datePublished={publishedDate}
         dateModified={publishedDate}
-        author={currentArticle.author}
+        author={article.author ?? ""}
         articleType="article"
       />
       {structuredData && <StructuredData data={structuredData} />}
@@ -93,20 +96,20 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
           <div className="flex flex-col flex-1">
             {/* Image Slider */}
             <div className="mb-6 md:mb-0 flex justify-center">
-              <Slider datas={currentArticle.imgSrcs} />
+              <Slider datas={article.imgSrcs} />
             </div>
 
             {/* Description Section */}
             <div className="flex-1">
               <ModalDescriptionSection
-                article={currentArticle}
+                article={article}
                 titles={["작성자", "카테고리", "작성일"]}
               />
             </div>
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-end gap-2">
+          {/* <div className="flex items-center justify-end gap-2">
             <Button
               asChild
               variant="link"
@@ -114,7 +117,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
               disabled={currentIndex === 0}
               className={cn(
                 "flex items-center",
-                currentIndex === 0 && "opacity-50 cursor-not-allowed"
+                currentIndex === 0 && "opacity-50 cursor-not-allowed",
               )}
             >
               <Link
@@ -142,7 +145,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
               className={cn(
                 "flex items-center",
                 currentIndex === articles.length - 1 &&
-                  "opacity-50 cursor-not-allowed"
+                  "opacity-50 cursor-not-allowed",
               )}
             >
               <Link
@@ -157,7 +160,7 @@ export const NewsDetailPc = ({ news, year, newsId }: NewsDetailPageProps) => {
                 <ChevronRight className="h-4 w-4" />
               </Link>
             </Button>
-          </div>
+          </div> */}
         </SheetWrapper>
       </DefaultLayout>
     </div>

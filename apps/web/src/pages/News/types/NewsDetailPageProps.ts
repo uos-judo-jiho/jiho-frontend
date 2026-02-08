@@ -1,7 +1,7 @@
 import { NewsType } from "@/shared/lib/types/NewsType";
 
 export type NewsDetailPageProps = {
-  year: string;
+  year: string | number;
   newsId: string;
-  news: NewsType;
+  articles: Omit<NewsType, "images">;
 };
