@@ -47,6 +47,7 @@ const initValues: Omit<ArticleInfoType, "id"> = {
 };
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
+  console.log(data);
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
     data ?? initValues,
   );
@@ -95,11 +96,11 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const handleSubmitOpen = () => setIsSubmitOpen(true);
 
   const handleDelete = async (
-    id: string,
+    id: string | number,
     type: "news" | "training" | "notice",
   ) => {
     try {
-      await deleteBoardMutation.mutateAsync(id);
+      await deleteBoardMutation.mutateAsync(String(id));
       naviagate(`/${type}`);
     } catch (error) {
       console.error(error);

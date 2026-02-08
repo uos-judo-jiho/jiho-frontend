@@ -1,18 +1,23 @@
 import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
 import Title from "@/components/layouts/Title";
 import { Constants } from "@/shared/lib/constant";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
+import { assert } from "es-toolkit";
 import { useParams } from "react-router-dom";
 
 const TrainingLogDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
 
-  const { data: trainings = [] } = v1Api.useGetApiV1Trainings(undefined, {
-    query: {
-      select: (response) => response.data.trainingLogs,
+  assert(id !== undefined, "훈련일지 ID가 없습니다.");
+
+  const { data: trainingLog } = v2Api.useGetApiV2TrainingIdSuspense(
+    Number(id),
+    {
+      query: {
+        select: (response) => response.data.training,
+      },
     },
-  });
-  const trainingLog = trainings?.find((item) => item.id.toString() === id);
+  );
 
   return (
     <>

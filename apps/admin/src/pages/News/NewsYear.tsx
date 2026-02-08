@@ -3,32 +3,23 @@ import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormCo
 import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { v1Api } from "@packages/api";
-import { useMemo } from "react";
+import { Suspense } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const NewsYear = () => {
   const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
-  const {
-    data: response,
-    refetch,
-    isLoading,
-    isRefetching,
-  } = v1Api.useGetApiV1NewsYear(Number(year), {
-    query: {
-      enabled: Boolean(year),
-      select: (result) => result.data,
+
+  const { data: newsData, refetch } = v1Api.useGetApiV1NewsYearSuspense(
+    Number(year),
+    {},
+    {
+      query: {
+        select: (response) => response.data,
+      },
     },
-  });
-
-  const newsData = useMemo(
-    () => normalizeNewsResponse(response, year ?? ""),
-    [response, year],
   );
-
-  const isDataLoading = isLoading || isRefetching;
 
   const articles = newsData?.articles || [];
 
@@ -53,15 +44,14 @@ const NewsYear = () => {
         </Row>
         <NewArticleButton onClick={() => refetch()}>새로고침</NewArticleButton>
       </Row>
-      {isDataLoading ? (
-        <Loading />
-      ) : (
+
+      <Suspense fallback={<Loading loading />}>
         <ListContainer
           datas={articles}
           targetUrl={`/news/${year}/`}
           additionalTitle={true}
         />
-      )}
+      </Suspense>
     </FormContainer>
   );
 };

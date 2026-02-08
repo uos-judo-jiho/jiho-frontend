@@ -1,8 +1,10 @@
-import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import { v2ApiModel } from "@packages/api/model";
 import ArticleForm from "./ArticleForm";
+
 type TrainingLogFormProps = {
-  data?: ArticleInfoType;
+  data?: v2ApiModel.GetApiV2TrainingId200Training;
 };
+
 function TrainingLogForm({ data }: TrainingLogFormProps) {
   return <ArticleForm data={data} type={"training"} />;
 }

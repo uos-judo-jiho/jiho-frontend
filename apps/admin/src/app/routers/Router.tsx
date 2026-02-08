@@ -1,28 +1,20 @@
-import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import { WithSuspense } from "@/components/utils/WithSuspense";
 import Helmet from "@/features/seo/helmet/Helmet";
 
+import Gallery from "@/pages/News/Gallery/Gallery";
+import { GalleryList } from "@/pages/News/Gallery/GalleryList";
+import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
+import NewsDetail from "@/pages/News/NewsDetail";
+import NoticeDetail from "@/pages/Notice/NoticeDetail";
+import TrainingLogDetail from "@/pages/trainingLog/TrainingLogDetail";
+import WriteArticlePage from "@/pages/WriteArticlePage";
 import NavPage from "../../pages/NavPage";
 import NewsIndex from "../../pages/News/NewsIndex";
 import NewsYear from "../../pages/News/NewsYear";
 import Notice from "../../pages/Notice/Notice";
 import TrainingLog from "../../pages/trainingLog/TrainingLog";
-
-const WriteArticlePage = lazy(() => import("../../pages/WriteArticlePage"));
-const Gallery = lazy(() => import("../../pages/News/Gallery/Gallery"));
-const GalleryIndex = lazy(
-  () => import("../../pages/News/Gallery/GalleryIndex"),
-);
-const GalleryWrite = lazy(
-  () => import("../../pages/News/Gallery/GalleryWrite"),
-);
-const TrainingLogDetail = lazy(
-  () => import("../../pages/trainingLog/TrainingLogDetail"),
-);
-const NewsDetail = lazy(() => import("../../pages/News/NewsDetail"));
-const NoticeDetail = lazy(() => import("../../pages/Notice/NoticeDetail"));
 
 const Router = () => {
   return (
@@ -53,7 +45,7 @@ const Router = () => {
           path="news/gallery"
           element={
             <WithSuspense>
-              <GalleryIndex />
+              <GalleryList />
             </WithSuspense>
           }
         />
