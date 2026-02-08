@@ -17,7 +17,6 @@ const HomeSectionExercise = () => {
       <SheetWrapper>
         <div className="w-full relative">
           <ExerciseThumbnail />
-          {/* <ExerciseVideo /> */}
         </div>
       </SheetWrapper>
     </HomeSectionBG>

@@ -1,50 +1,26 @@
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { Constants } from "@/shared/lib/constant";
-import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { v1Api } from "@packages/api";
-import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
-import MoreCard from "./MoreCard";
+import { MoreCard } from "./MoreCard";
 
 const HomeSectionMore = () => {
-  const { data: news } = useQuery({
-    queryKey: ["news", "all"],
-    queryFn: async () => {
-      const years = vaildNewsYearList();
-      const responses = await Promise.all(
-        years.map(async (year) => {
-          const options = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
-          const response = await options.queryFn({
-            queryKey: options.queryKey,
-          } as never);
-
-          return normalizeNewsResponse(response.data, year);
-        }),
-      );
-
-      return responses
-        .filter((item): item is NonNullable<typeof item> => Boolean(item))
-        .sort((a, b) => parseInt(b.year) - parseInt(a.year));
-    },
-  });
-  const { data } = v1Api.useGetApiV1Trainings(undefined, {
+  const { data: news } = v1Api.useGetApiV1NewsLatestSuspense(undefined, {
     query: {
-      select: (response) => response.data.trainingLogs,
+      select: (response) => response.data.articles,
     },
   });
-  const { data: notices } = v1Api.useGetApiV1Notices(undefined, {
+
+  const { data: trainings } = v1Api.useGetApiV1TrainingsSuspense(undefined, {
+    query: {
+      select: (response) => response.data.trainingLogs ?? [],
+    },
+  });
+  const { data: notices } = v1Api.useGetApiV1NoticesSuspense(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],
     },
   });
-
-  // 날짜순 정렬
-  const trainings = useMemo(() => {
-    if (!data) return [];
-    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
-  }, [data]);
 
   return (
     <SheetWrapper>
@@ -55,23 +31,17 @@ const HomeSectionMore = () => {
           heading={2}
         />
         <div className="flex flex-col gap-6 w-full pt-5">
-          {trainings && (
-            <MoreCard title="훈련일지" linkTo="/photo" data={trainings} />
-          )}
-          {news && (
-            <MoreCard
-              title="지호지"
-              linkTo={`/news`}
-              //
-              data={news.flatMap((item) =>
-                item.articles.map((article) => ({
-                  ...article,
-                  id: `${item.year}/${article.id}`,
-                })),
-              )}
-            />
-          )}
-          <MoreCard title="공지사항" linkTo="/notice" data={notices || []} />
+          <MoreCard title="훈련일지" linkTo="/photo" data={trainings} />
+          <MoreCard
+            title="지호지"
+            linkTo={`/news`}
+            data={news.map((n) => {
+              const year = new Date(n.dateTime).getFullYear();
+              const { id, ...rest } = n;
+              return { id: `${year}/${id}`, ...rest };
+            })}
+          />
+          <MoreCard title="공지사항" linkTo="/notice" data={notices} />
         </div>
       </div>
     </SheetWrapper>

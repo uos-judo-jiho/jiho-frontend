@@ -1,5 +1,5 @@
 export type ArticleInfoType = {
-  id: string;
+  id: string | number;
   imgSrcs: string[];
   title: string;
   author: string;
@@ -8,7 +8,7 @@ export type ArticleInfoType = {
   description: string;
 };
 export type ArticleInfoFormDataType = {
-  id: string;
+  id: string | number;
   imgSrcs: File[];
   title: string;
   author: string;

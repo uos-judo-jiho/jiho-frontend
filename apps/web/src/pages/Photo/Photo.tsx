@@ -14,6 +14,7 @@ import { v1Api } from "@packages/api";
 
 const PhotoPC = () => {
   const navigate = useNavigate();
+
   const { data } = v1Api.useGetApiV1TrainingsSuspense(undefined, {
     query: {
       select: (response) => response.data.trainingLogs,
