@@ -11,14 +11,19 @@ import HomeSectionMore from "@/components/Home/More/HomeSectionMore";
 import HomeSectionNews from "@/components/Home/News/HomeSectionNews";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
-import { awardsData } from "@/shared/lib/assets/data/awards";
 import { footerData } from "@/shared/lib/assets/data/footer";
 
 import { StructuredData, createOrganizationData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
+import { v2Api } from "@packages/api";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);
+  const { data: awards = [] } = v2Api.useGetApiV2AwardsSuspense({
+    query: {
+      select: (response) => response.data.awards ?? [],
+    },
+  });
 
   // Create structured data for organization with LocalBusiness
   const structuredData = useMemo(() => {
@@ -27,8 +32,11 @@ const Home = () => {
         ? window.location.origin
         : "https://uosjudo.com";
 
-    const awardTitles = awardsData.awards.map((award) => award.title);
-    const description = awardTitles.join(", ");
+    const awardTitles = awards.map((award) => award.title);
+    const description =
+      awardTitles.length > 0
+        ? awardTitles.join(", ")
+        : "서울시립대학교 유도부 지호";
 
     return createOrganizationData({
       name: "서울시립대학교 유도부 지호",
@@ -64,12 +72,13 @@ const Home = () => {
       },
       includeLocalBusiness: true,
     });
-  }, []);
+  }, [awards]);
 
   // Create helmet metadata
-  const metaDescription = awardsData.awards
-    .map((award) => award.title)
-    .join(", ");
+  const metaDescription =
+    awards.length > 0
+      ? awards.map((award) => award.title).join(", ")
+      : "서울시립대학교 유도부 지호";
 
   return (
     <>

@@ -1,5 +1,4 @@
-import { awardsData } from "@/shared/lib/assets/data/awards";
-import { v1Api } from "@packages/api";
+import { v1Api, v2Api } from "@packages/api";
 import {
   QueryClient,
   QueryClientProvider,
@@ -61,6 +60,8 @@ export async function render(url: string) {
 
   console.log("[SSR] Rendering URL:", url);
 
+  let awardsForMeta: { title: string }[] = [];
+
   // Prefetch data based on route
   try {
     // Match photo routes: /photo or /photo/:id
@@ -105,6 +106,14 @@ export async function render(url: string) {
 
     // Add more route-specific prefetching as needed
     // e.g., notices, etc.
+
+    if (url === "/") {
+      console.log("[SSR] Prefetching awards for home page");
+      const awardsOptions = v2Api.getGetApiV2AwardsQueryOptions();
+      const awardsResponse = await queryClient.fetchQuery(awardsOptions);
+      awardsForMeta = awardsResponse.data.awards ?? [];
+      console.log("[SSR] Prefetched awards count:", awardsForMeta.length);
+    }
   } catch (error) {
     // Always log errors even in production
     console.error("[SSR] Prefetch error:", error);
@@ -113,9 +122,10 @@ export async function render(url: string) {
 
   // Helmet data collector for SSR
   // Default metadata for home page
-  const defaultDescription = awardsData.awards
-    .map((award) => award.title)
-    .join(", ");
+  const defaultDescription =
+    awardsForMeta.length > 0
+      ? awardsForMeta.map((award) => award.title).join(", ")
+      : "서울시립대학교 유도부 지호";
 
   let helmetData: HelmetData = {
     title: "서울시립대학교 유도부 지호 | Home",

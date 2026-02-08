@@ -2,7 +2,7 @@ import Router from "@/app/routers/Router";
 import Login from "@/components/admin/form/Login";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
-import useSession from "@/recoils/session";
+import useSession from "@/stores/session";
 
 const HomePage = () => {
   const { session } = useSession();
@@ -10,7 +10,7 @@ const HomePage = () => {
   return (
     <DefaultLayout>
       {/* TODO: 로그인 기능 구현 */}
-      {!session.isLogin ? (
+      {session.isLogin ? (
         <SheetWrapper>
           <Router />
         </SheetWrapper>
