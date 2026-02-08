@@ -5,5 +5,10 @@
     "source.fixAll.eslint": "explicit",
     "source.addMissingImports": "explicit",
     "source.organizeImports": "explicit"
-  }
+  },
+  "search.exclude": {
+    "**/.pnpm": true
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

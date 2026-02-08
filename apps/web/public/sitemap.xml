@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+    <loc>https://uosjudo.com/photo</loc>
+<priority>0.9</priority>
+  </url>
+ <url>
+    <loc>https://uosjudo.com/news</loc>
+<priority>0.9</priority>
+  </url>
+ <url>
+    <loc>https://uosjudo.com/news/2022</loc>
+<lastmod>2022-12-31T00:00:00.000Z</lastmod>
+<priority>0.8</priority>
+  </url>
+ <url>
+    <loc>https://uosjudo.com/news/2023</loc>
+<lastmod>2023-12-31T00:00:00.000Z</lastmod>
+<priority>0.8</priority>
+  </url>
+ <url>
+    <loc>https://uosjudo.com/news/2024</loc>
+<lastmod>2024-12-31T00:00:00.000Z</lastmod>
+<priority>0.8</priority>
+  </url>
+ <url>
+    <loc>https://uosjudo.com/news/2025</loc>
+<lastmod>2025-12-31T00:00:00.000Z</lastmod>
+<priority>0.8</priority>
+  </url>
+ <url>
+    <loc>https://uosjudo.com/news/2026</loc>
+<lastmod>2026-12-31T00:00:00.000Z</lastmod>
+<priority>0.8</priority>
+  </url>
+ <url>
+    <loc>https://uosjudo.com/notice</loc>
+<priority>0.6</priority>
+  </url>
+</urlset>

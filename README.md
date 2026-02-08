@@ -1,131 +1,43 @@
-# 서울시립대학교 유도부 지호 UOS Judo Time Jiho
+# Jiho Frontend Monorepo
 
-[유도부 홈페이지 링크](https://uosjudo.com)
+This repository now hosts the public web experience and the standalone admin console as npm workspaces. The two apps share the same React component library so fixes and UI tweaks stay in sync.
 
-[API 명세서](https://uosjudo.com/api/docs)
+## Apps
 
-# 주요 페이지
+| Package           | Path         | Description                                                                                                              |
+| ----------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| `@uos-judo/web`   | `apps/web`   | Express + Vite SSR app that powers https://uosjudo.com including the BFF middleware.                                     |
+| `@uos-judo/admin` | `apps/admin` | Static React build that renders the admin dashboard entirely on the client. It now carries its own copy of the admin UI. |
 
-### 메인 페이지
+Reusable modules that both apps consume should live under `packages/*` (reserved for future shared packages).
 
-유도부 소개, 지호지 링크, 훈련일지 링크, 공지사항 링크를 제공합니다.
-
-### 공지사항
-
-공지사항을 작성합니다.
-
-### 훈련 일지
-
-정기 운동 후 훈련에 대한 일지를 작성합니다.
-
-### 지호지
-
-매년 발생한 소식을 안내합니다.
-
-### 관리자
-
-훈련 일지, 지호지, 공지사항을 작성합니다.
-
-# 개발 환경
+## Install
 
 ```bash
-Ubuntu Linux 20.04.
-Node 18.x
+pnpm install
 ```
 
-# Install instruction
-
-1. install dependency
+## Common scripts
 
 ```bash
-npm install
+# Web (SSR)
+pnpm dev:web
+pnpm dev:server
+pnpm build:web
+pnpm start
+
+# Admin (static)
+pnpm dev:admin
+pnpm build:admin
+pnpm preview:admin
 ```
 
-2. dev run
+`pnpm build` runs both apps so you get `apps/web/build` for the SSR bundle and `apps/admin/dist` for the static dashboard artifacts (useful for CDN/S3 uploads).
 
-```bash
-npm run dev
-```
+## Deploying Admin
 
-3. dev server (with SSR)
+The admin build is completely static and can be served from any static host. Deploy the contents of `packages/admin/dist` to your preferred storage/CDN and point `/admin` DNS there (or configure the main server / CDN to rewrite `/admin` requests). The existing Express server no longer serves the admin bundle directly.
 
-```bash
-npm run dev:server
-```
+## Legacy docs
 
-4. production build
-
-```bash
-npm run build
-```
-
-5. production run
-
-```bash
-npm run start
-```
-
-## Server Architecture
-
-The server has been refactored to TypeScript for better maintainability. The server code is organized in the `server/` directory with the following structure:
-
-- `server/index.ts` - Main entry point
-- `server/config.ts` - Configuration and environment variables
-- `server/middleware/` - Express middleware (logger, security, error handler)
-- `server/routes/` - Route handlers (BFF, upload, SSE)
-- `server/services/` - Business logic (S3 upload, proxy)
-- `server/utils/` - Utility functions (SSE tokens, progress tracking)
-- `server/types.ts` - TypeScript type definitions
-
-See `server/README.md` for detailed server documentation.
-
-# 기술스택
-
-## FE
-
-- React 18
-- TypeScript
-- Recoil
-- TailwindCSS v4
-- Vite
-- TanStack Query (React Query)
-
-## Server (BFF - Backend For Frontend)
-
-- Node.js + Express
-- TypeScript
-- AWS S3 (File Upload)
-- Server-Side Rendering (SSR) with Vite
-
-## BE
-
-- Java
-- Java Spring
-- MySQL
-
-## DevOps
-
-- aws
-  - ec2
-  - s3
-- docker
-- nginx
-- github action
-
-## OAS
-
-- Swagger
-
-# 프로젝트 멤버
-
-## FE
-
-34기 김영민
-
-## BE
-
-38기 이진수
-
-# contact
-
-[uosjudojiho@gmail.com](mailto:uosjudojiho@gmail.com)
+The original web README now lives in `apps/web/README.md` with all existing development details.

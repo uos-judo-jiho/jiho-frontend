@@ -1,49 +1,74 @@
-name: React Deploy with Docker # Workflow 이름
-on: # Event 감지
-  push:
-    branches:
-      - main
+name: Build and Deploy Web
 
-jobs: # Job 설정
-  build:
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/web/**"
+      - "packages/api/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - ".github/workflows/deploy.yml"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source code. # Repo checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Docker image Build
-        run: |
-          docker build \
-            --build-arg VITE_INTERNAL_API_TOKEN="${{ secrets.VITE_INTERNAL_API_TOKEN }}" \
-            --build-arg BACKEND_URL="${{ secrets.BACKEND_URL }}" \
-            --build-arg AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
-            --build-arg AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
-            --build-arg AWS_REGION="${{ secrets.AWS_REGION }}" \
-            --build-arg AWS_S3_BUCKET="${{ secrets.AWS_S3_BUCKET }}" \
-            --build-arg S3_UPLOAD_MAX_SIZE="${{ secrets.S3_UPLOAD_MAX_SIZE }}" \
-            --build-arg S3_ALLOWED_EXTENSIONS="${{ secrets.S3_ALLOWED_EXTENSIONS }}" \
-            --build-arg INTERNAL_API_TOKEN="${{ secrets.INTERNAL_API_TOKEN }}" \
-            --build-arg PORT="${{ secrets.PORT || '3000' }}" \
-            --platform linux/amd64 \
-            -t ${{ secrets.DOCKER_USERNAME }}/jiho-frontend .
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Login to DockerHub
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/jiho-frontend
-
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.3
+      - name: Build and push
+        uses: docker/build-push-action@v6
         with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          host: ${{ secrets.EC2_PUBLIC_IP }}
-          username: ${{ secrets.SSH_USER }}
+          context: .
+          file: ./apps/web/Dockerfile
+          push: true
+          platforms: linux/amd64
+          build-args: |
+            VITE_INTERNAL_API_TOKEN=${{ secrets.VITE_INTERNAL_API_TOKEN }}
+            BACKEND_URL=${{ secrets.BACKEND_URL }}
+            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }}
+            S3_UPLOAD_MAX_SIZE=${{ secrets.S3_UPLOAD_MAX_SIZE }}
+            S3_ALLOWED_EXTENSIONS=${{ secrets.S3_ALLOWED_EXTENSIONS }}
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+      - name: Deploy to Lightsail via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ${{ secrets.LIGHTSAIL_USER }}
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: 22
           script: |
-            docker-compose down
-            docker-compose pull && docker-compose up -d
-            docker image prune -f
+            if [ ! -f /opt/uos-judo/web/.env ]; then
+              echo "Missing /opt/uos-judo/web/.env on server" >&2
+              exit 1
+            fi
+            docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} -p ${{ secrets.GHCR_TOKEN }}
+            docker pull ghcr.io/${{ github.repository }}:latest
+            docker stop uos-judo-web || true
+            docker rm uos-judo-web || true
+            docker run -d --name uos-judo-web \
+              -p 3000:3000 \
+              --env-file /opt/uos-judo/web/.env \
+              ghcr.io/${{ github.repository }}:latest
