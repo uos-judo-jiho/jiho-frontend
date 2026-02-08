@@ -1,12 +1,27 @@
 import FormContainer from "@/components/admin/form/FormContainer";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
-import { useAllNewsQuery } from "@/features/api/news/query";
+import { normalizeNewsResponse } from "@/shared/lib/api/news";
+import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
+import { v1Api } from "@packages/api";
+import { useQueries } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const GalleryIndex = () => {
   const navigate = useNavigate();
-  const { data: news = [] } = useAllNewsQuery();
+  const years = useMemo(() => vaildNewsYearList(), []);
+  const queries = useQueries({
+    queries: years.map((year) => ({
+      ...v1Api.getGetApiV1NewsYearQueryOptions(Number(year)),
+      select: (result: { data: unknown }) => result.data,
+    })),
+  });
+  const news = useMemo(() => {
+    return years
+      .map((year, index) => normalizeNewsResponse(queries[index]?.data, year))
+      .filter(Boolean);
+  }, [queries, years]);
 
   const galleries = news
     .map((newsData) => ({
