@@ -26,6 +26,7 @@ function SheetWrapper({
     news: "지호지",
     notice: "공지",
     gallery: "갤러리",
+    awards: "수상내역",
     write: "작성",
   };
 

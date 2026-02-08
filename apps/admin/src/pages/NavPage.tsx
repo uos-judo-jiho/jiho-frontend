@@ -6,6 +6,7 @@ const NavPage = () => {
       <NavItem linkTo={"/training"} title={"훈련 일지 관리"} />
       <NavItem linkTo={"/news"} title={"지호지 관리"} />
       <NavItem linkTo={"/notice"} title={"공지사항 관리"} />
+      <NavItem linkTo={"/awards"} title={"수상이력 관리"} />
       <li className="border-t border-neutral-200 my-2" />
       <NavItem linkTo={"https://uosjudo.com"} title={"uosjudo.com"} external />
     </ul>

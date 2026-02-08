@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { WithSuspense } from "@/components/utils/WithSuspense";
 import Helmet from "@/features/seo/helmet/Helmet";
 
+import { Awards } from "@/pages/Awards/Awards";
 import Gallery from "@/pages/News/Gallery/Gallery";
 import { GalleryList } from "@/pages/News/Gallery/GalleryList";
 import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
@@ -83,6 +84,7 @@ const Router = () => {
           }
         />
         <Route path="notice" element={<Notice />} />
+        <Route path="awards" element={<Awards />} />
         <Route
           path="notice/:id"
           element={
