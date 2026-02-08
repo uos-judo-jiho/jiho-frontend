@@ -1,7 +1,6 @@
 import { QueryClientProvider, hydrate } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { queryClient } from "../shared/context/QueryClient";
 import AppRouter from "./routers/AppRouter";
 
@@ -26,11 +25,9 @@ const App = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <BrowserRouter>
-          <AppRouter />
-        </BrowserRouter>
-      </RecoilRoot>
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
     </QueryClientProvider>
   );
 };

@@ -1,7 +1,6 @@
 import { QueryClientProvider, hydrate } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 
 import AdminHomePage from "@/pages/admin/AdminHomePage";
 import { queryClient } from "../shared/context/QueryClient";
@@ -18,11 +17,9 @@ const AdminStandaloneApp = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <BrowserRouter basename={baseName}>
-          <AdminHomePage />
-        </BrowserRouter>
-      </RecoilRoot>
+      <BrowserRouter basename={baseName}>
+        <AdminHomePage />
+      </BrowserRouter>
     </QueryClientProvider>
   );
 };

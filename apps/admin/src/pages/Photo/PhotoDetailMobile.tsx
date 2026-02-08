@@ -1,7 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import Loading from "@/components/common/Skeletons/Loading";
@@ -51,7 +50,7 @@ export const PhotoDetailMobile = ({
             disabled={current === 0}
             className={cn(
               "flex items-center text-sm",
-              current === 0 && "opacity-50 cursor-not-allowed"
+              current === 0 && "opacity-50 cursor-not-allowed",
             )}
           >
             <Link
@@ -75,7 +74,7 @@ export const PhotoDetailMobile = ({
             className={cn(
               "flex items-center text-sm",
               current === trainings.length - 1 &&
-                "opacity-50 cursor-not-allowed"
+                "opacity-50 cursor-not-allowed",
             )}
           >
             <Link
@@ -92,7 +91,6 @@ export const PhotoDetailMobile = ({
           </Button>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

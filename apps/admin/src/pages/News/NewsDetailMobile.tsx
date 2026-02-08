@@ -2,7 +2,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import Loading from "@/components/common/Skeletons/Loading";
@@ -23,7 +22,7 @@ export const NewsDetailMobile = ({
 }: NewsDetailPageProps) => {
   const articles = news.articles;
   const currentIndex = articles.findIndex(
-    (article) => article.id.toString() === newsId
+    (article) => article.id.toString() === newsId,
   );
 
   const currentArticle = articles[currentIndex];
@@ -31,7 +30,7 @@ export const NewsDetailMobile = ({
   // Prepare metadata (before early return to satisfy React Hook rules)
   const metaDescription = currentArticle
     ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(
-        " | "
+        " | ",
       )
     : "";
 
@@ -102,7 +101,7 @@ export const NewsDetailMobile = ({
             disabled={currentIndex === 0}
             className={cn(
               "flex items-center text-sm",
-              currentIndex === 0 && "opacity-50 cursor-not-allowed"
+              currentIndex === 0 && "opacity-50 cursor-not-allowed",
             )}
           >
             <Link
@@ -130,7 +129,7 @@ export const NewsDetailMobile = ({
             className={cn(
               "flex items-center text-sm",
               currentIndex === articles.length - 1 &&
-                "opacity-50 cursor-not-allowed"
+                "opacity-50 cursor-not-allowed",
             )}
           >
             <Link
@@ -147,7 +146,6 @@ export const NewsDetailMobile = ({
           </Button>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
