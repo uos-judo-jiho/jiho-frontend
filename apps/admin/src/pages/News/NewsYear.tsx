@@ -3,7 +3,7 @@ import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormCo
 import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import { Suspense } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -11,7 +11,7 @@ const NewsYear = () => {
   const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
 
-  const { data: newsData, refetch } = v1Api.useGetApiV1NewsYearSuspense(
+  const { data: newsData, refetch } = v2Api.useGetApiV2NewsYearSuspense(
     Number(year),
     {},
     {

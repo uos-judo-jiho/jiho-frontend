@@ -1,9 +1,9 @@
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { NewsType } from "@/shared/lib/types/NewsType";
-import { v1ApiModel } from "@packages/api/model";
+import { v2ApiModel } from "@packages/api/model";
 
 export const normalizeNewsResponse = (
-  response: v1ApiModel.GetApiV1NewsYearResponse | undefined,
+  response: v2ApiModel.GetApiV2NewsYearResponse | undefined,
   fallbackYear: string,
 ): NewsType | null => {
   if (!response || typeof response !== "object") {

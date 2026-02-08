@@ -1,13 +1,28 @@
 import { v2Admin } from "@packages/api";
 import { useState } from "react";
 
-const Login = () => {
+type LoginProps = {
+  onSuccess?: () => void;
+};
+
+const Login = ({ onSuccess }: LoginProps) => {
   const [formState, setFormState] = useState({
     email: "",
     password: "",
   });
 
-  const loginMutation = v2Admin.usePostApiV2AdminLogin();
+  const loginMutation = v2Admin.usePostApiV2AdminLogin({
+    mutation: {
+      onSuccess: () => {
+        if (onSuccess) {
+          onSuccess();
+        }
+      },
+    },
+    axios: {
+      withCredentials: true,
+    },
+  });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

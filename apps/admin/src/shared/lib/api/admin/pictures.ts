@@ -1,4 +1,4 @@
-import { getPostApiV1AdminPicturesYearMutationOptions } from "@packages/api/_generated/v1/admin";
+import { getPostApiV2AdminPicturesYearMutationOptions } from "@packages/api/_generated/v2/admin";
 
 /**
  * upload picture
@@ -18,7 +18,7 @@ export const uploadPicture = async (year: string, imgs: string[]) => {
       throw new Error("유효하지 않은 연도입니다.");
     }
 
-    const { mutationFn } = getPostApiV1AdminPicturesYearMutationOptions({
+    const { mutationFn } = getPostApiV2AdminPicturesYearMutationOptions({
       axios: {
         withCredentials: true,
       },

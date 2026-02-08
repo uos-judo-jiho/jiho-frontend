@@ -1,4 +1,4 @@
-import { getPostApiV1AdminImageMutationOptions } from "@packages/api/_generated/v1/admin";
+import { getPostApiV2AdminImageMutationOptions } from "@packages/api/_generated/v2/admin";
 import type { AxiosProgressEvent, AxiosRequestConfig } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -61,7 +61,7 @@ const isAbortError = (error: unknown) => {
 };
 
 const uploadImage = async (file: File, options?: AxiosRequestConfig) => {
-  const { mutationFn } = getPostApiV1AdminImageMutationOptions({
+  const { mutationFn } = getPostApiV2AdminImageMutationOptions({
     axios: {
       withCredentials: true,
       ...options,

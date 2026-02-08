@@ -2,20 +2,20 @@ import Router from "@/app/routers/Router";
 import Login from "@/components/admin/form/Login";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
-import useSession from "@/stores/session";
+import { useState } from "react";
 
 const HomePage = () => {
-  const { session } = useSession();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <DefaultLayout>
       {/* TODO: 로그인 기능 구현 */}
-      {session.isLogin ? (
+      {isAuthenticated ? (
         <SheetWrapper>
           <Router />
         </SheetWrapper>
       ) : (
-        <Login />
+        <Login onSuccess={() => setIsAuthenticated(true)} />
       )}
     </DefaultLayout>
   );

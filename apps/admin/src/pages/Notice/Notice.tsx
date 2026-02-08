@@ -2,11 +2,11 @@ import FormContainer from "@/components/admin/form/FormContainer";
 import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import { Link } from "react-router-dom";
 
 const Notice = () => {
-  const { data: notices = [], refetch } = v1Api.useGetApiV1Notices(undefined, {
+  const { data: notices = [], refetch } = v2Api.useGetApiV2Notices(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],
     },
