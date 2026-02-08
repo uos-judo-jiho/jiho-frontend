@@ -1,12 +1,12 @@
 import FormContainer from "@/components/admin/form/FormContainer";
 import Col from "@/components/layouts/Col";
 import Row from "@/components/layouts/Row";
-import { useNews } from "@/recoils/news";
+import { useAllNewsQuery } from "@/features/api/news/query";
 import { Link, useNavigate } from "react-router-dom";
 
 const AdminGalleryIndex = () => {
   const navigate = useNavigate();
-  const { news } = useNews();
+  const { data: news = [] } = useAllNewsQuery();
 
   const galleries = news
     .map((newsData) => ({

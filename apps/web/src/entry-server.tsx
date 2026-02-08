@@ -9,7 +9,6 @@ import axios from "axios";
 import { PassThrough } from "node:stream";
 import { renderToPipeableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
-import { RecoilRoot } from "recoil";
 import AppRouter from "./app/routers/AppRouter";
 import { HelmetContext } from "./features/seo/helmet/MyHelmet";
 import { StructuredDataContext } from "./features/seo/StructuredData";
@@ -164,11 +163,9 @@ export async function render(url: string) {
       <StructuredDataContext.Provider value={{ setStructuredData }}>
         <HelmetContext.Provider value={{ setHelmetData }}>
           <QueryClientProvider client={queryClient}>
-            <RecoilRoot>
-              <StaticRouter location={url}>
-                <AppRouter />
-              </StaticRouter>
-            </RecoilRoot>
+            <StaticRouter location={url}>
+              <AppRouter />
+            </StaticRouter>
           </QueryClientProvider>
         </HelmetContext.Provider>
       </StructuredDataContext.Provider>,
