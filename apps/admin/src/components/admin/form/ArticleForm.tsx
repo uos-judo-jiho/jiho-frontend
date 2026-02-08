@@ -1,6 +1,5 @@
 import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
-import { uploadPicture } from "@/shared/lib/api/admin/pictures";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { v2Admin } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -90,6 +89,12 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     },
   });
 
+  const uploadPicturesMutation = v2Admin.usePostApiV2AdminPicturesYear({
+    axios: {
+      withCredentials: true,
+    },
+  });
+
   const handleSubmitOpen = () => setIsSubmitOpen(true);
 
   const handleDelete = async (
@@ -115,7 +120,17 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
     try {
       if (gallery) {
-        await uploadPicture(values.dateTime.slice(0, 4), values.imgSrcs);
+        const yearNumber = Number(values.dateTime.slice(0, 4));
+        if (Number.isNaN(yearNumber)) {
+          throw new Error("유효하지 않은 연도입니다.");
+        }
+
+        await uploadPicturesMutation.mutateAsync({
+          year: yearNumber,
+          data: {
+            base64Imgs: values.imgSrcs,
+          },
+        });
       } else {
         if (isNew) {
           await createBoardMutation.mutateAsync({
