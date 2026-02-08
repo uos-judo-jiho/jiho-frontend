@@ -16,6 +16,7 @@ RUN corepack enable
 ARG BACKEND_URL
 
 # Set environment variables for build
+ENV NODE_ENV=production
 ENV BACKEND_URL=$BACKEND_URL
 
 COPY --from=deps /repo/node_modules ./node_modules
