@@ -1,5 +1,6 @@
+import Loading from "@/components/common/Skeletons/Loading";
 import { QueryClientProvider, hydrate } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { queryClient } from "../shared/context/QueryClient";
@@ -27,8 +28,12 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
-        <BrowserRouter>
-          <AppRouter />
+        <BrowserRouter
+          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
+          <Suspense fallback={<Loading />}>
+            <AppRouter />
+          </Suspense>
         </BrowserRouter>
       </RecoilRoot>
     </QueryClientProvider>
