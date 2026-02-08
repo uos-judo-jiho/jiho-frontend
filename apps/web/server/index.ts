@@ -3,9 +3,11 @@ import fs from "node:fs/promises";
 import path from "path";
 import type { ViteDevServer } from "vite";
 import {
+  BACKEND_URL,
   base,
   CANONICAL_DOMAIN,
   customConsole,
+  isLocal,
   isProduction,
   port,
 } from "./config.js";
@@ -79,17 +81,14 @@ app.use("/api", async (req, res) => {
     let backendBaseUrl: string;
     const host = req.get("host") || "";
 
+    const normalizeBackendBaseUrl = (value: string) =>
+      value.replace(/\/api\/?$/, "").replace(/\/$/, "");
+
     // 로컬 개발 환경 (localhost, 127.0.0.1)
-    if (host.includes("localhost") || host.includes("127.0.0.1")) {
-      backendBaseUrl = "https://uosjudo.com";
+    if (isLocal) {
+      backendBaseUrl = "http://localhost:4000";
     } else {
-      // 프로덕션: 현재 호스트 기준 (www 제거)
-      const hostname = host.replace(/^www\./, "");
-      const protocol =
-        req.protocol === "https" || req.get("x-forwarded-proto") === "https"
-          ? "https"
-          : "http";
-      backendBaseUrl = `${protocol}://${hostname}`;
+      backendBaseUrl = normalizeBackendBaseUrl(BACKEND_URL);
     }
 
     const targetUrl = `${backendBaseUrl}/api${req.path}`;

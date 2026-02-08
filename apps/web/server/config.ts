@@ -82,7 +82,8 @@ export const UPLOAD_MAX_SIZE =
 export const ALLOWED_EXTENSIONS = (
   process.env.S3_ALLOWED_EXTENSIONS || "jpg,jpeg,png,gif,webp,pdf,doc,docx"
 ).split(",");
-export const BACKEND_URL = process.env.BACKEND_URL || "https://uosjudo.com/api";
+export const BACKEND_URL =
+  process.env.BACKEND_URL || "https://api.uosjudo.com/api";
 export const INTERNAL_API_TOKEN =
   process.env.INTERNAL_API_TOKEN || "jiho-internal-2024";
 export const ALLOWED_HOSTS = (

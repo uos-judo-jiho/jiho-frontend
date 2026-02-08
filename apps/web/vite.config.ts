@@ -17,9 +17,9 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api": {
-        target: "https://api.uosjudo.com",
+        target: process.env.VITE_API_PROXY_TARGET || "http://localhost:4000",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path,
         secure: false,
         ws: true,
       },
