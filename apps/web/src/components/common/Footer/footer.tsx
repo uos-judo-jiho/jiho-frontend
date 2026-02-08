@@ -1,8 +1,8 @@
 import Line from "@/components/layouts/Line";
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
+import { useLatestNews } from "@/features/seo/news/hooks/use-latest-news";
 import { footerData } from "@/shared/lib/assets/data/footer";
-import { Constants } from "@/shared/lib/constant";
 import { cn } from "@/shared/lib/utils";
 import { HTMLProps, ReactNode } from "react";
 import { Link } from "react-router-dom";
@@ -86,6 +86,7 @@ const HyperLink = ({
 };
 
 const Footer = () => {
+  const { lastestNewsYear } = useLatestNews();
   return (
     <footer className="my-8">
       <SheetWrapper>
@@ -152,8 +153,8 @@ const Footer = () => {
           </DescriptionItem>
           <DescriptionItem>
             <HyperLink
-              to={`/news/${Constants.LATEST_NEWS_YEAR}`}
-            >{`${Constants.LATEST_NEWS_YEAR} 지호지로 바로가기`}</HyperLink>
+              to={`/news/${lastestNewsYear}`}
+            >{`${lastestNewsYear} 지호지로 바로가기`}</HyperLink>
           </DescriptionItem>
           {/* 관리자 페이지로 */}
           {/* TODO admin.uosjudo.com */}

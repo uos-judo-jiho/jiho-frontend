@@ -1,22 +1,19 @@
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
+import { useLatestNews } from "@/features/seo/news/hooks/use-latest-news";
 import { Constants } from "@/shared/lib/constant";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import { MoreCard } from "./MoreCard";
 
 const HomeSectionMore = () => {
-  const { data: news } = v1Api.useGetApiV1NewsLatestSuspense(undefined, {
-    query: {
-      select: (response) => response.data.articles,
-    },
-  });
+  const { news } = useLatestNews();
 
-  const { data: trainings } = v1Api.useGetApiV1TrainingsSuspense(undefined, {
+  const { data: trainings } = v2Api.useGetApiV2TrainingsSuspense(undefined, {
     query: {
       select: (response) => response.data.trainingLogs ?? [],
     },
   });
-  const { data: notices } = v1Api.useGetApiV1NoticesSuspense(undefined, {
+  const { data: notices } = v2Api.useGetApiV2NoticesSuspense(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],
     },
