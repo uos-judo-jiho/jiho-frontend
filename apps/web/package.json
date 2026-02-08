@@ -43,6 +43,7 @@
     "compression": "^1.8.1",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.2",
+    "express": "^4.19.2",
     "http-proxy-middleware": "^2.0.7",
     "ignore-styles": "^5.0.1",
     "lucide-react": "^0.477.0",
@@ -56,7 +57,6 @@
     "react-ga": "^3.3.1",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^6.11.1",
-    "react-scripts": "5.0.1",
     "recoil": "^0.7.7",
     "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.1",
@@ -106,6 +106,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://uosjudo.com"
+  }
 }

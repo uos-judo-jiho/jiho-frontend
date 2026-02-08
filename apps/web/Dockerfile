@@ -1,12 +1,16 @@
-# Build stage - 빌드에 필요한 모든 dependencies 설치
+# Build stage - install monorepo dependencies with pnpm
 FROM node:20-alpine AS deps
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
+WORKDIR /repo
+RUN corepack enable
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY apps/web/package.json apps/web/package.json
+COPY packages/api/package.json packages/api/package.json
+RUN pnpm install --frozen-lockfile
 
 # Build stage - 애플리케이션 빌드
 FROM node:20-alpine AS builder
-WORKDIR /app
+WORKDIR /repo
+RUN corepack enable
 
 # Build arguments for environment variables
 ARG VITE_INTERNAL_API_TOKEN
@@ -28,15 +32,17 @@ ENV AWS_S3_BUCKET=$AWS_S3_BUCKET
 ENV S3_UPLOAD_MAX_SIZE=$S3_UPLOAD_MAX_SIZE
 ENV S3_ALLOWED_EXTENSIONS=$S3_ALLOWED_EXTENSIONS
 
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /repo/node_modules ./node_modules
 COPY . .
 
 # Build the application with environment variables
-RUN npm run build
+RUN pnpm -C packages/api generate
+RUN pnpm -C apps/web build
 
 # Production stage - 런타임 dependencies만 설치
 FROM node:20-alpine AS runner
-WORKDIR /app
+WORKDIR /repo
+RUN corepack enable
 
 # Runtime environment variables (server-side only)
 ARG INTERNAL_API_TOKEN
@@ -56,17 +62,17 @@ RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
 # Copy package files and install production dependencies
-COPY package*.json ./
-RUN npm ci --only=production && \
-    npm install compression sirv cross-env && \
-    npm cache clean --force
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY apps/web/package.json apps/web/package.json
+COPY packages/api/package.json packages/api/package.json
+RUN pnpm install --frozen-lockfile --prod --filter @apps/web...
 
 # Copy built application and server files
-COPY --from=builder /app/build ./build
+COPY --from=builder /repo/apps/web/build ./apps/web/build
 # COPY --from=builder /app/index.html ./
 
 # Change ownership to non-root user
-RUN chown -R nodejs:nodejs /app
+RUN chown -R nodejs:nodejs /repo
 USER nodejs
 
 # Set runtime environment variables
@@ -85,4 +91,4 @@ EXPOSE 3000
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm", "run", "start:prod"]
+CMD ["pnpm", "-C", "apps/web", "start:prod"]
