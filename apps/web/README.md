@@ -72,9 +72,9 @@ The server has been refactored to TypeScript for better maintainability. The ser
 - `server/index.ts` - Main entry point
 - `server/config.ts` - Configuration and environment variables
 - `server/middleware/` - Express middleware (logger, security, error handler)
-- `server/routes/` - Route handlers (BFF, upload, SSE)
-- `server/services/` - Business logic (S3 upload, proxy)
-- `server/utils/` - Utility functions (SSE tokens, progress tracking)
+- `server/routes/` - Route handlers (BFF)
+- `server/services/` - Business logic (proxy)
+- `server/utils/` - Utility functions
 - `server/types.ts` - TypeScript type definitions
 
 See `server/README.md` for detailed server documentation.
@@ -94,7 +94,6 @@ See `server/README.md` for detailed server documentation.
 
 - Node.js + Express
 - TypeScript
-- AWS S3 (File Upload)
 - Server-Side Rendering (SSR) with Vite
 
 ## BE
@@ -107,7 +106,6 @@ See `server/README.md` for detailed server documentation.
 
 - aws
   - ec2
-  - s3
 - docker
 - nginx
 - github action

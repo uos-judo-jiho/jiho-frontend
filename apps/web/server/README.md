@@ -14,16 +14,11 @@ server/
 │   ├── security.ts         # Security and authentication middleware
 │   └── error-handler.ts    # Error handling middleware
 ├── routes/                  # Route handlers
-│   ├── bff.ts              # BFF (Backend For Frontend) routes
-│   ├── upload.ts           # File upload routes
-│   └── sse-progress.ts     # Server-Sent Events for upload progress
+│   └── bff.ts              # BFF (Backend For Frontend) routes
 ├── services/                # Business logic services
-│   ├── s3-upload.ts        # S3 upload functionality
-│   ├── proxy.ts            # Backend proxy service
-│   └── multer.ts           # File upload configuration
+│   └── proxy.ts            # Backend proxy service
 └── utils/                   # Utility functions
-    ├── sse-tokens.ts       # SSE token generation and validation
-    └── upload-progress.ts  # Upload progress tracking
+    └── (no upload-related utilities)
 ```
 
 ## Features
@@ -32,7 +27,6 @@ server/
 - **Modular Architecture**: Clear separation of concerns with organized directory structure
 - **SSR Support**: Server-Side Rendering with Vite integration
 - **BFF Pattern**: Backend For Frontend proxy routes
-- **File Upload**: S3 file upload with progress tracking via SSE
 - **Security**: Request validation and authentication middleware
 - **Development Mode**: Hot-reload support with tsx
 
@@ -84,7 +78,6 @@ Server configuration is managed through environment variables:
 
 - `NODE_ENV` - Environment mode (development/production)
 - `PORT` - Server port (default: 3000)
-- `AWS_*` - AWS S3 credentials and configuration
 - `INTERNAL_API_TOKEN` - Internal API authentication token
 - `BACKEND_URL` - Backend API URL
 - `ALLOWED_HOSTS` - Allowed hosts for CORS

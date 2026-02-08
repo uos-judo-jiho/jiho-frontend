@@ -21,23 +21,16 @@ The server is built using a modular architecture pattern with TypeScript for typ
     ┌───────────┼───────────┐          ┌───────────┼───────────┐
     │           │           │          │           │           │
 ┌───▼───┐  ┌───▼────┐  ┌──▼───┐  ┌───▼───┐  ┌───▼────┐  ┌──▼────┐
-│Logger │  │Security│  │Error │  │  BFF  │  │ Upload │  │  SSE  │
-│       │  │        │  │Handler│  │       │  │        │  │Progress│
+│Logger │  │Security│  │Error │  │  BFF  │  │ Proxy │  │  SSR  │
+│       │  │        │  │Handler│  │       │  │Service│  │Handler│
 └───────┘  └────────┘  └──────┘  └───┬───┘  └───┬────┘  └───────┘
                                       │          │
-                         ┌────────────┴──────┬───┴───────┐
-                         │                   │           │
-                    ┌────▼─────┐      ┌─────▼───┐  ┌───▼──────┐
-                    │  Proxy   │      │S3 Upload│  │  Multer  │
-                    │  Service │      │ Service │  │  Config  │
-                    └──────────┘      └─────────┘  └──────────┘
-                                            │
-                                      ┌─────┴─────┐
-                                      │           │
-                                ┌─────▼────┐ ┌───▼──────┐
-                                │SSE Tokens│ │ Progress │
-                                │  Utils   │ │ Tracking │
-                                └──────────┘ └──────────┘
+                         ┌────────────┴──────────┘
+                         │
+                    ┌────▼─────┐
+                    │  Proxy   │
+                    │  Service │
+                    └──────────┘
 ```
 
 ## Request Flow
@@ -87,38 +80,6 @@ Transform Response
 Send Response to Client
 ```
 
-### 3. File Upload Flow
-
-```
-Client Request (POST /_internal/api/upload)
-    ↓
-Express App (index.ts)
-    ↓
-Security Middleware
-    ↓
-Multer Middleware (services/multer.ts)
-    ├─ Validate file type
-    ├─ Check file size
-    └─ Store in memory
-    ↓
-Upload Router (routes/upload.ts)
-    ├─ Generate upload ID
-    ├─ Generate SSE token (utils/sse-tokens.ts)
-    ├─ Return upload ID to client
-    └─ Start background upload
-        ↓
-    S3 Upload Service (services/s3-upload.ts)
-        ├─ Update progress (utils/upload-progress.ts)
-        └─ Upload to AWS S3
-    ↓
-Client connects to SSE endpoint
-    ↓
-SSE Progress Handler (routes/sse-progress.ts)
-    ├─ Validate SSE token
-    ├─ Stream progress updates
-    └─ Close connection on completion
-```
-
 ## Module Responsibilities
 
 ### Core (`index.ts`)
@@ -132,7 +93,6 @@ SSE Progress Handler (routes/sse-progress.ts)
 ### Configuration (`config.ts`)
 
 - Environment variable loading
-- S3 client configuration
 - Constants definition
 - Custom console configuration
 
@@ -140,9 +100,6 @@ SSE Progress Handler (routes/sse-progress.ts)
 
 - TypeScript interfaces
 - Type definitions for:
-  - Upload progress
-  - SSE tokens
-  - S3 responses
   - Console prefixes
 
 ### Middleware Layer
@@ -178,30 +135,7 @@ SSE Progress Handler (routes/sse-progress.ts)
 - Trainings proxy routes
 - Admin proxy routes
 
-#### Upload Routes (`routes/upload.ts`)
-
-- Single file upload
-- Multiple file upload
-- Presigned URL generation
-- Upload configuration
-- Upload cancellation
-
-#### SSE Progress (`routes/sse-progress.ts`)
-
-- Server-Sent Events handler
-- Progress streaming
-- Token validation
-- Connection management
-
 ### Services Layer
-
-#### S3 Upload (`services/s3-upload.ts`)
-
-- AWS S3 integration
-- File upload logic
-- Progress tracking
-- Error handling
-- Presigned URL generation
 
 #### Proxy (`services/proxy.ts`)
 
@@ -210,26 +144,7 @@ SSE Progress Handler (routes/sse-progress.ts)
 - Header management
 - Error handling
 
-#### Multer (`services/multer.ts`)
-
-- File upload configuration
-- File type validation
-- Size limit enforcement
-- Memory storage setup
-
 ### Utils Layer
-
-#### SSE Tokens (`utils/sse-tokens.ts`)
-
-- Token generation
-- Token validation
-- Token expiration
-- Security checks
-
-#### Upload Progress (`utils/upload-progress.ts`)
-
-- Progress state management
-- In-memory tracking
 
 ## Data Flow
 
@@ -247,23 +162,12 @@ Used by all modules
 
 ### State Management
 
-```
-In-Memory Maps
-├─ sseTokenMap (utils/sse-tokens.ts)
-│  └─ uploadId → { token, createdAt, expiresAt, ipAddress, used }
-│
-└─ uploadProgressMap (utils/upload-progress.ts)
-   └─ uploadId → { fileName, progress, status, url, error }
-```
-
 ## Security Layers
 
 1. **Token Authentication**: Custom header `x-jiho-internal` required
 2. **Origin Validation**: Check request origin/referer
 3. **User-Agent Filtering**: Block suspicious agents (curl, wget)
 4. **Content-Type Validation**: Enforce proper content types
-5. **SSE Token System**: One-time tokens for upload progress
-6. **IP Verification**: Match IP address for SSE tokens
 
 ## Error Handling Strategy
 
@@ -283,23 +187,16 @@ Error Handler Middleware
 
 1. **Static Asset Caching**: Production HTML template cached in memory
 2. **Compression**: Gzip compression for production responses
-3. **Connection Pooling**: S3 client reused across requests
-4. **Async Operations**: Background file uploads don't block responses
-5. **Memory Storage**: Files stored in memory (RAM) for faster upload
+3. **Async Operations**: Non-blocking SSR and proxy responses
 
 ## Scalability
 
 ### Horizontal Scaling
 
-- Stateless design (except in-memory maps)
-- For production, consider Redis for:
-  - SSE token storage
-  - Upload progress tracking
+- Stateless design
 
 ### Vertical Scaling
 
-- Memory-based file uploads (configurable limit)
-- S3 direct upload option via presigned URLs
 - Streaming support for large files
 
 ## Monitoring and Debugging
@@ -309,8 +206,7 @@ Error Handler Middleware
 1. Request/Response logging (all requests)
 2. Security rejections (failed auth)
 3. BFF proxy errors (backend failures)
-4. S3 upload errors (AWS issues)
-5. SSE connections (client tracking)
+4. SSR render errors
 
 ### Debug Mode
 
@@ -337,17 +233,13 @@ Set `NODE_ENV=development` for:
 ### Runtime Dependencies
 
 - `express` - Web framework
-- `@aws-sdk/client-s3` - S3 client
-- `multer` - File upload middleware
 - `dotenv` - Environment variables
-- `uuid` - Unique ID generation
 - `compression` - Gzip compression (production)
 - `sirv` - Static file server (production)
 
 ### Development Dependencies
 
 - `@types/express` - Express types
-- `@types/multer` - Multer types
 - `@types/compression` - Compression types
 - `typescript` - TypeScript compiler
 - `tsx` - TypeScript executor (development/local only)

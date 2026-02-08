@@ -15,8 +15,6 @@ import { bffErrorHandler } from "./middleware/error-handler.js";
 import { bffLogger } from "./middleware/logger.js";
 import { bffSecurityMiddleware } from "./middleware/security.js";
 import bffRouter from "./routes/bff.js";
-import { handleSSEProgress } from "./routes/sse-progress.js";
-import uploadRouter from "./routes/upload.js";
 
 const PRERENDERED_DIR = path.resolve("./build/prerendered");
 
@@ -43,14 +41,8 @@ const readPrerenderedHtml = async (routePath: string) => {
 // Create http server
 const app = express();
 
-// SSE endpoint for upload progress (보안 미들웨어 이전에 배치)
-app.get("/_internal/api/upload/progress", handleSSEProgress);
-
 // BFF middleware for internal routes
 app.use("/_internal", (req, res, next) => {
-  if (req.path.startsWith("/api/upload")) {
-    return next();
-  }
   bffSecurityMiddleware(req, res, next);
 });
 app.use("/_internal", bffLogger);
@@ -59,7 +51,6 @@ app.use("/_internal", express.urlencoded({ extended: true, limit: "10mb" }));
 
 // BFF Routes
 app.use("/_internal", bffRouter);
-app.use("/_internal/api", uploadRouter);
 
 // BFF Error handler (must be after routes)
 app.use("/_internal", bffErrorHandler);
@@ -79,8 +70,6 @@ app.use("/api", async (req, res) => {
   try {
     // 백엔드 URL 결정 로직
     let backendBaseUrl: string;
-    const host = req.get("host") || "";
-
     const normalizeBackendBaseUrl = (value: string) =>
       value.replace(/\/api\/?$/, "").replace(/\/$/, "");
 

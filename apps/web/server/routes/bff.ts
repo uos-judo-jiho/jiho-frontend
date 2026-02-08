@@ -1,7 +1,7 @@
 import express, {
+  type NextFunction,
   type Request,
   type Response,
-  type NextFunction,
 } from "express";
 import { proxyToBackend } from "../services/proxy.js";
 
@@ -25,8 +25,6 @@ router.get("/api", (req: Request, res: Response) => {
       notices: "/_internal/api/notices",
       trainings: "/_internal/api/trainings?year=<year>",
       admin: "/_internal/api/admin",
-      upload: "/_internal/api/upload",
-      "upload-url": "/_internal/api/upload-url/:fileName",
     },
   });
 });

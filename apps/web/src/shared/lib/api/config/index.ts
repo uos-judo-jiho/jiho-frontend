@@ -38,20 +38,7 @@ axiosInstance.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
-);
-
-// _internal API 전용 axios 인스턴스 (서버에서 발급받은 토큰 사용)
-const serverInternalToken =
-  import.meta.env.VITE_INTERNAL_API_TOKEN || "jiho-internal-2024";
-
-export const internalAxiosInstance = axios.create({
-  baseURL: "",
-  withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-    "X-Jiho-Internal": serverInternalToken,
   },
-});
+);
 
 export default axiosInstance;
