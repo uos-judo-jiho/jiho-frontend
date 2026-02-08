@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import "@/app/index.css";
+import "@/shared/lib/api/config";
 
 import StandaloneApp from "@/app/StandaloneApp";
 
