@@ -66,6 +66,7 @@
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
     "@babel/register": "^7.23.7",
+    "autoprefixer": "^10.4.20",
     "@tailwindcss/postcss": "^4.0.9",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
