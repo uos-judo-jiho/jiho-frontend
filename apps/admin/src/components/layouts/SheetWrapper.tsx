@@ -61,7 +61,7 @@ function SheetWrapper({
       style={{ paddingTop: `${paddingTop}px` }}
     >
       <div className="flex-1">
-        <nav className="pb-4 text-sm text-neutral-500">
+        <nav className="pb-4 text-md text-neutral-500">
           <ol className="flex flex-wrap items-center gap-2">
             {crumbs.map((segment, index) => {
               const path =
