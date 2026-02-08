@@ -14,7 +14,7 @@ const DescriptionList = ({
   <ul
     className={cn(
       "mr-2 mb-2 flex flex-col gap-2 py-2 sm:p-0 sm:border-none border-t border-theme-light-grey ",
-      className
+      className,
     )}
     {...props}
   />
@@ -28,7 +28,7 @@ const DescriptionItem = ({
   <li
     className={cn(
       "text-sm text-theme-black break-keep-all wrap-break",
-      className
+      className,
     )}
     {...rest}
   >
@@ -70,9 +70,7 @@ const HyperLink = ({
       <a
         href={to}
         target={target}
-        rel={
-          target === "_blank" ? "noopener noreferrer" : undefined
-        }
+        rel={target === "_blank" ? "noopener noreferrer" : undefined}
         className={cn("hover:opacity-60", className)}
       >
         {children}
@@ -160,7 +158,7 @@ const Footer = () => {
           {/* 관리자 페이지로 */}
           <DescriptionItem>
             <HyperLink
-              to={"/admin"}
+              to={"/"}
               reload
               className="text-gray-500 hover:text-gray-600 hover:underline"
             >

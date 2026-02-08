@@ -1,6 +1,4 @@
-import axiosInstance from "@/shared/lib/api/config";
-
-const METHOD_URL = "/api/admin/pictures/";
+import { getPostApiV1AdminPicturesYearMutationOptions } from "@packages/api/_generated/v1/admin";
 
 /**
  * upload picture
@@ -15,17 +13,25 @@ const METHOD_URL = "/api/admin/pictures/";
  */
 export const uploadPicture = async (year: string, imgs: string[]) => {
   try {
-    const res = await axiosInstance({
-      url: `${METHOD_URL}${year}`,
-      method: "POST",
+    const yearNumber = Number(year);
+    if (Number.isNaN(yearNumber)) {
+      throw new Error("유효하지 않은 연도입니다.");
+    }
+
+    const { mutationFn } = getPostApiV1AdminPicturesYearMutationOptions({
+      axios: {
+        withCredentials: true,
+      },
+    });
+
+    await mutationFn({
+      year: yearNumber,
       data: {
         base64Imgs: imgs,
       },
     });
-    if (res) {
-      return true;
-    }
-    return false;
+
+    return true;
   } catch (error) {
     console.error(error);
     return false;

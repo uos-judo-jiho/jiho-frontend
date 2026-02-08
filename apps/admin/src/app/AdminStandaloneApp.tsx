@@ -14,8 +14,7 @@ const AdminStandaloneApp = () => {
     }
   }, []);
 
-  const baseName =
-    (import.meta.env.BASE_URL || "/admin/").replace(/\/$/, "") || "/";
+  const baseName = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") || "/";
 
   return (
     <QueryClientProvider client={queryClient}>

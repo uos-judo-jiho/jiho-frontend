@@ -48,7 +48,7 @@ const initValues: Omit<ArticleInfoType, "id"> = {
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
-    data ?? initValues
+    data ?? initValues,
   );
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
@@ -96,11 +96,11 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleDelete = async (
     id: string,
-    type: "news" | "training" | "notice"
+    type: "news" | "training" | "notice",
   ) => {
     try {
       await deleteBoardMutation.mutateAsync(id);
-      naviagate(`/admin/${type}`);
+      naviagate(`/${type}`);
     } catch (error) {
       console.error(error);
       alert("게시물을 삭제에 실패하였습니다!");
@@ -143,7 +143,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
       }
 
       alert("업로드에 성공하였습니다.");
-      naviagate(`/admin/${type}/${gallery ? "gallery" : ""}`);
+      naviagate(`/${type}/${gallery ? "gallery" : ""}`);
     } catch (error) {
       console.error("upload error:", error);
       alert("업로드에 실패하였습니다.");
@@ -172,7 +172,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagsChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     const tagValue = event.target.value;
     setValues((prev) => {
@@ -184,7 +184,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagAdd = () => {
     const inputElement = document.getElementById(
-      "tagInput"
+      "tagInput",
     ) as HTMLInputElement;
 
     const inputValue = inputElement.value;
@@ -203,7 +203,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleDeleteTagClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    index: number
+    index: number,
   ) => {
     event.preventDefault();
 

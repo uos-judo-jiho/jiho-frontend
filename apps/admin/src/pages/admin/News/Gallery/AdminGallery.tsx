@@ -28,7 +28,7 @@ const AdminGallery = () => {
     <FormContainer title={`지호지 갤러리 관리 (${year}년)`}>
       <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
         <button
-          onClick={() => navigate(`/admin/news/${year}`)}
+          onClick={() => navigate(`/news/${year}`)}
           className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
         >
           ← {year}년 게시판으로 돌아가기
@@ -36,7 +36,7 @@ const AdminGallery = () => {
       </Row>
       <Col gap={20}>
         <Link
-          to={`/admin/news/${year}/gallery/write`}
+          to={`/news/${year}/gallery/write`}
           className="inline-block px-6 py-3 bg-blue-500 text-white rounded no-underline text-sm transition-all mb-5 hover:opacity-90 active:opacity-80 active:scale-[0.98]"
         >
           갤러리 이미지 수정하기

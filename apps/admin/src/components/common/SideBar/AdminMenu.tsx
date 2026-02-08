@@ -10,22 +10,22 @@ const AdminMenu = () => {
         </Link>
       </MenuItem>
       <MenuItem>
-        <Link to={"/admin"}>
+        <Link to={"/"}>
           <MenuItemTitle>어드민 페이지</MenuItemTitle>
         </Link>
       </MenuItem>
       <MenuItem>
-        <Link to={"/admin/training"}>
+        <Link to={"/training"}>
           <MenuItemTitle>훈련 일지</MenuItemTitle>
         </Link>
       </MenuItem>
       <MenuItem>
-        <Link to={"/admin/news"}>
+        <Link to={"/news"}>
           <MenuItemTitle>지호지</MenuItemTitle>
         </Link>
       </MenuItem>
       <MenuItem>
-        <Link to={"/admin/notice"}>
+        <Link to={"/notice"}>
           <MenuItemTitle>공지사항</MenuItemTitle>
         </Link>
       </MenuItem>

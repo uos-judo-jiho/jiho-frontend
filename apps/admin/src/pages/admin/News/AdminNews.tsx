@@ -36,7 +36,7 @@ const AdminNews = () => {
     <FormContainer title={`지호지 관리 (${year}년)`}>
       <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
         <button
-          onClick={() => navigate("/admin/news")}
+          onClick={() => navigate("/news")}
           className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
         >
           ← 년도 선택으로 돌아가기
@@ -44,10 +44,10 @@ const AdminNews = () => {
       </Row>
       <Row justifyContent="space-between">
         <Row gap={12} style={{ width: "auto" }}>
-          <Link to={`/admin/news/${year}/write`}>
+          <Link to={`/news/${year}/write`}>
             <NewArticleButton>새 글쓰기</NewArticleButton>
           </Link>
-          <Link to={`/admin/news/${year}/gallery`}>
+          <Link to={`/news/${year}/gallery`}>
             <NewArticleButton>{year}년 갤러리 보기</NewArticleButton>
           </Link>
         </Row>
@@ -58,7 +58,7 @@ const AdminNews = () => {
       ) : (
         <ListContainer
           datas={articles}
-          targetUrl={`/admin/news/${year}/`}
+          targetUrl={`/news/${year}/`}
           additionalTitle={true}
         />
       )}

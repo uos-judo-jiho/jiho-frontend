@@ -19,7 +19,7 @@ const AdminGalleryIndex = () => {
     <FormContainer title="지호지 갤러리 - 년도 선택">
       <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
         <button
-          onClick={() => navigate("/admin/news")}
+          onClick={() => navigate("/news")}
           className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
         >
           ← 지호지 관리로 돌아가기
@@ -33,7 +33,7 @@ const AdminGalleryIndex = () => {
         <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 mt-5">
           {galleries.map((gallery) => (
             <Link
-              to={`/admin/news/${gallery.year}/gallery`}
+              to={`/news/${gallery.year}/gallery`}
               key={gallery.year}
               style={{ textDecoration: "none" }}
             >

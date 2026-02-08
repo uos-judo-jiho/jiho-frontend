@@ -8,12 +8,16 @@ import { defineConfig } from "vite";
 const srcDir = path.resolve(__dirname, "src");
 
 export default defineConfig({
-  base: "/admin/",
+  base: "/",
   plugins: [tailwindcss(), react()],
+
   resolve: {
     alias: {
       "@": srcDir,
     },
+  },
+  server: {
+    port: 3001,
   },
   build: {
     outDir: "dist",

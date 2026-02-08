@@ -15,12 +15,12 @@ const AdminNotice = () => {
   return (
     <FormContainer title="공지사항 관리">
       <Row justifyContent="space-between">
-        <Link to="/admin/notice/write">
+        <Link to="/notice/write">
           <NewArticleButton>새 글쓰기</NewArticleButton>
         </Link>
         <NewArticleButton onClick={() => refetch()}>새로고침</NewArticleButton>
       </Row>
-      <ListContainer datas={notices} targetUrl={"/admin/notice/"} />
+      <ListContainer datas={notices} targetUrl={"/notice/"} />
     </FormContainer>
   );
 };

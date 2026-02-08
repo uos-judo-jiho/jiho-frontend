@@ -30,7 +30,7 @@ const AdminTrainingLog = () => {
   return (
     <FormContainer title="훈련일지 관리">
       <Row justifyContent="space-between">
-        <Link to="/admin/training/write">
+        <Link to="/training/write">
           <NewArticleButton>새 글쓰기</NewArticleButton>
         </Link>
         <NewArticleButton onClick={() => refreshTraining()}>
@@ -42,7 +42,7 @@ const AdminTrainingLog = () => {
       ) : (
         <ListContainer
           datas={trainings ?? []}
-          targetUrl={"/admin/training/"}
+          targetUrl={"/training/"}
           additionalTitle={true}
         />
       )}
