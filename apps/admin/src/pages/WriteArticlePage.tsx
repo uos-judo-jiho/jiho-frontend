@@ -13,7 +13,7 @@ const WriteArticlePage = () => {
   const year = params.get("year")?.concat(today.slice(4, 10)) ?? today;
 
   const path = pathname.split("/");
-  switch (path[2]) {
+  switch (path[1]) {
     case "training":
       return (
         <>
@@ -22,7 +22,7 @@ const WriteArticlePage = () => {
         </>
       );
     case "news":
-      return path.length > 3 && path[3] === "gallery" ? (
+      return path.length > 2 && path[2] === "gallery" ? (
         <>
           <Title
             title={`${year.slice(0, 4)}년 갤러리 쓰기`}

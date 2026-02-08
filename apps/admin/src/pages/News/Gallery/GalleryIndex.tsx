@@ -4,7 +4,7 @@ import Row from "@/components/layouts/Row";
 import { useAllNewsQuery } from "@/features/api/news/query";
 import { Link, useNavigate } from "react-router-dom";
 
-const AdminGalleryIndex = () => {
+const GalleryIndex = () => {
   const navigate = useNavigate();
   const { data: news = [] } = useAllNewsQuery();
 
@@ -55,4 +55,4 @@ const AdminGalleryIndex = () => {
   );
 };
 
-export default AdminGalleryIndex;
+export default GalleryIndex;

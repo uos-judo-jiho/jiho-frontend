@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useLoginMutation } from "@/features/api/admin/hooks";
+import { useState } from "react";
 
-const AdminLogin = () => {
+const Login = () => {
   const [formState, setFormState] = useState({
     email: "",
     password: "",
@@ -61,4 +61,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default Login;

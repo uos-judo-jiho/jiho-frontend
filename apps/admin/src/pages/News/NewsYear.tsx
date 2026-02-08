@@ -8,7 +8,7 @@ import { v1Api } from "@packages/api";
 import { useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const AdminNews = () => {
+const NewsYear = () => {
   const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
   const {
@@ -66,4 +66,4 @@ const AdminNews = () => {
   );
 };
 
-export default AdminNews;
+export default NewsYear;

@@ -1,12 +1,12 @@
-import AdminLogin from "@/components/admin/form/AdminLogin";
+import Router from "@/app/routers/Router";
+import Login from "@/components/admin/form/Login";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import useSession from "@/recoils/session";
 import { useEffect, useState } from "react";
-import AdminRouter from "../../app/routers/AdminRouter";
 
-const AdminHomePage = () => {
+const HomePage = () => {
   const [isClient, setIsClient] = useState(false);
   const { session } = useSession();
 
@@ -17,7 +17,7 @@ const AdminHomePage = () => {
   if (!isClient) {
     return (
       <>
-        <MyHelmet title="Admin" />
+        <MyHelmet title="관리자" />
         <DefaultLayout>
           <SheetWrapper>
             <div>Loading...</div>
@@ -29,14 +29,12 @@ const AdminHomePage = () => {
 
   return (
     <>
-      <MyHelmet title="Admin" />
+      <MyHelmet title="관리자" />
       <DefaultLayout>
-        <SheetWrapper>
-          {session.isLogin ? <AdminRouter /> : <AdminLogin />}
-        </SheetWrapper>
+        <SheetWrapper>{session.isLogin ? <Router /> : <Login />}</SheetWrapper>
       </DefaultLayout>
     </>
   );
 };
 
-export default AdminHomePage;
+export default HomePage;

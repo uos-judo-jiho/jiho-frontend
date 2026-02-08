@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { MenuItem, MenuItemTitle, MenuList } from "./MenuStyledComponents";
 
-const AdminMenu = () => {
+const Menu = () => {
   return (
     <MenuList>
       <MenuItem>
@@ -33,4 +33,4 @@ const AdminMenu = () => {
   );
 };
 
-export default AdminMenu;
+export default Menu;

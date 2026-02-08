@@ -5,7 +5,7 @@ import Row from "@/components/layouts/Row";
 import { v1Api } from "@packages/api";
 import { Link } from "react-router-dom";
 
-const AdminNotice = () => {
+const Notice = () => {
   const { data: notices = [], refetch } = v1Api.useGetApiV1Notices(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],
@@ -25,4 +25,4 @@ const AdminNotice = () => {
   );
 };
 
-export default AdminNotice;
+export default Notice;

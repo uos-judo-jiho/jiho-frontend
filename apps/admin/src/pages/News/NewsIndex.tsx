@@ -3,7 +3,7 @@ import Col from "@/components/layouts/Col";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { Link } from "react-router-dom";
 
-const AdminNewsIndex = () => {
+const NewsIndex = () => {
   const yearList = vaildNewsYearList().reverse();
 
   return (
@@ -26,4 +26,4 @@ const AdminNewsIndex = () => {
   );
 };
 
-export default AdminNewsIndex;
+export default NewsIndex;

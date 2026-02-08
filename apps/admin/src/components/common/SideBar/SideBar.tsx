@@ -2,7 +2,7 @@ import { CloseIcon } from "@/components/icons";
 import { cn } from "@/shared/lib/utils";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import AdminMenu from "./AdminMenu";
+import Menu from "./Menu";
 
 import { useNavbar } from "../Navbar/NavBar.provider";
 
@@ -73,7 +73,7 @@ const SideBar = () => {
         className="absolute top-3 left-3 w-5 h-5 z-[1] cursor-pointer"
       />
       <nav>
-        <AdminMenu />
+        <Menu />
       </nav>
     </div>,
     document.body,

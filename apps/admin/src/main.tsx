@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 
 import "@/app/index.css";
 
-import AdminStandaloneApp from "@/app/AdminStandaloneApp";
+import StandaloneApp from "@/app/StandaloneApp";
 
 const rootElement = document.getElementById("root");
 
@@ -13,6 +13,6 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <AdminStandaloneApp />
+    <StandaloneApp />
   </StrictMode>,
 );

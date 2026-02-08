@@ -4,7 +4,7 @@ import { Constants } from "@/shared/lib/constant";
 import { v1Api } from "@packages/api";
 import { useParams } from "react-router-dom";
 
-const AdminTrainingLogDetail = () => {
+const TrainingLogDetail = () => {
   const { id } = useParams();
 
   const { data: trainings = [] } = v1Api.useGetApiV1Trainings(undefined, {
@@ -22,4 +22,4 @@ const AdminTrainingLogDetail = () => {
   );
 };
 
-export default AdminTrainingLogDetail;
+export default TrainingLogDetail;

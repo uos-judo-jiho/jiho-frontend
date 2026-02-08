@@ -4,7 +4,7 @@ import { Constants } from "@/shared/lib/constant";
 import { v1Api } from "@packages/api";
 import { useParams } from "react-router-dom";
 
-const AdminNoticeDetail = () => {
+const NoticeDetail = () => {
   const { id } = useParams();
   const { data: notices = [] } = v1Api.useGetApiV1Notices(undefined, {
     query: {
@@ -22,4 +22,4 @@ const AdminNoticeDetail = () => {
   );
 };
 
-export default AdminNoticeDetail;
+export default NoticeDetail;

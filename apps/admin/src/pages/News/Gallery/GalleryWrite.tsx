@@ -1,8 +1,8 @@
-import { useParams } from "react-router-dom";
-import NewsGalleryFrom from "@/components/admin/form/NewsGalleryFrom";
 import FormContainer from "@/components/admin/form/FormContainer";
+import NewsGalleryFrom from "@/components/admin/form/NewsGalleryFrom";
+import { useParams } from "react-router-dom";
 
-const AdminGalleryWrite = () => {
+const GalleryWrite = () => {
   const { year } = useParams<{ year: string }>();
 
   if (!year) {
@@ -20,4 +20,4 @@ const AdminGalleryWrite = () => {
   );
 };
 
-export default AdminGalleryWrite;
+export default GalleryWrite;

@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
 import { ArrowForwardIosIcon } from "@/components/icons";
+import { Link } from "react-router-dom";
 
-type AdminNavItemProps = {
+type NavItemProps = {
   linkTo: string;
   title: string;
 };
 
-function AdminNavItem({ linkTo, title }: AdminNavItemProps) {
+function NavItem({ linkTo, title }: NavItemProps) {
   return (
     <div className="p-2.5 flex items-center">
       <Link to={linkTo}>
@@ -19,4 +19,4 @@ function AdminNavItem({ linkTo, title }: AdminNavItemProps) {
   );
 }
 
-export default AdminNavItem;
+export default NavItem;

@@ -7,7 +7,7 @@ import { v1Api } from "@packages/api";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-const AdminTrainingLog = () => {
+const TrainingLog = () => {
   const {
     data,
     refetch: refreshTraining,
@@ -50,4 +50,4 @@ const AdminTrainingLog = () => {
   );
 };
 
-export default AdminTrainingLog;
+export default TrainingLog;

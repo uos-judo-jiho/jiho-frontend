@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-type AdminHelmetProps = {
+type HelmetProps = {
   title: string;
 };
 
@@ -8,7 +8,7 @@ type AdminHelmetProps = {
  * Helmet component for admin pages
  * Adds noindex, nofollow meta tags to prevent crawling
  */
-const AdminHelmet = ({ title }: AdminHelmetProps) => {
+const Helmet = ({ title }: HelmetProps) => {
   useEffect(() => {
     if (typeof document === "undefined") return;
 
@@ -36,4 +36,4 @@ const AdminHelmet = ({ title }: AdminHelmetProps) => {
   return null;
 };
 
-export default AdminHelmet;
+export default Helmet;

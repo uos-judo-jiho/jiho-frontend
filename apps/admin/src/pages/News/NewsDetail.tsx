@@ -6,7 +6,7 @@ import { v1Api } from "@packages/api";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
-const AdminNewsDetail = () => {
+const NewsDetail = () => {
   const { year, id } = useParams<{ year: string; id: string }>();
 
   const { data: response } = v1Api.useGetApiV1NewsYear(Number(year), {
@@ -33,4 +33,4 @@ const AdminNewsDetail = () => {
   );
 };
 
-export default AdminNewsDetail;
+export default NewsDetail;

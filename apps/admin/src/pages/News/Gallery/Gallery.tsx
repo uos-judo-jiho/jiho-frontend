@@ -7,7 +7,7 @@ import { v1Api } from "@packages/api";
 import { useMemo } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-const AdminGallery = () => {
+const Gallery = () => {
   const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
   const { data: response } = v1Api.useGetApiV1NewsYear(Number(year), {
@@ -53,4 +53,4 @@ const AdminGallery = () => {
   );
 };
 
-export default AdminGallery;
+export default Gallery;
