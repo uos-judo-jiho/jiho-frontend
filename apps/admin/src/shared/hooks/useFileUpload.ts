@@ -232,6 +232,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
         const totalCount = files.length;
 
         for (const file of files) {
+          const completedBeforeCurrent = completedCount;
           const response = await uploadImage(file, {
             signal: controller.signal,
             onUploadProgress: (event) => {
@@ -239,7 +240,10 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
               const overallProgress = Math.min(
                 99,
                 Math.round(
-                  ((completedCount + currentFileProgress / 100) / totalCount) *
+                  (
+                    (completedBeforeCurrent + currentFileProgress / 100) /
+                    totalCount
+                  ) *
                     100,
                 ),
               );
@@ -335,9 +339,10 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
   );
 
   useEffect(() => {
+    const controllers = controllersRef.current;
     return () => {
-      controllersRef.current.forEach((controller) => controller.abort());
-      controllersRef.current.clear();
+      controllers.forEach((controller) => controller.abort());
+      controllers.clear();
     };
   }, []);
 

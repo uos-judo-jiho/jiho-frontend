@@ -17,6 +17,7 @@
     "build:server-ts": "tsc -p tsconfig.server.json",
     "build:prerender": "node script/prerender.js",
     "build:docker": "npm run clean && sh script/docker-build-local.sh",
+    "lint": "eslint src --ext .ts,.tsx,.js --max-warnings=0",
     "orval": "pnpm --filter @packages/api generate",
     "preview": "cross-env NODE_ENV=production tsx server/index.ts",
     "start": "npm run preview",

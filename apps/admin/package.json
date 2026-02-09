@@ -9,7 +9,8 @@
     "build": "npm run type-check && vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx,.js --max-warnings=0"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
