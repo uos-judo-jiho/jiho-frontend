@@ -10,6 +10,7 @@ on:
       - "pnpm-workspace.yaml"
       - "package.json"
       - ".github/workflows/deploy-admin.yml"
+  workflow_dispatch:
 
 permissions:
   contents: read

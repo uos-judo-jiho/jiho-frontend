@@ -1,9 +1,9 @@
 #!/bin/bash
 node script/sitemap.js
 
-npm run clean
-npm run orval
-npm run build:client
-npm run build:server
-npm run build:server-ts
-npm run build:prerender
+pnpm run clean
+NODE_ENV=production pnpm run orval
+pnpm run build:client
+pnpm run build:server
+pnpm run build:server-ts
+pnpm run build:prerender
