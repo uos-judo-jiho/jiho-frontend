@@ -9,7 +9,6 @@ on:
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "package.json"
-      - ".github/workflows/deploy-web.yml"
   workflow_dispatch:
 
 permissions:

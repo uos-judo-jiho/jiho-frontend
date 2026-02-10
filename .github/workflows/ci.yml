@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches-ignore: ["main"]
   pull_request:
 
 jobs:
@@ -19,6 +20,7 @@ jobs:
         with:
           node-version: "20"
           cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
