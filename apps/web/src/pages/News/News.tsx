@@ -10,7 +10,7 @@ import Title from "@/components/layouts/Title";
 import { StructuredData, createImageGalleryData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import { useQueries } from "@tanstack/react-query";
 
 const NewsPage = () => {
@@ -18,7 +18,7 @@ const NewsPage = () => {
     queries: vaildNewsYearList()
       .reverse()
       .map((year) =>
-        v1Api.getGetApiV1NewsYearQueryOptions(Number(year), { limit: 2 }),
+        v2Api.getGetApiV2NewsYearQueryOptions(Number(year), { limit: 2 }),
       ),
   });
 

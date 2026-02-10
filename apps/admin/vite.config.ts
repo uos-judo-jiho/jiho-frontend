@@ -8,11 +8,24 @@ import { defineConfig } from "vite";
 const srcDir = path.resolve(__dirname, "src");
 
 export default defineConfig({
-  base: "/admin/",
+  base: "/",
   plugins: [tailwindcss(), react()],
+
   resolve: {
     alias: {
       "@": srcDir,
+    },
+  },
+  server: {
+    port: 3001,
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_PROXY_TARGET || "http://localhost:4000",
+        changeOrigin: true,
+        rewrite: (path) => path,
+        secure: false,
+        ws: true,
+      },
     },
   },
   build: {

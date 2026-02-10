@@ -11,8 +11,6 @@ import {
 } from "../StyledComponent/FormContainer";
 
 import { Input } from "@/components/ui/input";
-import { useFileUpload } from "@/shared/hooks/useFileUpload";
-import { UploadProgress } from "./UploadProgress";
 
 type ImageUploaderProps = {
   setValues: (images: (prev: string[]) => string[]) => void;
@@ -48,18 +46,6 @@ const ImageUploader = ({
     convertFileFromSrc();
   }, [data, previewImg]);
 
-  // 업로드 완료 콜백: URL을 받아서 직접 업데이트
-  const handleUploadComplete = (_uploadId: string, url: string) => {
-    setValues((prev) => {
-      return [...prev, url];
-    });
-  };
-
-  const { uploadMultipleFiles, uploadsArray, cancelUpload, clearCompleted } =
-    useFileUpload({
-      onComplete: handleUploadComplete,
-    });
-
   const insertImg = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isFull) {
       alert(`사진은 최대 ${imageLimit}장까지 추가할 수 있습니다.`);
@@ -77,12 +63,12 @@ const ImageUploader = ({
 
     const fileList = Array.from(event.target.files).slice(
       0,
-      imageLimit - img.length
+      imageLimit - img.length,
     );
 
     // 미리보기용 base64 생성 (즉시 표시)
     const base64Promises: Promise<string>[] = fileList.map((file) =>
-      toBase64(file)
+      toBase64(file),
     );
 
     try {
@@ -90,9 +76,6 @@ const ImageUploader = ({
       setPreviewImg([...previewImg, ...urlList]);
       setImg([...img, ...fileList]);
       setValues((prev) => [...prev, ...urlList]);
-
-      // S3에 비동기 업로드 시작 (UI 차단 없음)
-      await uploadMultipleFiles(fileList, "images");
     } catch (error) {
       console.error("Error:", error);
       alert("이미지 업로드 중 오류가 발생했습니다.");
@@ -101,7 +84,7 @@ const ImageUploader = ({
 
   const deleteImg = (
     event: React.MouseEvent<HTMLButtonElement>,
-    index: number
+    index: number,
   ) => {
     event.preventDefault();
 
@@ -114,13 +97,7 @@ const ImageUploader = ({
     setImg([...imgArr]);
     setPreviewImg([...imgNameArr]);
 
-    // 업로드된 URL에서도 제거하고 부모 컴포넌트에 전달
-    if (!deletedUrl.startsWith("data:")) {
-      setValues((prev) => {
-        const newUrls = prev.filter((url) => url !== deletedUrl);
-        return newUrls;
-      });
-    }
+    setValues((prev) => prev.filter((url) => url !== deletedUrl));
   };
 
   return (
@@ -135,13 +112,6 @@ const ImageUploader = ({
         name="file"
         onChange={insertImg}
         multiple
-      />
-
-      {/* 업로드 진행 상황 표시 */}
-      <UploadProgress
-        uploads={uploadsArray}
-        onCancel={cancelUpload}
-        clearUploads={clearCompleted}
       />
 
       <PreviewContainer>

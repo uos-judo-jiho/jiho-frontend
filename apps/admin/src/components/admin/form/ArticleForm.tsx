@@ -1,18 +1,8 @@
 import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
-import {
-  useCreateNewsBoard,
-  useCreateNoticeBoard,
-  useCreateTrainingBoard,
-  useDeleteNewsBoard,
-  useDeleteNoticeBoard,
-  useDeleteTrainingBoard,
-  useUpdateNewsBoard,
-  useUpdateNoticeBoard,
-  useUpdateTrainingBoard,
-} from "@/features/api/admin/board/query";
-import { uploadPicture } from "@/features/api/admin/pictures";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import { v2Admin } from "@packages/api";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageUploader from "./ImageUploader/ImageUploader";
@@ -47,60 +37,78 @@ const initValues: Omit<ArticleInfoType, "id"> = {
 };
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
+  console.log(data);
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
-    data ?? initValues
+    data ?? initValues,
   );
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
   const naviagate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const queryKeyByType = {
+    news: "news",
+    training: "trainings",
+    notice: "notices",
+  } as const;
 
   const isNew = !data;
 
   // Mutation hooks - call all hooks unconditionally (React Hook rule)
-  const createNewsMutation = useCreateNewsBoard();
-  const updateNewsMutation = useUpdateNewsBoard();
-  const deleteNewsMutation = useDeleteNewsBoard();
+  const createBoardMutation = v2Admin.usePostApiV2AdminBoard({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [queryKeyByType[type]] });
+      },
+    },
+    axios: {
+      withCredentials: true,
+    },
+  });
 
-  const createTrainingMutation = useCreateTrainingBoard();
-  const updateTrainingMutation = useUpdateTrainingBoard();
-  const deleteTrainingMutation = useDeleteTrainingBoard();
+  const updateBoardMutation = v2Admin.usePutApiV2AdminBoardBoardId({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [queryKeyByType[type]] });
+      },
+    },
+    axios: {
+      withCredentials: true,
+    },
+  });
 
-  const createNoticeMutation = useCreateNoticeBoard();
-  const updateNoticeMutation = useUpdateNoticeBoard();
-  const deleteNoticeMutation = useDeleteNoticeBoard();
+  const deleteBoardMutation = v2Admin.useDeleteApiV2AdminBoardBoardId({
+    mutation: {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [queryKeyByType[type]] });
+      },
+    },
+    axios: {
+      withCredentials: true,
+    },
+  });
 
-  // Select appropriate mutation based on board type
-  const createBoardMutation =
-    type === "news"
-      ? createNewsMutation
-      : type === "training"
-        ? createTrainingMutation
-        : createNoticeMutation;
-
-  const updateBoardMutation =
-    type === "news"
-      ? updateNewsMutation
-      : type === "training"
-        ? updateTrainingMutation
-        : updateNoticeMutation;
-
-  const deleteBoardMutation =
-    type === "news"
-      ? deleteNewsMutation
-      : type === "training"
-        ? deleteTrainingMutation
-        : deleteNoticeMutation;
+  const uploadPicturesMutation = v2Admin.usePostApiV2AdminPicturesYear({
+    axios: {
+      withCredentials: true,
+    },
+  });
 
   const handleSubmitOpen = () => setIsSubmitOpen(true);
 
   const handleDelete = async (
-    id: string,
-    type: "news" | "training" | "notice"
+    id: string | number,
+    type: "news" | "training" | "notice",
   ) => {
     try {
-      await deleteBoardMutation.mutateAsync(id);
-      naviagate(`/admin/${type}`);
+      const boardId = Number(id);
+      if (Number.isNaN(boardId)) {
+        throw new Error("유효하지 않은 게시글 ID입니다.");
+      }
+
+      await deleteBoardMutation.mutateAsync({ boardId });
+      naviagate(`/${type}`);
     } catch (error) {
       console.error(error);
       alert("게시물을 삭제에 실패하였습니다!");
@@ -112,38 +120,53 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
     try {
       if (gallery) {
-        await uploadPicture(values.dateTime.slice(0, 4), values.imgSrcs);
+        const yearNumber = Number(values.dateTime.slice(0, 4));
+        if (Number.isNaN(yearNumber)) {
+          throw new Error("유효하지 않은 연도입니다.");
+        }
+
+        await uploadPicturesMutation.mutateAsync({
+          year: yearNumber,
+          data: {
+            base64Imgs: values.imgSrcs,
+          },
+        });
       } else {
         if (isNew) {
           await createBoardMutation.mutateAsync({
-            articleInfo: {
+            data: {
               title: values.title,
               author: values.author,
-              description: values.description,
+              boardType: type,
               dateTime: values.dateTime,
+              description: values.description,
               tags: values.tags,
-              imgSrcs: values.imgSrcs,
+              base64Imgs: values.imgSrcs,
             },
-            boardType: type,
           });
         } else {
+          const boardId = Number(data.id);
+          if (Number.isNaN(boardId)) {
+            throw new Error("유효하지 않은 게시글 ID입니다.");
+          }
+
           await updateBoardMutation.mutateAsync({
-            articleInfo: {
-              id: data.id,
+            boardId,
+            data: {
               title: values.title,
               author: values.author,
-              description: values.description,
+              boardType: type,
               dateTime: values.dateTime,
+              description: values.description,
               tags: values.tags,
-              imgSrcs: values.imgSrcs,
+              base64Imgs: values.imgSrcs,
             },
-            boardType: type,
           });
         }
       }
 
       alert("업로드에 성공하였습니다.");
-      naviagate(`/admin/${type}/${gallery ? "gallery" : ""}`);
+      naviagate(`/${type}/${gallery ? "gallery" : ""}`);
     } catch (error) {
       console.error("upload error:", error);
       alert("업로드에 실패하였습니다.");
@@ -172,7 +195,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagsChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    index: number
+    index: number,
   ) => {
     const tagValue = event.target.value;
     setValues((prev) => {
@@ -184,7 +207,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleTagAdd = () => {
     const inputElement = document.getElementById(
-      "tagInput"
+      "tagInput",
     ) as HTMLInputElement;
 
     const inputValue = inputElement.value;
@@ -203,7 +226,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleDeleteTagClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    index: number
+    index: number,
   ) => {
     event.preventDefault();
 

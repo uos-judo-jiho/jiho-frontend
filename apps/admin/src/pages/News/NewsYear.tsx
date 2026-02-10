@@ -1,109 +1,78 @@
-import SkeletonItem from "@/components/common/Skeletons/SkeletonItem";
-import DefaultLayout from "@/components/layouts/DefaultLayout";
-import SheetWrapper from "@/components/layouts/SheetWrapper";
-import Title from "@/components/layouts/Title";
-import NewsIndex from "@/components/News/NewsIndex";
-import { StructuredData, createImageGalleryData } from "@/features/seo";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
-import { normalizeNewsResponse } from "@/shared/lib/api/news";
-import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
-import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
-import { v1Api } from "@packages/api";
-import { useMemo } from "react";
-import { useParams } from "react-router-dom";
-import NotFound from "../NotFound";
+import FormContainer from "@/components/admin/form/FormContainer";
+import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
+import Loading from "@/components/common/Skeletons/Loading";
+import ListContainer from "@/components/layouts/ListContainer";
+import Row from "@/components/layouts/Row";
+import { v2Api } from "@packages/api";
+import { startTransition, Suspense } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-const NewsYear = () => {
-  const { id, index } = useParams<NewsParamsType>();
+type NewsYearContentProps = {
+  year: string;
+};
 
-  const { data: response, isLoading } = v1Api.useGetApiV1NewsYear(Number(id), {
-    query: {
-      enabled: Boolean(id),
-      select: (result) => result.data,
+const NewsYearContent = ({ year }: NewsYearContentProps) => {
+  const { data: newsData, refetch } = v2Api.useGetApiV2NewsYearSuspense(
+    Number(year),
+    undefined,
+    {
+      query: {
+        select: (response) => response.data,
+      },
     },
-  });
-
-  const news = useMemo(
-    () => normalizeNewsResponse(response, id ?? ""),
-    [response, id],
   );
 
-  // SSG-friendly: 뉴스 데이터가 없어도 기본 메타 정보 제공
-  const metaDescription = news
-    ? [
-        news.year,
-        news.articles.at(0)?.title,
-        news.articles.at(0)?.description.slice(0, 140),
-      ].join(" | ")
-    : `${id}년 서울시립대학교 유도부 지호지`;
-
-  const metaImgUrl = news?.articles.at(0)?.imgSrcs.at(0);
-
-  // Create structured data for image gallery
-  const structuredData = useMemo(() => {
-    if (!news || !news.articles || news.articles.length === 0) {
-      return null;
-    }
-
-    const currentUrl =
-      typeof window !== "undefined"
-        ? window.location.href
-        : `https://uosjudo.com/news/${id}`;
-
-    // Collect all images from all articles
-    const allImages = news.articles.flatMap((article) =>
-      article.imgSrcs.slice(0, 5).map((imgSrc, imgIdx) => ({
-        url: imgSrc,
-        caption: `${article.title} - ${imgIdx + 1}`,
-        datePublished: article.dateTime
-          ? new Date(article.dateTime).toISOString()
-          : undefined,
-      })),
-    );
-
-    return createImageGalleryData({
-      name: `${id}년 서울시립대학교 유도부 지호지`,
-      description: metaDescription,
-      url: currentUrl,
-      images: allImages.slice(0, 30), // Limit to 30 images for performance
-    });
-  }, [news, id, metaDescription]);
-
-  if (!id || !vaildNewsYearList().includes(id)) {
-    return <NotFound />;
-  }
+  const articles = newsData?.articles || [];
 
   return (
-    <div>
-      <MyHelmet
-        title="News"
-        description={metaDescription}
-        imgUrl={metaImgUrl}
+    <>
+      <Row justifyContent="space-between">
+        <Row gap={12} style={{ width: "auto" }}>
+          <Link to={`/news/${year}/write`}>
+            <NewArticleButton>새 글쓰기</NewArticleButton>
+          </Link>
+          <Link to={`/news/${year}/gallery`}>
+            <NewArticleButton>{year}년 갤러리 보기</NewArticleButton>
+          </Link>
+        </Row>
+        <NewArticleButton
+          onClick={() => {
+            startTransition(() => {
+              void refetch();
+            });
+          }}
+        >
+          새로고침
+        </NewArticleButton>
+      </Row>
+
+      <ListContainer
+        datas={articles}
+        targetUrl={`/news/${year}/`}
+        additionalTitle={true}
       />
-      {structuredData && <StructuredData data={structuredData} />}
-      <DefaultLayout>
-        <SheetWrapper>
-          <Title title={`${id}년 지호지`} color="black" />
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <SkeletonItem key={index}>
-                  <div className="sm:h-[320px] h-[400px] w-full" />
-                </SkeletonItem>
-              ))}
-            </div>
-          ) : (
-            <NewsIndex
-              articles={news?.articles || []}
-              images={news?.images || []}
-              selectedIndex={parseInt(index as string)}
-              index={index ?? ""}
-              year={id}
-            />
-          )}
-        </SheetWrapper>
-      </DefaultLayout>
-    </div>
+    </>
+  );
+};
+
+const NewsYear = () => {
+  const navigate = useNavigate();
+  const { year } = useParams<{ year: string }>();
+
+  return (
+    <FormContainer title={`지호지 관리 (${year}년)`}>
+      <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
+        <button
+          onClick={() => navigate("/news")}
+          className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
+        >
+          ← 년도 선택으로 돌아가기
+        </button>
+      </Row>
+      <Suspense fallback={<Loading loading />}>
+        <NewsYearContent year={year ?? ""} />
+      </Suspense>
+    </FormContainer>
   );
 };
 

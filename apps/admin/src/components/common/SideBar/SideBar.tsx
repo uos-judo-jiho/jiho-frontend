@@ -1,11 +1,8 @@
 import { CloseIcon } from "@/components/icons";
 import { cn } from "@/shared/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useLocation } from "react-router-dom";
-import AdminMenu from "./AdminMenu";
-import ClientMenu from "./ClientMenu";
-import { SelectedType } from "./MenuStyledComponents";
+import Menu from "./Menu";
 
 import { useNavbar } from "../Navbar/NavBar.provider";
 
@@ -16,18 +13,10 @@ const SideBar = () => {
 
   const outside = useRef<any>();
 
-  const location = useLocation();
-
-  const [selected, setSelected] = useState<[SelectedType, SelectedType]>([
-    "closed",
-    "closed",
-  ]);
-
   const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> =
     useRef(null);
 
   const toggleSide = () => {
-    setSelected(["closed", "closed"]);
     setOpen(false);
   };
 
@@ -50,7 +39,6 @@ const SideBar = () => {
 
     const handlerOutside = (e: any) => {
       if (!outside.current.contains(e.target)) {
-        setSelected(["closed", "closed"]);
         setOpen(false);
       }
     };
@@ -76,7 +64,7 @@ const SideBar = () => {
         "fixed -left-full top-0",
         "transition-all duration-500",
         "max-[539px]:min-w-0 max-[539px]:w-full",
-        open && "!left-0"
+        open && "!left-0",
       )}
     >
       <CloseIcon
@@ -85,14 +73,10 @@ const SideBar = () => {
         className="absolute top-3 left-3 w-5 h-5 z-[1] cursor-pointer"
       />
       <nav>
-        {location.pathname.includes("/admin") ? (
-          <AdminMenu />
-        ) : (
-          <ClientMenu selected={selected} setSelected={setSelected} />
-        )}
+        <Menu />
       </nav>
     </div>,
-    document.body
+    document.body,
   );
 };
 

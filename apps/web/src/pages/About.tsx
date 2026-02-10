@@ -1,4 +1,4 @@
-import HomeAwards from "@/components/Home/Info/HomeAwards";
+import { HomeAwards } from "@/components/Home/Info/HomeAwards";
 import HomeInfo from "@/components/Home/Info/HomeInfo";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";

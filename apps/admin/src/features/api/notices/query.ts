@@ -1,1 +1,0 @@
-export { useNoticesQuery } from "./useNoticesQuery";

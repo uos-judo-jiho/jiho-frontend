@@ -1,31 +1,28 @@
-import DefaultLayout from "@/components/layouts/DefaultLayout";
-import Line from "@/components/layouts/Line";
+import FormContainer from "@/components/admin/form/FormContainer";
+import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormContainer";
 import ListContainer from "@/components/layouts/ListContainer";
-import SheetWrapper from "@/components/layouts/SheetWrapper";
-import Title from "@/components/layouts/Title";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
-import { Constants } from "@/shared/lib/constant";
-import { v1Api } from "@packages/api";
+import Row from "@/components/layouts/Row";
+import { v2Api } from "@packages/api";
+import { Link } from "react-router-dom";
 
-function Notice() {
-  const { data: notices = [] } = v1Api.useGetApiV1Notices(undefined, {
+const Notice = () => {
+  const { data: notices = [], refetch } = v2Api.useGetApiV2Notices(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],
     },
   });
 
   return (
-    <>
-      <MyHelmet title="Notice" />
-      <DefaultLayout>
-        <SheetWrapper>
-          <Title title={"공지사항"} color={Constants.BLACK_COLOR} />
-          <Line margin="1rem 0" borderColor={Constants.GREY_COLOR} />
-          <ListContainer datas={notices} targetUrl={"/notice/"} />
-        </SheetWrapper>
-      </DefaultLayout>
-    </>
+    <FormContainer title="공지사항 관리">
+      <Row justifyContent="space-between">
+        <Link to="/notice/write">
+          <NewArticleButton>새 글쓰기</NewArticleButton>
+        </Link>
+        <NewArticleButton onClick={() => refetch()}>새로고침</NewArticleButton>
+      </Row>
+      <ListContainer datas={notices} targetUrl={"/notice/"} />
+    </FormContainer>
   );
-}
+};
 
 export default Notice;

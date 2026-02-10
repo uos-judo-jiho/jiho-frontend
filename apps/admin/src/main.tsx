@@ -2,8 +2,9 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import "@/app/index.css";
+import "@/shared/lib/api/config";
 
-import AdminStandaloneApp from "@/app/AdminStandaloneApp";
+import StandaloneApp from "@/app/StandaloneApp";
 
 const rootElement = document.getElementById("root");
 
@@ -13,6 +14,6 @@ if (!rootElement) {
 
 createRoot(rootElement).render(
   <StrictMode>
-    <AdminStandaloneApp />
+    <StandaloneApp />
   </StrictMode>,
 );

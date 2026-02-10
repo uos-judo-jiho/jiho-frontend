@@ -8,8 +8,6 @@
   "exports": {
     ".": "./src/index.ts",
     "./model": "./src/model.ts",
-    "./_generated/v1/admin": "./src/_generated/v1/admin/index.ts",
-    "./_generated/v1/api": "./src/_generated/v1/api/index.ts",
     "./_generated/v2/admin": "./src/_generated/v2/admin/index.ts",
     "./_generated/v2/api": "./src/_generated/v2/api/index.ts"
   },

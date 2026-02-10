@@ -1,10 +1,10 @@
 import { Constants } from "@/shared/lib/constant";
-import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import { v2ApiModel } from "@packages/api/model";
 import { Link } from "react-router-dom";
 import Line from "./Line";
 
 type ListContainerProps = {
-  datas: Partial<ArticleInfoType>[];
+  datas: Partial<v2ApiModel.GetApiV2NewsYear200ArticlesItem>[];
   targetUrl: string;
   additionalTitle?: boolean;
 };

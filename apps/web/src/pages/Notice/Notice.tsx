@@ -5,10 +5,10 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { Constants } from "@/shared/lib/constant";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 
 function Notice() {
-  const { data: notices = [] } = v1Api.useGetApiV1Notices(undefined, {
+  const { data: notices = [] } = v2Api.useGetApiV2Notices(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],
     },

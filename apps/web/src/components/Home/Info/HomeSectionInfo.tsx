@@ -4,7 +4,7 @@ import BGImageWebp from "@/shared/lib/assets/images/background-img-event.webp";
 import { MobileRowColLayout } from "@/components/layouts/MobileRowColLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import HomeSectionBG from "../HomeSectionBG";
-import HomeAwards from "./HomeAwards";
+import { HomeAwards } from "./HomeAwards";
 import HomeInfo from "./HomeInfo";
 
 function HomeSectionInfo() {

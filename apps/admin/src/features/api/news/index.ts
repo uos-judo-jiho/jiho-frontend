@@ -1,1 +1,0 @@
-export { getNews } from "./client";

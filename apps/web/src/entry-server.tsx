@@ -1,5 +1,4 @@
-import { awardsData } from "@/shared/lib/assets/data/awards";
-import { v1Api } from "@packages/api";
+import { v2Api } from "@packages/api";
 import {
   QueryClient,
   QueryClientProvider,
@@ -9,7 +8,6 @@ import axios from "axios";
 import { PassThrough } from "node:stream";
 import { renderToPipeableStream } from "react-dom/server";
 import { StaticRouter } from "react-router-dom/server";
-import { RecoilRoot } from "recoil";
 import AppRouter from "./app/routers/AppRouter";
 import { HelmetContext } from "./features/seo/helmet/MyHelmet";
 import { StructuredDataContext } from "./features/seo/StructuredData";
@@ -62,13 +60,15 @@ export async function render(url: string) {
 
   console.log("[SSR] Rendering URL:", url);
 
+  let awardsForMeta: { title: string }[] = [];
+
   // Prefetch data based on route
   try {
     // Match photo routes: /photo or /photo/:id
     const photoMatch = url.match(/^\/photo/);
     if (photoMatch) {
       console.log("[SSR] Prefetching trainings for photo page");
-      const trainingOptions = v1Api.getGetApiV1TrainingsQueryOptions();
+      const trainingOptions = v2Api.getGetApiV2TrainingsQueryOptions();
       const trainingsResponse = await queryClient.fetchQuery(trainingOptions);
       const trainings = trainingsResponse.data.trainingLogs ?? [];
       console.log("[SSR] Prefetched trainings count:", trainings.length);
@@ -84,7 +84,7 @@ export async function render(url: string) {
       console.log("[SSR] Prefetching latest news for news root page");
 
       const allNewsQueryPromises = vaildNewsYearList().map(async (year) => {
-        const newsOptions = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
+        const newsOptions = v2Api.getGetApiV2NewsYearQueryOptions(Number(year));
         const newsResponse = await queryClient.fetchQuery(newsOptions);
         const data = normalizeNewsResponse(newsResponse.data, year);
         console.log(
@@ -98,7 +98,7 @@ export async function render(url: string) {
     } else if (newsMatch) {
       const year = newsMatch[1];
       console.log("[SSR] Prefetching news for year:", year);
-      const newsOptions = v1Api.getGetApiV1NewsYearQueryOptions(Number(year));
+      const newsOptions = v2Api.getGetApiV2NewsYearQueryOptions(Number(year));
       const newsResponse = await queryClient.fetchQuery(newsOptions);
       const data = normalizeNewsResponse(newsResponse.data, year);
       console.log("[SSR] Prefetched news:", data?.year || "Not found");
@@ -106,6 +106,14 @@ export async function render(url: string) {
 
     // Add more route-specific prefetching as needed
     // e.g., notices, etc.
+
+    if (url === "/") {
+      console.log("[SSR] Prefetching awards for home page");
+      const awardsOptions = v2Api.getGetApiV2AwardsQueryOptions();
+      const awardsResponse = await queryClient.fetchQuery(awardsOptions);
+      awardsForMeta = awardsResponse.data.awards ?? [];
+      console.log("[SSR] Prefetched awards count:", awardsForMeta.length);
+    }
   } catch (error) {
     // Always log errors even in production
     console.error("[SSR] Prefetch error:", error);
@@ -114,9 +122,10 @@ export async function render(url: string) {
 
   // Helmet data collector for SSR
   // Default metadata for home page
-  const defaultDescription = awardsData.awards
-    .map((award) => award.title)
-    .join(", ");
+  const defaultDescription =
+    awardsForMeta.length > 0
+      ? awardsForMeta.map((award) => award.title).join(", ")
+      : "서울시립대학교 유도부 지호";
 
   let helmetData: HelmetData = {
     title: "서울시립대학교 유도부 지호 | Home",
@@ -164,11 +173,9 @@ export async function render(url: string) {
       <StructuredDataContext.Provider value={{ setStructuredData }}>
         <HelmetContext.Provider value={{ setHelmetData }}>
           <QueryClientProvider client={queryClient}>
-            <RecoilRoot>
-              <StaticRouter location={url}>
-                <AppRouter />
-              </StaticRouter>
-            </RecoilRoot>
+            <StaticRouter location={url}>
+              <AppRouter />
+            </StaticRouter>
           </QueryClientProvider>
         </HelmetContext.Provider>
       </StructuredDataContext.Provider>,

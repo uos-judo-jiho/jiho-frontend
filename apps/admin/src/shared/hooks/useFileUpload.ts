@@ -1,14 +1,20 @@
-import {
-  uploadClient,
-  UploadProgress,
-} from "@/features/api/_internal/upload/client";
-import type { AxiosProgressEvent } from "axios";
+import { getPostApiV2AdminImageMutationOptions } from "@packages/api/_generated/v2/admin";
+import type { AxiosProgressEvent, AxiosRequestConfig } from "axios";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface UploadState {
   isUploading: boolean;
   uploads: Map<string, UploadProgress>;
   error: string | null;
+}
+
+export interface UploadProgress {
+  uploadId: string;
+  fileName: string;
+  progress: number;
+  status: "uploading" | "completed" | "error";
+  url?: string;
+  error?: string;
 }
 
 export interface UseFileUploadOptions {
@@ -52,6 +58,23 @@ const isAbortError = (error: unknown) => {
   }
 
   return false;
+};
+
+const uploadImage = async (file: File, options?: AxiosRequestConfig) => {
+  const { mutationFn } = getPostApiV2AdminImageMutationOptions({
+    axios: {
+      withCredentials: true,
+      ...options,
+    },
+  });
+
+  const response = await mutationFn({
+    data: {
+      file,
+    },
+  });
+
+  return response.data;
 };
 
 export const useFileUpload = (options?: UseFileUploadOptions) => {
@@ -117,7 +140,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
   );
 
   const uploadFile = useCallback(
-    async (file: File, folder?: string) => {
+    async (file: File, _folder?: string) => {
       const uploadId = generateUploadId();
       const controller = new AbortController();
       controllersRef.current.set(uploadId, controller);
@@ -136,7 +159,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
       });
 
       try {
-        const response = await uploadClient.uploadFile(file, folder, {
+        const response = await uploadImage(file, {
           signal: controller.signal,
           onUploadProgress: (event) => {
             updateUpload(uploadId, {
@@ -181,7 +204,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
   );
 
   const uploadMultipleFiles = useCallback(
-    async (files: File[], folder?: string) => {
+    async (files: File[], _folder?: string) => {
       const uploadId = generateUploadId();
       const controller = new AbortController();
       controllersRef.current.set(uploadId, controller);
@@ -200,35 +223,55 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
       });
 
       try {
-        const response = await uploadClient.uploadMultipleFiles(files, folder, {
-          signal: controller.signal,
-          onUploadProgress: (event) => {
-            updateUpload(uploadId, {
-              progress: calculateProgress(event),
-              status: "uploading",
-            });
-          },
-        });
-
-        if (!response.success) {
-          throw new Error("파일 업로드에 실패했습니다.");
+        if (files.length === 0) {
+          throw new Error("업로드할 파일이 없습니다.");
         }
 
-        const firstUrl = response.files?.[0]?.url;
+        let completedCount = 0;
+        let lastUrl: string | undefined;
+        const totalCount = files.length;
+
+        for (const file of files) {
+          const completedBeforeCurrent = completedCount;
+          const response = await uploadImage(file, {
+            signal: controller.signal,
+            onUploadProgress: (event) => {
+              const currentFileProgress = calculateProgress(event);
+              const overallProgress = Math.min(
+                99,
+                Math.round(
+                  (
+                    (completedBeforeCurrent + currentFileProgress / 100) /
+                    totalCount
+                  ) *
+                    100,
+                ),
+              );
+              updateUpload(uploadId, {
+                progress: overallProgress,
+                status: "uploading",
+              });
+            },
+          });
+
+          completedCount += 1;
+          lastUrl = response.url ?? lastUrl;
+
+          updateUpload(uploadId, {
+            progress: Math.round((completedCount / totalCount) * 100),
+            status: "uploading",
+          });
+
+          if (response.url && onComplete) {
+            onComplete(uploadId, response.url);
+          }
+        }
 
         updateUpload(uploadId, {
           status: "completed",
           progress: 100,
-          url: firstUrl,
+          url: lastUrl,
         });
-
-        if (response.files?.length && onComplete) {
-          response.files.forEach((fileResponse) => {
-            if (fileResponse.url) {
-              onComplete(uploadId, fileResponse.url);
-            }
-          });
-        }
 
         return uploadId;
       } catch (error) {
@@ -296,9 +339,10 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
   );
 
   useEffect(() => {
+    const controllers = controllersRef.current;
     return () => {
-      controllersRef.current.forEach((controller) => controller.abort());
-      controllersRef.current.clear();
+      controllers.forEach((controller) => controller.abort());
+      controllers.clear();
     };
   }, []);
 

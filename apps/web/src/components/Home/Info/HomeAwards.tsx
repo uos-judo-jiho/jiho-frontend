@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
-import { awardsData } from "@/shared/lib/assets/data/awards";
 import { AwardType } from "@/shared/lib/types/AwardType";
 import { formatAwardsType } from "@/shared/lib/utils/Utils";
+import { v2Api } from "@packages/api";
 
 const AwardItem = ({ award }: { award: AwardType }) => {
   return (
@@ -15,14 +15,23 @@ const AwardItem = ({ award }: { award: AwardType }) => {
   );
 };
 
-const HomeAwards = () => {
-  const awards: AwardType[] = awardsData.awards;
+export const HomeAwards = () => {
+  const { data: awards = [] } = v2Api.useGetApiV2AwardsSuspense({
+    query: {
+      select: (response) => response.data.awards ?? [],
+    },
+  });
+
+  const metaDescription =
+    awards.length > 0
+      ? awards.map((award) => award.title).join(", ")
+      : "서울시립대학교 유도부 지호";
 
   return (
     <div className="flex-1">
       <MyHelmet
         title="Home"
-        description={awards.map((award) => award.title).join(", ")}
+        description={metaDescription}
         imgUrl="/favicon-96x96.png"
       />
       <div className="flex flex-col">
@@ -35,7 +44,7 @@ const HomeAwards = () => {
           <CardContent>
             <ul>
               {awards.map((award) => (
-                <AwardItem key={award.title} award={award} />
+                <AwardItem key={award.id} award={award} />
               ))}
             </ul>
           </CardContent>
@@ -44,5 +53,3 @@ const HomeAwards = () => {
     </div>
   );
 };
-
-export default HomeAwards;

@@ -81,10 +81,11 @@ export const toBase64 = async (file: File): Promise<string> => {
  * @returns string[]
  * @example ["2022", "2023", "2024", ...]
  */
-export const vaildNewsYearList = () => {
-  const yearList = Array.from(
-    { length: Number(Constants.LATEST_NEWS_YEAR) - 2021 },
-    (_, i) => String(2022 + i),
+export const vaildNewsYearList = (
+  latestNewsYear = Number(Constants.LATEST_NEWS_YEAR),
+) => {
+  const yearList = Array.from({ length: latestNewsYear - 2021 }, (_, i) =>
+    String(2022 + i),
   );
   return yearList;
 };
