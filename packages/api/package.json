@@ -13,7 +13,8 @@
   },
   "scripts": {
     "generate": "orval",
-    "generate:watch": "orval --watch"
+    "generate:watch": "orval --watch",
+    "generate:prod": "NODE_ENV=production orval"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.11",

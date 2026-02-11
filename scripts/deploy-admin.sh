@@ -3,44 +3,42 @@
 set -euo pipefail
 
 DIST_DIR=${DIST_DIR:-apps/admin/dist}
-S3_BUCKET=${S3_BUCKET:-}
-S3_PREFIX=${S3_PREFIX:-}
-CLOUDFRONT_DISTRIBUTION_ID=${CLOUDFRONT_DISTRIBUTION_ID:-}
-AWS_ENDPOINT_URL=${AWS_ENDPOINT_URL:-}
-
-if [ -z "$S3_BUCKET" ]; then
-  echo "Missing S3_BUCKET" >&2
-  exit 1
-fi
+SSH_HOST=${SSH_HOST:-}
+SSH_USER=${SSH_USER:-}
+SSH_PORT=${SSH_PORT:-22}
+SSH_KEY_PATH=${SSH_KEY_PATH:-}
+REMOTE_DIR=${REMOTE_DIR:-/opt/uos-jiho-judo/admin}
+REMOTE_TMP_DIR=${REMOTE_TMP_DIR:-/tmp/uos-jiho-judo-admin}
 
 if [ ! -d "$DIST_DIR" ]; then
   echo "Missing $DIST_DIR. Run 'pnpm build:admin' first." >&2
   exit 1
 fi
 
-DESTINATION="s3://$S3_BUCKET"
-if [ -n "$S3_PREFIX" ]; then
-  DESTINATION="$DESTINATION/$S3_PREFIX"
+if [ -z "$SSH_HOST" ] || [ -z "$SSH_USER" ]; then
+  echo "SSH_HOST and SSH_USER must be provided" >&2
+  exit 1
 fi
 
-AWS_ENDPOINT_ARGS=()
-if [ -n "$AWS_ENDPOINT_URL" ]; then
-  AWS_ENDPOINT_ARGS+=(--endpoint-url "$AWS_ENDPOINT_URL")
+if [ -z "$SSH_KEY_PATH" ] || [ ! -f "$SSH_KEY_PATH" ]; then
+  echo "SSH_KEY_PATH is missing or invalid" >&2
+  exit 1
 fi
 
-# Upload hashed assets with long cache, then upload index.html with no-cache.
-aws s3 sync "$DIST_DIR" "$DESTINATION" "${AWS_ENDPOINT_ARGS[@]}" \
-  --delete \
-  --exclude "index.html" \
-  --cache-control "public,max-age=31536000,immutable"
+echo "Uploading admin build to $SSH_USER@$SSH_HOST:$REMOTE_DIR"
 
-aws s3 cp "$DIST_DIR/index.html" "$DESTINATION/index.html" "${AWS_ENDPOINT_ARGS[@]}" \
-  --cache-control "no-cache"
+RSYNC_SSH_OPTS=(-i "$SSH_KEY_PATH" -p "$SSH_PORT" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null)
 
-if [ -n "$CLOUDFRONT_DISTRIBUTION_ID" ]; then
-  aws cloudfront create-invalidation \
-    --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
-    --paths "/*" >/dev/null
-fi
+rsync -az --delete -e "ssh ${RSYNC_SSH_OPTS[*]}" \
+  "$DIST_DIR/" \
+  "$SSH_USER@$SSH_HOST:$REMOTE_TMP_DIR/"
 
-echo "Admin deployed to $DESTINATION"
+ssh "${RSYNC_SSH_OPTS[@]}" "$SSH_USER@$SSH_HOST" <<EOF
+set -euo pipefail
+mkdir -p "$REMOTE_DIR"
+rm -rf "$REMOTE_DIR"/*
+cp -R "$REMOTE_TMP_DIR"/. "$REMOTE_DIR"/
+rm -rf "$REMOTE_TMP_DIR"
+EOF
+
+echo "Admin deployed to $SSH_HOST:$REMOTE_DIR"

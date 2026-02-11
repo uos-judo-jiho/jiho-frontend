@@ -43,13 +43,16 @@ jobs:
       - name: Build admin
         run: pnpm build:admin
 
-      - name: Deploy to Lightsail object storage
+      - name: Prepare SSH key
+        run: |
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > admin_ssh_key
+          chmod 600 admin_ssh_key
+
+      - name: Deploy admin via SSH
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-          AWS_ENDPOINT_URL: ${{ secrets.LIGHTSAIL_S3_ENDPOINT }}
-          S3_BUCKET: ${{ secrets.S3_BUCKET }}
-          S3_PREFIX: ${{ secrets.ADMIN_S3_PREFIX }}
+          SSH_HOST: ${{ secrets.LIGHTSAIL_SSH_HOST }}
+          SSH_USER: ${{ secrets.LIGHTSAIL_SSH_USER }}
+          # SSH_PORT: ${{ secrets.LIGHTSAIL_SSH_PORT }}
+          SSH_KEY_PATH: ${{ github.workspace }}/admin_ssh_key
+          REMOTE_DIR: /opt/uos-jiho-judo/admin
         run: bash scripts/deploy-admin.sh

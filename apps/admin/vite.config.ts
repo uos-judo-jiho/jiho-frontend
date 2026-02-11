@@ -16,6 +16,18 @@ export default defineConfig({
       "@": srcDir,
     },
   },
+  preview: {
+    port: 3001,
+    proxy: {
+      "/api": {
+        target: "https://api.uosjudo.com",
+        changeOrigin: true,
+        rewrite: (path) => path,
+        secure: false,
+        ws: true,
+      },
+    },
+  },
   server: {
     port: 3001,
     proxy: {
