@@ -35,10 +35,10 @@ rsync -az --delete -e "ssh ${RSYNC_SSH_OPTS[*]}" \
 
 ssh "${RSYNC_SSH_OPTS[@]}" "$SSH_USER@$SSH_HOST" <<EOF
 set -euo pipefail
-mkdir -p "$REMOTE_DIR"
-rm -rf "$REMOTE_DIR"/*
-cp -R "$REMOTE_TMP_DIR"/. "$REMOTE_DIR"/
-rm -rf "$REMOTE_TMP_DIR"
+sudo mkdir -p "$REMOTE_DIR"
+sudo rm -rf "$REMOTE_DIR"/*
+sudo cp -R "$REMOTE_TMP_DIR"/. "$REMOTE_DIR"/
+sudo rm -rf "$REMOTE_TMP_DIR"
 EOF
 
 echo "Admin deployed to $SSH_HOST:$REMOTE_DIR"
