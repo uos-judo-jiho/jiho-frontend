@@ -5,7 +5,7 @@ import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
 import { v2Api } from "@packages/api";
 import { startTransition, Suspense } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 type NewsYearContentProps = {
   year: string;
@@ -56,19 +56,10 @@ const NewsYearContent = ({ year }: NewsYearContentProps) => {
 };
 
 const NewsYear = () => {
-  const navigate = useNavigate();
   const { year } = useParams<{ year: string }>();
 
   return (
     <FormContainer title={`지호지 관리 (${year}년)`}>
-      <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
-        <button
-          onClick={() => navigate("/news")}
-          className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
-        >
-          ← 년도 선택으로 돌아가기
-        </button>
-      </Row>
       <Suspense fallback={<Loading loading />}>
         <NewsYearContent year={year ?? ""} />
       </Suspense>

@@ -1,14 +1,11 @@
 import FormContainer from "@/components/admin/form/FormContainer";
 import Col from "@/components/layouts/Col";
-import Row from "@/components/layouts/Row";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { v2Api } from "@packages/api";
 import { useQueries } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const GalleryList = () => {
-  const navigate = useNavigate();
-
   const galleriesData = useQueries({
     queries: vaildNewsYearList()
       .reverse()
@@ -21,15 +18,6 @@ export const GalleryList = () => {
 
   return (
     <FormContainer title="지호지 갤러리 - 년도 선택">
-      <Row justifyContent="space-between" style={{ marginBottom: "12px" }}>
-        <button
-          onClick={() => navigate("/news")}
-          className="px-4 py-2 bg-transparent border border-gray-500 rounded cursor-pointer text-sm transition-all hover:bg-gray-200"
-        >
-          ← 지호지 관리로 돌아가기
-        </button>
-      </Row>
-
       <Col gap={12}>
         <p style={{ margin: 0, color: "#666" }}>
           갤러리를 관리할 년도를 선택해주세요

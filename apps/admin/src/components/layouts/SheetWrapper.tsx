@@ -55,7 +55,8 @@ function SheetWrapper({
         "w-full",
         "sm:w-[640px]",
         "md:w-[768px]",
-        "lg:w-[960px]",
+        "lg:w-[1040px]",
+        "xl:w-[1280px]",
         "flex flex-col min-h-screen",
         className,
       )}
