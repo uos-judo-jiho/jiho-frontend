@@ -24,8 +24,8 @@ const MobileHeader = ({
         <a
           href={backUrl}
           onClick={(e) => {
-            e.preventDefault();
             if (backUrl == null) {
+              e.preventDefault();
               window.history.back();
             }
           }}

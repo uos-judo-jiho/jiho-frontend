@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
+import Slider from "@/components/layouts/Slider";
 
 import { StructuredData, createArticleData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
@@ -93,6 +94,11 @@ export const NewsDetailPc = () => {
 
           {/* Main Content */}
           <div className="flex flex-col flex-1">
+            {/* Image Slider */}
+            <div className="mb-6 md:mb-0 flex justify-center">
+              <Slider datas={article.imgSrcs} />
+            </div>
+
             {/* Description Section */}
             <div className="flex-1">
               <ModalDescriptionSection

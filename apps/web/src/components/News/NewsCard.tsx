@@ -8,7 +8,7 @@ import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
 
 type NewsCardProps = {
-  year: number;
+  year: number | string;
   article: ArticleInfoType;
   selectedIndex?: number;
 };
@@ -81,7 +81,7 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
               </Col>
             </Col>
           </div>
-          <div className="overflow-hidden h-[20cqh] leading-normal">
+          <div className="overflow-hidden h-[25cqh] leading-normal">
             {commenter}
           </div>
 

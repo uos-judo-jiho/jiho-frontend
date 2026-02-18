@@ -1,4 +1,5 @@
 import Footer from "@/components/common/Footer/footer";
+import { LazyImage } from "@/components/common/image/lazy-image";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
 import DetailImageModal from "@/components/common/Modals/DetailImageModal/DetailImageModal";
 import ResponsiveBranch from "@/components/common/ResponsiveBranch/ResponsiveBranch";
@@ -71,11 +72,12 @@ const Inner = () => {
                   <button
                     onClick={() => handleOpenDetailModal(image)}
                     key={image}
+                    className="w-full h-auto mb-2 md:mb-4 cursor-pointer"
                   >
-                    <img
+                    <LazyImage
                       src={image}
-                      alt={image}
-                      className="w-full h-auto mb-2 md:mb-4 cursor-pointer"
+                      alt={`${year}년 사진 ${image}`}
+                      className="relative aspect-auto"
                     />
                   </button>
                 ))}
