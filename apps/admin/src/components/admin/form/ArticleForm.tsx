@@ -1,7 +1,7 @@
 import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
-import { v2Admin } from "@packages/api";
+import { v2Admin, v2Api } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +37,6 @@ const initValues: Omit<ArticleInfoType, "id"> = {
 };
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
-  console.log(data);
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
     data ?? initValues,
   );
@@ -48,14 +47,13 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const queryClient = useQueryClient();
 
   const queryKeyByType = {
-    news: "news",
-    training: "trainings",
-    notice: "notices",
+    news: v2Api.getGetApiV2NewsLatestQueryKey(),
+    training: v2Api.getGetApiV2TrainingsQueryKey(),
+    notice: v2Api.getGetApiV2NoticesQueryKey(),
   } as const;
 
   const isNew = !data;
 
-  // Mutation hooks - call all hooks unconditionally (React Hook rule)
   const createBoardMutation = v2Admin.usePostApiV2AdminBoard({
     mutation: {
       onSuccess: () => {

@@ -1,5 +1,4 @@
-import { getPostApiV2AdminImageMutationOptions } from "@packages/api/_generated/v2/admin";
-import type { AxiosProgressEvent, AxiosRequestConfig } from "axios";
+import { v2Admin } from "@packages/api";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface UploadState {
@@ -35,47 +34,16 @@ const generateUploadId = () => {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-const calculateProgress = (event?: AxiosProgressEvent) => {
-  if (!event || typeof event.total !== "number" || event.total === 0) {
-    return 0;
-  }
-
-  return Math.min(100, Math.round((event.loaded / event.total) * 100));
-};
-
-const isAbortError = (error: unknown) => {
-  if (error instanceof DOMException && error.name === "AbortError") {
-    return true;
-  }
-
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "name" in error &&
-    (error as { name?: string }).name === "CanceledError"
-  ) {
-    return true;
-  }
-
-  return false;
-};
-
-const uploadImage = async (file: File, options?: AxiosRequestConfig) => {
-  const { mutationFn } = getPostApiV2AdminImageMutationOptions({
+// orval의 usePostApiV2AdminImage 쿼리 훅을 활용한 업로드
+const useImageUploadMutation = () =>
+  v2Admin.usePostApiV2AdminImage({
     axios: {
       withCredentials: true,
-      ...options,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     },
   });
-
-  const response = await mutationFn({
-    data: {
-      file,
-    },
-  });
-
-  return response.data;
-};
 
 export const useFileUpload = (options?: UseFileUploadOptions) => {
   const { onComplete, onError } = options || {};
@@ -139,12 +107,11 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
     [onError, updateUpload],
   );
 
+  const imageUploadMutation = useImageUploadMutation();
+
   const uploadFile = useCallback(
     async (file: File, _folder?: string) => {
       const uploadId = generateUploadId();
-      const controller = new AbortController();
-      controllersRef.current.set(uploadId, controller);
-
       setState((prev) => ({
         ...prev,
         isUploading: true,
@@ -158,49 +125,38 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
         status: "uploading",
       });
 
-      try {
-        const response = await uploadImage(file, {
-          signal: controller.signal,
-          onUploadProgress: (event) => {
-            updateUpload(uploadId, {
-              progress: calculateProgress(event),
-              status: "uploading",
-            });
+      return new Promise<string>((resolve, reject) => {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        imageUploadMutation.mutate(
+          {
+            data: { file },
           },
-        });
-
-        updateUpload(uploadId, {
-          status: "completed",
-          progress: 100,
-          url: response.url,
-        });
-
-        if (response.url && onComplete) {
-          onComplete(uploadId, response.url);
-        }
-
-        return uploadId;
-      } catch (error) {
-        if (isAbortError(error)) {
-          removeUpload(uploadId);
-          setState((prev) => ({
-            ...prev,
-            error: "업로드가 취소되었습니다.",
-          }));
-          return uploadId;
-        }
-
-        const message =
-          error instanceof Error
-            ? error.message
-            : "업로드 중 오류가 발생했습니다.";
-        handleUploadError(uploadId, message);
-        throw error;
-      } finally {
-        controllersRef.current.delete(uploadId);
-      }
+          {
+            onSuccess: (response: any) => {
+              updateUpload(uploadId, {
+                status: "completed",
+                progress: 100,
+                url: response?.data?.url,
+              });
+              if (response?.data?.url && onComplete) {
+                onComplete(uploadId, response.data.url);
+              }
+              resolve(uploadId);
+            },
+            onError: (error: any) => {
+              handleUploadError(
+                uploadId,
+                error?.message || "업로드 중 오류가 발생했습니다.",
+              );
+              reject(error);
+            },
+          },
+        );
+      });
     },
-    [handleUploadError, onComplete, removeUpload, updateUpload],
+    [handleUploadError, onComplete, updateUpload, imageUploadMutation],
   );
 
   const uploadMultipleFiles = useCallback(
@@ -222,79 +178,63 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
         status: "uploading",
       });
 
-      try {
-        if (files.length === 0) {
-          throw new Error("업로드할 파일이 없습니다.");
-        }
-
-        let completedCount = 0;
-        let lastUrl: string | undefined;
-        const totalCount = files.length;
-
-        for (const file of files) {
-          const completedBeforeCurrent = completedCount;
-          const response = await uploadImage(file, {
-            signal: controller.signal,
-            onUploadProgress: (event) => {
-              const currentFileProgress = calculateProgress(event);
-              const overallProgress = Math.min(
-                99,
-                Math.round(
-                  (
-                    (completedBeforeCurrent + currentFileProgress / 100) /
-                    totalCount
-                  ) *
-                    100,
-                ),
-              );
-              updateUpload(uploadId, {
-                progress: overallProgress,
-                status: "uploading",
-              });
-            },
-          });
-
-          completedCount += 1;
-          lastUrl = response.url ?? lastUrl;
-
-          updateUpload(uploadId, {
-            progress: Math.round((completedCount / totalCount) * 100),
-            status: "uploading",
-          });
-
-          if (response.url && onComplete) {
-            onComplete(uploadId, response.url);
-          }
-        }
-
-        updateUpload(uploadId, {
-          status: "completed",
-          progress: 100,
-          url: lastUrl,
-        });
-
-        return uploadId;
-      } catch (error) {
-        if (isAbortError(error)) {
-          removeUpload(uploadId);
-          setState((prev) => ({
-            ...prev,
-            error: "업로드가 취소되었습니다.",
-          }));
-          return uploadId;
-        }
-
-        const message =
-          error instanceof Error
-            ? error.message
-            : "다중 업로드 중 오류가 발생했습니다.";
-        handleUploadError(uploadId, message);
-        throw error;
-      } finally {
+      if (files.length === 0) {
+        handleUploadError(uploadId, "업로드할 파일이 없습니다.");
         controllersRef.current.delete(uploadId);
+        return uploadId;
       }
+
+      let completedCount = 0;
+      let lastUrl: string | undefined;
+      const totalCount = files.length;
+
+      await Promise.all(
+        files.map(
+          (file) =>
+            new Promise<void>((resolve) => {
+              const formData = new FormData();
+              formData.append("file", file);
+              imageUploadMutation.mutate(
+                { data: { file } },
+                {
+                  onSuccess: (response: any) => {
+                    completedCount += 1;
+                    const url = response?.data?.url;
+                    lastUrl = url ?? lastUrl;
+
+                    updateUpload(uploadId, {
+                      progress: Math.round((completedCount / totalCount) * 100),
+                      status: "uploading",
+                    });
+
+                    if (url && onComplete) {
+                      onComplete(uploadId, url);
+                    }
+                    resolve();
+                  },
+                  onError: (error: any) => {
+                    handleUploadError(
+                      uploadId,
+                      error?.message || "업로드 중 오류가 발생했습니다.",
+                    );
+                    resolve();
+                  },
+                },
+              );
+            }),
+        ),
+      );
+
+      updateUpload(uploadId, {
+        status: "completed",
+        progress: 100,
+        url: lastUrl,
+      });
+
+      controllersRef.current.delete(uploadId);
+      return uploadId;
     },
-    [handleUploadError, onComplete, removeUpload, updateUpload],
+    [handleUploadError, onComplete, updateUpload, imageUploadMutation],
   );
 
   const cancelUpload = useCallback(

@@ -156,6 +156,9 @@ const Footer = () => {
               to={`/news/${lastestNewsYear}`}
             >{`${lastestNewsYear} 지호지로 바로가기`}</HyperLink>
           </DescriptionItem>
+          <DescriptionItem>
+            <HyperLink to={`/album`}>앨범으로 바로가기</HyperLink>
+          </DescriptionItem>
           {/* 관리자 페이지로 */}
           {/* TODO admin.uosjudo.com */}
           {/* <DescriptionItem>
