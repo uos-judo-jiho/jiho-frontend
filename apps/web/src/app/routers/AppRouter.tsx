@@ -12,6 +12,7 @@ import Notice from "@/pages/Notice/Notice";
 import NoticeDetail from "@/pages/Notice/NoticeDetail";
 import Photo from "@/pages/Photo/Photo";
 import PhotoDetail from "@/pages/Photo/PhotoDetail";
+import { AlbumPage } from "@/pages/album";
 
 const AppRouter = () => {
   useScrollToTop();
@@ -27,6 +28,7 @@ const AppRouter = () => {
       <Route path="/photo/:id" element={<PhotoDetail />} />
       <Route path="/notice" element={<Notice />} />
       <Route path="/notice/:id" element={<NoticeDetail />} />
+      <Route path="/album" element={<AlbumPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
