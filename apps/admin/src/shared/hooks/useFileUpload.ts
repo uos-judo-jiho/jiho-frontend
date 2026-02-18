@@ -35,7 +35,15 @@ const generateUploadId = () => {
 };
 
 // orval의 usePostApiV2AdminImage 쿼리 훅을 활용한 업로드
-const useImageUploadMutation = () => v2Admin.usePostApiV2AdminImage();
+const useImageUploadMutation = () =>
+  v2Admin.usePostApiV2AdminImage({
+    axios: {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  });
 
 export const useFileUpload = (options?: UseFileUploadOptions) => {
   const { onComplete, onError } = options || {};
@@ -122,7 +130,9 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
         formData.append("file", file);
 
         imageUploadMutation.mutate(
-          { data: { file: formData } },
+          {
+            data: { file },
+          },
           {
             onSuccess: (response: any) => {
               updateUpload(uploadId, {
@@ -185,7 +195,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
               const formData = new FormData();
               formData.append("file", file);
               imageUploadMutation.mutate(
-                { data: { file: formData } },
+                { data: { file } },
                 {
                   onSuccess: (response: any) => {
                     completedCount += 1;

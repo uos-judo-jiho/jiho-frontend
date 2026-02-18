@@ -37,7 +37,6 @@ const initValues: Omit<ArticleInfoType, "id"> = {
 };
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
-  console.log(data);
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
     data ?? initValues,
   );

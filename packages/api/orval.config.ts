@@ -23,7 +23,7 @@ const tanstackQueryOptions: QueryOptions = {
   usePrefetch: true,
   useSuspenseQuery: true,
   useInvalidate: true,
-  shouldExportHttpClient: true,
+  shouldExportHttpClient: false,
   shouldExportQueryKey: true,
   shouldSplitQueryKey: true,
 };
