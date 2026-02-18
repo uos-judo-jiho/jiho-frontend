@@ -41,7 +41,7 @@ export const CancelButton: React.FC<
   <button
     className={cn(
       "mt-2.5 cursor-pointer text-sm bg-yellow-500 border border-yellow-500 text-white px-5 py-2.5 mr-2.5 hover:opacity-60",
-      className
+      className,
     )}
     {...props}
   >
@@ -70,7 +70,7 @@ export const StyledTextArea: React.FC<
   <textarea
     className={cn(
       "min-h-[300px] p-2 border border-black/20 resize-y leading-[160%]",
-      className
+      className,
     )}
     {...props}
   />
@@ -122,7 +122,7 @@ export const PreviewImgContainer: React.FC<
   <div
     className={cn(
       "flex flex-col justify-center items-center text-sm",
-      className
+      className,
     )}
     {...props}
   >
@@ -156,7 +156,7 @@ export const NewArticleButton: React.FC<
   <button
     className={cn(
       "cursor-pointer text-sm bg-blue-500 border border-blue-500 text-white px-4 py-2 hover:opacity-60",
-      className
+      className,
     )}
     {...props}
   >
