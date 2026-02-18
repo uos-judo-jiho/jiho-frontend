@@ -6,7 +6,6 @@ import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import Loading from "@/components/common/Skeletons/Loading";
-import Slider from "@/components/layouts/Slider";
 import { Button } from "@/components/ui/button";
 
 import { StructuredData, createArticleData } from "@/features/seo";
@@ -82,11 +81,6 @@ export const NewsDetailMobile = () => {
       />
 
       <div className="flex-1">
-        {/* Image Slider */}
-        <div className="mb-4">
-          <Slider datas={currentArticle.imgSrcs} />
-        </div>
-
         {/* Description Section */}
         <div>
           <ModalDescriptionSection
