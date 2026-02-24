@@ -61,12 +61,27 @@ const Inner = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-8">
+      <div className="flex gap-1 items-end">
+        <h1 className="text-2xl font-bold">지호 앨범</h1>
+        <span className="text-sm text-gray-600">
+          (
+          {data
+            .reduce((acc, curr) => acc + curr.images.length, 0)
+            .toLocaleString()}
+          )
+        </span>
+      </div>
       <div className="flex flex-col gap-2">
         {data?.map(({ images, year }) => {
           return (
             <div key={year} className="m-0 break-inside-avoid">
-              <h2 className="text-md font-bold mb-4">{year}년</h2>
+              <div className="flex gap-1 items-end mb-4">
+                <h2 className="text-md font-bold">{year}년</h2>
+                <span className="text-sm text-gray-600">
+                  ({images.length.toLocaleString()})
+                </span>
+              </div>
               <div className="columns-2 md:columns-3 lg:columns-4 gap-2 md:gap-4">
                 {images.map((image) => (
                   <button
@@ -93,6 +108,6 @@ const Inner = () => {
           onClose={handleCloseDetailModal}
         />
       )}
-    </>
+    </div>
   );
 };
