@@ -1,5 +1,4 @@
-import Router from "@/app/routers/Router";
-import Login from "@/components/admin/form/Login";
+import { AuthRouter, PublicRouter } from "@/app/routers/Router";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import { v2Admin } from "@packages/api";
@@ -13,7 +12,6 @@ const HomePage = () => {
     isLoading,
     isSuccess,
     error,
-    refetch,
   } = v2Admin.useGetApiV2AdminMe({
     query: { retry: false },
     axios: { withCredentials: true },
@@ -35,10 +33,10 @@ const HomePage = () => {
     <DefaultLayout showSidebar={!!isAuthorized}>
       {isLoading ? null : isAuthorized ? (
         <SheetWrapper>
-          <Router />
+          <AuthRouter />
         </SheetWrapper>
       ) : (
-        <Login onSuccess={() => refetch()} />
+        <PublicRouter />
       )}
     </DefaultLayout>
   );

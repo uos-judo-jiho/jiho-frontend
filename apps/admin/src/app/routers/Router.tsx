@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { WithSuspense } from "@/components/utils/WithSuspense";
 
+import Login from "@/components/admin/form/Login";
 import Helmet from "@/components/common/helmet/Helmet";
 import { Awards } from "@/pages/Awards/Awards";
 import Gallery from "@/pages/News/Gallery/Gallery";
@@ -9,6 +10,7 @@ import { GalleryList } from "@/pages/News/Gallery/GalleryList";
 import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
 import NewsDetail from "@/pages/News/NewsDetail";
 import NoticeDetail from "@/pages/Notice/NoticeDetail";
+import { Register } from "@/pages/Register";
 import TrainingLogDetail from "@/pages/trainingLog/TrainingLogDetail";
 import WriteArticlePage from "@/pages/WriteArticlePage";
 import NavPage from "../../pages/NavPage";
@@ -27,7 +29,7 @@ const WithHelmet = (Component: React.ReactNode, title: string) => {
   );
 };
 
-const Router = () => {
+export const AuthRouter = () => {
   return (
     <Routes>
       <Route path={RouterUrl.홈} element={WithHelmet(<NavPage />, "홈")} />
@@ -148,4 +150,18 @@ const Router = () => {
   );
 };
 
-export default Router;
+export const PublicRouter = () => {
+  return (
+    <Routes>
+      <Route path={RouterUrl.홈} element={WithHelmet(<Login />, "로그인")} />
+      <Route
+        path={RouterUrl.로그인}
+        element={WithHelmet(<Login />, "로그인")}
+      />
+      <Route
+        path={RouterUrl.회원가입}
+        element={WithHelmet(<Register />, "회원가입")}
+      />
+    </Routes>
+  );
+};

@@ -1,7 +1,7 @@
+import { RouterUrl } from "@/app/routers/router-url";
 import NavItem from "@/components/admin/Main/NavItem";
 import { v2Admin } from "@packages/api";
 import { useCallback } from "react";
-import { RouterUrl } from "@/app/routers/router-url";
 
 const NavPage = () => {
   const { refetch } = v2Admin.useGetApiV2AdminMe({

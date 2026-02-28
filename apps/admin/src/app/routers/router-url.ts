@@ -1,5 +1,7 @@
 export const RouterUrl = {
   홈: "/",
+  로그인: "/login",
+  회원가입: "/register",
   뉴스: {
     목록: "/news",
     년도별: ({ year }: { year: number }) => `/news/${year}`,
@@ -19,4 +21,4 @@ export const RouterUrl = {
     상세: ({ id }: { id: number }) => `/training/${id}`,
     작성: "/training/write",
   },
-};
+} as const;

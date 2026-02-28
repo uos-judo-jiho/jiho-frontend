@@ -1,11 +1,11 @@
+import { RouterUrl } from "@/app/routers/router-url";
 import { v2Admin } from "@packages/api";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-type LoginProps = {
-  onSuccess?: () => void;
-};
+const Login = () => {
+  const navigate = useNavigate();
 
-const Login = ({ onSuccess }: LoginProps) => {
   const [formState, setFormState] = useState({
     email: "",
     password: "",
@@ -14,9 +14,8 @@ const Login = ({ onSuccess }: LoginProps) => {
   const loginMutation = v2Admin.usePostApiV2AdminLogin({
     mutation: {
       onSuccess: () => {
-        if (onSuccess) {
-          onSuccess();
-        }
+        navigate(RouterUrl.홈, { replace: true });
+        window.location.reload();
       },
     },
     axios: {
@@ -35,7 +34,7 @@ const Login = ({ onSuccess }: LoginProps) => {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <div className="mx-auto flex min-h-screen max-w-lg items-center px-6 py-12">
+      <div className="mx-auto flex flex-col gap-4 min-h-screen max-w-lg items-center justify-center px-6 py-12">
         <div className="w-full rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/60">
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
@@ -103,6 +102,20 @@ const Login = ({ onSuccess }: LoginProps) => {
               {loginMutation.isPending ? "로그인 중..." : "로그인"}
             </button>
           </form>
+        </div>
+
+        {/* 회원가입 */}
+        <div className="text-center">
+          <p className="text-sm text-slate-500">
+            계정이 없으신가요?
+            <br />
+            <Link
+              to={RouterUrl.회원가입}
+              className="text-slate-900 font-medium hover:text-slate-700"
+            >
+              {"회원가입 >"}
+            </Link>
+          </p>
         </div>
       </div>
     </div>
