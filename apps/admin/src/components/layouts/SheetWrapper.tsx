@@ -11,7 +11,7 @@ type SheetWrapperProps = {
 
 function SheetWrapper({
   children,
-  paddingTop = 92,
+  paddingTop = 40,
   className,
 }: SheetWrapperProps) {
   const location = useLocation();
@@ -52,11 +52,7 @@ function SheetWrapper({
     <div
       className={cn(
         "relative mx-auto",
-        "w-full",
-        "sm:w-[640px]",
-        "md:w-[768px]",
-        "lg:w-[1040px]",
-        "xl:w-[1280px]",
+        "w-full px-4 md:px-8 max-w-7xl",
         "flex flex-col min-h-screen",
         className,
       )}

@@ -29,10 +29,11 @@ const HomePage = () => {
     }
   }, [error?.status, isLoading, refreshMutation, refreshTried]);
 
+  const isAuthorized = isSuccess && adminProfile?.data;
+
   return (
-    <DefaultLayout>
-      {/* TODO: 로그인 기능 구현 */}
-      {isLoading ? null : isSuccess && adminProfile?.data ? (
+    <DefaultLayout showSidebar={!!isAuthorized}>
+      {isLoading ? null : isAuthorized ? (
         <SheetWrapper>
           <Router />
         </SheetWrapper>
