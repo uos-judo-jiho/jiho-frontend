@@ -1,5 +1,5 @@
 import React from "react";
-import LNB from "../admin/Main/LNB";
+import { LNB } from "../admin/Main/LNB";
 
 type DefaultLayoutProps = {
   children: React.ReactNode;

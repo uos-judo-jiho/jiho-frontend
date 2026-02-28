@@ -11,7 +11,7 @@ import {
   Newspaper,
   Trophy,
 } from "lucide-react";
-import { useCallback, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
@@ -22,27 +22,9 @@ const menuItems = [
   { icon: Trophy, label: "수상내역", path: RouterUrl.수상내역 },
 ];
 
-const LNB = () => {
+export const LNB = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
-  const { refetch } = v2Admin.useGetApiV2AdminMe({
-    query: { retry: false },
-    axios: { withCredentials: true },
-  });
-
-  const logoutMutation = v2Admin.usePostApiV2AdminLogout({
-    axios: { withCredentials: true },
-  });
-
-  const handleLogout = useCallback(() => {
-    logoutMutation.mutate(undefined, {
-      onSuccess: (res) => {
-        if (res.status === 200) {
-          refetch();
-        }
-      },
-    });
-  }, [logoutMutation, refetch]);
 
   const isActive = (path: string) => {
     if (path === "/") {
@@ -64,11 +46,15 @@ const LNB = () => {
           isCollapsed ? "justify-center" : "justify-between",
         )}
       >
-        {!isCollapsed && (
-          <h1 className="text-xl font-bold text-neutral-800 truncate">
-            지호 관리자
-          </h1>
-        )}
+        <h1
+          className={cn(
+            "text-xl font-bold text-neutral-800 truncate",
+            isCollapsed ? "w-0" : "w-auto",
+          )}
+        >
+          지호 관리자
+        </h1>
+
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="p-2 hover:bg-neutral-100 rounded-lg text-neutral-500 transition-colors"
@@ -104,26 +90,84 @@ const LNB = () => {
                   : "text-neutral-500 group-hover:text-neutral-700",
               )}
             />
-            {!isCollapsed && <span className="truncate">{item.label}</span>}
+            <span className={cn("truncate", isCollapsed ? "w-0" : "w-auto")}>
+              {item.label}
+            </span>
           </Link>
         ))}
       </nav>
 
       <div className="p-4 border-t border-gray-100">
-        <button
-          onClick={handleLogout}
-          title={isCollapsed ? "로그아웃" : ""}
-          className={cn(
-            "flex items-center gap-3 px-4 py-3 w-full text-neutral-500 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors",
-            isCollapsed ? "justify-center px-2" : "justify-start",
-          )}
-        >
-          <LogOut className="w-5 h-5 shrink-0" />
-          {!isCollapsed && <span>로그아웃</span>}
-        </button>
+        <Suspense>
+          <UserInfoButton isCollapsed={isCollapsed} />
+        </Suspense>
       </div>
     </aside>
   );
 };
 
-export default LNB;
+const UserInfoButton = ({ isCollapsed }: { isCollapsed: boolean }) => {
+  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+    axios: { withCredentials: true },
+    query: {
+      select: (data) => data.data,
+    },
+  });
+
+  const logoutMutation = v2Admin.usePostApiV2AdminLogout({
+    axios: { withCredentials: true },
+  });
+
+  const refreshMutation = v2Admin.usePostApiV2AdminRefresh({
+    axios: { withCredentials: true },
+  });
+
+  const handleLogout = useCallback(() => {
+    logoutMutation.mutate(undefined, {
+      onSuccess: (res) => {
+        if (res.status === 200) {
+          refreshMutation.mutate(undefined, {
+            onSuccess: (res) => {
+              if (res.status === 200) {
+                window.location.href = RouterUrl.홈;
+              }
+            },
+          });
+        }
+      },
+    });
+  }, [logoutMutation, refreshMutation]);
+
+  return (
+    <div>
+      <div
+        title={isCollapsed ? meData.user.email || "사용자 정보" : ""}
+        className={cn(
+          "flex items-center gap-3 px-4 py-3 w-full text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700 rounded-lg transition-colors mb-2",
+          isCollapsed ? "justify-center px-2" : "justify-start",
+        )}
+      >
+        <div className="w-8 h-8 bg-neutral-200 rounded-full flex items-center justify-center text-sm font-medium text-neutral-600">
+          {meData?.user.email ? meData.user.email.charAt(0).toUpperCase() : "U"}
+        </div>
+
+        <span className={cn("truncate", isCollapsed ? "w-0 hidden" : "w-auto")}>
+          {meData?.user.email || "사용자 정보"}
+        </span>
+      </div>
+      <button
+        onClick={handleLogout}
+        title={isCollapsed ? "로그아웃" : ""}
+        className={cn(
+          "flex items-center gap-3 px-4 py-3 w-full text-neutral-500 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors",
+          isCollapsed ? "justify-center px-2" : "justify-start",
+        )}
+      >
+        <LogOut className="w-3 h-3 shrink-0" />
+        <span className={cn("text-sm", isCollapsed ? "w-0 hidden" : "w-auto")}>
+          로그아웃
+        </span>
+      </button>
+    </div>
+  );
+};
