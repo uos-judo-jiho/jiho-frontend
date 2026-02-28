@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 import { WithSuspense } from "@/components/utils/WithSuspense";
 
-import Helmet from "@/features/seo/helmet/Helmet";
+import Helmet from "@/components/common/helmet/Helmet";
 import { Awards } from "@/pages/Awards/Awards";
 import Gallery from "@/pages/News/Gallery/Gallery";
 import { GalleryList } from "@/pages/News/Gallery/GalleryList";
