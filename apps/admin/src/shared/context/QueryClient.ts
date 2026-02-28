@@ -9,7 +9,6 @@ export const queryClient = new QueryClient({
       refetchOnMount: false, // 마운트 시 자동 refetch 비활성화 (SSR 캐시 활용)
       refetchOnReconnect: false, // 재연결 시 자동 refetch 비활성화
       retry: 1, // 실패 시 1번만 재시도
-      throwOnError: true, // 에러 발생 시 throw
     },
   },
 });
