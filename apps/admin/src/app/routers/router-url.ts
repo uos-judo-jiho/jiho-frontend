@@ -21,4 +21,13 @@ export const RouterUrl = {
     상세: ({ id }: { id: number }) => `/training/${id}`,
     작성: "/training/write",
   },
+  회원: {
+    목록: "/users",
+    상세: ({ id }: { id: number }) => `/users/${id}`,
+    승인: "/users/approval",
+  },
+  마이페이지: {
+    루트: "/mypage",
+    정보수정: "/mypage/edit",
+  },
 } as const;

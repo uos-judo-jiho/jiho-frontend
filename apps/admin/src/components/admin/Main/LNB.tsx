@@ -10,12 +10,19 @@ import {
   Menu,
   Newspaper,
   Trophy,
+  Users,
 } from "lucide-react";
 import { Suspense, useCallback, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const menuItems = [
   { icon: Home, label: "홈", path: RouterUrl.홈 },
+  {
+    icon: Users,
+    label: "회원",
+    path: RouterUrl.회원.목록,
+    allowedRoles: ["root", "president", "manager", "staff"],
+  },
   { icon: BookOpen, label: "훈련", path: RouterUrl.훈련일지.목록 },
   { icon: Newspaper, label: "지호지", path: RouterUrl.뉴스.목록 },
   { icon: Bell, label: "공지", path: RouterUrl.공지사항.목록 },
@@ -26,12 +33,21 @@ export const LNB = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
 
+  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+    axios: { withCredentials: true },
+    query: {
+      select: (data) => data.data,
+    },
+  });
+
   const isActive = (path: string) => {
     if (path === "/") {
       return location.pathname === "/";
     }
     return location.pathname.startsWith(path);
   };
+
+  const userRole = meData.user.role;
 
   return (
     <aside
@@ -69,51 +85,56 @@ export const LNB = () => {
       </div>
 
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto overflow-x-hidden">
-        {menuItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            title={isCollapsed ? item.label : ""}
-            className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group",
-              isCollapsed ? "justify-center px-2" : "justify-start",
-              isActive(item.path)
-                ? "bg-neutral-100 text-neutral-900 font-semibold"
-                : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700",
-            )}
-          >
-            <item.icon
+        {menuItems
+          .filter(
+            (item) =>
+              !item.allowedRoles ||
+              (userRole && item.allowedRoles.includes(userRole)),
+          )
+          .map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              title={isCollapsed ? item.label : ""}
               className={cn(
-                "w-5 h-5 shrink-0",
+                "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group",
+                isCollapsed ? "justify-center px-2" : "justify-start",
                 isActive(item.path)
-                  ? "text-neutral-900"
-                  : "text-neutral-500 group-hover:text-neutral-700",
+                  ? "bg-neutral-100 text-neutral-900 font-semibold"
+                  : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700",
               )}
-            />
-            <span className={cn("truncate", isCollapsed ? "w-0" : "w-auto")}>
-              {item.label}
-            </span>
-          </Link>
-        ))}
+            >
+              <item.icon
+                className={cn(
+                  "w-5 h-5 shrink-0",
+                  isActive(item.path)
+                    ? "text-neutral-900"
+                    : "text-neutral-500 group-hover:text-neutral-700",
+                )}
+              />
+              <span className={cn("truncate", isCollapsed ? "w-0" : "w-auto")}>
+                {item.label}
+              </span>
+            </Link>
+          ))}
       </nav>
 
       <div className="p-4 border-t border-gray-100">
         <Suspense>
-          <UserInfoButton isCollapsed={isCollapsed} />
+          <UserInfoButton isCollapsed={isCollapsed} meData={meData} />
         </Suspense>
       </div>
     </aside>
   );
 };
 
-const UserInfoButton = ({ isCollapsed }: { isCollapsed: boolean }) => {
-  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
-    axios: { withCredentials: true },
-    query: {
-      select: (data) => data.data,
-    },
-  });
-
+const UserInfoButton = ({
+  isCollapsed,
+  meData,
+}: {
+  isCollapsed: boolean;
+  meData: any;
+}) => {
   const logoutMutation = v2Admin.usePostApiV2AdminLogout({
     axios: { withCredentials: true },
   });
@@ -131,7 +152,7 @@ const UserInfoButton = ({ isCollapsed }: { isCollapsed: boolean }) => {
   return (
     <div>
       <div
-        title={isCollapsed ? meData.user.email || "사용자 정보" : ""}
+        title={isCollapsed ? meData?.user.email || "사용자 정보" : ""}
         className={cn(
           "flex items-center gap-3 px-4 py-3 w-full text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700 rounded-lg transition-colors mb-2",
           isCollapsed ? "justify-center px-2" : "justify-start",

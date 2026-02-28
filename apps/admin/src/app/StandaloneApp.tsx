@@ -2,7 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 
-import HomePage from "@/pages/HomePage";
+import { App } from "@/app/app";
 import { queryClient } from "../shared/context/QueryClient";
 
 const StandaloneApp = () => {
@@ -12,7 +12,7 @@ const StandaloneApp = () => {
     <QueryClientProvider client={queryClient}>
       <Toaster position="top-center" richColors />
       <BrowserRouter basename={baseName}>
-        <HomePage />
+        <App />
       </BrowserRouter>
     </QueryClientProvider>
   );

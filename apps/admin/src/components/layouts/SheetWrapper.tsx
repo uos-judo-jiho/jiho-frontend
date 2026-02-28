@@ -28,6 +28,8 @@ function SheetWrapper({
     gallery: "갤러리",
     awards: "수상내역",
     write: "작성",
+    users: "회원",
+    mypage: "마이페이지",
   };
 
   const formatSegmentLabel = (segment: string) => {

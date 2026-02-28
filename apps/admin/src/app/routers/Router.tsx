@@ -5,6 +5,7 @@ import { WithSuspense } from "@/components/utils/WithSuspense";
 import Login from "@/components/admin/form/Login";
 import Helmet from "@/components/common/helmet/Helmet";
 import { Awards } from "@/pages/Awards/Awards";
+import MemberList from "@/pages/Member/MemberList";
 import Gallery from "@/pages/News/Gallery/Gallery";
 import { GalleryList } from "@/pages/News/Gallery/GalleryList";
 import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
@@ -13,7 +14,7 @@ import NoticeDetail from "@/pages/Notice/NoticeDetail";
 import { Register } from "@/pages/Register";
 import TrainingLogDetail from "@/pages/trainingLog/TrainingLogDetail";
 import WriteArticlePage from "@/pages/WriteArticlePage";
-import NavPage from "../../pages/NavPage";
+import { HomePage } from "../../pages/HomePage";
 import NewsIndex from "../../pages/News/NewsIndex";
 import NewsYear from "../../pages/News/NewsYear";
 import Notice from "../../pages/Notice/Notice";
@@ -32,8 +33,18 @@ const WithHelmet = (Component: React.ReactNode, title: string) => {
 export const AuthRouter = () => {
   return (
     <Routes>
-      <Route path={RouterUrl.홈} element={WithHelmet(<NavPage />, "홈")} />
-      <Route path="home" element={WithHelmet(<NavPage />, "홈")} />
+      <Route path={RouterUrl.홈} element={WithHelmet(<HomePage />, "홈")} />
+
+      {/* 회원 관리 */}
+      <Route
+        path={RouterUrl.회원.목록}
+        element={WithHelmet(
+          <WithSuspense>
+            <MemberList />
+          </WithSuspense>,
+          "회원 관리",
+        )}
+      />
 
       {/* 훈련일지 */}
       <Route
