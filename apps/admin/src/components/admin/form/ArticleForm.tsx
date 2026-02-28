@@ -389,7 +389,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           <ImageUploader
             setValues={handleUploadImages}
             data={data?.imgSrcs}
-            imageLimit={gallery ? 20 : 10}
+            imageLimit={gallery ? 50 : 10}
           />
         </div>
       </FormContainer>
