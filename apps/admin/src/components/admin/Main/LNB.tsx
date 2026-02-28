@@ -118,25 +118,15 @@ const UserInfoButton = ({ isCollapsed }: { isCollapsed: boolean }) => {
     axios: { withCredentials: true },
   });
 
-  const refreshMutation = v2Admin.usePostApiV2AdminRefresh({
-    axios: { withCredentials: true },
-  });
-
   const handleLogout = useCallback(() => {
     logoutMutation.mutate(undefined, {
       onSuccess: (res) => {
         if (res.status === 200) {
-          refreshMutation.mutate(undefined, {
-            onSuccess: (res) => {
-              if (res.status === 200) {
-                window.location.href = RouterUrl.홈;
-              }
-            },
-          });
+          window.location.reload();
         }
       },
     });
-  }, [logoutMutation, refreshMutation]);
+  }, [logoutMutation]);
 
   return (
     <div>
