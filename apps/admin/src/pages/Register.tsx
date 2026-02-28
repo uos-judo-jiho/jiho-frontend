@@ -2,6 +2,7 @@ import { RouterUrl } from "@/app/routers/router-url";
 import { v2Admin } from "@packages/api";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 export const Register = () => {
   const [formState, setFormState] = useState({
@@ -18,13 +19,13 @@ export const Register = () => {
   const signupMutation = v2Admin.usePostApiV2AdminSignup({
     mutation: {
       onSuccess: () => {
-        alert("회원가입이 완료되었습니다.");
+        toast.success("회원가입이 완료되었습니다.");
         window.location.href = RouterUrl.로그인;
       },
       onError: (error: any) => {
         const message =
           error.response?.data?.message || "회원가입에 실패했습니다.";
-        alert(message);
+        toast.error(message);
       },
     },
     axios: {

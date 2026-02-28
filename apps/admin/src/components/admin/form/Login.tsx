@@ -2,6 +2,7 @@ import { RouterUrl } from "@/app/routers/router-url";
 import { v2Admin } from "@packages/api";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,8 +15,15 @@ const Login = () => {
   const loginMutation = v2Admin.usePostApiV2AdminLogin({
     mutation: {
       onSuccess: () => {
+        toast.success("로그인에 성공했습니다.");
         navigate(RouterUrl.홈, { replace: true });
         window.location.reload();
+      },
+      onError: (error: any) => {
+        const message =
+          error.response?.data?.message ||
+          "로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.";
+        toast.error(message);
       },
     },
     axios: {
