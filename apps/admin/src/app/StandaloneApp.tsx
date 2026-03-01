@@ -1,8 +1,8 @@
+import { App } from "@/app/app";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
-
-import { App } from "@/app/app";
 import { queryClient } from "../shared/context/QueryClient";
 
 const StandaloneApp = () => {
@@ -10,6 +10,7 @@ const StandaloneApp = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} client={queryClient} />
       <Toaster position="top-center" richColors />
       <BrowserRouter basename={baseName}>
         <App />
