@@ -26,13 +26,32 @@ export const HomePage = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <Suspense>
-        <WaitedApproval />
+        <Section title="가입 승인 대기">
+          <WaitedApproval />
+        </Section>
       </Suspense>
       <Suspense>
-        <WaitedRole />
+        <Section title="등급 업그레이드 대기">
+          <WaitedRole />
+        </Section>
       </Suspense>
+    </div>
+  );
+};
+
+const Section = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className="flex flex-col gap-2">
+      <h2 className="text-xl font-bold">{title}</h2>
+      {children}
     </div>
   );
 };

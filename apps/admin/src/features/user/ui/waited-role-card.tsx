@@ -1,12 +1,14 @@
 import { RouterUrl } from "@/app/routers/router-url";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/shared/lib/utils";
 import { v2Admin } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { GetApiV2AdminUsersUpgradeRequests200RequestsItem } from "node_modules/@packages/api/src/_generated/v2/admin/model";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { getUserRole } from "../utils/get-user-role";
 
 type WaitedApprovalProps = {
   showAll?: boolean;
@@ -27,7 +29,6 @@ export const WaitedRole = ({ showAll = false }: WaitedApprovalProps) => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold">회원 등급 업그레이드 대기 중인 회원</h2>
       <div className="text-sm flex gap-2 items-center">
         <p className="text-neutral-600">
           현재 등급 업그레이드 대기 중인 회원이 {waitedUpgradeRequests.length}명
@@ -61,15 +62,24 @@ const ApprovalItem = ({
 }) => {
   const queryClient = useQueryClient();
 
+  const invalidateQueries = () => {
+    return Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: v2Admin.getGetApiV2AdminUsersUpgradeRequestsQueryKey(),
+      }),
+      queryClient.invalidateQueries({
+        queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
+      }),
+    ]);
+  };
+
   const approvMutation =
     v2Admin.usePostApiV2AdminUsersUpgradeRequestsRequestIdApprove({
       axios: { withCredentials: true },
       mutation: {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.success("회원이 승인되었습니다.");
-          queryClient.invalidateQueries({
-            queryKey: v2Admin.getGetApiV2AdminUsersUpgradeRequestsQueryKey(),
-          });
+          await invalidateQueries();
         },
         onError: () => {
           toast.error("회원 승인에 실패했습니다.");
@@ -81,11 +91,9 @@ const ApprovalItem = ({
     v2Admin.usePostApiV2AdminUsersUpgradeRequestsRequestIdReject({
       axios: { withCredentials: true },
       mutation: {
-        onSuccess: () => {
+        onSuccess: async () => {
           toast.success("회원이 거절되었습니다.");
-          queryClient.invalidateQueries({
-            queryKey: v2Admin.getGetApiV2AdminUsersUpgradeRequestsQueryKey(),
-          });
+          await invalidateQueries();
         },
         onError: () => {
           toast.error("회원 거절에 실패했습니다.");
@@ -93,14 +101,27 @@ const ApprovalItem = ({
       },
     });
 
+  const roleText = getUserRole(request.requestedRole);
+
   return (
     <div className="flex flex-row justify-between items-center">
       <div className="flex flex-col p-2 gap-2 justify-between">
         <div className="flex-1 flex gap-1 items-center">
-          {/* <Badge theme="blue">{getApprovalStatus(admin.status)}</Badge> */}
           <p>{format(request.createdAt, "yyyy-MM-dd HH:mm")}</p>
         </div>
         <p className="font-semibold">{request.email}</p>
+        <p>
+          <b
+            className={cn(
+              request.requestedRole === "general"
+                ? "text-blue-600"
+                : "text-gray-600",
+            )}
+          >
+            {roleText}
+          </b>{" "}
+          권한을 요청했어요.
+        </p>
       </div>
 
       <div className="flex gap-2">
