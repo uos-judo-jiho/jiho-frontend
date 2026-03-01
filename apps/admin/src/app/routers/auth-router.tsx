@@ -1,11 +1,7 @@
-import { Route, Routes } from "react-router-dom";
-
+import { WithHelmet } from "@/components/utils/with-helmet";
 import { WithSuspense } from "@/components/utils/WithSuspense";
-
-import Helmet from "@/components/common/helmet/Helmet";
 import { Awards } from "@/pages/Awards";
 import { HomePage } from "@/pages/home-page";
-import { LoginPage } from "@/pages/login-page";
 import Gallery from "@/pages/News/Gallery/Gallery";
 import { GalleryList } from "@/pages/News/Gallery/GalleryList";
 import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
@@ -14,22 +10,13 @@ import NewsIndex from "@/pages/News/NewsIndex";
 import NewsYear from "@/pages/News/NewsYear";
 import Notice from "@/pages/Notice/Notice";
 import NoticeDetail from "@/pages/Notice/NoticeDetail";
-import { Register } from "@/pages/register-page";
 import { TrainingLogPage } from "@/pages/training-log";
 import { TrainingLogDetail } from "@/pages/training-log/training-log-detail";
 import { UserPage } from "@/pages/user";
 import { UserDetailPage } from "@/pages/user/detail";
 import WriteArticlePage from "@/pages/WriteArticlePage";
+import { Route, Routes } from "react-router-dom";
 import { RouterUrl } from "./router-url";
-
-const WithHelmet = (Component: React.ReactNode, title: string) => {
-  return (
-    <>
-      <Helmet title={title} />
-      {Component}
-    </>
-  );
-};
 
 export const AuthRouter = () => {
   return (
@@ -156,25 +143,6 @@ export const AuthRouter = () => {
       <Route
         path={RouterUrl.수상내역}
         element={WithHelmet(<Awards />, "수상내역")}
-      />
-    </Routes>
-  );
-};
-
-export const PublicRouter = () => {
-  return (
-    <Routes>
-      <Route
-        path={RouterUrl.홈}
-        element={WithHelmet(<LoginPage />, "로그인")}
-      />
-      <Route
-        path={RouterUrl.로그인}
-        element={WithHelmet(<LoginPage />, "로그인")}
-      />
-      <Route
-        path={RouterUrl.회원가입}
-        element={WithHelmet(<Register />, "회원가입")}
       />
     </Routes>
   );
