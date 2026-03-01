@@ -1,11 +1,13 @@
 import { RouterUrl } from "@/app/routers/router-url";
 import { v2Admin } from "@packages/api";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo");
 
   const [formState, setFormState] = useState({
     email: "",
@@ -16,7 +18,10 @@ export const LoginPage = () => {
     mutation: {
       onSuccess: () => {
         toast.success("로그인에 성공했습니다.");
-        navigate(RouterUrl.홈, { replace: true });
+        const destination = redirectTo
+          ? decodeURIComponent(redirectTo)
+          : RouterUrl.홈;
+        navigate(destination, { replace: true });
         window.location.reload();
       },
       onError: (error: any) => {
