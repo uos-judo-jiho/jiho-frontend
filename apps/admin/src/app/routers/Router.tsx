@@ -18,6 +18,7 @@ import { Register } from "@/pages/register-page";
 import { TrainingLogPage } from "@/pages/training-log";
 import { TrainingLogDetail } from "@/pages/training-log/training-log-detail";
 import { UserPage } from "@/pages/user";
+import { UserDetailPage } from "@/pages/user/detail";
 import WriteArticlePage from "@/pages/WriteArticlePage";
 import { RouterUrl } from "./router-url";
 
@@ -38,12 +39,11 @@ export const AuthRouter = () => {
       {/* 회원 관리 */}
       <Route
         path={RouterUrl.회원.목록}
-        element={WithHelmet(
-          <WithSuspense>
-            <UserPage />
-          </WithSuspense>,
-          "회원 관리",
-        )}
+        element={WithHelmet(<UserPage />, "회원 관리")}
+      />
+      <Route
+        path={RouterUrl.회원.상세({ id: ":id" as unknown as number })}
+        element={WithHelmet(<UserDetailPage />, "회원 상세")}
       />
 
       {/* 훈련일지 */}

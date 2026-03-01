@@ -24,7 +24,7 @@ export const RouterUrl = {
   회원: {
     목록: "/users",
     상세: ({ id }: { id: number }) => `/users/${id}`,
-    승인: "/users/approval",
+    전체: "/users/all",
   },
   마이페이지: {
     루트: "/mypage",

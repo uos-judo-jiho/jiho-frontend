@@ -42,7 +42,7 @@ function SheetWrapper({
     }
 
     if (/^\d+$/.test(segment)) {
-      return `#${segment}`;
+      return segment;
     }
 
     return decodeURIComponent(segment);

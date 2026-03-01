@@ -48,7 +48,7 @@ export const Register = () => {
     const passwordRegex = /^(?=.*[0-9]).{8,}$/;
     if (!passwordRegex.test(formState.password)) {
       newErrors.password =
-        "비밀번호는 8자 이상이며 숫자를 1개 이상 포함해야 합니다.";
+        "비밀번호는 8자 이상이며 숫자를 1개 이상 포함해야 해요.";
       isValid = false;
     }
 

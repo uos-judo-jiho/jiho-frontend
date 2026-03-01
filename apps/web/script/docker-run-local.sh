@@ -8,22 +8,22 @@ IMAGE_NAME="jiho-frontend:local"
 CONTAINER_NAME="jiho-frontend-test"
 PORT="3000"
 
-echo "🚀 Docker 컨테이너를 시작합니다..."
+echo "🚀 Docker 컨테이너를 시작해요..."
 
 # 기존 컨테이너가 실행 중이면 중지
 if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
-    echo "⏹️  기존 컨테이너를 중지합니다..."
+    echo "⏹️  기존 컨테이너를 중지해요..."
     docker stop $CONTAINER_NAME
 fi
 
 # 기존 컨테이너가 있으면 제거
 if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
-    echo "🗑️  기존 컨테이너를 제거합니다..."
+    echo "🗑️  기존 컨테이너를 제거해요..."
     docker rm $CONTAINER_NAME
 fi
 
 # 새 컨테이너 실행
-echo "▶️  새 컨테이너를 실행합니다..."
+echo "▶️  새 컨테이너를 실행해요..."
 docker run -d \
   --name $CONTAINER_NAME \
   -p $PORT:$PORT \

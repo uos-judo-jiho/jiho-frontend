@@ -20,7 +20,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   value,
   onChange,
   disabled = false,
-  placeholder = "마크다운으로 내용을 작성하세요...\n\n# 제목\n\n**굵은 글씨**와 *기울임꼴*을 사용할 수 있습니다.\n\n- 리스트 항목 1\n- 리스트 항목 2\n\n```javascript\n// 코드 블록도 지원됩니다\nconsole.log('Hello, World!');\n```\n\n> 인용구도 사용 가능합니다.\n\n[링크](https://example.com)와 이미지도 추가할 수 있습니다.",
+  placeholder = "마크다운으로 내용을 작성하세요...\n\n# 제목\n\n**굵은 글씨**와 *기울임꼴*을 사용할 수 있습니다.\n\n- 리스트 항목 1\n- 리스트 항목 2\n\n```javascript\n// 코드 블록도 지원됩니다\nconsole.log('Hello, World!');\n```\n\n> 인용구도 사용 가능해요.\n\n[링크](https://example.com)와 이미지도 추가할 수 있습니다.",
 }) => {
   const [mode, setMode] = useState<EditorMode>("live");
   const [internalValue, setInternalValue] = useState(value);

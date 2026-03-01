@@ -1,8 +1,10 @@
 import { RouterUrl } from "@/app/routers/router-url";
+import PageHeader from "@/components/layouts/PageHeader";
+import { WaitedApproval } from "@/features/user/ui/waited-approval-card";
 import { v2Admin } from "@packages/api";
 import { Users } from "lucide-react";
+import { Suspense } from "react";
 import { Navigate } from "react-router-dom";
-import PageHeader from "@/components/layouts/PageHeader";
 
 export const UserPage = () => {
   const { data: meData, isLoading } = v2Admin.useGetApiV2AdminMe({
@@ -26,14 +28,11 @@ export const UserPage = () => {
       <PageHeader
         icon={Users}
         title="회원 관리"
-        description="시스템에 등록된 회원을 관리합니다."
+        description="시스템에 등록된 회원을 관리해요."
       />
-
-      <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-sm">
-        <div className="p-8 text-center">
-          <p className="text-neutral-500">회원 목록 기능을 준비 중입니다.</p>
-        </div>
-      </div>
+      <Suspense>
+        <WaitedApproval showAll />
+      </Suspense>
     </div>
   );
 };
