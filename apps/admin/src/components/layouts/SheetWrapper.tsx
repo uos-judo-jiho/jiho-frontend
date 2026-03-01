@@ -1,3 +1,4 @@
+import { RouteLabels } from "@/app/routers/router-url";
 import { cn } from "@/shared/lib/utils";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -20,21 +21,9 @@ function SheetWrapper({
     .split("/")
     .filter(Boolean);
 
-  const labelMap: Record<string, string> = {
-    home: "홈",
-    training: "훈련",
-    news: "지호지",
-    notice: "공지",
-    gallery: "갤러리",
-    awards: "수상내역",
-    write: "작성",
-    users: "회원",
-    mypage: "마이페이지",
-  };
-
   const formatSegmentLabel = (segment: string) => {
-    if (labelMap[segment]) {
-      return labelMap[segment];
+    if (RouteLabels[segment]) {
+      return RouteLabels[segment];
     }
 
     if (/^\d{4}$/.test(segment)) {

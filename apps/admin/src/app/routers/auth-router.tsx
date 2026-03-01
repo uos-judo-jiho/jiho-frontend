@@ -3,6 +3,7 @@ import { WithSuspense } from "@/components/utils/WithSuspense";
 import { Awards } from "@/pages/Awards";
 import { HomePage } from "@/pages/home-page";
 import { MyPage } from "@/pages/my-page";
+import { PasswordChangePage } from "@/pages/my-page/password-chage-page";
 import Gallery from "@/pages/News/Gallery/Gallery";
 import { GalleryList } from "@/pages/News/Gallery/GalleryList";
 import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
@@ -71,6 +72,10 @@ export const AuthRouter = () => {
       <Route
         path={RouterUrl.마이페이지.루트}
         element={WithHelmet(<MyPage />, "마이페이지")}
+      />
+      <Route
+        path={RouterUrl.마이페이지.비밀번호변경}
+        element={WithHelmet(<PasswordChangePage />, "비밀번호 변경")}
       />
 
       {/* 회원 관리 - Staff 이상 */}

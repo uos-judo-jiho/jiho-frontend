@@ -29,5 +29,21 @@ export const RouterUrl = {
   마이페이지: {
     루트: "/mypage",
     정보수정: "/mypage/edit",
+    비밀번호변경: "/mypage/password-change",
   },
 } as const;
+
+export const RouteLabels: Record<string, string> = {
+  home: "홈",
+  training: "훈련",
+  news: "지호지",
+  notice: "공지",
+  gallery: "갤러리",
+  awards: "수상내역",
+  write: "작성",
+  users: "회원",
+  mypage: "마이페이지",
+  "password-change": "비밀번호 변경",
+  all: "전체",
+  edit: "수정",
+};
