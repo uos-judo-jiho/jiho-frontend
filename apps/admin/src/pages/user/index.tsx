@@ -1,5 +1,6 @@
 import { RouterUrl } from "@/app/routers/router-url";
 import PageHeader from "@/components/layouts/PageHeader";
+import { UserTable } from "@/features/user/ui/user-table";
 import { WaitedApproval } from "@/features/user/ui/waited-approval-card";
 import { v2Admin } from "@packages/api";
 import { Users } from "lucide-react";
@@ -30,9 +31,14 @@ export const UserPage = () => {
         title="회원 관리"
         description="시스템에 등록된 회원을 관리해요."
       />
-      <Suspense>
-        <WaitedApproval showAll />
-      </Suspense>
+      <div className="flex flex-col gap-4">
+        <Suspense>
+          <WaitedApproval showAll />
+        </Suspense>
+        <Suspense>
+          <UserTable />
+        </Suspense>
+      </div>
     </div>
   );
 };

@@ -24,13 +24,7 @@ export const WaitedApproval = ({ showAll = false }: WaitedApprovalProps) => {
   });
 
   if (approvalData.length === 0) {
-    return (
-      <div className="p-4">
-        현재 승인 대기 중인 회원이 없습니다.
-        <br />
-        <p className="text-center">좋은 하루 보내세요!</p>
-      </div>
-    );
+    return <p>현재 승인 대기 중인 회원이 없어요.</p>;
   }
 
   return (
