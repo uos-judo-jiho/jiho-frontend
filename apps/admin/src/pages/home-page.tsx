@@ -1,4 +1,5 @@
 import { WaitedApproval } from "@/features/user/ui/waited-approval-card";
+import { WaitedRole } from "@/features/user/ui/waited-role-card";
 import { v2Admin } from "@packages/api";
 import { Suspense } from "react";
 
@@ -28,6 +29,9 @@ export const HomePage = () => {
     <div>
       <Suspense>
         <WaitedApproval />
+      </Suspense>
+      <Suspense>
+        <WaitedRole />
       </Suspense>
     </div>
   );

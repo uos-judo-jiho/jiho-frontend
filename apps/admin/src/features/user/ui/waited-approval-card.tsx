@@ -24,12 +24,12 @@ export const WaitedApproval = ({ showAll = false }: WaitedApprovalProps) => {
   });
 
   if (approvalData.length === 0) {
-    return <p>현재 승인 대기 중인 회원이 없어요.</p>;
+    return <p>현재 가입 승인 대기 중인 회원이 없어요.</p>;
   }
 
   return (
     <div>
-      <h2 className="text-xl font-bold">승인 대기 중인 회원</h2>
+      <h2 className="text-xl font-bold">가입 승인 대기 중인 회원</h2>
       <div className="text-sm flex gap-2 items-center">
         <p className="text-neutral-600">
           현재 승인 대기 중인 회원이 {approvalData.length}명 있어요.
@@ -90,7 +90,7 @@ const ApprovalItem = ({
   });
 
   return (
-    <div key={admin.id} className="flex flex-row justify-between items-center">
+    <div className="flex flex-row justify-between items-center">
       <div className="flex flex-col p-2 gap-2 justify-between">
         <div className="flex-1 flex gap-1 items-center">
           <Badge theme="blue">{getApprovalStatus(admin.status)}</Badge>
