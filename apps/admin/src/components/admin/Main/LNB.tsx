@@ -15,18 +15,41 @@ import {
 import { Suspense, useCallback, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+const StaffAndAbove = ["root", "president", "manager", "staff"];
+const GeneralAndAbove = [...StaffAndAbove, "general"];
+
 const menuItems = [
   { icon: Home, label: "홈", path: RouterUrl.홈 },
   {
     icon: Users,
     label: "회원",
     path: RouterUrl.회원.목록,
-    allowedRoles: ["root", "president", "manager", "staff"],
+    allowedRoles: StaffAndAbove,
   },
-  { icon: BookOpen, label: "훈련", path: RouterUrl.훈련일지.목록 },
-  { icon: Newspaper, label: "지호지", path: RouterUrl.뉴스.목록 },
-  { icon: Bell, label: "공지", path: RouterUrl.공지사항.목록 },
-  { icon: Trophy, label: "수상내역", path: RouterUrl.수상내역 },
+  {
+    icon: BookOpen,
+    label: "훈련",
+    path: RouterUrl.훈련일지.목록,
+    allowedRoles: GeneralAndAbove,
+  },
+  {
+    icon: Newspaper,
+    label: "지호지",
+    path: RouterUrl.뉴스.목록,
+    allowedRoles: GeneralAndAbove,
+  },
+  {
+    icon: Bell,
+    label: "공지",
+    path: RouterUrl.공지사항.목록,
+    allowedRoles: StaffAndAbove,
+  },
+  {
+    icon: Trophy,
+    label: "수상내역",
+    path: RouterUrl.수상내역,
+    allowedRoles: StaffAndAbove,
+  },
 ];
 
 export const LNB = () => {

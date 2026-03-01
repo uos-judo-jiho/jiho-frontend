@@ -1,4 +1,12 @@
 import { Badge } from "@/components/common/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { v2Admin } from "@packages/api";
 import { getUserRole } from "../utils/get-user-role";
 
@@ -11,34 +19,36 @@ export const UserTable = () => {
   });
 
   return (
-    <table className="w-full table-auto border-collapse border border-gray-300">
-      <thead>
-        <tr>
-          <th className="border border-gray-300 px-4 py-2">ID</th>
-          <th className="border border-gray-300 px-4 py-2">이메일</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.map((user) => (
-          <tr key={user.id}>
-            <td className="border border-gray-300 px-4 py-2">
-              <div className="flex items-center gap-2">
-                <span>{user.id}</span>
-                <Badge
-                  theme={
-                    ["root", "president", "manager"].includes(user.role)
-                      ? "blue"
-                      : "gray"
-                  }
-                >
-                  {getUserRole(user.role)}
-                </Badge>
-              </div>
-            </td>
-            <td className="border border-gray-300 px-4 py-2">{user.email}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-muted hover:none">
+            <TableHead className="w-[100px]">ID</TableHead>
+            <TableHead>이메일</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {users.map((user) => (
+            <TableRow key={user.id} className="hover:bg-muted/90">
+              <TableCell className="font-medium">{user.id}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Badge
+                    theme={
+                      ["root", "president", "manager"].includes(user.role)
+                        ? "blue"
+                        : "gray"
+                    }
+                  >
+                    {getUserRole(user.role)}
+                  </Badge>
+                  {user.email}
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
