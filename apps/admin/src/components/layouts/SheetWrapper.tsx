@@ -43,7 +43,7 @@ function SheetWrapper({
     <div
       className={cn(
         "relative mx-auto",
-        "w-full px-4 md:px-8 max-w-7xl",
+        "w-full px-4 md:px-6 max-w-8xl",
         "flex flex-col min-h-screen",
         className,
       )}

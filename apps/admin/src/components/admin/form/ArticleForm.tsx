@@ -1,8 +1,11 @@
 import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
+import { Badge } from "@/components/common/badge";
+import { PageHeader } from "@/components/layouts/PageHeader";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { v2Admin, v2Api } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
+import { Bell, BookOpen, Newspaper } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageUploader from "./ImageUploader/ImageUploader";
@@ -37,9 +40,60 @@ const initValues: Omit<ArticleInfoType, "id"> = {
 };
 
 function ArticleForm({ data, type, gallery }: ArticleFormProps) {
+  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+    axios: { withCredentials: true },
+    query: {
+      select: (data) => data.data,
+    },
+  });
+
+  const userRole = meData.user.role;
+  const StaffAndAbove = ["root", "president", "manager", "staff"];
+  const GeneralAndAbove = [...StaffAndAbove, "general"];
+
+  // Permission logic
+  const canEdit =
+    type === "training"
+      ? GeneralAndAbove.includes(userRole)
+      : StaffAndAbove.includes(userRole);
+
+  const readOnly = !canEdit;
+
+  const getHeaderInfo = () => {
+    const isEdit = !!data;
+    if (gallery) {
+      return {
+        title: `${values.dateTime.slice(0, 4)}년 갤러리 작성`,
+        icon: Newspaper,
+      };
+    }
+    switch (type) {
+      case "news":
+        return {
+          title: isEdit ? "지호지 수정" : "지호지 글쓰기",
+          icon: Newspaper,
+        };
+      case "training":
+        return {
+          title: isEdit ? "훈련일지 수정" : "훈련일지 글쓰기",
+          icon: BookOpen,
+        };
+      case "notice":
+        return {
+          title: isEdit ? "공지사항 수정" : "공지사항 글쓰기",
+          icon: Bell,
+        };
+      default:
+        return { title: "게시글", icon: Newspaper };
+    }
+  };
+
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
     data ?? initValues,
   );
+
+  const headerInfo = getHeaderInfo();
+
   const [isSubmitOpen, setIsSubmitOpen] = useState<boolean>(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
@@ -276,6 +330,12 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   return (
     <>
+      <PageHeader
+        title={headerInfo.title}
+        icon={headerInfo.icon}
+        badge={readOnly ? <Badge theme="gray">보기 전용</Badge> : null}
+        className="mb-6"
+      />
       <FormContainer>
         <div>
           {!gallery && (
@@ -285,7 +345,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                   작성자
                 </StyledLabel>
                 <Input
-                  disabled={gallery}
+                  disabled={readOnly || gallery}
                   id="author"
                   type="text"
                   name="author"
@@ -300,7 +360,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                   제목
                 </StyledLabel>
                 <Input
-                  disabled={gallery}
+                  disabled={readOnly || gallery}
                   id="title"
                   type="text"
                   name="title"
@@ -325,7 +385,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                 {/* 태그 입력란 */}
                 <div className="flex flex-row items-center mb-2 gap-4">
                   <Input
-                    disabled={gallery}
+                    disabled={readOnly || gallery}
                     id="tagInput"
                     type="text"
                     name="tagInput"
@@ -342,6 +402,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                     }}
                   />
                   <Button
+                    disabled={readOnly}
                     onClick={(event) => {
                       event.preventDefault();
                       handleTagAdd();
@@ -354,7 +415,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                   <TagsContainer key={"tag" + index}>
                     {index + 1}
                     <Input
-                      disabled={gallery}
+                      disabled={readOnly || gallery}
                       id={"tag" + index}
                       name={"tag" + index}
                       onChange={(event) => handleTagsChange(event, index)}
@@ -362,6 +423,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                       value={tag}
                     />
                     <TagDeleteButton
+                      disabled={readOnly}
                       onClick={(event) => handleDeleteTagClick(event, index)}
                     >
                       ❌
@@ -376,7 +438,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               날짜
             </StyledLabel>
             <Input
-              disabled={gallery}
+              disabled={readOnly || gallery}
               id="date"
               type="date"
               name="date"
@@ -390,6 +452,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
             setValues={handleUploadImages}
             data={data?.imgSrcs}
             imageLimit={gallery ? 50 : 10}
+            disabled={readOnly}
           />
         </div>
       </FormContainer>
@@ -399,12 +462,12 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           onChange={handleMarkdownChange}
           onImageUpload={handleImageUpload}
           type={type}
-          disabled={gallery}
+          disabled={readOnly || gallery}
         />
       )}
 
       <ButtonContainer>
-        {!isNew && !gallery && (
+        {!isNew && !gallery && canEdit && (
           <Button
             variant={"destructive"}
             onClick={handleDeleteSubmit}
@@ -413,21 +476,23 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
             삭제
           </Button>
         )}
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full justify-end">
           <Button
             className="text-primary bg-gray-300 hover:bg-gray-500"
             variant={"secondary"}
             onClick={handleCancelSubmit}
           >
-            취소
+            {canEdit ? "취소" : "목록으로"}
           </Button>
-          <Button
-            variant={"default"}
-            className="text-primary bg-blue-500 hover:bg-blue-600"
-            onClick={handleSubmitOpen}
-          >
-            제출
-          </Button>
+          {canEdit && (
+            <Button
+              variant={"default"}
+              className="text-primary bg-blue-500 hover:bg-blue-600"
+              onClick={handleSubmitOpen}
+            >
+              제출
+            </Button>
+          )}
         </div>
       </ButtonContainer>
 
