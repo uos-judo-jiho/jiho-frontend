@@ -7,7 +7,7 @@ import { v2Api } from "@packages/api";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
-const TrainingLog = () => {
+export const TrainingLogPage = () => {
   const {
     data,
     refetch: refreshTraining,
@@ -49,5 +49,3 @@ const TrainingLog = () => {
     </FormContainer>
   );
 };
-
-export default TrainingLog;

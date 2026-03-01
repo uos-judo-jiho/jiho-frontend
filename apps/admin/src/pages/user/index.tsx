@@ -1,9 +1,9 @@
+import { RouterUrl } from "@/app/routers/router-url";
 import { v2Admin } from "@packages/api";
 import { Users } from "lucide-react";
 import { Navigate } from "react-router-dom";
-import { RouterUrl } from "@/app/routers/router-url";
 
-const MemberList = () => {
+export const UserPage = () => {
   const { data: meData, isLoading } = v2Admin.useGetApiV2AdminMe({
     axios: { withCredentials: true },
     query: {
@@ -29,7 +29,9 @@ const MemberList = () => {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-neutral-900">회원 관리</h2>
-            <p className="text-neutral-500 text-sm">시스템에 등록된 회원을 관리합니다.</p>
+            <p className="text-neutral-500 text-sm">
+              시스템에 등록된 회원을 관리합니다.
+            </p>
           </div>
         </div>
       </div>
@@ -42,5 +44,3 @@ const MemberList = () => {
     </div>
   );
 };
-
-export default MemberList;

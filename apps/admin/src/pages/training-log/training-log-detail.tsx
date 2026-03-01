@@ -5,7 +5,7 @@ import { v2Api } from "@packages/api";
 import { assert } from "es-toolkit";
 import { useParams } from "react-router-dom";
 
-const TrainingLogDetail = () => {
+export const TrainingLogDetail = () => {
   const { id } = useParams<{ id: string }>();
 
   assert(id !== undefined, "훈련일지 ID가 없습니다.");
@@ -26,5 +26,3 @@ const TrainingLogDetail = () => {
     </>
   );
 };
-
-export default TrainingLogDetail;

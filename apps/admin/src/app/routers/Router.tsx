@@ -5,20 +5,20 @@ import { WithSuspense } from "@/components/utils/WithSuspense";
 import Login from "@/components/admin/form/Login";
 import Helmet from "@/components/common/helmet/Helmet";
 import { Awards } from "@/pages/Awards/Awards";
-import MemberList from "@/pages/Member/MemberList";
+import { HomePage } from "@/pages/home-page";
 import Gallery from "@/pages/News/Gallery/Gallery";
 import { GalleryList } from "@/pages/News/Gallery/GalleryList";
 import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
 import NewsDetail from "@/pages/News/NewsDetail";
+import NewsIndex from "@/pages/News/NewsIndex";
+import NewsYear from "@/pages/News/NewsYear";
+import Notice from "@/pages/Notice/Notice";
 import NoticeDetail from "@/pages/Notice/NoticeDetail";
-import { Register } from "@/pages/Register";
-import TrainingLogDetail from "@/pages/trainingLog/TrainingLogDetail";
+import { Register } from "@/pages/register-page";
+import { TrainingLogPage } from "@/pages/training-log";
+import { TrainingLogDetail } from "@/pages/training-log/training-log-detail";
+import { UserPage } from "@/pages/user";
 import WriteArticlePage from "@/pages/WriteArticlePage";
-import { HomePage } from "../../pages/HomePage";
-import NewsIndex from "../../pages/News/NewsIndex";
-import NewsYear from "../../pages/News/NewsYear";
-import Notice from "../../pages/Notice/Notice";
-import TrainingLog from "../../pages/trainingLog/TrainingLog";
 import { RouterUrl } from "./router-url";
 
 const WithHelmet = (Component: React.ReactNode, title: string) => {
@@ -40,7 +40,7 @@ export const AuthRouter = () => {
         path={RouterUrl.회원.목록}
         element={WithHelmet(
           <WithSuspense>
-            <MemberList />
+            <UserPage />
           </WithSuspense>,
           "회원 관리",
         )}
@@ -49,7 +49,7 @@ export const AuthRouter = () => {
       {/* 훈련일지 */}
       <Route
         path={RouterUrl.훈련일지.목록}
-        element={WithHelmet(<TrainingLog />, "훈련일지")}
+        element={WithHelmet(<TrainingLogPage />, "훈련일지")}
       />
       <Route
         path={RouterUrl.훈련일지.상세({ id: ":id" as unknown as number })}
