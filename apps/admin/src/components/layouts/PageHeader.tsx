@@ -1,6 +1,6 @@
+import { cn } from "@/shared/lib/utils";
 import { LucideIcon } from "lucide-react";
 import React from "react";
-import { cn } from "@/shared/lib/utils";
 
 interface PageHeaderProps {
   icon?: LucideIcon;
@@ -10,7 +10,7 @@ interface PageHeaderProps {
   className?: string;
 }
 
-const PageHeader = ({
+export const PageHeader = ({
   icon: Icon,
   title,
   description,
@@ -36,5 +36,3 @@ const PageHeader = ({
     </div>
   );
 };
-
-export default PageHeader;

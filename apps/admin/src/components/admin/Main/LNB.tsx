@@ -174,21 +174,22 @@ const UserInfoButton = ({
 
   return (
     <div>
-      <div
+      <Link
+        to={RouterUrl.마이페이지.루트}
         title={isCollapsed ? meData?.user.email || "사용자 정보" : ""}
         className={cn(
           "flex items-center gap-3 px-4 py-3 w-full text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700 rounded-lg transition-colors mb-2",
           isCollapsed ? "justify-center px-2" : "justify-start",
         )}
       >
-        <div className="w-8 h-8 bg-neutral-200 rounded-full flex items-center justify-center text-sm font-medium text-neutral-600">
+        <div className="w-8 h-8 bg-neutral-200 rounded-full flex items-center justify-center text-sm font-medium text-neutral-600 shrink-0">
           {meData?.user.email ? meData.user.email.charAt(0).toUpperCase() : "U"}
         </div>
 
         <span className={cn("truncate", isCollapsed ? "w-0 hidden" : "w-auto")}>
           {meData?.user.email || "사용자 정보"}
         </span>
-      </div>
+      </Link>
       <button
         onClick={handleLogout}
         title={isCollapsed ? "로그아웃" : ""}

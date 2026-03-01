@@ -1,5 +1,5 @@
 import { RouterUrl } from "@/app/routers/router-url";
-import PageHeader from "@/components/layouts/PageHeader";
+import { PageHeader } from "@/components/layouts/PageHeader";
 import { UserTable } from "@/features/user/ui/user-table";
 import { WaitedApproval } from "@/features/user/ui/waited-approval-card";
 import { v2Admin } from "@packages/api";
