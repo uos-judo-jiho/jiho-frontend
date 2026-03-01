@@ -2,6 +2,7 @@ import { RouterUrl } from "@/app/routers/router-url";
 import { v2Admin } from "@packages/api";
 import { Users } from "lucide-react";
 import { Navigate } from "react-router-dom";
+import PageHeader from "@/components/layouts/PageHeader";
 
 export const UserPage = () => {
   const { data: meData, isLoading } = v2Admin.useGetApiV2AdminMe({
@@ -22,19 +23,11 @@ export const UserPage = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-neutral-100 rounded-lg">
-            <Users className="w-6 h-6 text-neutral-900" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-neutral-900">회원 관리</h2>
-            <p className="text-neutral-500 text-sm">
-              시스템에 등록된 회원을 관리합니다.
-            </p>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        icon={Users}
+        title="회원 관리"
+        description="시스템에 등록된 회원을 관리합니다."
+      />
 
       <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-sm">
         <div className="p-8 text-center">
