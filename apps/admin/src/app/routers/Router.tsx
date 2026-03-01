@@ -2,10 +2,10 @@ import { Route, Routes } from "react-router-dom";
 
 import { WithSuspense } from "@/components/utils/WithSuspense";
 
-import Login from "@/components/admin/form/Login";
 import Helmet from "@/components/common/helmet/Helmet";
-import { Awards } from "@/pages/Awards/Awards";
+import { Awards } from "@/pages/Awards";
 import { HomePage } from "@/pages/home-page";
+import { LoginPage } from "@/pages/login-page";
 import Gallery from "@/pages/News/Gallery/Gallery";
 import { GalleryList } from "@/pages/News/Gallery/GalleryList";
 import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
@@ -164,10 +164,13 @@ export const AuthRouter = () => {
 export const PublicRouter = () => {
   return (
     <Routes>
-      <Route path={RouterUrl.홈} element={WithHelmet(<Login />, "로그인")} />
+      <Route
+        path={RouterUrl.홈}
+        element={WithHelmet(<LoginPage />, "로그인")}
+      />
       <Route
         path={RouterUrl.로그인}
-        element={WithHelmet(<Login />, "로그인")}
+        element={WithHelmet(<LoginPage />, "로그인")}
       />
       <Route
         path={RouterUrl.회원가입}

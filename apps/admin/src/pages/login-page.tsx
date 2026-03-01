@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const Login = () => {
+export const LoginPage = () => {
   const navigate = useNavigate();
 
   const [formState, setFormState] = useState({
@@ -129,5 +129,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;
