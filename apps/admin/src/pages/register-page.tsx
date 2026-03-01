@@ -1,10 +1,12 @@
 import { RouterUrl } from "@/app/routers/router-url";
 import { v2Admin } from "@packages/api";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export const Register = () => {
+  const navigate = useNavigate();
+
   const [formState, setFormState] = useState({
     email: "",
     password: "",
@@ -20,7 +22,7 @@ export const Register = () => {
     mutation: {
       onSuccess: () => {
         toast.success("회원가입이 완료되었습니다.");
-        window.location.href = RouterUrl.로그인;
+        navigate(RouterUrl.로그인);
       },
       onError: (error: any) => {
         const message =
