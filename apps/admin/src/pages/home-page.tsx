@@ -33,7 +33,8 @@ const CommonSection = () => {
         안녕하세요. {meData?.user.email}님!
         <br />
       </div>
-      {meData?.user.role === "etc" ? (
+      {meData?.user.role === "etc" &&
+      meData?.user.pendingUpgradeRequest != null ? (
         <div className="flex flex-row gap-2 items-center">
           <p className="text-sm text-neutral-500">
             유도부 회원이신가요? 관리자에게 등급 업그레이드를 요청하시면 더
@@ -42,6 +43,13 @@ const CommonSection = () => {
           <RequestUpdradeButton />
         </div>
       ) : null}
+      {meData?.user.pendingUpgradeRequest?.status === "pending" && (
+        <div className="flex flex-row gap-2 items-center">
+          <p className="text-sm text-yellow-600">
+            등급 업그레이드 요청이 관리자 승인 대기 중이에요.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
