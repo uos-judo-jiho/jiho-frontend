@@ -38,7 +38,12 @@ export const AdditionalMyInfo = () => {
       <div className="grid grid-cols-3 border-b border-gray-50 pb-4">
         <span className="text-sm font-medium text-neutral-500">연락처</span>
         <span className="col-span-2 text-sm">
-          {additionalInfo?.phoneNumber ?? "-"}
+          {additionalInfo?.phoneNumber
+            ? additionalInfo.phoneNumber.replace(
+                /(\d{3})(\d{4})(\d{4})/,
+                "$1-$2-$3",
+              )
+            : "-"}
         </span>
       </div>
       <div className="grid grid-cols-3">

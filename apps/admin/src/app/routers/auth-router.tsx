@@ -2,7 +2,7 @@ import { WithHelmet } from "@/components/utils/with-helmet";
 import { WithSuspense } from "@/components/utils/WithSuspense";
 import { Awards } from "@/pages/Awards";
 import { HomePage } from "@/pages/home-page";
-import { MyPage } from "@/pages/my-page";
+import { EditPage, MyPage } from "@/pages/my-page";
 import { PasswordChangePage } from "@/pages/my-page/password-chage-page";
 import Gallery from "@/pages/News/Gallery/Gallery";
 import { GalleryList } from "@/pages/News/Gallery/GalleryList";
@@ -72,6 +72,10 @@ export const AuthRouter = () => {
       <Route
         path={RouterUrl.마이페이지.루트}
         element={WithHelmet(<MyPage />, "마이페이지")}
+      />
+      <Route
+        path={RouterUrl.마이페이지.정보수정}
+        element={WithHelmet(<EditPage />, "정보 수정")}
       />
       <Route
         path={RouterUrl.마이페이지.비밀번호변경}
