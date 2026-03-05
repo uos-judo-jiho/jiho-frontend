@@ -1,11 +1,14 @@
 import { cn } from "@/shared/lib/utils";
 
 export type BadgeProps = {
-  theme: "blue" | "green" | "red" | "yellow" | "gray";
+  /**
+   * @default gray
+   */
+  theme?: "blue" | "green" | "red" | "yellow" | "gray";
   children: React.ReactNode;
 };
 
-export const Badge = ({ theme, children }: BadgeProps) => {
+export const Badge = ({ theme = "gray", children }: BadgeProps) => {
   const themeClasses = {
     blue: "bg-blue-100 text-blue-800",
     green: "bg-green-100 text-green-800",
