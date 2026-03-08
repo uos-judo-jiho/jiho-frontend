@@ -1,21 +1,45 @@
 import { RouterUrl } from "@/app/routers/router-url";
+import { cn } from "@/shared/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { v2Admin } from "@packages/api";
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import * as z from "zod";
+
+const registerSchema = z
+  .object({
+    email: z
+      .string()
+      .email("유효한 이메일 주소를 입력해주세요.")
+      .min(1, "이메일을 입력해주세요."),
+    password: z
+      .string()
+      .min(8, "비밀번호는 8자 이상이어야 합니다.")
+      .regex(/[0-9]/, "숫자를 1개 이상 포함해야 해요."),
+    confirmPassword: z.string().min(1, "비밀번호 확인을 입력해주세요."),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "비밀번호가 일치하지 않습니다.",
+    path: ["confirmPassword"],
+  });
+
+type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export const Register = () => {
   const navigate = useNavigate();
 
-  const [formState, setFormState] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const signupMutation = v2Admin.usePostApiV2AdminSignup({
@@ -35,46 +59,14 @@ export const Register = () => {
     },
   });
 
-  const validate = () => {
-    let isValid = true;
-    const newErrors = { email: "", password: "", confirmPassword: "" };
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formState.email)) {
-      newErrors.email = "유효한 이메일 주소를 입력해주세요.";
-      isValid = false;
-    }
-
-    // Password validation: min 8 characters, at least one number
-    const passwordRegex = /^(?=.*[0-9]).{8,}$/;
-    if (!passwordRegex.test(formState.password)) {
-      newErrors.password =
-        "비밀번호는 8자 이상이며 숫자를 1개 이상 포함해야 해요.";
-      isValid = false;
-    }
-
-    // Confirm Password validation
-    if (formState.password !== formState.confirmPassword) {
-      newErrors.confirmPassword = "비밀번호가 일치하지 않습니다.";
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (validate()) {
-      signupMutation.mutate({
-        data: {
-          email: formState.email,
-          password: formState.password,
-          passwordConfirm: formState.confirmPassword,
-        },
-      });
-    }
+  const onSubmit = (values: RegisterFormValues) => {
+    signupMutation.mutate({
+      data: {
+        email: values.email,
+        password: values.password,
+        passwordConfirm: values.confirmPassword,
+      },
+    });
   };
 
   return (
@@ -93,7 +85,7 @@ export const Register = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -104,15 +96,8 @@ export const Register = () => {
               </label>
               <input
                 id="email"
-                name="email"
                 type="email"
-                value={formState.email}
-                onChange={(event) =>
-                  setFormState({
-                    ...formState,
-                    email: event.currentTarget.value,
-                  })
-                }
+                {...register("email")}
                 className={cn(
                   "h-11 w-full rounded-lg border bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2",
                   errors.email
@@ -120,10 +105,9 @@ export const Register = () => {
                     : "border-slate-200 focus:border-slate-400 focus:ring-slate-200",
                 )}
                 placeholder="이메일 주소"
-                required={true}
               />
               {errors.email && (
-                <p className="text-xs text-red-500">{errors.email}</p>
+                <p className="text-xs text-red-500">{errors.email.message}</p>
               )}
             </div>
 
@@ -137,15 +121,8 @@ export const Register = () => {
               </label>
               <input
                 id="password"
-                name="password"
                 type="password"
-                value={formState.password}
-                onChange={(event) =>
-                  setFormState({
-                    ...formState,
-                    password: event.currentTarget.value,
-                  })
-                }
+                {...register("password")}
                 className={cn(
                   "h-11 w-full rounded-lg border bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2",
                   errors.password
@@ -153,10 +130,9 @@ export const Register = () => {
                     : "border-slate-200 focus:border-slate-400 focus:ring-slate-200",
                 )}
                 placeholder="비밀번호 (8자 이상, 숫자 포함)"
-                required={true}
               />
               {errors.password && (
-                <p className="text-xs text-red-500">{errors.password}</p>
+                <p className="text-xs text-red-500">{errors.password.message}</p>
               )}
             </div>
 
@@ -170,15 +146,8 @@ export const Register = () => {
               </label>
               <input
                 id="confirmPassword"
-                name="confirmPassword"
                 type="password"
-                value={formState.confirmPassword}
-                onChange={(event) =>
-                  setFormState({
-                    ...formState,
-                    confirmPassword: event.currentTarget.value,
-                  })
-                }
+                {...register("confirmPassword")}
                 className={cn(
                   "h-11 w-full rounded-lg border bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2",
                   errors.confirmPassword
@@ -186,10 +155,11 @@ export const Register = () => {
                     : "border-slate-200 focus:border-slate-400 focus:ring-slate-200",
                 )}
                 placeholder="비밀번호 확인"
-                required={true}
               />
               {errors.confirmPassword && (
-                <p className="text-xs text-red-500">{errors.confirmPassword}</p>
+                <p className="text-xs text-red-500">
+                  {errors.confirmPassword.message}
+                </p>
               )}
             </div>
 
@@ -221,8 +191,3 @@ export const Register = () => {
     </div>
   );
 };
-
-// Helper function for class names (similar to cn from shadcn/ui or existing utils)
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}

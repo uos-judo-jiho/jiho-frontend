@@ -1,17 +1,36 @@
 import { RouterUrl } from "@/app/routers/router-url";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { v2Admin } from "@packages/api";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import * as z from "zod";
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .email("유효한 이메일을 입력해주세요.")
+    .min(1, "이메일을 입력해주세요."),
+  password: z.string().min(1, "비밀번호를 입력해주세요."),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const redirectTo = searchParams.get("redirectTo");
 
-  const [formState, setFormState] = useState({
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const loginMutation = v2Admin.usePostApiV2AdminLogin({
@@ -36,12 +55,9 @@ export const LoginPage = () => {
     },
   });
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmit = (values: LoginFormValues) => {
     loginMutation.mutate({
-      data: {
-        ...formState,
-      },
+      data: values,
     });
   };
 
@@ -61,28 +77,23 @@ export const LoginPage = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
             <div className="space-y-2">
               <label
-                htmlFor="username"
+                htmlFor="email"
                 className="text-sm font-medium text-slate-600"
               >
-                Username
+                Email
               </label>
               <input
-                id="username"
-                name="username"
-                value={formState.email}
-                onChange={(event) =>
-                  setFormState({
-                    ...formState,
-                    email: event.currentTarget.value,
-                  })
-                }
+                id="email"
+                {...register("email")}
                 className="h-11 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 placeholder="관리자 이메일"
-                required={true}
               />
+              {errors.email && (
+                <p className="text-xs text-red-500">{errors.email.message}</p>
+              )}
             </div>
             <div className="space-y-2">
               <label
@@ -93,19 +104,14 @@ export const LoginPage = () => {
               </label>
               <input
                 id="password"
-                name="password"
                 type="password"
-                value={formState.password}
-                onChange={(event) =>
-                  setFormState({
-                    ...formState,
-                    password: event.currentTarget.value,
-                  })
-                }
+                {...register("password")}
                 className="h-11 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 placeholder="비밀번호"
-                required={true}
               />
+              {errors.password && (
+                <p className="text-xs text-red-500">{errors.password.message}</p>
+              )}
             </div>
             <button
               className="h-11 w-full rounded-lg bg-slate-900 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
