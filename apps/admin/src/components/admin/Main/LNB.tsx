@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Suspense, useCallback, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { match, P } from "ts-pattern";
 
 const StaffAndAbove = ["root", "president", "manager", "staff"];
 const GeneralAndAbove = [...StaffAndAbove, "general"];
@@ -144,20 +145,21 @@ export const LNB = () => {
 
       <div className="p-4 border-t border-gray-100">
         <Suspense>
-          <UserInfoButton isCollapsed={isCollapsed} meData={meData} />
+          <UserInfoButton isCollapsed={isCollapsed} />
         </Suspense>
       </div>
     </aside>
   );
 };
 
-const UserInfoButton = ({
-  isCollapsed,
-  meData,
-}: {
-  isCollapsed: boolean;
-  meData: any;
-}) => {
+const UserInfoButton = ({ isCollapsed }: { isCollapsed: boolean }) => {
+  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+    axios: { withCredentials: true },
+    query: {
+      select: (data) => data.data,
+    },
+  });
+
   const logoutMutation = v2Admin.usePostApiV2AdminLogout({
     axios: { withCredentials: true },
   });
@@ -172,22 +174,30 @@ const UserInfoButton = ({
     });
   }, [logoutMutation]);
 
+  const userName = match(meData.user)
+    .with(
+      { additionalInfo: { name: P.string } },
+      (user) => user.additionalInfo.name,
+    )
+    .with({ email: P.string }, (user) => user.email)
+    .otherwise(() => null);
+
   return (
     <div>
       <Link
         to={RouterUrl.마이페이지.루트}
-        title={isCollapsed ? meData?.user.email || "사용자 정보" : ""}
+        title={isCollapsed ? (userName ?? '"사용자 정보"') : ""}
         className={cn(
           "flex items-center gap-3 px-4 py-3 w-full text-neutral-500 hover:bg-neutral-50 hover:text-neutral-700 rounded-lg transition-colors mb-2",
           isCollapsed ? "justify-center px-2" : "justify-start",
         )}
       >
         <div className="w-8 h-8 bg-neutral-200 rounded-full flex items-center justify-center text-sm font-medium text-neutral-600 shrink-0">
-          {meData?.user.email ? meData.user.email.charAt(0).toUpperCase() : "U"}
+          {userName ? userName.charAt(0).toUpperCase() : "U"}
         </div>
 
         <span className={cn("truncate", isCollapsed ? "w-0 hidden" : "w-auto")}>
-          {meData?.user.email || "사용자 정보"}
+          {userName}
         </span>
       </Link>
       <button

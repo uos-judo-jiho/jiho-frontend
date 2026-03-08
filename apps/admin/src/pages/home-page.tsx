@@ -1,3 +1,4 @@
+import SkeletonItem from "@/components/common/Skeletons/SkeletonItem";
 import { RequestUpdradeButton } from "@/features/user/ui/request-updrade-button";
 import { WaitedApproval } from "@/features/user/ui/waited-approval-card";
 import { WaitedRole } from "@/features/user/ui/waited-role-card";
@@ -15,14 +16,18 @@ export const HomePage = () => {
     userRole && ["root", "president", "manager", "staff"].includes(userRole);
 
   if (!canManageMembers) {
-    return <CommonSection />;
+    return (
+      <Suspense fallback={<SkeletonItem className="h-20 w-full" />}>
+        <CommonSection />
+      </Suspense>
+    );
   }
 
   return <AdminSection />;
 };
 
 const CommonSection = () => {
-  const { data: meData } = v2Admin.useGetApiV2AdminMe({
+  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
     query: { retry: false, select: (data) => data.data },
     axios: { withCredentials: true },
   });
@@ -33,7 +38,8 @@ const CommonSection = () => {
   return (
     <div className="flex flex-col gap-4">
       <div>
-        안녕하세요. {meData?.user.email}님!
+        안녕하세요.{" "}
+        <b>{meData.user.additionalInfo?.name ?? meData.user.email}</b>님!
         <br />
       </div>
       {meData?.user.role === "etc" && hasPendingUpgradeRequest === false ? (

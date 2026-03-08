@@ -72,9 +72,7 @@ const SideBar = () => {
         title="Close sidebar"
         className="absolute top-3 left-3 w-5 h-5 z-[1] cursor-pointer"
       />
-      <nav>
-        <Menu />
-      </nav>
+      <Menu />
     </div>,
     document.body,
   );
