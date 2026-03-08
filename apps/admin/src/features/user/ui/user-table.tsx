@@ -26,7 +26,7 @@ export const UserTable = () => {
         <TableHeader>
           <TableRow className="bg-muted hover:none">
             <TableHead className="w-[100px]">ID</TableHead>
-            <TableHead>이메일</TableHead>
+            <TableHead>유저</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -45,7 +45,9 @@ export const UserTable = () => {
                     >
                       {getUserRole(user.role)}
                     </Badge>
-                    {user.email}
+                    {user.additionalInfo?.name
+                      ? `${user.additionalInfo.name}${user.additionalInfo.generation ? ` (${user.additionalInfo.generation}기)` : ""}`
+                      : user.email}
                   </div>
                 </Link>
               </TableCell>

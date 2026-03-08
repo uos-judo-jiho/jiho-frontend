@@ -1,4 +1,5 @@
 import { RouterUrl } from "@/app/routers/router-url";
+import SkeletonItem from "@/components/common/Skeletons/SkeletonItem";
 import {
   ButtonContainer,
   FormContainer,
@@ -10,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v2Admin } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
+import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -25,16 +27,18 @@ const editMyInfoSchema = z.object({
 
 type EditMyInfoFormValues = z.infer<typeof editMyInfoSchema>;
 
-export const EditMyInfoForm = () => {
+// 1. 폼의 실제 로직과 UI를 담당하는 내부 컴포넌트
+const EditMyInfoFormInner = ({ user }: { user: any }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: user } = v2Admin.useGetApiV2AdminMeSuspense({
-    axios: { withCredentials: true },
-    query: {
-      select: (data) => data.data.user,
-    },
-  });
+  const initialValues = {
+    name: user.additionalInfo?.name ?? "",
+    generation: user.additionalInfo?.generation ?? 0,
+    studentId: user.additionalInfo?.studentId ?? "",
+    major: user.additionalInfo?.major ?? "",
+    phoneNumber: user.additionalInfo?.phoneNumber ?? "",
+  };
 
   const {
     register,
@@ -42,13 +46,11 @@ export const EditMyInfoForm = () => {
     formState: { errors },
   } = useForm<EditMyInfoFormValues>({
     resolver: zodResolver(editMyInfoSchema),
-    defaultValues: {
-      name: user.additionalInfo?.name ?? "",
-      generation: user.additionalInfo?.generation ?? 0,
-      studentId: user.additionalInfo?.studentId ?? "",
-      major: user.additionalInfo?.major ?? "",
-      phoneNumber: user.additionalInfo?.phoneNumber ?? "",
-    },
+    // values를 통해 비동기 데이터를 폼에 주입
+    values: initialValues,
+    resetOptions: {
+      keepDirtyValues: true, // 사용자가 입력 중인 값은 유지하면서 초기값만 업데이트
+    }
   });
 
   const updateMe = v2Admin.usePutApiV2AdminMe({
@@ -82,6 +84,7 @@ export const EditMyInfoForm = () => {
             id="name"
             {...register("name")}
             placeholder="이름을 입력하세요"
+            defaultValue={initialValues.name}
           />
           {errors.name && (
             <span className="text-xs text-red-500">{errors.name.message}</span>
@@ -95,6 +98,7 @@ export const EditMyInfoForm = () => {
             type="number"
             {...register("generation", { valueAsNumber: true })}
             placeholder="기수를 입력하세요"
+            defaultValue={initialValues.generation || ""}
           />
           {errors.generation && (
             <span className="text-xs text-red-500">
@@ -112,6 +116,7 @@ export const EditMyInfoForm = () => {
             id="studentId"
             {...register("studentId")}
             placeholder="학번을 입력하세요"
+            defaultValue={initialValues.studentId}
           />
           {errors.studentId && (
             <span className="text-xs text-red-500">
@@ -130,6 +135,7 @@ export const EditMyInfoForm = () => {
             id="major"
             {...register("major")}
             placeholder="학과를 입력하세요"
+            defaultValue={initialValues.major}
           />
           {errors.major && (
             <span className="text-xs text-red-500">{errors.major.message}</span>
@@ -142,6 +148,7 @@ export const EditMyInfoForm = () => {
             id="phoneNumber"
             {...register("phoneNumber")}
             placeholder="연락처를 입력하세요"
+            defaultValue={initialValues.phoneNumber}
           />
           {errors.phoneNumber && (
             <span className="text-xs text-red-500">
@@ -167,5 +174,37 @@ export const EditMyInfoForm = () => {
         </Button>
       </ButtonContainer>
     </form>
+  );
+};
+
+// 2. 데이터를 가져오는 래퍼 컴포넌트
+const EditMyInfoFormWrapper = () => {
+  const { data: user } = v2Admin.useGetApiV2AdminMeSuspense({
+    axios: { withCredentials: true },
+    query: {
+      select: (data) => data.data.user,
+    },
+  });
+
+  // 데이터가 없을 경우 가드
+  if (!user) return null;
+
+  return <EditMyInfoFormInner user={user} />;
+};
+
+// 3. 최종적으로 노출되는 컨테이너 (Suspense 포함)
+export const EditMyInfoForm = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-4">
+          <SkeletonItem className="h-10 w-full" />
+          <SkeletonItem className="h-10 w-full" />
+          <SkeletonItem className="h-10 w-full" />
+        </div>
+      }
+    >
+      <EditMyInfoFormWrapper />
+    </Suspense>
   );
 };
