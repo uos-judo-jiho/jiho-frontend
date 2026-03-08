@@ -18,8 +18,14 @@ The project follows the **Feature-Sliced Design (FSD)** architecture (referred t
 - **Framework**: React 18+ (TypeScript).
 - **Language**: Strict TypeScript. Use interfaces for props and descriptive types for complex data.
 - **Utility Library**: **es-toolkit** is the primary choice for utility functions (cloning, grouping, etc.). Use it instead of Lodash.
+- **Form Handling**: Use `react-hook-form` with `zod` for schema validation. Define schemas in a `schemas` folder within features.
+- **Conditional Pattern**: Use 'ts-pattern' for complex conditional logic instead of nested if-else or switch statements.
 - **Styling**: TailwindCSS (v4) with `clsx` and `tailwind-merge` for class management. Always use the `cn` utility from `src/shared/lib/utils.ts`.
 - **API**: Use `@packages/api` (v2Admin hooks) for all server interactions.
+  - import @packages/api like this: `import { v2Admin } from "@packages/api";`
+    - use hooks like this: `const { data } = v2Admin.useGetApiV2AdminUsersSuspense();`
+  - import @packages/api/models like this: `import { v2AdminModel } from "@packages/api/models";`
+    - use models like this: `type User = v2AdminModel.User;`
 - **Icons**: Use components from `lucide-react` or the internal SVG components in `src/components/icons`.
 
 ## 3. Coding Standards & Patterns

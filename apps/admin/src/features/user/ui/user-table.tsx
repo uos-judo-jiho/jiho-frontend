@@ -1,3 +1,4 @@
+import { RouterUrl } from "@/app/routers/router-url";
 import { Badge } from "@/components/common/badge";
 import {
   Table,
@@ -8,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { v2Admin } from "@packages/api";
+import { Link } from "react-router-dom";
 import { getUserRole } from "../utils/get-user-role";
 
 export const UserTable = () => {
@@ -32,18 +34,20 @@ export const UserTable = () => {
             <TableRow key={user.id} className="hover:bg-muted/90">
               <TableCell className="font-medium">{user.id}</TableCell>
               <TableCell>
-                <div className="flex items-center gap-2">
-                  <Badge
-                    theme={
-                      ["root", "president", "manager"].includes(user.role)
-                        ? "blue"
-                        : "gray"
-                    }
-                  >
-                    {getUserRole(user.role)}
-                  </Badge>
-                  {user.email}
-                </div>
+                <Link to={RouterUrl.회원.상세({ id: user.id })}>
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      theme={
+                        ["root", "president", "manager"].includes(user.role)
+                          ? "blue"
+                          : "gray"
+                      }
+                    >
+                      {getUserRole(user.role)}
+                    </Badge>
+                    {user.email}
+                  </div>
+                </Link>
               </TableCell>
             </TableRow>
           ))}

@@ -29,7 +29,6 @@ export const WaitedApproval = ({ showAll = false }: WaitedApprovalProps) => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold">가입 승인 대기 중인 회원</h2>
       <div className="text-sm flex gap-2 items-center">
         <p className="text-neutral-600">
           현재 승인 대기 중인 회원이 {approvalData.length}명 있어요.
