@@ -9,8 +9,13 @@ import * as z from "zod";
 const loginSchema = z.object({
   email: z
     .string()
-    .email("유효한 이메일을 입력해주세요.")
-    .min(1, "이메일을 입력해주세요."),
+    .min(1, "이메일을 입력해주세요.")
+    .refine(
+      (val) => val === "uosjudojiho" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+      {
+        message: "유효한 이메일을 입력해주세요.",
+      },
+    ),
   password: z.string().min(1, "비밀번호를 입력해주세요."),
 });
 
@@ -43,7 +48,7 @@ export const LoginPage = () => {
         navigate(destination, { replace: true });
         window.location.reload();
       },
-      onError: (error: any) => {
+      onError: (error) => {
         const message =
           error.response?.data?.message ||
           "로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.";
@@ -110,7 +115,9 @@ export const LoginPage = () => {
                 placeholder="비밀번호"
               />
               {errors.password && (
-                <p className="text-xs text-red-500">{errors.password.message}</p>
+                <p className="text-xs text-red-500">
+                  {errors.password.message}
+                </p>
               )}
             </div>
             <button
