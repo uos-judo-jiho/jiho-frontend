@@ -6,19 +6,29 @@ import { v2Admin } from "@packages/api";
 import { Suspense } from "react";
 
 export const HomePage = () => {
-  const { data: meData } = v2Admin.useGetApiV2AdminMe({
-    query: { retry: false, select: (data) => data.data },
+  return (
+    <div className="flex flex-col gap-6">
+      <Suspense fallback={<SkeletonItem className="h-20 w-full" />}>
+        <CommonSection />
+      </Suspense>
+      <Inner />
+    </div>
+  );
+};
+
+const Inner = () => {
+  const { data: userRole } = v2Admin.useGetApiV2AdminMeSuspense({
+    query: { retry: false, select: (data) => data.data.user.role },
     axios: { withCredentials: true },
   });
 
-  const userRole = meData?.user.role;
   const canManageMembers =
     userRole && ["root", "president", "manager", "staff"].includes(userRole);
 
   if (!canManageMembers) {
     return (
       <Suspense fallback={<SkeletonItem className="h-20 w-full" />}>
-        <CommonSection />
+        <UnauthorizedSection />
       </Suspense>
     );
   }
@@ -26,7 +36,7 @@ export const HomePage = () => {
   return <AdminSection />;
 };
 
-const CommonSection = () => {
+const UnauthorizedSection = () => {
   const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
     query: { retry: false, select: (data) => data.data },
     axios: { withCredentials: true },
@@ -34,17 +44,11 @@ const CommonSection = () => {
 
   const hasPendingUpgradeRequest =
     meData?.user.pendingUpgradeRequest?.status === "pending";
-
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        안녕하세요.{" "}
-        <b>{meData.user.additionalInfo?.name ?? meData.user.email}</b>님!
-        <br />
-      </div>
-      {meData?.user.role === "etc" && hasPendingUpgradeRequest === false ? (
+    <div>
+      {meData.user.role === "etc" && hasPendingUpgradeRequest === false ? (
         <div className="flex flex-row gap-2 items-center">
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-neutral-900">
             유도부 회원이신가요? 관리자에게 등급 업그레이드를 요청하시면 더
             다양한 기능을 이용하실 수 있어요.
           </p>
@@ -58,6 +62,20 @@ const CommonSection = () => {
           </p>
         </div>
       )}
+    </div>
+  );
+};
+
+const CommonSection = () => {
+  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+    query: { retry: false, select: (data) => data.data },
+    axios: { withCredentials: true },
+  });
+  return (
+    <div>
+      안녕하세요. <b>{meData.user.additionalInfo?.name ?? meData.user.email}</b>
+      님!
+      <br />
     </div>
   );
 };

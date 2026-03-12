@@ -34,7 +34,7 @@ export const CommonMyInfo = () => {
           </div>
           {user.role === "etc" ? (
             <div className="flex items-center gap-1 text-sm text-neutral-500 mt-1">
-              <Info className="size-3 inline-block" />
+              <Info className="size-4 inline-block" />
               <p className="text-xs">
                 유도부 회원이신가요? 권한을 요청해주세요.
               </p>
