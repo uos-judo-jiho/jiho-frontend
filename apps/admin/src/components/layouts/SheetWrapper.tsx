@@ -1,3 +1,4 @@
+import { RouteLabels } from "@/app/routers/router-url";
 import { cn } from "@/shared/lib/utils";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -11,7 +12,7 @@ type SheetWrapperProps = {
 
 function SheetWrapper({
   children,
-  paddingTop = 92,
+  paddingTop = 40,
   className,
 }: SheetWrapperProps) {
   const location = useLocation();
@@ -20,19 +21,9 @@ function SheetWrapper({
     .split("/")
     .filter(Boolean);
 
-  const labelMap: Record<string, string> = {
-    home: "홈",
-    training: "훈련",
-    news: "지호지",
-    notice: "공지",
-    gallery: "갤러리",
-    awards: "수상내역",
-    write: "작성",
-  };
-
   const formatSegmentLabel = (segment: string) => {
-    if (labelMap[segment]) {
-      return labelMap[segment];
+    if (RouteLabels[segment]) {
+      return RouteLabels[segment];
     }
 
     if (/^\d{4}$/.test(segment)) {
@@ -40,7 +31,7 @@ function SheetWrapper({
     }
 
     if (/^\d+$/.test(segment)) {
-      return `#${segment}`;
+      return segment;
     }
 
     return decodeURIComponent(segment);
@@ -52,11 +43,7 @@ function SheetWrapper({
     <div
       className={cn(
         "relative mx-auto",
-        "w-full",
-        "sm:w-[640px]",
-        "md:w-[768px]",
-        "lg:w-[1040px]",
-        "xl:w-[1280px]",
+        "w-full px-4 md:px-6 max-w-8xl",
         "flex flex-col min-h-screen",
         className,
       )}

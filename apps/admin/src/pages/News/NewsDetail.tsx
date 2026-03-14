@@ -1,7 +1,5 @@
 import NewsForm from "@/components/admin/form/NewsForm";
-import Title from "@/components/layouts/Title";
 import { normalizeNewsResponse } from "@/shared/lib/api/news";
-import { Constants } from "@/shared/lib/constant";
 import { v2Api } from "@packages/api";
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
@@ -29,12 +27,7 @@ const NewsDetail = () => {
 
   if (!article) return null;
 
-  return (
-    <>
-      <Title title={"지호지 수정"} color={Constants.BLACK_COLOR} />
-      <NewsForm data={article} />
-    </>
-  );
+  return <NewsForm data={article} />;
 };
 
 export default NewsDetail;

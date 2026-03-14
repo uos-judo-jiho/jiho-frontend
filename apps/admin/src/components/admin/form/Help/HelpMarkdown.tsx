@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -5,7 +6,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { HelpCircle } from "lucide-react";
 
 export const HelpMarkdown = () => {
@@ -30,8 +30,8 @@ export const HelpMarkdown = () => {
 
           <h3 className="help-title">📝 제목 (Headers)</h3>
           <p>
-            제목을 만들 때는 <code>#</code>을 사용합니다. <code>#</code>의
-            개수에 따라 제목 크기가 달라집니다.
+            제목을 만들 때는 <code>#</code>을 사용해요. <code>#</code>의 개수에
+            따라 제목 크기가 달라집니다.
           </p>
           <div className="example-section">
             <div className="markdown-input">
@@ -137,7 +137,7 @@ export const HelpMarkdown = () => {
           </div>
 
           <h3 className="help-title">💬 인용구 (Blockquotes)</h3>
-          <p>인용구나 강조하고 싶은 내용을 표시할 때 사용합니다.</p>
+          <p>인용구나 강조하고 싶은 내용을 표시할 때 사용해요.</p>
           <div className="example-section">
             <div className="markdown-input">
               &gt; 이것은 인용구입니다.
@@ -181,7 +181,7 @@ export const HelpMarkdown = () => {
           </div>
 
           <h3 className="help-title">📊 표 (Tables)</h3>
-          <p>데이터를 정리해서 보여줄 때 유용합니다.</p>
+          <p>데이터를 정리해서 보여줄 때 유용해요.</p>
           <div className="example-section">
             <div className="markdown-input">
               | 제목1 | 제목2 | 제목3 |<br />

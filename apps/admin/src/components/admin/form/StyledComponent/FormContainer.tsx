@@ -1,5 +1,5 @@
 import { cn } from "@/shared/lib/utils";
-import React from "react";
+import React, { forwardRef } from "react";
 
 export const StyledLabel: React.FC<
   React.LabelHTMLAttributes<HTMLLabelElement>
@@ -116,19 +116,21 @@ export const PreviewContainer: React.FC<
   </div>
 );
 
-export const PreviewImgContainer: React.FC<
+export const PreviewImgContainer = forwardRef<
+  HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
-> = ({ className, children, ...props }) => (
+>(({ className, children, ...props }, ref) => (
   <div
+    ref={ref}
     className={cn(
-      "flex flex-col justify-center items-center text-sm",
+      "relative flex flex-col justify-center items-center text-sm",
       className,
     )}
     {...props}
   >
     {children}
   </div>
-);
+));
 
 export const PreviewImg: React.FC<
   React.ImgHTMLAttributes<HTMLImageElement>

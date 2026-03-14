@@ -1,5 +1,16 @@
 # Jiho Frontend Monorepo
 
+<div align="center" style="display: flex; gap: 0.5rem;">
+
+[![CI](https://github.com/uos-judo-jiho/jiho-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/uos-judo-jiho/jiho-frontend/actions/workflows/ci.yml)
+
+[![Build and Deploy (apps/Admin)](https://github.com/uos-judo-jiho/jiho-frontend/actions/workflows/deploy-admin.yml/badge.svg?branch=main)](https://github.com/uos-judo-jiho/jiho-frontend/actions/workflows/deploy-admin.yml)
+
+[![Build and Deploy (apps/Web)](https://github.com/uos-judo-jiho/jiho-frontend/actions/workflows/deploy-web.yml/badge.svg?branch=main)](https://github.com/uos-judo-jiho/jiho-frontend/actions/workflows/deploy-web.yml)
+
+</div>
+
+</div>
 This repository now hosts the public web experience and the standalone admin console as npm workspaces. The two apps share the same React component library so fixes and UI tweaks stay in sync.
 
 ## Apps

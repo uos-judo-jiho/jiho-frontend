@@ -12,7 +12,7 @@ if [ ! -f "$ENV_FILE" ]; then
     exit 1
 fi
 
-echo "🔧 $ENV_FILE 에서 환경 변수를 읽어와서 Docker 빌드를 시작합니다..."
+echo "🔧 $ENV_FILE 에서 환경 변수를 읽어와서 Docker 빌드를 시작해요..."
 
 # .env 파일에서 변수 읽기
 source $ENV_FILE
