@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v2Admin } from "@packages/api";
+import { v2AdminModel } from "@packages/api/model";
 import { useQueryClient } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { useForm } from "react-hook-form";
@@ -29,13 +30,34 @@ const editMyInfoSchema = z.object({
   graduationYear: z
     .number()
     .min(1987, "졸업 년도를 입력해주세요.")
-    .max(2100, "올바른 졸업 년도를 입력해주세요."),
+    .max(2100, "올바른 졸업 년도를 입력해주세요.")
+    .nullable(),
 });
 
 type EditMyInfoFormValues = z.infer<typeof editMyInfoSchema>;
 
+export const EditMyInfoForm = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-4">
+          <SkeletonItem className="h-10 w-full" />
+          <SkeletonItem className="h-10 w-full" />
+          <SkeletonItem className="h-10 w-full" />
+        </div>
+      }
+    >
+      <EditMyInfoFormWrapper />
+    </Suspense>
+  );
+};
+
 // 1. 폼의 실제 로직과 UI를 담당하는 내부 컴포넌트
-const EditMyInfoFormInner = ({ user }: { user: any }) => {
+const EditMyInfoFormInner = ({
+  user,
+}: {
+  user: v2AdminModel.GetApiV2AdminMe200User;
+}) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -45,7 +67,7 @@ const EditMyInfoFormInner = ({ user }: { user: any }) => {
     studentId: user.additionalInfo?.studentId ?? "",
     major: user.additionalInfo?.major ?? "",
     phoneNumber: user.additionalInfo?.phoneNumber ?? "",
-    graduationYear: user.additionalInfo?.graduationYear,
+    graduationYear: user.additionalInfo?.graduationYear ?? null,
   };
 
   const {
@@ -222,21 +244,4 @@ const EditMyInfoFormWrapper = () => {
   if (!user) return null;
 
   return <EditMyInfoFormInner user={user} />;
-};
-
-// 3. 최종적으로 노출되는 컨테이너 (Suspense 포함)
-export const EditMyInfoForm = () => {
-  return (
-    <Suspense
-      fallback={
-        <div className="space-y-4">
-          <SkeletonItem className="h-10 w-full" />
-          <SkeletonItem className="h-10 w-full" />
-          <SkeletonItem className="h-10 w-full" />
-        </div>
-      }
-    >
-      <EditMyInfoFormWrapper />
-    </Suspense>
-  );
 };
