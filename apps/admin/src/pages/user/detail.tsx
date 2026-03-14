@@ -70,11 +70,13 @@ const UserDetailContent = ({ id }: { id: number }) => {
   const updateRoleMutation = v2Admin.usePatchApiV2AdminUsersAdminIdRole({
     axios: { withCredentials: true },
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
+          }),
+        ]);
         toast.success("역할이 성공적으로 변경되었습니다.");
-        queryClient.invalidateQueries({
-          queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
-        });
         setIsEditingRole(false);
       },
       onError: () => {
