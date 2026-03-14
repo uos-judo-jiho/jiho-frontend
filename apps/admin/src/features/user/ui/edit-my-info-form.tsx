@@ -1,11 +1,11 @@
 import { RouterUrl } from "@/app/routers/router-url";
-import SkeletonItem from "@/components/common/Skeletons/SkeletonItem";
 import {
   ButtonContainer,
   FormContainer,
   InputContainer,
   StyledLabel,
 } from "@/components/admin/form/StyledComponent/FormContainer";
+import SkeletonItem from "@/components/common/Skeletons/SkeletonItem";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,10 +19,17 @@ import { z } from "zod";
 
 const editMyInfoSchema = z.object({
   name: z.string().min(1, "이름을 입력해주세요."),
-  generation: z.number().min(1, "기수를 입력해주세요."),
+  generation: z
+    .number()
+    .min(1, "기수를 입력해주세요.")
+    .max(100, "올바른 기수를 입력해주세요."),
   studentId: z.string().min(1, "학번을 입력해주세요."),
   major: z.string().min(1, "학과를 입력해주세요."),
   phoneNumber: z.string().min(1, "연락처를 입력해주세요."),
+  graduationYear: z
+    .number()
+    .min(1987, "졸업 년도를 입력해주세요.")
+    .max(2100, "올바른 졸업 년도를 입력해주세요."),
 });
 
 type EditMyInfoFormValues = z.infer<typeof editMyInfoSchema>;
@@ -38,6 +45,7 @@ const EditMyInfoFormInner = ({ user }: { user: any }) => {
     studentId: user.additionalInfo?.studentId ?? "",
     major: user.additionalInfo?.major ?? "",
     phoneNumber: user.additionalInfo?.phoneNumber ?? "",
+    graduationYear: user.additionalInfo?.graduationYear,
   };
 
   const {
@@ -46,11 +54,10 @@ const EditMyInfoFormInner = ({ user }: { user: any }) => {
     formState: { errors },
   } = useForm<EditMyInfoFormValues>({
     resolver: zodResolver(editMyInfoSchema),
-    // values를 통해 비동기 데이터를 폼에 주입
     values: initialValues,
     resetOptions: {
-      keepDirtyValues: true, // 사용자가 입력 중인 값은 유지하면서 초기값만 업데이트
-    }
+      keepDirtyValues: true,
+    },
   });
 
   const updateMe = v2Admin.usePutApiV2AdminMe({
@@ -100,14 +107,15 @@ const EditMyInfoFormInner = ({ user }: { user: any }) => {
             placeholder="기수를 입력하세요"
             defaultValue={initialValues.generation || ""}
           />
-          {errors.generation && (
+          {errors.generation != null ? (
             <span className="text-xs text-red-500">
               {errors.generation.message}
             </span>
+          ) : (
+            <span className="text-sm text-neutral-500">
+              기수는 숫자만 입력해주세요 (예: 0, 1, 8, 34)
+            </span>
           )}
-          <span className="text-sm text-neutral-500">
-            기수는 숫자만 입력해주세요 (예: 8, 34)
-          </span>
         </InputContainer>
 
         <InputContainer>
@@ -118,15 +126,16 @@ const EditMyInfoFormInner = ({ user }: { user: any }) => {
             placeholder="학번을 입력하세요"
             defaultValue={initialValues.studentId}
           />
-          {errors.studentId && (
+          {errors.studentId != null ? (
             <span className="text-xs text-red-500">
               {errors.studentId.message}
             </span>
+          ) : (
+            <span className="text-sm text-neutral-500">
+              학번은 숫자만 입력해주세요 (예: 2026920001) <br />* 학번이
+              기억나지 않는 경우, 입학년도를 작성해주세요 (예: 12)
+            </span>
           )}
-          <span className="text-sm text-neutral-500">
-            학번은 숫자만 입력해주세요 (예: 2026920001) <br />* 학번이 기억나지
-            않는 경우, 입학년도를 작성해주세요 (예: 12)
-          </span>
         </InputContainer>
 
         <InputContainer>
@@ -137,9 +146,9 @@ const EditMyInfoFormInner = ({ user }: { user: any }) => {
             placeholder="학과를 입력하세요"
             defaultValue={initialValues.major}
           />
-          {errors.major && (
+          {errors.major != null ? (
             <span className="text-xs text-red-500">{errors.major.message}</span>
-          )}
+          ) : null}
         </InputContainer>
 
         <InputContainer>
@@ -150,14 +159,37 @@ const EditMyInfoFormInner = ({ user }: { user: any }) => {
             placeholder="연락처를 입력하세요"
             defaultValue={initialValues.phoneNumber}
           />
-          {errors.phoneNumber && (
+          {errors.phoneNumber != null ? (
             <span className="text-xs text-red-500">
               {errors.phoneNumber.message}
             </span>
+          ) : (
+            <span className="text-sm text-neutral-500">
+              연락처는 숫자만 입력해주세요 (예: 01012345678)
+            </span>
           )}
-          <span className="text-sm text-neutral-500">
-            연락처는 숫자만 입력해주세요 (예: 01012345678)
-          </span>
+        </InputContainer>
+
+        <InputContainer>
+          <StyledLabel htmlFor="graduationYear">졸업 년도</StyledLabel>
+          <Input
+            id="graduationYear"
+            type="number"
+            {...register("graduationYear", { valueAsNumber: true })}
+            placeholder="졸업 년도를 입력하세요"
+            min={1987}
+            max={2100}
+            defaultValue={initialValues.graduationYear || ""}
+          />
+          {errors.graduationYear != null ? (
+            <span className="text-xs text-red-500">
+              {errors.graduationYear.message}
+            </span>
+          ) : (
+            <span className="text-sm text-neutral-500">
+              졸업 년도는 숫자만 입력해주세요 (예: 2025)
+            </span>
+          )}
         </InputContainer>
       </FormContainer>
 

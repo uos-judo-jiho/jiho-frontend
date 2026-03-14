@@ -32,8 +32,6 @@ const ROLE_PRIORITY: Record<UserRole, number> = {
   manager: 2,
   staff: 3,
   general: 4,
-  member: 4,
-  alumni: 5,
   graduate: 5,
   etc: 6,
 };
@@ -104,6 +102,10 @@ const UserDetailContent = ({ id }: { id: number }) => {
       data: { role: newRole },
     });
   };
+
+  const isGraduated = user.additionalInfo?.graduationYear
+    ? user.additionalInfo.graduationYear <= new Date().getFullYear()
+    : null;
 
   return (
     <div className="grid gap-6">
@@ -238,12 +240,10 @@ const UserDetailContent = ({ id }: { id: number }) => {
               졸업 여부
             </span>
             <span className="col-span-2 text-sm">
-              {match(user.additionalInfo?.isGraduated)
+              {match(isGraduated)
                 .with(true, () => <Badge>졸업생</Badge>)
                 .with(false, () => <Badge theme="green">재학생</Badge>)
-                .with(null, () => "-")
-                .with(undefined, () => "-")
-                .exhaustive()}
+                .otherwise(() => "-")}
             </span>
           </div>
         </CardContent>

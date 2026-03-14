@@ -1,5 +1,6 @@
 import { Badge } from "@/components/common/badge";
 import { v2Admin } from "@packages/api";
+import { match } from "ts-pattern";
 
 export const AdditionalMyInfo = () => {
   const { data: additionalInfo } = v2Admin.useGetApiV2AdminMeSuspense({
@@ -8,6 +9,10 @@ export const AdditionalMyInfo = () => {
       select: (data) => data.data.user.additionalInfo,
     },
   });
+
+  const isGraduated = additionalInfo?.graduationYear
+    ? additionalInfo.graduationYear <= new Date().getFullYear()
+    : null;
 
   return (
     <>
@@ -47,14 +52,18 @@ export const AdditionalMyInfo = () => {
         </span>
       </div>
       <div className="grid grid-cols-3">
-        <span className="text-sm font-medium text-neutral-500">졸업 여부</span>
-        <span className="col-span-2 text-sm">
-          {additionalInfo?.isGraduated === "Y" && <Badge>졸업생</Badge>}
-          {additionalInfo?.isGraduated === "N" && (
-            <Badge theme="green">재학생</Badge>
-          )}
-          {additionalInfo?.isGraduated == null && "-"}
-        </span>
+        <span className="text-sm font-medium text-neutral-500">졸업 년도</span>
+        <div className="flex gap-2 items-center">
+          <span className="text-sm">
+            {additionalInfo?.graduationYear ?? "-"}
+          </span>
+          <span className="col-span-2 text-sm">
+            {match(isGraduated)
+              .with(true, () => <Badge>졸업생</Badge>)
+              .with(false, () => <Badge theme="green">재학생</Badge>)
+              .otherwise(() => "-")}
+          </span>
+        </div>
       </div>
     </>
   );
