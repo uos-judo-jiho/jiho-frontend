@@ -41,12 +41,12 @@ export const UserDetailPage = () => {
 
   const queryClient = useQueryClient();
 
-  const deleteMemberMutation = v2Admin.useDeleteApiV2AdminMembersId({
+  const deleteMemberMutation = v2Admin.useDeleteApiV2AdminUsersAdminId({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: v2Admin.getGetApiV2AdminMembersQueryKey(),
+          queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
         });
         toast.success("회원을 성공적으로 삭제했습니다.");
       },
@@ -71,7 +71,7 @@ export const UserDetailPage = () => {
           variant="destructive"
           onClick={() => {
             if (window.confirm("정말로 이 회원을 삭제하시겠습니까?")) {
-              deleteMemberMutation.mutate({ id: Number(id) });
+              deleteMemberMutation.mutate({ adminId: Number(id) });
             }
           }}
         >
