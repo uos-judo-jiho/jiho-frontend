@@ -381,6 +381,8 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0(typescript@5.9.3)
 
+  packages/jds: {}
+
 packages:
 
   '@adobe/css-tools@4.4.4':
