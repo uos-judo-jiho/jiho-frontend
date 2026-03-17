@@ -4,13 +4,19 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
 import { defineConfig } from "vite";
+import { configDefaults } from "vitest/config";
 
 const srcDir = path.resolve(__dirname, "src");
 
 export default defineConfig({
   base: "/",
   plugins: [tailwindcss(), react()],
-
+  test: {
+    globals: true,
+    environment: "happy-dom",
+    setupFiles: "./src/test/setup.ts",
+    exclude: [...configDefaults.exclude, "e2e/*"],
+  },
   resolve: {
     alias: {
       "@": srcDir,

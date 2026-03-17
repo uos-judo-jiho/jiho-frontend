@@ -36,7 +36,9 @@
     "type-check": "pnpm type-check:web && pnpm type-check:admin",
     "type-check:web": "pnpm -C apps/web type-check",
     "type-check:server": "pnpm -C apps/web type-check:server",
-    "type-check:admin": "pnpm -C apps/admin type-check"
+    "type-check:admin": "pnpm -C apps/admin type-check",
+    "test": "pnpm test:admin",
+    "test:admin": "pnpm -C apps/admin test -- --run"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
