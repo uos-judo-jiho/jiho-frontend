@@ -1,11 +1,11 @@
 name: CI
 
 on:
-  push:
   pull_request:
     types:
       - opened
       - reopened
+      - synchronize
 
 jobs:
   lint-and-typecheck:
@@ -37,3 +37,6 @@ jobs:
 
       - name: Type check
         run: pnpm type-check
+
+      - name: Test
+        run: pnpm test
