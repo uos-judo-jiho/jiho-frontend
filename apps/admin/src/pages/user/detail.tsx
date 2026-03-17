@@ -39,6 +39,23 @@ const ROLE_PRIORITY: Record<UserRole, number> = {
 export const UserDetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
+  const queryClient = useQueryClient();
+
+  const deleteMemberMutation = v2Admin.useDeleteApiV2AdminMembersId({
+    axios: { withCredentials: true },
+    mutation: {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: v2Admin.getGetApiV2AdminMembersQueryKey(),
+        });
+        toast.success("회원을 성공적으로 삭제했습니다.");
+      },
+      onError: () => {
+        toast.error("회원 삭제에 실패했습니다.");
+      },
+    },
+  });
+
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
@@ -49,6 +66,18 @@ export const UserDetailPage = () => {
       <Suspense fallback={<UserDetailSkeleton />}>
         <UserDetailContent id={Number(id)} />
       </Suspense>
+      <div>
+        <Button
+          variant="destructive"
+          onClick={() => {
+            if (window.confirm("정말로 이 회원을 삭제하시겠습니까?")) {
+              deleteMemberMutation.mutate({ id: Number(id) });
+            }
+          }}
+        >
+          회원 삭제
+        </Button>
+      </div>
     </div>
   );
 };
