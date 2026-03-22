@@ -1,3 +1,4 @@
+import { cn } from "@/shared/lib/utils";
 import {
   closestCenter,
   DndContext,
@@ -17,7 +18,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { v2Admin } from "@packages/api";
 import React, { ChangeEvent, DragEvent, useRef, useState } from "react";
-import { cn } from "@/shared/lib/utils";
+import { toast } from "sonner";
 import {
   InputContainer,
   PreviewContainer,
@@ -42,7 +43,12 @@ interface SortableItemProps {
   disabled?: boolean;
 }
 
-const SortableImage = ({ id, index, onDelete, disabled = false }: SortableItemProps) => {
+const SortableImage = ({
+  id,
+  index,
+  onDelete,
+  disabled = false,
+}: SortableItemProps) => {
   const {
     attributes,
     listeners,
@@ -140,7 +146,7 @@ const ImageUploader = ({
   const handleFiles = async (files: FileList | File[]) => {
     const currentCount = previewImg.length;
     if (currentCount >= imageLimit) {
-      alert(`사진은 최대 ${imageLimit}장까지 추가할 수 있습니다.`);
+      toast.warning(`사진은 최대 ${imageLimit}장까지 추가할 수 있습니다.`);
       setIsFull(true);
       return;
     }
@@ -151,7 +157,7 @@ const ImageUploader = ({
 
     for (const file of fileArr) {
       if (!file.type.startsWith("image/")) {
-        alert("이미지 파일만 업로드할 수 있습니다.");
+        toast.error("이미지 파일만 업로드할 수 있습니다.");
         return;
       }
     }
@@ -177,7 +183,7 @@ const ImageUploader = ({
       }
     } catch (error) {
       console.error("Image upload failed:", error);
-      alert("이미지 업로드에 실패했습니다.");
+      toast.error("이미지 업로드에 실패했습니다.");
     }
   };
 

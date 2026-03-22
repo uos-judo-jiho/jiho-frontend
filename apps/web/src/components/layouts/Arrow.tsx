@@ -27,6 +27,7 @@ const StyledBackArrow = (
     $isMobileVisible,
     $isBackGround,
     $isVisible,
+    className,
     ...rest
   } = props;
 
@@ -38,12 +39,13 @@ const StyledBackArrow = (
       id={id}
       title="Previous"
       className={cn(
-        "absolute z-[1] top-1/2 -translate-y-1/2 select-none cursor-pointer hover:opacity-80",
+        "absolute z-[1] top-1/2 -translate-y-1/2 select-none cursor-pointer hover:opacity-80 transition-all",
         isVisible ? displayClass : "!hidden",
         $isBackGround &&
           "rounded-full p-1 bg-muted shadow-[0_0_0.2rem_hsl(var(--black))]",
         "max-sm:hidden",
-        $isMobileVisible && "max-sm:flex"
+        $isMobileVisible && "max-sm:flex",
+        className
       )}
       style={{
         width: size || "24px",
@@ -74,6 +76,7 @@ const StyledForwardArrow = (
     $isMobileVisible,
     $isBackGround,
     $isVisible,
+    className,
     ...rest
   } = props;
 
@@ -85,11 +88,12 @@ const StyledForwardArrow = (
       id={id}
       title="Next"
       className={cn(
-        "absolute z-[1] top-1/2 -translate-y-1/2 select-none cursor-pointer hover:opacity-80",
+        "absolute z-[1] top-1/2 -translate-y-1/2 select-none cursor-pointer hover:opacity-80 transition-all",
         isVisible ? displayClass : "!hidden",
         $isBackGround && "rounded-full p-1 bg-muted",
         "max-sm:hidden",
-        $isMobileVisible && "max-sm:flex"
+        $isMobileVisible && "max-sm:flex",
+        className
       )}
       style={{
         width: size || "24px",

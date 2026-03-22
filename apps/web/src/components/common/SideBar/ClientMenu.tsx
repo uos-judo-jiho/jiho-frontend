@@ -87,6 +87,11 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
           <MenuItemTitle>공지사항</MenuItemTitle>
         </Link>
       </MenuItem>
+      <MenuItem>
+        <Link to={"/login"} onClick={(e) => handleClickLink(e, "/login")}>
+          <MenuItemTitle>로그인</MenuItemTitle>
+        </Link>
+      </MenuItem>
     </MenuList>
   );
 };

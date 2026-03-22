@@ -28,7 +28,7 @@ const NewsYear = () => {
       ].join(" | ")
     : `${id}년 서울시립대학교 유도부 지호지`;
 
-  const metaImgUrl = news?.articles.at(0)?.imgSrcs.at(0);
+  const metaImgUrl = news?.articles.at(0)?.images.at(0);
 
   // Create structured data for image gallery
   const structuredData = useMemo(() => {
@@ -43,7 +43,7 @@ const NewsYear = () => {
 
     // Collect all images from all articles
     const allImages = news.articles.flatMap((article) =>
-      article.imgSrcs.slice(0, 5).map((imgSrc, imgIdx) => ({
+      article.images.slice(0, 5).map((imgSrc, imgIdx) => ({
         url: imgSrc,
         caption: `${article.title} - ${imgIdx + 1}`,
         datePublished: article.dateTime
@@ -56,7 +56,11 @@ const NewsYear = () => {
       name: `${id}년 서울시립대학교 유도부 지호지`,
       description: metaDescription,
       url: currentUrl,
-      images: allImages.slice(0, 30), // Limit to 30 images for performance
+      images: allImages.map((img) => ({
+        url: img.url.originSrc,
+        caption: img.caption,
+        datePublished: img.datePublished,
+      })),
     });
   }, [news, id, metaDescription]);
 
@@ -69,7 +73,7 @@ const NewsYear = () => {
       <MyHelmet
         title="News"
         description={metaDescription}
-        imgUrl={metaImgUrl}
+        imgUrl={metaImgUrl?.originSrc}
       />
       {structuredData && <StructuredData data={structuredData} />}
       <DefaultLayout>
@@ -88,7 +92,6 @@ const NewsYear = () => {
           >
             <NewsIndex
               articles={news?.articles || []}
-              images={news?.images || []}
               selectedIndex={parseInt(index as string)}
               index={index ?? ""}
               year={id}

@@ -28,7 +28,10 @@ const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
   const galleryData: ArticleInfoType | undefined = newsData
     ? {
         id: `${newsData.year}-gallery`,
-        imgSrcs: newsData.images,
+        imgSrcs: newsData.images.map((src) => ({
+          originSrc: src,
+          smallSrc: null,
+        })),
         title: "",
         author: "",
         dateTime: year,

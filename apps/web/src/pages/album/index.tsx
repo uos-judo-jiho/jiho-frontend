@@ -85,13 +85,14 @@ const Inner = () => {
               <div className="columns-2 md:columns-3 lg:columns-4 gap-2 md:gap-4">
                 {images.map((image) => (
                   <button
-                    onClick={() => handleOpenDetailModal(image)}
-                    key={image}
+                    onClick={() => handleOpenDetailModal(image.originSrc)}
+                    key={image.originSrc}
                     className="w-full h-auto mb-2 md:mb-4 cursor-pointer"
                   >
                     <LazyImage
-                      src={image}
-                      alt={`${year}년 사진 ${image}`}
+                      src={image.originSrc}
+                      lowResSrc={image.smallSrc ?? undefined}
+                      alt={`${year}년 사진 ${image.originSrc}`}
                       className="relative aspect-auto"
                     />
                   </button>

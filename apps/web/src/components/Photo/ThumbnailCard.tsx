@@ -2,7 +2,10 @@ import { cn } from "@/shared/lib/utils";
 import { LazyImage } from "../common/image/lazy-image";
 
 type ThumbnailCardProps = {
-  imgSrc: string;
+  imgSrc: {
+    originSrc: string;
+    smallSrc: string | null;
+  };
   dateTime: string;
   id: number;
   handleClickCard: (index: number) => void;
@@ -22,7 +25,11 @@ const ThumbnailCard = ({
       className="relative w-full aspect-square hover:cursor-pointer after:block after:content-[''] group"
     >
       <a href={`/photo/${id}`}>
-        <LazyImage src={imgSrc} alt={"훈련 일지: " + dateTime} />
+        <LazyImage
+          src={imgSrc.originSrc}
+          srcSet={imgSrc.smallSrc}
+          alt={"훈련 일지: " + dateTime}
+        />
         <div
           className={cn(
             "absolute flex justify-center items-center",

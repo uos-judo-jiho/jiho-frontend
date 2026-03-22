@@ -10,13 +10,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { User as UserIcon } from "lucide-react";
 import { Suspense, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 
-type UserRole = v2AdminModel.GetApiV2AdminUsers200UsersItemRole;
-
-const ROLES: { value: UserRole; label: string }[] = [
+const ROLES: {
+  value: v2AdminModel.GetApiV2AdminUsers200UsersItemRole;
+  label: string;
+}[] = [
   { value: "root", label: "관리자" },
   { value: "president", label: "회장" },
   { value: "manager", label: "운영진" },
@@ -26,7 +27,10 @@ const ROLES: { value: UserRole; label: string }[] = [
   { value: "etc", label: "외부인 (기타)" },
 ];
 
-const ROLE_PRIORITY: Record<UserRole, number> = {
+const ROLE_PRIORITY: Record<
+  v2AdminModel.GetApiV2AdminUsers200UsersItemRole,
+  number
+> = {
   root: 0,
   president: 1,
   manager: 2,
@@ -39,6 +43,24 @@ const ROLE_PRIORITY: Record<UserRole, number> = {
 export const UserDetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
+  const navigation = useNavigate();
+  const queryClient = useQueryClient();
+
+  const deleteMemberMutation = v2Admin.useDeleteApiV2AdminUsersAdminId({
+    axios: { withCredentials: true },
+    mutation: {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
+        });
+        toast.success("회원을 성공적으로 삭제했습니다.");
+      },
+      onError: () => {
+        toast.error("회원 삭제에 실패했습니다.");
+      },
+    },
+  });
+
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
@@ -49,6 +71,25 @@ export const UserDetailPage = () => {
       <Suspense fallback={<UserDetailSkeleton />}>
         <UserDetailContent id={Number(id)} />
       </Suspense>
+      <div>
+        <Button
+          variant="destructive"
+          onClick={() => {
+            if (window.confirm("정말로 이 회원을 삭제하시겠습니까?")) {
+              deleteMemberMutation.mutate(
+                { adminId: Number(id) },
+                {
+                  onSuccess: () => {
+                    navigation("/users", { replace: true });
+                  },
+                },
+              );
+            }
+          }}
+        >
+          회원 삭제
+        </Button>
+      </div>
     </div>
   );
 };
@@ -92,13 +133,15 @@ const UserDetailContent = ({ id }: { id: number }) => {
   const isStaffOrAbove = ["root", "president", "manager", "staff"].includes(
     me.role,
   );
-  const myPriority = ROLE_PRIORITY[me.role as UserRole] ?? 99;
-  const userPriority = ROLE_PRIORITY[user.role as UserRole] ?? 99;
+  const myPriority = ROLE_PRIORITY[me.role] ?? 99;
+  const userPriority = ROLE_PRIORITY[user.role] ?? 99;
 
   // 자기를 포함하여 자기보다 높은 권한의 유저는 수정 불가 (동일 권한도 수정 불가하게 설정)
   const canManageRole = isStaffOrAbove && myPriority < userPriority;
 
-  const handleRoleChange = (newRole: UserRole) => {
+  const handleRoleChange = (
+    newRole: v2AdminModel.GetApiV2AdminUsers200UsersItemRole,
+  ) => {
     updateRoleMutation.mutate({
       adminId: id,
       data: { role: newRole },
@@ -132,7 +175,10 @@ const UserDetailContent = ({ id }: { id: number }) => {
                       className="text-sm border rounded p-1"
                       defaultValue={user.role}
                       onChange={(e) =>
-                        handleRoleChange(e.target.value as UserRole)
+                        handleRoleChange(
+                          e.target
+                            .value as v2AdminModel.GetApiV2AdminUsers200UsersItemRole,
+                        )
                       }
                       disabled={updateRoleMutation.isPending}
                     >
@@ -163,7 +209,7 @@ const UserDetailContent = ({ id }: { id: number }) => {
                           : "gray"
                       }
                     >
-                      {getUserRole(user.role as any)}
+                      {getUserRole(user.role)}
                     </Badge>
                     {canManageRole && (
                       <Button

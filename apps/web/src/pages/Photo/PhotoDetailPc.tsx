@@ -38,7 +38,7 @@ export const PhotoDetailPc = ({
         <div className="flex flex-col flex-1">
           {/* Image Slider */}
           <div className="mb-6 md:mb-0 flex justify-center">
-            <Slider datas={training.imgSrcs} />
+            <Slider datas={training.images} />
           </div>
 
           {/* Description Section */}
@@ -58,7 +58,7 @@ export const PhotoDetailPc = ({
               disabled={current === 0}
               className={cn(
                 "flex items-center",
-                current === 0 && "opacity-50 cursor-not-allowed"
+                current === 0 && "opacity-50 cursor-not-allowed",
               )}
             >
               <Link
@@ -82,7 +82,7 @@ export const PhotoDetailPc = ({
               className={cn(
                 "flex items-center",
                 current === trainings.length - 1 &&
-                  "opacity-50 cursor-not-allowed"
+                  "opacity-50 cursor-not-allowed",
               )}
             >
               <Link

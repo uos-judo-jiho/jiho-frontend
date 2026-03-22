@@ -38,6 +38,7 @@ import {
   type ReactNode,
   type SetStateAction,
 } from "react";
+import { toast } from "sonner";
 
 const emptyForm = {
   title: "",
@@ -178,7 +179,7 @@ export const Awards = () => {
       setIsCreateOpen(false);
     } catch (error) {
       console.error(error);
-      alert("수상이력 등록에 실패했습니다.");
+      toast.error("수상이력 등록에 실패했습니다.");
     }
   };
 
@@ -233,7 +234,7 @@ export const Awards = () => {
       cancelEdit();
     } catch (error) {
       console.error(error);
-      alert("수상이력 수정에 실패했습니다.");
+      toast.error("수상이력 수정에 실패했습니다.");
     }
   };
 
@@ -245,7 +246,7 @@ export const Awards = () => {
       setPendingDeleteId(null);
     } catch (error) {
       console.error(error);
-      alert("수상이력 삭제에 실패했습니다.");
+      toast.error("수상이력 삭제에 실패했습니다.");
     }
   };
 

@@ -37,7 +37,7 @@ export const NewsDetailMobile = () => {
       )
     : "";
 
-  const metaImgUrl = currentArticle?.imgSrcs.at(0);
+  const metaImgUrl = currentArticle?.images.at(0);
 
   // Format date for meta tags (ISO 8601 format)
   const publishedDate = currentArticle?.dateTime
@@ -51,7 +51,7 @@ export const NewsDetailMobile = () => {
     return createArticleData({
       headline: `${year}년 지호지 - ${currentArticle.title}`,
       description: metaDescription,
-      images: currentArticle.imgSrcs,
+      images: currentArticle.images.map((img) => img.originSrc) || [],
       datePublished: publishedDate,
       dateModified: publishedDate,
       author: currentArticle.author,
@@ -67,7 +67,7 @@ export const NewsDetailMobile = () => {
       <MyHelmet
         title={`${year}년 지호지 - ${currentArticle.title}`}
         description={metaDescription}
-        imgUrl={metaImgUrl}
+        imgUrl={metaImgUrl?.originSrc}
         datePublished={publishedDate}
         dateModified={publishedDate}
         author={currentArticle.author}
@@ -84,7 +84,7 @@ export const NewsDetailMobile = () => {
       <div className="flex-1">
         {/* Image Slider */}
         <div className="mb-4">
-          <Slider datas={currentArticle.imgSrcs} />
+          <Slider datas={currentArticle.images} />
         </div>
 
         {/* Description Section */}

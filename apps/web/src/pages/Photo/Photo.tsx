@@ -38,7 +38,7 @@ const PhotoPC = () => {
       )
     : "서울시립대학교 유도부 지호 - 훈련일지";
 
-  const metaImgUrl = trainings?.at(0)?.imgSrcs.at(0);
+  const metaImgUrl = trainings?.at(0)?.images.at(0)?.originSrc;
 
   // Create structured data for image gallery
   const structuredData = useMemo(() => {
@@ -54,7 +54,7 @@ const PhotoPC = () => {
       description: metaDescription,
       url: currentUrl,
       images: trainings.slice(0, 20).map((training) => ({
-        url: training.imgSrcs[0] || "",
+        url: training.images[0].originSrc || "",
         caption: training.title,
         datePublished: training.dateTime
           ? new Date(training.dateTime).toISOString()
@@ -78,7 +78,7 @@ const PhotoPC = () => {
             {trainings.map((trainingLog) => (
               <Suspense key={trainingLog.id} fallback={<SkeletonThumbnail />}>
                 <ThumbnailCard
-                  imgSrc={trainingLog?.imgSrcs.at(0) ?? ""}
+                  imgSrc={trainingLog.images[0]}
                   dateTime={trainingLog.dateTime}
                   handleClickCard={handleClickCard}
                   id={trainingLog.id}

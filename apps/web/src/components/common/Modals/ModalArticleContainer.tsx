@@ -16,14 +16,14 @@ function ModalArticleContainer({ info, titles }: ModalArticleContainerProps) {
       className={cn(
         "w-full h-full bg-white rounded-lg overflow-hidden",
         "md:w-auto md:h-auto md:max-w-4xl md:max-h-[85vh]",
-        "flex flex-col"
+        "flex flex-col",
       )}
     >
       {/* Main Content */}
       <div className="flex-1 p-4 md:p-6 overflow-auto">
         <MobileRowColLayout>
           {/* Image Slider */}
-          <Slider datas={info.imgSrcs} />
+          <Slider datas={info.images} />
           {/* Description Section */}
           <ModalDescriptionSection article={info} titles={titles} />
         </MobileRowColLayout>

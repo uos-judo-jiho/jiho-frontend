@@ -33,7 +33,7 @@ export const NewsDetailPc = () => {
     ? [article.title, article.description?.slice(0, 140)].join(" | ")
     : "";
 
-  const metaImgUrl = article?.imgSrcs.at(0);
+  const metaImgUrl = article?.images.at(0)?.originSrc;
 
   // Format date for meta tags (ISO 8601 format)
   const publishedDate = article?.dateTime
@@ -47,7 +47,7 @@ export const NewsDetailPc = () => {
     return createArticleData({
       headline: `${year}년 지호지 - ${article.title}`,
       description: metaDescription,
-      images: article.imgSrcs,
+      images: article.images.map((img) => img.originSrc) || [],
       datePublished: publishedDate,
       dateModified: publishedDate,
       author: article.author,
@@ -96,7 +96,7 @@ export const NewsDetailPc = () => {
           <div className="flex flex-col flex-1">
             {/* Image Slider */}
             <div className="mb-6 md:mb-0 flex justify-center">
-              <Slider datas={article.imgSrcs} />
+              <Slider datas={article.images} />
             </div>
 
             {/* Description Section */}
