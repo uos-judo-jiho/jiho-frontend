@@ -8,18 +8,12 @@ import SkeletonThumbnail from "../common/Skeletons/SkeletonThumbnail";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];
-  images: string[];
   selectedIndex?: number;
   index: string;
   year: string;
 };
 
-const NewsIndex = ({
-  articles,
-  images,
-  selectedIndex,
-  year,
-}: NewsIndexProps) => {
+const NewsIndex = ({ articles, selectedIndex, year }: NewsIndexProps) => {
   if (articles.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-20">

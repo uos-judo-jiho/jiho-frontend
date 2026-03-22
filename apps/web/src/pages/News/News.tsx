@@ -32,7 +32,7 @@ const NewsPage = () => {
         ].join(" | ")
       : "서울시립대학교 유도부 지호지 - 뉴스 및 소식";
 
-  const metaImgUrl = firstYearArticles?.imgSrcs.at(0);
+  const metaImgUrl = firstYearArticles?.images.at(0);
 
   // Create structured data for image gallery
   const structuredData = useMemo(() => {
@@ -55,7 +55,7 @@ const NewsPage = () => {
 
         return [
           {
-            url: firstArticle.imgSrcs[0] || "",
+            url: firstArticle.images[0] || "",
             caption: `${data.data?.data?.year}년 - ${firstArticle.title}`,
             datePublished: firstArticle.dateTime
               ? new Date(firstArticle.dateTime).toISOString()

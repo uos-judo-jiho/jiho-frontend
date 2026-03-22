@@ -1,6 +1,9 @@
 export type ArticleInfoType = {
   id: string | number;
-  imgSrcs: string[];
+  imgSrcs: {
+    originSrc: string;
+    smallSrc: string | null;
+  }[];
   title: string;
   author: string;
   dateTime: string;
@@ -9,7 +12,7 @@ export type ArticleInfoType = {
 };
 export type ArticleInfoFormDataType = {
   id: string | number;
-  imgSrcs: File[];
+  imgSrcs: string[];
   title: string;
   author: string;
   dateTime: string;

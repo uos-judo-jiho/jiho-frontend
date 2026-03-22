@@ -39,7 +39,11 @@ const Inner = () => {
       {images.length > 0 ? (
         <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
           {images.map((imgSrc, index) => (
-            <GalleryImage key={`${imgSrc}-${index}`} src={imgSrc} />
+            <GalleryImage
+              key={`${imgSrc}-${index}`}
+              src={imgSrc.originSrc}
+              smallSrc={imgSrc.smallSrc}
+            />
           ))}
         </div>
       ) : (
@@ -51,7 +55,13 @@ const Inner = () => {
   );
 };
 
-const GalleryImage = ({ src }: { src: string }) => {
+const GalleryImage = ({
+  src,
+  smallSrc,
+}: {
+  src: string;
+  smallSrc?: string | null;
+}) => {
   const [detailIsOpen, setDetailIsOpen] = useState(false);
 
   return (
@@ -62,7 +72,7 @@ const GalleryImage = ({ src }: { src: string }) => {
         onClick={() => setDetailIsOpen(true)}
       >
         <img
-          src={src}
+          src={smallSrc || src}
           alt={`Gallery ${src.split("/").pop()}`}
           className="w-full h-full object-cover"
         />

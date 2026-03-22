@@ -98,11 +98,14 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   };
 
   const myAuthorString = meData.user.additionalInfo
-    ? `${meData.user.additionalInfo.generation}기 ${meData.user.additionalInfo.name}`
+    ? `${meData.user.additionalInfo.generation ? meData.user.additionalInfo.generation + "기 " : ""}${meData.user.additionalInfo.name}`
     : meData.user.email;
 
   const [values, setValues] = useState<Omit<ArticleInfoType, "id">>(
-    data ?? { ...initValues, author: myAuthorString },
+    data ?? {
+      ...initValues,
+      author: myAuthorString,
+    },
   );
 
   const headerInfo = getHeaderInfo();
@@ -173,6 +176,15 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     axios: {
       withCredentials: true,
     },
+    mutation: {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeyByType["news"],
+        });
+        toast.success("이미지가 성공적으로 업로드되었습니다.");
+        naviagate(`/news/${values.dateTime.slice(0, 4)}/gallery`);
+      },
+    },
   });
 
   const handleSubmitOpen = () => setIsSubmitOpen(true);
@@ -208,7 +220,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
         await uploadPicturesMutation.mutateAsync({
           year: yearNumber,
           data: {
-            base64Imgs: values.imgSrcs,
+            imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc),
           },
         });
       } else {
@@ -221,7 +233,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               dateTime: values.dateTime,
               description: values.description,
               tags: values.tags,
-              imgSrcs: values.imgSrcs,
+              imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc),
             },
           });
         } else {
@@ -239,7 +251,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               dateTime: values.dateTime,
               description: values.description,
               tags: values.tags,
-              imgSrcs: values.imgSrcs,
+              imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc),
             },
           });
         }
@@ -336,7 +348,9 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     setValues((prev) => {
       return {
         ...prev,
-        imgSrcs: [...images(prev.imgSrcs)],
+        imgSrcs: images(prev.imgSrcs.map(({ originSrc }) => originSrc)).map(
+          (src) => ({ originSrc: src, smallSrc: null }),
+        ),
       };
     });
   };
@@ -475,7 +489,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
           <ImageUploader
             setValues={handleUploadImages}
-            data={data?.imgSrcs}
+            data={data?.imgSrcs.map(({ originSrc }) => originSrc)}
             imageLimit={gallery ? 50 : 10}
             disabled={readOnly}
           />

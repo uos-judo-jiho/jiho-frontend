@@ -180,6 +180,15 @@ const Footer = () => {
               {`사이트맵`}
             </HyperLink>
           </DescriptionItem>
+          {/* 로그인 */}
+          <DescriptionItem>
+            <HyperLink
+              to={"/login"}
+              className="text-gray-500 hover:text-gray-600 hover:underline"
+            >
+              로그인
+            </HyperLink>
+          </DescriptionItem>
         </ul>
       </SheetWrapper>
     </footer>

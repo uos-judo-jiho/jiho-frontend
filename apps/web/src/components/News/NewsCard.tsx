@@ -42,7 +42,7 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
                 </h3>
                 <Row alignItems="center" gap={4}>
                   {article.tags.map((tag) => (
-                    <Badge className="min-w-[48px]">
+                    <Badge className="min-w-[48px]" key={tag}>
                       <span className="indent-0 text-theme-tiny leading-theme-tiny text-theme-grey pr-2">
                         # {tag}
                       </span>
@@ -58,24 +58,40 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
             </Col>
           </div>
         </div>
-        {article.imgSrcs[0] && (
+        {article.images[0] && (
           <div className="w-full h-full flex items-center justify-center relative">
             {isLoading ? (
-              <img
-                loading="lazy"
-                alt={article.title + article.author}
-                src={article.imgSrcs[0]}
-                className="w-full h-full bg-black object-contain"
-              />
+              <picture>
+                <img
+                  loading="lazy"
+                  alt={article.title + article.author}
+                  src={article.images[0].originSrc}
+                  className="w-full h-full bg-black object-contain"
+                />
+                <source
+                  srcSet={
+                    article.images[0].smallSrc || article.images[0].originSrc
+                  }
+                  media="(max-width: 640px)"
+                />
+              </picture>
             ) : (
               <SkeletonThumbnail />
             )}
-            <img
-              alt={article.title + article.author}
-              src={article.imgSrcs[0]}
-              style={{ display: "none" }}
-              onLoad={handleLoding}
-            />
+            <picture>
+              <img
+                alt={article.title + article.author}
+                src={article.images[0].originSrc}
+                style={{ display: "none" }}
+                onLoad={handleLoding}
+              />
+              <source
+                srcSet={
+                  article.images[0].smallSrc || article.images[0].originSrc
+                }
+                media="(max-width: 640px)"
+              />
+            </picture>
             <Col>
               <div className="text-theme-description leading-theme-description font-bold pt-2 text-ellipsis overflow-hidden whitespace-nowrap hidden xs:block">
                 {article.title}

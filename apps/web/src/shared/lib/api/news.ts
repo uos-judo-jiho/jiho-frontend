@@ -13,7 +13,7 @@ export const normalizeNewsResponse = (
   const articles = (response.articles ?? []).map<ArticleInfoType>(
     (article) => ({
       id: String(article.id),
-      imgSrcs: article.imgSrcs ?? [],
+      images: article.images ?? [],
       title: article.title ?? "",
       author: article.author ?? "",
       dateTime: article.dateTime ?? "",

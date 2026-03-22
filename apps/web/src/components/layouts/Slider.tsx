@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
 import useTouchScroll from "@/shared/hooks/useTouchScroll";
-import { Constants } from "@/shared/lib/constant";
 import { cn } from "@/shared/lib/utils";
 import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 
 type SliderProps = {
-  datas: string[];
+  datas: {
+    originSrc: string;
+    smallSrc: string | null;
+  }[];
 };
 
 function Slider({ datas }: SliderProps) {
@@ -84,11 +86,17 @@ function Slider({ datas }: SliderProps) {
               key={"slide-" + i}
               className="min-w-full h-full flex items-center justify-center p-4"
             >
-              <img
-                src={img || Constants.LOGO_BLACK}
-                alt={`슬라이드 이미지 ${i + 1}`}
-                className="max-w-full max-h-full object-contain select-none"
-              />
+              <picture>
+                <img
+                  src={img.originSrc}
+                  alt={`슬라이드 이미지 ${i + 1}`}
+                  className="max-w-full max-h-full object-contain select-none"
+                />
+                <source
+                  srcSet={img.smallSrc || img.originSrc}
+                  media="(max-width: 640px)"
+                />
+              </picture>
             </div>
           ))}
         </div>

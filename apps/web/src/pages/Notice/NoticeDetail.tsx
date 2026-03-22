@@ -28,7 +28,7 @@ const NoticeDetail = () => {
     " | ",
   );
 
-  const metaImgUrl = data.imgSrcs[0];
+  const metaImgUrl = data.images[0];
 
   return (
     <>

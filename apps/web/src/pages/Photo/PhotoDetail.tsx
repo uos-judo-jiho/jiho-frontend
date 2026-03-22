@@ -37,7 +37,7 @@ const PhotoPage = () => {
     return createArticleData({
       headline: [info.title, info.author].join(" - ") || "",
       description: metaDescription,
-      images: info.imgSrcs || [],
+      images: info.images || [],
       datePublished: info.dateTime
         ? new Date(info.dateTime).toISOString()
         : undefined,
@@ -51,7 +51,7 @@ const PhotoPage = () => {
     return <Loading />;
   }
 
-  const metaImgUrl = info.imgSrcs.at(0);
+  const metaImgUrl = info.images.at(0);
 
   // Format date for meta tags (ISO 8601 format)
   const publishedDate = info.dateTime
