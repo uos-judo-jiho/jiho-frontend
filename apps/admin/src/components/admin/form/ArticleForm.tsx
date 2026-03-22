@@ -22,6 +22,7 @@ import ModalDescriptionSection from "@/components/common/Modals/ModalDescription
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toBase64 } from "@/shared/lib/utils/Utils";
+import { toast } from "sonner";
 import MarkdownEditorField from "./MarkdownEditor/MarkdownEditorField";
 
 type ArticleFormProps = {
@@ -101,7 +102,9 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const queryClient = useQueryClient();
 
   const queryKeyByType = {
-    news: v2Api.getGetApiV2NewsLatestQueryKey(),
+    news: v2Api
+      .getGetApiV2NewsLatestQueryKey()
+      .filter((key) => key !== "latest"),
     training: v2Api.getGetApiV2TrainingsQueryKey(),
     notice: v2Api.getGetApiV2NoticesQueryKey(),
   } as const;
@@ -110,8 +113,12 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const createBoardMutation = v2Admin.usePostApiV2AdminBoard({
     mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [queryKeyByType[type]] });
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeyByType[type],
+        });
+        toast.success("게시물이 성공적으로 등록되었습니다.");
+        naviagate(`/${type}/${gallery ? "gallery" : ""}`);
       },
     },
     axios: {
@@ -121,8 +128,13 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const updateBoardMutation = v2Admin.usePutApiV2AdminBoardBoardId({
     mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [queryKeyByType[type]] });
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeyByType[type],
+        });
+
+        toast.success("업데이트에 성공하였습니다.");
+        naviagate(`/${type}/${gallery ? "gallery" : ""}`);
       },
     },
     axios: {
@@ -132,8 +144,12 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const deleteBoardMutation = v2Admin.useDeleteApiV2AdminBoardBoardId({
     mutation: {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [queryKeyByType[type]] });
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeyByType[type],
+        });
+        toast.success("게시물이 성공적으로 삭제되었습니다.");
+        naviagate(`/${type}`);
       },
     },
     axios: {
@@ -149,21 +165,21 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleSubmitOpen = () => setIsSubmitOpen(true);
 
-  const handleDelete = async (
-    id: string | number,
-    type: "news" | "training" | "notice",
-  ) => {
+  const handleDelete = async (id: string | number) => {
     try {
       const boardId = Number(id);
       if (Number.isNaN(boardId)) {
         throw new Error("유효하지 않은 게시글 ID입니다.");
       }
 
+      if (!window.confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
+        return;
+      }
+
       await deleteBoardMutation.mutateAsync({ boardId });
-      naviagate(`/${type}`);
     } catch (error) {
       console.error(error);
-      alert("게시물을 삭제에 실패하였습니다!");
+      toast.error("게시물을 삭제에 실패하였습니다!");
     }
   };
 
@@ -193,7 +209,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               dateTime: values.dateTime,
               description: values.description,
               tags: values.tags,
-              base64Imgs: values.imgSrcs,
+              imgSrcs: values.imgSrcs,
             },
           });
         } else {
@@ -211,17 +227,14 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
               dateTime: values.dateTime,
               description: values.description,
               tags: values.tags,
-              base64Imgs: values.imgSrcs,
+              imgSrcs: values.imgSrcs,
             },
           });
         }
       }
-
-      alert("업로드에 성공하였습니다.");
-      naviagate(`/${type}/${gallery ? "gallery" : ""}`);
     } catch (error) {
       console.error("upload error:", error);
-      alert("업로드에 실패하였습니다.");
+      toast.error("업로드에 실패하였습니다.");
     } finally {
       setIsSubmited(false);
     }
@@ -511,7 +524,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           description={"게시물을 삭제할까요?"}
           open={isDeleteOpen}
           setOpen={setIsDeleteOpen}
-          onSubmit={async () => handleDelete(data.id, type)}
+          onSubmit={async () => await handleDelete(data.id)}
         />
       )}
 

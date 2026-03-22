@@ -10,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { User as UserIcon } from "lucide-react";
 import { Suspense, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 
@@ -43,6 +43,7 @@ const ROLE_PRIORITY: Record<
 export const UserDetailPage = () => {
   const { id } = useParams<{ id: string }>();
 
+  const navigation = useNavigate();
   const queryClient = useQueryClient();
 
   const deleteMemberMutation = v2Admin.useDeleteApiV2AdminUsersAdminId({
@@ -75,7 +76,14 @@ export const UserDetailPage = () => {
           variant="destructive"
           onClick={() => {
             if (window.confirm("정말로 이 회원을 삭제하시겠습니까?")) {
-              deleteMemberMutation.mutate({ adminId: Number(id) });
+              deleteMemberMutation.mutate(
+                { adminId: Number(id) },
+                {
+                  onSuccess: () => {
+                    navigation("/users", { replace: true });
+                  },
+                },
+              );
             }
           }}
         >
