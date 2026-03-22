@@ -27,7 +27,7 @@ export const RequestUpdradeButton = () => {
                   toast.success("권한 업그레이드 요청이 제출되었습니다.");
                   close();
                 },
-                onError: (error: any) => {
+                onError: (error) => {
                   toast.error(
                     error.response?.data?.message ||
                       "권한 업그레이드 요청 제출에 실패했습니다.",

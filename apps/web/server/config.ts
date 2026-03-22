@@ -29,24 +29,24 @@ nodeConsole.log("Arguments received:", args);
 export const isLocal = args.includes("--local");
 
 export const customConsole = {
-  log: (...args: any[]) => {
+  log: (...args: unknown[]) => {
     nodeConsole.log(`${COLOR.LOG}${CONSOLE_PREFIX.LOG}`, ...args, COLOR.RESET);
   },
-  info: (...args: any[]) => {
+  info: (...args: unknown[]) => {
     nodeConsole.log(
       `${COLOR.INFO}${CONSOLE_PREFIX.INFO}`,
       ...args,
       COLOR.RESET,
     );
   },
-  error: (...args: any[]) => {
+  error: (...args: unknown[]) => {
     nodeConsole.error(
       `${COLOR.ERROR}${CONSOLE_PREFIX.ERROR}`,
       ...args,
       COLOR.RESET,
     );
   },
-  warn: (...args: any[]) => {
+  warn: (...args: unknown[]) => {
     nodeConsole.warn(
       `${COLOR.WARN}${CONSOLE_PREFIX.WARN}`,
       ...args,

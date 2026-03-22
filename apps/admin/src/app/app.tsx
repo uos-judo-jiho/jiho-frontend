@@ -1,5 +1,5 @@
 import { AuthRouter, PublicRouter } from "@/app/routers";
-import DefaultLayout from "@/components/layouts/DefaultLayout";
+import { DefaultLayout } from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import { v2Admin } from "@packages/api";
 import { useEffect, useState } from "react";

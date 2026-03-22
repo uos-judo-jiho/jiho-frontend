@@ -134,7 +134,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
             data: { file },
           },
           {
-            onSuccess: (response: any) => {
+            onSuccess: (response) => {
               updateUpload(uploadId, {
                 status: "completed",
                 progress: 100,
@@ -145,7 +145,7 @@ export const useFileUpload = (options?: UseFileUploadOptions) => {
               }
               resolve(uploadId);
             },
-            onError: (error: any) => {
+            onError: (error) => {
               handleUploadError(
                 uploadId,
                 error?.message || "업로드 중 오류가 발생했습니다.",

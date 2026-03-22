@@ -1,5 +1,4 @@
 import { LazyImage } from "@/components/common/image/lazy-image";
-import Col from "@/components/layouts/Col";
 import { Card } from "@/components/ui/card";
 import { v2Api } from "@packages/api";
 import { useMemo } from "react";
@@ -37,7 +36,7 @@ const ExerciseThumbnail = () => {
             className="absolute flex group-hover:flex justify-center items-center top-0 bottom-0 left-0 right-0 z-10"
             style={{ color: "var(--theme-bg)" }}
           >
-            <Col>
+            <div className="flex flex-col items-normal justify-normal">
               <span
                 className="mb-1"
                 style={{ fontSize: "var(--theme-font-description)" }}
@@ -51,7 +50,7 @@ const ExerciseThumbnail = () => {
                 {lastTraningData.dateTime}
               </span>
               <span style={{ fontSize: "1.2rem" }}>자세히 보기</span>
-            </Col>
+            </div>
           </div>
         </div>
       </Link>
