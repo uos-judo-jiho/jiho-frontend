@@ -242,8 +242,20 @@ export const Awards = () => {
     if (pendingDeleteId === null) return;
 
     try {
-      await deleteAwardMutation.mutateAsync({ awardId: pendingDeleteId });
-      setPendingDeleteId(null);
+      await deleteAwardMutation.mutateAsync(
+        { awardId: pendingDeleteId },
+        {
+          onSuccess: () => {
+            setPendingDeleteId(null);
+            setIsDeleteOpen(false);
+            toast.success("수상이력이 삭제되었습니다.");
+          },
+          onError: (error) => {
+            console.error(error);
+            toast.error("수상이력 삭제에 실패했습니다.");
+          },
+        },
+      );
     } catch (error) {
       console.error(error);
       toast.error("수상이력 삭제에 실패했습니다.");
