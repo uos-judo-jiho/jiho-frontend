@@ -26,7 +26,7 @@ const registerSchema = z
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
-export const Register = () => {
+export const RegisterPage = () => {
   const navigate = useNavigate();
 
   const {
@@ -48,7 +48,7 @@ export const Register = () => {
         toast.success("회원가입이 완료되었습니다.");
         navigate(RouterUrl.로그인);
       },
-      onError: (error: any) => {
+      onError: (error) => {
         const message =
           error.response?.data?.message || "회원가입에 실패했습니다.";
         toast.error(message);
@@ -71,7 +71,7 @@ export const Register = () => {
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <div className="mx-auto flex min-h-screen max-w-lg items-center px-6 py-12">
+      <div className="mx-auto flex min-h-screen max-w-xl items-center px-6 py-12">
         <div className="w-full rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/60">
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
@@ -132,7 +132,9 @@ export const Register = () => {
                 placeholder="비밀번호 (8자 이상, 숫자 포함)"
               />
               {errors.password && (
-                <p className="text-xs text-red-500">{errors.password.message}</p>
+                <p className="text-xs text-red-500">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 

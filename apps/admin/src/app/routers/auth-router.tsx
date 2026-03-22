@@ -68,12 +68,12 @@ export const AuthRouter = () => {
   return (
     <Routes>
       <Route path={RouterUrl.홈} element={WithHelmet(<HomePage />, "홈")} />
-
       {/* 마이페이지 */}
       <Route
         path={RouterUrl.마이페이지.루트}
         element={WithHelmet(<MyPage />, "마이페이지")}
       />
+      ...
       <Route
         path={RouterUrl.마이페이지.정보수정}
         element={WithHelmet(<EditPage />, "정보 수정")}
@@ -82,7 +82,6 @@ export const AuthRouter = () => {
         path={RouterUrl.마이페이지.비밀번호변경}
         element={WithHelmet(<PasswordChangePage />, "비밀번호 변경")}
       />
-
       {/* 회원 관리 - Staff 이상 */}
       <Route
         path={RouterUrl.회원.목록}
@@ -100,7 +99,6 @@ export const AuthRouter = () => {
           </ProtectedRoute>
         }
       />
-
       {/* 훈련일지 - General 이상 */}
       <Route
         path={RouterUrl.훈련일지.목록}
@@ -126,7 +124,6 @@ export const AuthRouter = () => {
           </ProtectedRoute>
         }
       />
-
       {/* 지호지 (뉴스) - General 이상 */}
       <Route
         path={RouterUrl.뉴스.목록}
@@ -187,7 +184,6 @@ export const AuthRouter = () => {
           </ProtectedRoute>
         }
       />
-
       {/* 공지사항 - Staff 이상 */}
       <Route
         path={RouterUrl.공지사항.목록}
@@ -213,7 +209,6 @@ export const AuthRouter = () => {
           </ProtectedRoute>
         }
       />
-
       {/* 수상내역 - Staff 이상 */}
       <Route
         path={RouterUrl.수상내역}
@@ -223,17 +218,15 @@ export const AuthRouter = () => {
           </ProtectedRoute>
         }
       />
-
       {/* 로그인 상태에서 login, register 접근 시 홈으로 리디렉션 */}
       <Route
         path={RouterUrl.로그인}
         element={<Navigate to={RouterUrl.홈} replace />}
       />
       <Route
-        path={RouterUrl.회원가입}
+        path={RouterUrl.회원가입.홈}
         element={<Navigate to={RouterUrl.홈} replace />}
       />
-
       {/* 그 외는 not found */}
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

@@ -136,7 +136,7 @@ export const LoginPage = () => {
             계정이 없으신가요?
             <br />
             <Link
-              to={RouterUrl.회원가입}
+              to={RouterUrl.회원가입.홈}
               className="text-slate-900 font-medium hover:text-slate-700"
             >
               {"회원가입 >"}
