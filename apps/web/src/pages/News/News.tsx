@@ -55,7 +55,7 @@ const NewsPage = () => {
 
         return [
           {
-            url: firstArticle.images[0] || "",
+            url: firstArticle.images[0]?.originSrc || "",
             caption: `${data.data?.data?.year}년 - ${firstArticle.title}`,
             datePublished: firstArticle.dateTime
               ? new Date(firstArticle.dateTime).toISOString()
@@ -71,7 +71,7 @@ const NewsPage = () => {
       <MyHelmet
         title="News"
         description={metaDescription}
-        imgUrl={metaImgUrl}
+        imgUrl={metaImgUrl ? metaImgUrl.originSrc : undefined}
       />
       {structuredData && <StructuredData data={structuredData} />}
       <DefaultLayout>
