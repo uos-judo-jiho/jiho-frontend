@@ -5,6 +5,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";
 import React, { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 interface MarkdownEditorProps {
   value: string;
@@ -91,7 +92,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
     if (imageFiles.length === 0) {
-      alert("이미지 파일만 업로드할 수 있습니다.");
+      toast.warning("이미지 파일만 업로드할 수 있습니다.");
       return;
     }
 
@@ -112,7 +113,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
       }
     } catch (error) {
       console.error("Image upload failed:", error);
-      alert("이미지 업로드에 실패했습니다.");
+      toast.error("이미지 업로드에 실패했습니다.");
     }
   };
 
