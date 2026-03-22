@@ -1,4 +1,3 @@
-import Row from "@/components/layouts/Row";
 import { MenuIdType } from "@/shared/lib/types/MenuIdType";
 import {
   MenuItemTitle,
@@ -28,10 +27,10 @@ const ToggleMenuItem = ({
   return (
     <>
       <MenuToggle onClick={() => handleClickMenu(targetMenu)} to={"#"}>
-        <Row justifyContent="space-between" alignItems="center">
+        <div className="flex w-full h-full justify-between items-center">
           <MenuItemTitle>{parentTitle}</MenuItemTitle>
           <span>{selected === "selected" ? "-" : "+"}</span>
-        </Row>
+        </div>
       </MenuToggle>
       <SlideSubMenu
         selected={selected}

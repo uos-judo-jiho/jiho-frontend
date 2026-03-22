@@ -10,6 +10,7 @@ import GalleryWrite from "@/pages/News/Gallery/GalleryWrite";
 import NewsDetail from "@/pages/News/NewsDetail";
 import NewsIndex from "@/pages/News/NewsIndex";
 import NewsYear from "@/pages/News/NewsYear";
+import { NotFoundPage } from "@/pages/not-found-page";
 import Notice from "@/pages/Notice/Notice";
 import NoticeDetail from "@/pages/Notice/NoticeDetail";
 import { TrainingLogPage } from "@/pages/training-log";
@@ -222,6 +223,19 @@ export const AuthRouter = () => {
           </ProtectedRoute>
         }
       />
+
+      {/* 로그인 상태에서 login, register 접근 시 홈으로 리디렉션 */}
+      <Route
+        path={RouterUrl.로그인}
+        element={<Navigate to={RouterUrl.홈} replace />}
+      />
+      <Route
+        path={RouterUrl.회원가입}
+        element={<Navigate to={RouterUrl.홈} replace />}
+      />
+
+      {/* 그 외는 not found */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

@@ -1,12 +1,8 @@
-import { useState } from "react";
-
 import SkeletonThumbnail from "@/components/common/Skeletons/SkeletonThumbnail";
-import Col from "@/components/layouts/Col";
-
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
+import { useState } from "react";
 import { Badge } from "../common/badge";
-import Row from "../layouts/Row";
 
 type NewsCardProps = {
   year: number | string;
@@ -35,12 +31,12 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
       >
         <div className="flex flex-col text-theme-default leading-theme-description w-full indent-1 xs:hidden @container">
           <div className="mb-2.5">
-            <Col>
-              <Row alignItems="center" gap={4}>
+            <div className="flex flex-col items-normal justify-normal">
+              <div className={cn("flex flex-row gap-4 items-center")}>
                 <h3 className="indent-0 text-theme-description leading-theme-description font-bold">
                   {article.title}
                 </h3>
-                <Row alignItems="center" gap={4}>
+                <div className={cn("flex flex-row gap-2")}>
                   {article.tags.map((tag) => (
                     <Badge className="min-w-[48px]" key={tag}>
                       <span className="indent-0 text-theme-tiny leading-theme-tiny text-theme-grey pr-2">
@@ -48,14 +44,14 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
                       </span>
                     </Badge>
                   ))}
-                </Row>
-              </Row>
-              <Col>
+                </div>
+              </div>
+              <div className="flex flex-col items-normal justify-normal">
                 <span className="indent-0 text-theme-tiny leading-theme-tiny text-theme-grey pr-2">
                   {article.author}
                 </span>
-              </Col>
-            </Col>
+              </div>
+            </div>
           </div>
         </div>
         {article.images[0] && (
@@ -92,7 +88,7 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
                 media="(max-width: 640px)"
               />
             </picture>
-            <Col>
+            <div className="flex flex-col items-normal justify-normal">
               <div className="text-theme-description leading-theme-description font-bold pt-2 text-ellipsis overflow-hidden whitespace-nowrap hidden xs:block">
                 {article.title}
               </div>
@@ -102,7 +98,7 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
               <div className="text-theme-tiny leading-theme-tiny text-theme-grey hidden xs:block">
                 {article.tags}
               </div>
-            </Col>
+            </div>
           </div>
         )}
       </a>

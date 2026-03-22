@@ -6,7 +6,10 @@ type DefaultLayoutProps = {
   showSidebar?: boolean;
 };
 
-function DefaultLayout({ children, showSidebar = false }: DefaultLayoutProps) {
+export const DefaultLayout = ({
+  children,
+  showSidebar = false,
+}: DefaultLayoutProps) => {
   return (
     <div className="flex bg-neutral-50 min-h-screen">
       {showSidebar && <LNB />}
@@ -15,6 +18,4 @@ function DefaultLayout({ children, showSidebar = false }: DefaultLayoutProps) {
       </main>
     </div>
   );
-}
-
-export default DefaultLayout;
+};

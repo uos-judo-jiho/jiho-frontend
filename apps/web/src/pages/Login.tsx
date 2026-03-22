@@ -68,7 +68,7 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-            <div className="space-y-4 rounded-md shadow-sm">
+            <div className="space-y-4">
               <div className="space-y-1">
                 <label
                   htmlFor="email"
@@ -122,14 +122,14 @@ const Login = () => {
 
           <div className="text-center mt-4">
             <p className="text-sm text-muted-foreground">
-              관리자 계정이 필요하신가요?{" "}
+              계정이 필요하신가요?{" "}
               <a
                 href="https://admin.uosjudo.com/signup"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-medium text-primary hover:underline"
               >
-                관리자 신청하기
+                회원가입하기
               </a>
             </p>
           </div>
