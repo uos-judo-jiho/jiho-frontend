@@ -1,12 +1,9 @@
-import { useState } from "react";
-
 import SkeletonThumbnail from "@/components/common/Skeletons/SkeletonThumbnail";
 import Col from "@/components/layouts/Col";
-
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
+import { useState } from "react";
 import { Badge } from "../common/badge";
-import Row from "../layouts/Row";
 
 type NewsCardProps = {
   year: number | string;
@@ -17,7 +14,7 @@ type NewsCardProps = {
 const NewsCard = ({ article, year }: NewsCardProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLoding = () => {
+  const handleLoading = () => {
     setIsLoading(true);
   };
 
@@ -36,32 +33,28 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
         <div className="flex flex-col text-theme-default leading-theme-description w-full indent-1 xs:hidden @container">
           <div className="mb-2.5">
             <Col>
-              <Row alignItems="center" gap={4}>
-                <h3 className="indent-0 text-theme-description leading-theme-description font-bold">
-                  {article.title}
-                </h3>
-                <Row alignItems="center" gap={4}>
-                  {article.tags.map((tag) => (
-                    <Badge className="min-w-[48px]" key={tag}>
-                      <span className="indent-0 text-theme-tiny leading-theme-tiny text-theme-grey pr-2">
-                        # {tag}
-                      </span>
-                    </Badge>
-                  ))}
-                </Row>
-              </Row>
-              <Col>
-                <span className="indent-0 text-theme-tiny leading-theme-tiny text-theme-grey pr-2">
-                  {article.author}
-                </span>
-              </Col>
+              <h3 className="indent-0 text-theme-description leading-theme-description font-bold">
+                {article.title}
+              </h3>
+              <span className="indent-0 text-theme-tiny leading-theme-tiny text-theme-grey pr-2">
+                {article.author}
+              </span>
+              <div className="flex flex-wrap w-full mt-1 gap-1">
+                {article.tags.map((tag) => (
+                  <Badge className="min-w-[48px] h-6" key={tag}>
+                    <span className="indent-0 text-xs leading-theme-tiny text-theme-grey">
+                      # {tag}
+                    </span>
+                  </Badge>
+                ))}
+              </div>
             </Col>
           </div>
         </div>
         {article.images[0] && (
           <div className="w-full h-full flex items-center justify-center relative">
             {isLoading ? (
-              <picture>
+              <picture className="h-full">
                 <img
                   loading="lazy"
                   alt={article.title + article.author}
@@ -83,7 +76,7 @@ const NewsCard = ({ article, year }: NewsCardProps) => {
                 alt={article.title + article.author}
                 src={article.images[0].originSrc}
                 style={{ display: "none" }}
-                onLoad={handleLoding}
+                onLoad={handleLoading}
               />
               <source
                 srcSet={

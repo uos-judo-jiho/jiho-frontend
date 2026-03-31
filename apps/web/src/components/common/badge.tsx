@@ -22,6 +22,7 @@ export const Badge = ({ theme = "gray", className, children }: BadgeProps) => {
       className={cn(
         themeClasses[theme] || "bg-gray-100 text-gray-800",
         "w-fit px-2 py-1 rounded-full text-sm font-medium  text-center",
+        "flex items-center justify-center",
         className,
       )}
     >
