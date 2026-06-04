@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
+import { logger } from "@99mini/logger-client";
+import { useEffect } from "react";
 
 type PhotoDetailPcProps = {
   trainings: ArticleInfoType[];
@@ -21,13 +23,27 @@ export const PhotoDetailPc = ({
   current,
   training,
 }: PhotoDetailPcProps) => {
+  useEffect(() => {
+    logger.info("[pc] 훈련일지", {
+      res: training,
+      path: window.location.pathname,
+    });
+  }, [training]);
   return (
     <DefaultLayout>
       <SheetWrapper>
         {/* Header with Back Button and Navigation */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center ext-gray-600 hover:text-gray-900">
-            <Link to={`/photo`} className="flex items-center gap-2">
+            <Link
+              to={`/photo`}
+              className="flex items-center gap-2"
+              onClick={() =>
+                logger.info("[pc] 훈련일지 목록으로 이동", {
+                  path: window.location.pathname,
+                })
+              }
+            >
               <ArrowLeft className="h-4 w-4" />
               훈련일지로 돌아가기
             </Link>
@@ -64,6 +80,11 @@ export const PhotoDetailPc = ({
               <Link
                 to={current > 0 ? `/photo/${trainings[current - 1].id}` : "#"}
                 className="flex items-center gap-1"
+                onClick={() =>
+                  logger.info("[pc] 이전 훈련일지로 이동", {
+                    path: window.location.pathname,
+                  })
+                }
               >
                 <ChevronLeft className="h-4 w-4" />
                 이전
@@ -92,6 +113,11 @@ export const PhotoDetailPc = ({
                     : "#"
                 }
                 className="flex items-center gap-1"
+                onClick={() =>
+                  logger.info("[pc] 다음 훈련일지로 이동", {
+                    path: window.location.pathname,
+                  })
+                }
               >
                 다음
                 <ChevronRight className="h-4 w-4" />

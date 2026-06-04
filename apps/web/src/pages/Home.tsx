@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import BGImageWebp from "@/shared/lib/assets/images/background-img-group.webp";
 
@@ -15,6 +15,7 @@ import { footerData } from "@/shared/lib/assets/data/footer";
 
 import { StructuredData, createOrganizationData } from "@/features/seo";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
+import { logger } from "@99mini/logger-client";
 import { v2Api } from "@packages/api";
 
 const Home = () => {
@@ -79,6 +80,10 @@ const Home = () => {
     awards.length > 0
       ? awards.map((award) => award.title).join(", ")
       : "서울시립대학교 유도부 지호";
+
+  useEffect(() => {
+    logger.info("홈", { path: window.location.pathname });
+  }, []);
 
   return (
     <>

@@ -25,7 +25,7 @@ export const PhotoDetailMobile = ({
   trainings,
 }: PhotoDetailMobileProps) => {
   useEffect(() => {
-    logger.info("모바일 훈련일지", {
+    logger.info("[mobile] 훈련일지", {
       res: training,
       path: window.location.pathname,
     });
@@ -67,7 +67,7 @@ export const PhotoDetailMobile = ({
               to={current > 0 ? `/photo/${trainings[current - 1].id}` : "#"}
               className="flex items-center gap-1"
               onClick={() => {
-                logger.info("이전 훈련일지로 이동", {
+                logger.info("[mobile] 이전 훈련일지로 이동", {
                   path: window.location.pathname,
                   meta: {
                     from: training.id,
