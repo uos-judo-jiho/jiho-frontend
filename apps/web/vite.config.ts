@@ -3,11 +3,11 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
-import { defineConfig } from "vite";
 import { voyageLoggerPlugin } from "@99mini/logger-client/plugin";
+import { defineConfig } from "vite";
 
-const VOYAGE_BASE_URL = process.env.VOYAGE_BASE_URL;
-const VOYAGE_API_KEY = process.env.VOYAGE_API_KEY;
+const VOYAGE_BASE_URL = process.env.VITE_VOYAGE_BASE_URL;
+const VOYAGE_API_KEY = process.env.VITE_VOYAGE_API_KEY;
 
 const isVoyageConfigValid = VOYAGE_BASE_URL && VOYAGE_API_KEY;
 
@@ -20,7 +20,7 @@ export default defineConfig({
       ? voyageLoggerPlugin({
           baseUrl: VOYAGE_BASE_URL,
           apiKey: VOYAGE_API_KEY,
-          app: process.env.VOYAGE_APP,
+          app: process.env.VITE_VOYAGE_APP,
         })
       : null,
   ],
