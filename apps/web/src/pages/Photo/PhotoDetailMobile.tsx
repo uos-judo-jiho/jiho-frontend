@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
+import { logger } from "@99mini/logger-client";
+import { useEffect } from "react";
 
 type PhotoDetailMobileProps = {
   trainings: ArticleInfoType[];
@@ -22,6 +24,12 @@ export const PhotoDetailMobile = ({
   current,
   trainings,
 }: PhotoDetailMobileProps) => {
+  useEffect(() => {
+    logger.info("모바일 훈련일지", {
+      res: training,
+    });
+  }, [training]);
+
   if (!training) {
     return <Loading />;
   }

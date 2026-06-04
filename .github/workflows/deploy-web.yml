@@ -66,6 +66,9 @@ jobs:
           platforms: linux/amd64
           build-args: |
             BACKEND_URL=${{ secrets.BACKEND_URL }}
+            VITE_VOYAGE_BASE_URL=https://api.zerovoyage.com
+            VITE_VOYAGE_API_KEY=${{ secrets.VOYAGE_API_KEY }}
+            VITE_VOYAGE_APP=uos-jiho-judo-client
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
