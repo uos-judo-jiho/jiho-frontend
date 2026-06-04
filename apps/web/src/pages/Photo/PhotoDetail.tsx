@@ -37,7 +37,7 @@ const PhotoPage = () => {
     return createArticleData({
       headline: [info.title, info.author].join(" - ") || "",
       description: metaDescription,
-      images: info.images || [],
+      images: info.images.map((img) => img.originSrc) || [],
       datePublished: info.dateTime
         ? new Date(info.dateTime).toISOString()
         : undefined,
@@ -63,7 +63,7 @@ const PhotoPage = () => {
       <MyHelmet
         title={`훈련일지 - ${info.author}`}
         description={metaDescription}
-        imgUrl={metaImgUrl}
+        imgUrl={metaImgUrl?.originSrc}
         datePublished={publishedDate}
         dateModified={publishedDate}
         author={info.author}

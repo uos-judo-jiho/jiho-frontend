@@ -3,11 +3,27 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 
+import { voyageLoggerPlugin } from "@99mini/logger-client/plugin";
 import { defineConfig } from "vite";
+
+const VOYAGE_BASE_URL = process.env.VITE_VOYAGE_BASE_URL;
+const VOYAGE_API_KEY = process.env.VITE_VOYAGE_API_KEY;
+
+const isVoyageConfigValid = VOYAGE_BASE_URL && VOYAGE_API_KEY;
 
 /** @type {import('vite').UserConfig} */
 export default defineConfig({
-  plugins: [tailwindcss(), react()],
+  plugins: [
+    tailwindcss(),
+    react(),
+    isVoyageConfigValid
+      ? voyageLoggerPlugin({
+          baseUrl: VOYAGE_BASE_URL,
+          apiKey: VOYAGE_API_KEY,
+          app: process.env.VITE_VOYAGE_APP,
+        })
+      : null,
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

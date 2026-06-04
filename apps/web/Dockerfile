@@ -14,10 +14,16 @@ RUN corepack enable
 
 # Build arguments for environment variables
 ARG BACKEND_URL
+ARG VITE_VOYAGE_BASE_URL
+ARG VITE_VOYAGE_API_KEY
+ARG VITE_VOYAGE_APP
 
 # Set environment variables for build
 ENV NODE_ENV=production
 ENV BACKEND_URL=$BACKEND_URL
+ENV VITE_VOYAGE_BASE_URL=$VITE_VOYAGE_BASE_URL
+ENV VITE_VOYAGE_API_KEY=$VITE_VOYAGE_API_KEY
+ENV VITE_VOYAGE_APP=$VITE_VOYAGE_APP
 
 COPY --from=deps /repo/node_modules ./node_modules
 COPY --from=deps /repo/apps/web/node_modules ./apps/web/node_modules

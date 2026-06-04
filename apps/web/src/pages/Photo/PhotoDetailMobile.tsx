@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
+import { logger } from "@99mini/logger-client";
+import { useEffect } from "react";
 
 type PhotoDetailMobileProps = {
   trainings: ArticleInfoType[];
@@ -22,6 +24,13 @@ export const PhotoDetailMobile = ({
   current,
   trainings,
 }: PhotoDetailMobileProps) => {
+  useEffect(() => {
+    logger.info("[mobile] 훈련일지", {
+      res: training,
+      path: window.location.pathname,
+    });
+  }, [training]);
+
   if (!training) {
     return <Loading />;
   }
@@ -57,6 +66,15 @@ export const PhotoDetailMobile = ({
             <Link
               to={current > 0 ? `/photo/${trainings[current - 1].id}` : "#"}
               className="flex items-center gap-1"
+              onClick={() => {
+                logger.info("[mobile] 이전 훈련일지로 이동", {
+                  path: window.location.pathname,
+                  meta: {
+                    from: training.id,
+                    to: current > 0 ? trainings[current - 1].id : null,
+                  },
+                });
+              }}
             >
               <ChevronLeft className="h-4 w-4" />
               이전
@@ -85,6 +103,18 @@ export const PhotoDetailMobile = ({
                   : "#"
               }
               className="flex items-center gap-1"
+              onClick={() => {
+                logger.info("다음 훈련일지로 이동", {
+                  path: window.location.pathname,
+                  meta: {
+                    from: training.id,
+                    to:
+                      current < trainings.length - 1
+                        ? trainings[current + 1].id
+                        : null,
+                  },
+                });
+              }}
             >
               다음
               <ChevronRight className="h-4 w-4" />

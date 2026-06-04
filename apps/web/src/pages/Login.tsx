@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Navbar from "@/components/common/Navbar/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import MyHelmet from "@/features/seo/helmet/MyHelmet";
+import { logger } from "@99mini/logger-client";
 import { v2Admin } from "@packages/api";
 
 const Login = () => {
@@ -52,6 +53,10 @@ const Login = () => {
     });
   };
 
+  useEffect(() => {
+    logger.info("로그인 페이지 방문", { path: window.location.pathname });
+  }, []);
+
   return (
     <>
       <MyHelmet title="로그인 | 서울시립대학교 유도부 지호" />
@@ -68,7 +73,7 @@ const Login = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-            <div className="space-y-4 rounded-md shadow-sm">
+            <div className="space-y-4">
               <div className="space-y-1">
                 <label
                   htmlFor="email"
