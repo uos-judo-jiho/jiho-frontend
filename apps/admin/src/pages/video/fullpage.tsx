@@ -34,6 +34,23 @@ export const VideoLabelingFullpage = () => {
   const eventsQuery = useVideoEvents(jobId);
   const jobsQuery = useVideoJobs();
 
+  const navigableJobs = useMemo(
+    () =>
+      [...(jobsQuery.data ?? [])]
+        .filter((job) => job.status === "done" && job.highlightCount > 0)
+        .sort((left, right) => left.id - right.id),
+    [jobsQuery.data],
+  );
+  const currentJobIndex = navigableJobs.findIndex((job) => job.id === jobId);
+  const previousJob =
+    currentJobIndex > 0 ? navigableJobs[currentJobIndex - 1] : undefined;
+  const nextJob =
+    currentJobIndex >= 0 && currentJobIndex < navigableJobs.length - 1
+      ? navigableJobs[currentJobIndex + 1]
+      : undefined;
+  const previousJobEventsQuery = useVideoEvents(previousJob?.id ?? 0);
+  const nextJobEventsQuery = useVideoEvents(nextJob?.id ?? 0);
+
   const highlights = useMemo(() => {
     if (!jobQuery.data || !eventsQuery.data) return [];
     const eventStatus = new Map(
@@ -62,15 +79,6 @@ export const VideoLabelingFullpage = () => {
         : 0;
   const activeHighlight = highlights[activeIndex];
 
-  const currentJobIndex =
-    jobsQuery.data?.findIndex((job) => job.id === jobId) ?? -1;
-  const nextJob =
-    currentJobIndex >= 0
-      ? jobsQuery.data
-          ?.slice(currentJobIndex + 1)
-          .find((job) => job.status === "done" && job.highlightCount > 0)
-      : undefined;
-
   const labeledCount = highlights.filter(
     (highlight) => highlight.isLabeledByCurrentUser,
   ).length;
@@ -95,6 +103,39 @@ export const VideoLabelingFullpage = () => {
     navigate(RouterUrl.영상.풀페이지({ jobId: nextJob.id }), {
       replace: true,
     });
+  };
+
+  const openJobHighlight = (
+    targetJobId: number,
+    highlightId: number,
+    replace = false,
+  ) => {
+    navigate(
+      `${RouterUrl.영상.풀페이지({ jobId: targetJobId })}?highlightId=${highlightId}`,
+      { replace },
+    );
+  };
+
+  const previousJobLastHighlight = previousJobEventsQuery.data?.at(-1);
+  const nextJobFirstHighlight = nextJobEventsQuery.data?.[0];
+  const canMovePrevious = activeIndex > 0 || !!previousJobLastHighlight;
+  const canMoveNext =
+    activeIndex < highlights.length - 1 || !!nextJobFirstHighlight;
+
+  const movePrevious = () => {
+    if (activeIndex > 0) {
+      openHighlight(highlights[activeIndex - 1].id);
+    } else if (previousJob && previousJobLastHighlight) {
+      openJobHighlight(previousJob.id, previousJobLastHighlight.highlightId);
+    }
+  };
+
+  const moveNext = () => {
+    if (activeIndex < highlights.length - 1) {
+      openHighlight(highlights[activeIndex + 1].id);
+    } else if (nextJob && nextJobFirstHighlight) {
+      openJobHighlight(nextJob.id, nextJobFirstHighlight.highlightId);
+    }
   };
 
   const handleSaved = () => {
@@ -162,8 +203,8 @@ export const VideoLabelingFullpage = () => {
             <button
               type="button"
               aria-label="이전 하이라이트"
-              disabled={activeIndex <= 0}
-              onClick={() => openHighlight(highlights[activeIndex - 1].id)}
+              disabled={!canMovePrevious}
+              onClick={movePrevious}
               className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 disabled:opacity-30"
             >
               <ChevronLeft className="h-5 w-5" />
@@ -174,8 +215,8 @@ export const VideoLabelingFullpage = () => {
             <button
               type="button"
               aria-label="다음 하이라이트"
-              disabled={activeIndex >= highlights.length - 1}
-              onClick={() => openHighlight(highlights[activeIndex + 1].id)}
+              disabled={!canMoveNext}
+              onClick={moveNext}
               className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 disabled:opacity-30"
             >
               <ChevronRight className="h-5 w-5" />
@@ -222,6 +263,31 @@ export const VideoLabelingFullpage = () => {
                 jobId={jobId}
                 onSaved={handleSaved}
               />
+              <nav
+                aria-label="하이라이트 이동"
+                className="mt-4 flex items-center justify-between gap-3"
+              >
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!canMovePrevious}
+                  onClick={movePrevious}
+                  className="bg-white"
+                >
+                  <ChevronLeft />
+                  이전 하이라이트
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={!canMoveNext}
+                  onClick={moveNext}
+                  className="bg-white"
+                >
+                  다음 하이라이트
+                  <ChevronRight />
+                </Button>
+              </nav>
             </section>
 
             <aside className="hidden lg:block">
