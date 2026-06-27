@@ -27,7 +27,11 @@ const additionalSchema = z.object({
       "기수는 1 이상의 정수여야 합니다.",
     )
     .optional(),
-  studentId: z.string().trim().max(20, "학번은 20자 이하여야 합니다.").optional(),
+  studentId: z
+    .string()
+    .trim()
+    .max(20, "학번은 20자 이하여야 합니다.")
+    .optional(),
   // 010 프리픽스는 UI 에서 고정되고, 폼에는 뒤 8자리(1234-5678)만 담는다.
   phoneNumber: z
     .string()
@@ -114,11 +118,11 @@ export const Register = () => {
 
   return (
     <AuthShell
-      title={pendingToken ? "추가 정보 입력" : "관리자 회원가입"}
+      title={pendingToken ? "추가 정보 입력" : "회원가입"}
       description={
         pendingToken
           ? "관리자 승인 전까지 추가 정보를 입력·수정할 수 있어요."
-          : "관리자 계정을 생성하여 지호 서비스를 관리하세요."
+          : "회원가입 후 서비스를 이용할 수 있어요."
       }
     >
       {pendingToken ? (
@@ -331,9 +335,6 @@ const AuthShell = ({
     <div className="mx-auto flex min-h-screen max-w-lg items-center px-6 py-12">
       <div className="w-full rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/60">
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
-            UOS Judo Admin
-          </p>
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
           <p className="text-sm text-slate-500">{description}</p>
         </div>

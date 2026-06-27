@@ -67,16 +67,11 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <div className="mx-auto flex flex-col gap-4 min-h-screen max-w-lg items-center justify-center px-6 py-12">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col">
+      <div className="mx-auto flex flex-col gap-4 max-w-lg items-center justify-center px-6 py-12 flex-1">
         <div className="w-full rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/60">
           <div className="space-y-2">
-            <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
-              UOS Judo Admin
-            </p>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              관리자 로그인
-            </h1>
+            <h1 className="text-2xl font-semibold tracking-tight">로그인</h1>
             <p className="text-sm text-slate-500">
               계정 정보를 입력하고 관리자 페이지로 이동하세요.
             </p>
@@ -94,7 +89,7 @@ export const LoginPage = () => {
                 id="email"
                 {...register("email")}
                 className="h-11 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
-                placeholder="관리자 이메일"
+                placeholder="이메일(아이디)"
               />
               {errors.email && (
                 <p className="text-xs text-red-500">{errors.email.message}</p>
@@ -144,6 +139,39 @@ export const LoginPage = () => {
           </p>
         </div>
       </div>
+      <footer className="border-t border-slate-200 py-4 text-center text-sm text-slate-500 flex flex-col items-center gap-2">
+        <ul>
+          {/* 문의 이메일 정보 */}
+          <li>
+            <dl className="flex flex-wrap justify-center gap-2">
+              <div>문의:</div>
+              <div>
+                <dt className="sr-only">Email</dt>
+                <dd>
+                  <a
+                    href="mailto:uosjudojiho@gmail.com"
+                    className="text-slate-900 hover:text-slate-700"
+                  >
+                    uosjudojiho@gmail.com
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </li>
+          {/* 서비스 담당자 */}
+          <li>
+            <dl className="flex flex-wrap justify-center gap-2">
+              <div>서비스 담당자:</div>
+              <div>
+                <dt className="sr-only">Name</dt>
+                <dd>34기 김영민</dd>
+              </div>
+            </dl>
+          </li>
+        </ul>
+        <ul></ul>
+        &copy; {new Date().getFullYear()} UOS Judo. All rights reserved.
+      </footer>
     </div>
   );
 };

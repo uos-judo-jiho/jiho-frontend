@@ -269,7 +269,7 @@ app.post("/upload", async (req, res) => {
 
   const cookie = req.get("cookie");
   if (!cookie) {
-    res.status(401).json({ message: "관리자 로그인이 필요합니다." });
+    res.status(401).json({ message: "로그인이 필요합니다." });
     return;
   }
 
