@@ -31,7 +31,7 @@ COPY --from=deps /repo/packages/api/node_modules ./packages/api/node_modules
 COPY . .
 
 # Build the application with environment variables
-RUN pnpm -C packages/api generate
+RUN pnpm -C packages/api gen
 RUN pnpm -C apps/web build
 
 # Production stage - 런타임 dependencies만 설치
