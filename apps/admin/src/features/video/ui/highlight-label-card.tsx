@@ -119,8 +119,8 @@ export const HighlightLabelCard = ({
     },
   });
 
-  const memoLength = watch("memo").length;
-  const correctedEventSecInput = watch("correctedEventSec");
+  const memoLength = watch("memo", "").length;
+  const correctedEventSecInput = watch("correctedEventSec", "");
   const correctedEventSecNumber = Number(correctedEventSecInput);
   const correctedAbsoluteSec =
     correctedEventSecInput.trim() !== "" &&
@@ -213,11 +213,6 @@ export const HighlightLabelCard = ({
           disabled={highlight.isLabeledByCurrentUser}
           className="flex flex-col gap-3 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {highlight.isLabeledByCurrentUser && (
-            <p className="rounded-md bg-green-50 px-3 py-2 text-sm font-medium text-green-700">
-              이미 라벨링한 하이라이트입니다.
-            </p>
-          )}
           <Field label="기술 결과" required>
             <Controller
               control={control}

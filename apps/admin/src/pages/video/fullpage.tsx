@@ -1,11 +1,11 @@
-import { useEffect, useMemo } from "react";
 import {
   ArrowLeft,
-  Check,
   ChevronLeft,
   ChevronRight,
   ListVideo,
+  X,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Link,
   useNavigate,
@@ -20,13 +20,14 @@ import {
   useVideoJobDetail,
   useVideoJobs,
 } from "@/features/video/hooks";
+import { FullpageNavigationPanel } from "@/features/video/ui/fullpage-navigation-panel";
 import { HighlightLabelCard } from "@/features/video/ui/highlight-label-card";
-import { cn } from "@/shared/lib/utils";
 
 export const VideoLabelingFullpage = () => {
   const { jobId: jobIdParam } = useParams<{ jobId: string }>();
   const jobId = Number(jobIdParam);
   const navigate = useNavigate();
+  const [isListOpen, setIsListOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedHighlightId = Number(searchParams.get("highlightId"));
 
@@ -100,9 +101,15 @@ export const VideoLabelingFullpage = () => {
 
   const openNextJob = () => {
     if (!nextJob) return;
-    navigate(RouterUrl.영상.풀페이지({ jobId: nextJob.id }), {
+    navigate(RouterUrl.영상.풀페이지.상세({ jobId: nextJob.id }), {
       replace: true,
     });
+  };
+
+  const openJob = (targetJobId: number) => {
+    setIsListOpen(false);
+    if (targetJobId === jobId) return;
+    navigate(RouterUrl.영상.풀페이지.상세({ jobId: targetJobId }));
   };
 
   const openJobHighlight = (
@@ -111,7 +118,7 @@ export const VideoLabelingFullpage = () => {
     replace = false,
   ) => {
     navigate(
-      `${RouterUrl.영상.풀페이지({ jobId: targetJobId })}?highlightId=${highlightId}`,
+      `${RouterUrl.영상.풀페이지.상세({ jobId: targetJobId })}?highlightId=${highlightId}`,
       { replace },
     );
   };
@@ -136,6 +143,11 @@ export const VideoLabelingFullpage = () => {
     } else if (nextJob && nextJobFirstHighlight) {
       openJobHighlight(nextJob.id, nextJobFirstHighlight.highlightId);
     }
+  };
+
+  const selectHighlight = (highlightId: number) => {
+    setIsListOpen(false);
+    openHighlight(highlightId);
   };
 
   const handleSaved = () => {
@@ -171,7 +183,7 @@ export const VideoLabelingFullpage = () => {
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-100 px-6 text-center text-neutral-900">
         <p>영상 라벨링 데이터를 불러오지 못했습니다.</p>
         <Button asChild variant="secondary">
-          <Link to={RouterUrl.영상.목록}>목록으로 돌아가기</Link>
+          <Link to={RouterUrl.영상.풀페이지.목록}>목록으로 돌아가기</Link>
         </Button>
       </div>
     );
@@ -183,8 +195,8 @@ export const VideoLabelingFullpage = () => {
         <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
             <Link
-              to={RouterUrl.영상.목록}
-              aria-label="영상 목록으로"
+              to={RouterUrl.영상.풀페이지.목록}
+              aria-label="하이라이트 전체화면 목록으로"
               className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -199,28 +211,18 @@ export const VideoLabelingFullpage = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
-              aria-label="이전 하이라이트"
-              disabled={!canMovePrevious}
-              onClick={movePrevious}
-              className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 disabled:opacity-30"
+              onClick={() => setIsListOpen(true)}
+              className="mr-1 inline-flex items-center gap-1.5 rounded-md border border-neutral-200 px-2.5 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 lg:hidden"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ListVideo className="h-4 w-4" />
+              <span className="hidden sm:inline">목록</span>
             </button>
-            <span className="min-w-14 text-center text-sm tabular-nums">
+            <span className="rounded-md bg-neutral-100 px-2.5 py-1.5 text-sm font-medium tabular-nums text-neutral-600">
               {highlights.length > 0 ? activeIndex + 1 : 0}/{highlights.length}
             </span>
-            <button
-              type="button"
-              aria-label="다음 하이라이트"
-              disabled={!canMoveNext}
-              onClick={moveNext}
-              className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 disabled:opacity-30"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
           </div>
         </div>
       </header>
@@ -239,7 +241,7 @@ export const VideoLabelingFullpage = () => {
             )}
           </section>
         ) : (
-          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_17rem]">
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
             <section className="min-w-0">
               {isCurrentJobComplete &&
                 activeHighlight.isLabeledByCurrentUser && (
@@ -251,7 +253,9 @@ export const VideoLabelingFullpage = () => {
                       </Button>
                     ) : (
                       <Button asChild size="sm" variant="secondary">
-                        <Link to={RouterUrl.영상.목록}>목록으로 돌아가기</Link>
+                        <Link to={RouterUrl.영상.풀페이지.목록}>
+                          목록으로 돌아가기
+                        </Link>
                       </Button>
                     )}
                   </div>
@@ -291,35 +295,57 @@ export const VideoLabelingFullpage = () => {
             </section>
 
             <aside className="hidden lg:block">
-              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-3 shadow-sm">
-                <h2 className="mb-2 px-2 text-sm font-semibold text-neutral-700">
-                  하이라이트 목록
-                </h2>
-                <div className="space-y-1">
-                  {highlights.map((highlight, index) => (
-                    <button
-                      key={highlight.id}
-                      type="button"
-                      onClick={() => openHighlight(highlight.id)}
-                      className={cn(
-                        "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm",
-                        index === activeIndex
-                          ? "bg-neutral-900 text-white"
-                          : "text-neutral-600 hover:bg-neutral-100",
-                      )}
-                    >
-                      <span>하이라이트 {index + 1}</span>
-                      {highlight.isLabeledByCurrentUser && (
-                        <Check className="h-4 w-4 text-green-500" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <FullpageNavigationPanel
+                jobs={navigableJobs}
+                currentJobId={jobId}
+                highlights={highlights}
+                activeIndex={activeIndex}
+                onSelectJob={openJob}
+                onSelectHighlight={selectHighlight}
+                className="sticky top-24 max-h-[calc(100vh-7rem)]"
+              />
             </aside>
           </div>
         )}
       </main>
+
+      {isListOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <button
+            type="button"
+            aria-label="목록 닫기"
+            onClick={() => setIsListOpen(false)}
+            className="absolute inset-0 bg-black/30"
+          />
+          <aside
+            role="dialog"
+            aria-modal="true"
+            aria-label="라벨링 목록"
+            className="absolute inset-y-0 right-0 w-[min(22rem,calc(100vw-2rem))] bg-white p-4 shadow-2xl"
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="font-semibold text-neutral-900">라벨링 목록</h2>
+              <button
+                type="button"
+                aria-label="목록 닫기"
+                onClick={() => setIsListOpen(false)}
+                className="rounded-md p-2 text-neutral-500 hover:bg-neutral-100"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <FullpageNavigationPanel
+              jobs={navigableJobs}
+              currentJobId={jobId}
+              highlights={highlights}
+              activeIndex={activeIndex}
+              onSelectJob={openJob}
+              onSelectHighlight={selectHighlight}
+              className="max-h-[calc(100vh-5rem)] border-0 p-0 shadow-none"
+            />
+          </aside>
+        </div>
+      )}
     </div>
   );
 };

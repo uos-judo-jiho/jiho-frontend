@@ -13,7 +13,8 @@ import { Link } from "react-router-dom";
 import { getUserRole } from "../utils/get-user-role";
 
 export const UserTable = () => {
-  const { data: users } = v2Admin.useGetApiV2AdminUsersSuspense({
+  // 첫 인자는 쿼리 파라미터(year 필터). 옵션은 두 번째 인자로 넘겨야 select 가 적용된다.
+  const { data: users } = v2Admin.useGetApiV2AdminUsersSuspense(undefined, {
     axios: { withCredentials: true },
     query: {
       select: (data) => data.data.users,

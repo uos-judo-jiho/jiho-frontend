@@ -6,7 +6,7 @@ import {
 } from "@/features/video/api";
 import { useVideoJobs } from "@/features/video/hooks";
 import { cn } from "@/shared/lib/utils";
-import { Expand, Film } from "lucide-react";
+import { ArrowUpRightFromSquareIcon, Expand, Film } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const STATUS_META: Record<
@@ -34,6 +34,15 @@ export const VideoLabelingPage = () => {
         icon={Film}
         title="하이라이트 라벨링"
         description="분석된 영상 하이라이트를 검토하고 라벨을 달아요."
+        className="justify-normal gap-4"
+        rightElement={
+          <Link
+            to={RouterUrl.영상.풀페이지.목록}
+            title="하이라이트 전체화면으로 이동"
+          >
+            <ArrowUpRightFromSquareIcon className="h-5 w-5 text-neutral-600 transition-colors hover:text-neutral-900" />
+          </Link>
+        }
       />
 
       {isLoading && <p className="text-neutral-500">불러오는 중...</p>}
@@ -91,7 +100,7 @@ const JobRow = ({ job }: { job: VideoJobListItem }) => {
       </Link>
       {job.status === "done" && job.highlightCount > 0 && (
         <Link
-          to={RouterUrl.영상.풀페이지({ jobId: job.id })}
+          to={RouterUrl.영상.풀페이지.상세({ jobId: job.id })}
           className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-2 text-sm font-semibold text-white hover:bg-neutral-700"
         >
           <Expand className="h-4 w-4" />

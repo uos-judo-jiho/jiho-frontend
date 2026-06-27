@@ -5,7 +5,10 @@ import { cn } from "@/shared/lib/utils";
 import { v2Admin } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { GetApiV2AdminUsersUpgradeRequests200RequestsItem } from "node_modules/@packages/api/src/_generated/v2/admin/model";
+import {
+  GetApiV2AdminUsers200UsersItemAdditionalInfo,
+  GetApiV2AdminUsersUpgradeRequests200RequestsItem,
+} from "node_modules/@packages/api/src/_generated/v2/admin/model";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { getUserRole } from "../utils/get-user-role";
@@ -22,6 +25,18 @@ export const WaitedRole = ({ showAll = false }: WaitedApprovalProps) => {
       },
       axios: { withCredentials: true },
     });
+
+  // 업그레이드 요청 응답에는 추가정보가 없어, users 목록을 adminId 로 조인해 표시한다.
+  // /users 는 manager 이상만 접근 가능하므로(staff 는 403) Suspense 대신 비차단 쿼리로
+  // 조회하고, 실패 시 추가정보 없이 그대로 노출한다(graceful degradation).
+  const { data: infoByAdminId } = v2Admin.useGetApiV2AdminUsers(undefined, {
+    query: {
+      retry: false,
+      select: (data) =>
+        new Map(data.data.users.map((user) => [user.id, user.additionalInfo])),
+    },
+    axios: { withCredentials: true },
+  });
 
   if (waitedUpgradeRequests.length === 0) {
     return <p>현재 회원 등급 업그레이드 대기 중인 회원이 없어요.</p>;
@@ -48,7 +63,11 @@ export const WaitedRole = ({ showAll = false }: WaitedApprovalProps) => {
           ? waitedUpgradeRequests
           : waitedUpgradeRequests.slice(0, 3)
         ).map((request) => (
-          <ApprovalItem request={request} key={request.id} />
+          <ApprovalItem
+            request={request}
+            additionalInfo={infoByAdminId?.get(request.adminId) ?? null}
+            key={request.id}
+          />
         ))}
       </Card>
     </div>
@@ -57,8 +76,10 @@ export const WaitedRole = ({ showAll = false }: WaitedApprovalProps) => {
 
 const ApprovalItem = ({
   request,
+  additionalInfo,
 }: {
   request: GetApiV2AdminUsersUpgradeRequests200RequestsItem;
+  additionalInfo: GetApiV2AdminUsers200UsersItemAdditionalInfo;
 }) => {
   const queryClient = useQueryClient();
 
@@ -122,6 +143,7 @@ const ApprovalItem = ({
           </b>{" "}
           권한을 요청했어요.
         </p>
+        <UpgradeProfile additionalInfo={additionalInfo} />
       </div>
 
       <div className="flex gap-2">
@@ -146,5 +168,43 @@ const ApprovalItem = ({
         </Button>
       </div>
     </div>
+  );
+};
+
+/** 회원이 입력한 추가정보가 있으면 보여준다(없으면 렌더하지 않음). */
+const UpgradeProfile = ({
+  additionalInfo,
+}: {
+  additionalInfo: GetApiV2AdminUsers200UsersItemAdditionalInfo;
+}) => {
+  if (!additionalInfo) return null;
+
+  const formatPhone = (phone: string) =>
+    /^\d{11}$/.test(phone)
+      ? `${phone.slice(0, 3)}-${phone.slice(3, 7)}-${phone.slice(7)}`
+      : phone;
+
+  const items: { label: string; value: string }[] = [];
+  if (additionalInfo.name) items.push({ label: "이름", value: additionalInfo.name });
+  if (additionalInfo.major)
+    items.push({ label: "학과", value: additionalInfo.major });
+  if (additionalInfo.generation != null)
+    items.push({ label: "기수", value: `${additionalInfo.generation}기` });
+  if (additionalInfo.studentId)
+    items.push({ label: "학번", value: additionalInfo.studentId });
+  if (additionalInfo.phoneNumber)
+    items.push({ label: "연락처", value: formatPhone(additionalInfo.phoneNumber) });
+
+  if (items.length === 0) return null;
+
+  return (
+    <dl className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-neutral-500">
+      {items.map((item) => (
+        <div key={item.label} className="flex gap-1">
+          <dt className="text-neutral-400">{item.label}</dt>
+          <dd className="text-neutral-700">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
   );
 };

@@ -96,6 +96,7 @@ const ApprovalItem = ({
           <p>{format(admin.createdAt, "yyyy-MM-dd HH:mm")}</p>
         </div>
         <p className="font-semibold">{admin.email}</p>
+        <ApprovalProfile admin={admin} />
       </div>
 
       <div className="flex gap-2">
@@ -120,5 +121,33 @@ const ApprovalItem = ({
         </Button>
       </div>
     </div>
+  );
+};
+
+/** 가입 시 입력한 추가정보가 있으면 보여준다(없으면 아무것도 렌더하지 않음). */
+const ApprovalProfile = ({
+  admin,
+}: {
+  admin: GetApiV2AdminPending200AdminsItem;
+}) => {
+  const items: { label: string; value: string }[] = [];
+  if (admin.name) items.push({ label: "이름", value: admin.name });
+  if (admin.major) items.push({ label: "학과", value: admin.major });
+  if (admin.year != null) items.push({ label: "기수", value: `${admin.year}기` });
+  if (admin.studentId) items.push({ label: "학번", value: admin.studentId });
+  if (admin.phoneNumber)
+    items.push({ label: "연락처", value: admin.phoneNumber });
+
+  if (items.length === 0) return null;
+
+  return (
+    <dl className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-neutral-500">
+      {items.map((item) => (
+        <div key={item.label} className="flex gap-1">
+          <dt className="text-neutral-400">{item.label}</dt>
+          <dd className="text-neutral-700">{item.value}</dd>
+        </div>
+      ))}
+    </dl>
   );
 };

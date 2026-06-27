@@ -2,12 +2,17 @@
  * Local sidecar for the internal highlight uploader.
  *
  * Responsibilities:
- *  1. Receive a local video from the browser (POST /process).
- *  2. Run the Python jiho-video-worker (local_runner.py) on it.
- *  3. Serve the produced clips back for in-browser preview (GET /clip/...).
- *  4. On request, upload the highlights to the real API (POST /upload):
+ *  1. Receive one or more local videos from the browser (POST /process) and
+ *     queue them.
+ *  2. Run the Python jiho-video-worker (local_runner.py) on them one at a time.
+ *  3. Persist each finished result (clips + metadata + original) under
+ *     {WORKER_DIR}/.tmp/yyyymmdd/<id>/ so an interrupted/restarted process can
+ *     recover not-yet-uploaded work.
+ *  4. Serve produced clips for in-browser preview (GET /clip/...).
+ *  5. On request, upload one finished item to the real API (POST /upload):
  *       POST {API}/videos/ingest            -> creates job + highlight rows
  *       POST {API}/highlights/:id/clip      -> uploads each clip file
+ *     On success the cache entry is deleted so it no longer reappears.
  *
  * This process runs only on the operator's workstation; it is never deployed.
  */
@@ -47,8 +52,13 @@ const API_BASE_URL = (
 ).replace(/\/$/, "");
 const API_PREFIX = process.env.API_PREFIX ?? "/api/v2/admin";
 
+// Persistent cache for finished-but-not-uploaded work.
+const CACHE_ROOT = path.join(WORKER_DIR, ".tmp");
+
 const RESULT_PREFIX = "RESULT_JSON:";
 const MAX_ORIGINAL_UPLOAD_BYTES = 60 * 1024 * 1024;
+// 캐시 보관 기한(일). 0 이하면 기한 만료 정리를 끈다.
+const CACHE_TTL_DAYS = Number(process.env.CACHE_TTL_DAYS ?? 14);
 
 function errorMessage(error: unknown): string {
   if (!(error instanceof Error)) return String(error);
@@ -93,21 +103,59 @@ interface RunnerResult {
   events: RunnerEvent[];
 }
 
-interface Session {
+type ItemStatus = "queued" | "processing" | "done" | "failed";
+
+interface QueueItem {
+  id: string;
   originalFilename: string;
+  status: ItemStatus;
+  createdAt: string;
+  /** Original to process: multer temp path before processing, cached source after. */
+  inputVideo?: string;
+  /** {CACHE_ROOT}/yyyymmdd/<id> once processed. */
+  cacheDir?: string;
   durationSec: number | null;
-  tempVideo: string;
-  outputDir: string;
   events: RunnerEvent[];
+  /** Whether a cached source video exists (enables optional original upload). */
+  hasOriginal: boolean;
+  error?: string;
 }
 
-const sessions = new Map<string, Session>();
+const queue: QueueItem[] = [];
 
 const upload = multer({
   dest: path.join(os.tmpdir(), "jiho-internal-uploads"),
 });
 const app = express();
 app.use(express.json());
+
+function yyyymmdd(date = new Date()): string {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("");
+}
+
+function dtoOf(item: QueueItem) {
+  return {
+    id: item.id,
+    originalFilename: item.originalFilename,
+    status: item.status,
+    createdAt: item.createdAt,
+    durationSec: item.durationSec,
+    hasOriginal: item.hasOriginal,
+    error: item.error ?? null,
+    highlights: item.events.map((event, index) => ({
+      index,
+      eventSec: event.event_sec,
+      startSec: event.start_sec,
+      endSec: event.end_sec,
+      confidence: event.confidence,
+      clipUrl: `/clip/${item.id}/${index}`,
+    })),
+  };
+}
 
 /** Run local_runner.py and return its parsed RESULT_JSON. */
 function runWorker(
@@ -169,52 +217,211 @@ async function readDurationSec(outputDir: string): Promise<number | null> {
   }
 }
 
-app.post("/process", upload.single("video"), async (req, res) => {
-  const file = req.file;
-  if (!file) {
+/** Process one queued item: run the worker into a persistent cache dir. */
+async function processItem(item: QueueItem): Promise<void> {
+  const cacheDir = path.join(CACHE_ROOT, yyyymmdd(), item.id);
+  await fsp.mkdir(cacheDir, { recursive: true });
+  item.cacheDir = cacheDir;
+
+  const result = await runWorker(item.inputVideo!, cacheDir);
+
+  // Copy the original into the cache so a later restart can still upload it.
+  const ext = path.extname(item.originalFilename) || ".mp4";
+  const cachedSource = path.join(cacheDir, `source${ext}`);
+  try {
+    await fsp.copyFile(item.inputVideo!, cachedSource);
+    item.hasOriginal = true;
+  } catch {
+    item.hasOriginal = false;
+  }
+
+  // Drop the multer temp upload now that everything lives in the cache.
+  if (item.inputVideo && item.inputVideo !== cachedSource) {
+    await fsp.rm(item.inputVideo, { force: true });
+  }
+  item.inputVideo = item.hasOriginal ? cachedSource : undefined;
+
+  item.durationSec = await readDurationSec(cacheDir);
+  item.events = result.events;
+  item.originalFilename = item.originalFilename || result.original_filename;
+}
+
+let pumping = false;
+async function pump(): Promise<void> {
+  if (pumping) return;
+  pumping = true;
+  try {
+    for (;;) {
+      const item = queue.find((i) => i.status === "queued");
+      if (!item) break;
+      item.status = "processing";
+      try {
+        await processItem(item);
+        item.status = "done";
+      } catch (error) {
+        item.status = "failed";
+        item.error = errorMessage(error);
+        if (item.cacheDir) {
+          await fsp.rm(item.cacheDir, { recursive: true, force: true });
+          item.cacheDir = undefined;
+        }
+      }
+    }
+  } finally {
+    pumping = false;
+  }
+}
+
+/** Best-effort: remove a date directory if it has no remaining entries. */
+async function removeIfEmptyDir(dir: string): Promise<void> {
+  try {
+    if ((await fsp.readdir(dir)).length === 0) await fsp.rmdir(dir);
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Housekeeping on startup: delete cache entries that are either unusable
+ * (no result.json — a crashed/partial run) or older than CACHE_TTL_DAYS,
+ * then drop now-empty date folders so .tmp doesn't grow without bound.
+ */
+async function pruneCache(): Promise<void> {
+  let dateDirs: string[];
+  try {
+    dateDirs = await fsp.readdir(CACHE_ROOT);
+  } catch {
+    return; // no cache yet
+  }
+
+  const ttlMs = CACHE_TTL_DAYS * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  let removed = 0;
+
+  for (const dateDir of dateDirs) {
+    const datePath = path.join(CACHE_ROOT, dateDir);
+    let idDirs: string[];
+    try {
+      idDirs = await fsp.readdir(datePath);
+    } catch {
+      continue;
+    }
+
+    for (const id of idDirs) {
+      const dir = path.join(datePath, id);
+      try {
+        const stat = await fsp.stat(dir);
+        if (!stat.isDirectory()) continue;
+        const hasResult = await fsp
+          .access(path.join(dir, "result.json"))
+          .then(() => true)
+          .catch(() => false);
+        const expired = CACHE_TTL_DAYS > 0 && now - stat.mtimeMs > ttlMs;
+        if (!hasResult || expired) {
+          await fsp.rm(dir, { recursive: true, force: true });
+          removed += 1;
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+
+    await removeIfEmptyDir(datePath);
+  }
+
+  if (removed > 0) {
+    console.log(`[internal-sidecar] pruned ${removed} stale cache entr(y/ies)`);
+  }
+}
+
+/** Rebuild not-yet-uploaded items from the on-disk cache on startup. */
+async function rehydrateCache(): Promise<void> {
+  let dateDirs: string[];
+  try {
+    dateDirs = await fsp.readdir(CACHE_ROOT);
+  } catch {
+    return; // no cache yet
+  }
+
+  for (const dateDir of dateDirs) {
+    const datePath = path.join(CACHE_ROOT, dateDir);
+    let idDirs: string[];
+    try {
+      idDirs = await fsp.readdir(datePath);
+    } catch {
+      continue;
+    }
+
+    for (const id of idDirs) {
+      const cacheDir = path.join(datePath, id);
+      const resultPath = path.join(cacheDir, "result.json");
+      try {
+        const result = JSON.parse(
+          await fsp.readFile(resultPath, "utf-8"),
+        ) as RunnerResult;
+        const entries = await fsp.readdir(cacheDir);
+        const source = entries.find((name) => name.startsWith("source."));
+        const stat = await fsp.stat(cacheDir);
+
+        queue.push({
+          id,
+          originalFilename:
+            result.original_filename || `${result.video_id ?? id}.mp4`,
+          status: "done",
+          createdAt: stat.mtime.toISOString(),
+          inputVideo: source ? path.join(cacheDir, source) : undefined,
+          cacheDir,
+          durationSec: await readDurationSec(cacheDir),
+          events: result.events ?? [],
+          hasOriginal: !!source,
+        });
+      } catch {
+        // No result.json (partial/crashed run) — skip.
+      }
+    }
+  }
+
+  queue.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  if (queue.length > 0) {
+    console.log(
+      `[internal-sidecar] recovered ${queue.length} cached item(s) from ${CACHE_ROOT}`,
+    );
+  }
+}
+
+app.post("/process", upload.array("videos"), async (req, res) => {
+  const files = (req.files as Express.Multer.File[] | undefined) ?? [];
+  if (files.length === 0) {
     res.status(400).json({ message: "video file is required" });
     return;
   }
 
-  const outputDir = await fsp.mkdtemp(
-    path.join(os.tmpdir(), "jiho-highlights-"),
-  );
-  try {
-    const result = await runWorker(file.path, outputDir);
-    const durationSec = await readDurationSec(outputDir);
-    const sessionId = randomUUID();
-
-    sessions.set(sessionId, {
-      originalFilename: file.originalname || result.original_filename,
-      durationSec,
-      tempVideo: file.path,
-      outputDir,
-      events: result.events,
+  for (const file of files) {
+    queue.push({
+      id: randomUUID(),
+      originalFilename: file.originalname || "video.mp4",
+      status: "queued",
+      createdAt: new Date().toISOString(),
+      inputVideo: file.path,
+      durationSec: null,
+      events: [],
+      hasOriginal: false,
     });
-
-    res.json({
-      sessionId,
-      originalFilename: file.originalname || result.original_filename,
-      durationSec,
-      highlights: result.events.map((event, index) => ({
-        index,
-        eventSec: event.event_sec,
-        startSec: event.start_sec,
-        endSec: event.end_sec,
-        confidence: event.confidence,
-        clipUrl: `/clip/${sessionId}/${index}`,
-      })),
-    });
-  } catch (error) {
-    res.status(500).json({ message: errorMessage(error) });
   }
+
+  void pump();
+  res.status(202).json({ items: queue.map(dtoOf) });
 });
 
-app.get("/clip/:sessionId/:index", (req, res) => {
-  const session = sessions.get(req.params.sessionId);
+app.get("/queue", (_req, res) => {
+  res.json({ items: queue.map(dtoOf) });
+});
+
+app.get("/clip/:id/:index", (req, res) => {
+  const item = queue.find((i) => i.id === req.params.id);
   const index = Number(req.params.index);
-  const event = session?.events[index];
-  if (!session || !event) {
+  const event = item?.events[index];
+  if (!item || !event) {
     res.status(404).json({ message: "clip not found" });
     return;
   }
@@ -222,20 +429,20 @@ app.get("/clip/:sessionId/:index", (req, res) => {
   fs.createReadStream(event.clip_file).pipe(res);
 });
 
-app.get("/download/:sessionId", (req, res) => {
-  const session = sessions.get(req.params.sessionId);
-  if (!session) {
-    res.status(404).json({ message: "session not found" });
+app.get("/download/:id", (req, res) => {
+  const item = queue.find((i) => i.id === req.params.id);
+  if (!item) {
+    res.status(404).json({ message: "item not found" });
     return;
   }
-  if (session.events.length === 0) {
+  if (item.events.length === 0) {
     res.status(400).json({ message: "no highlights to download" });
     return;
   }
 
   const baseName =
     path
-      .parse(session.originalFilename)
+      .parse(item.originalFilename)
       .name.replace(/[^a-zA-Z0-9_-]+/g, "_")
       .replace(/^_+|_+$/g, "") || "video";
   const archive = archiver("zip", { zlib: { level: 9 } });
@@ -248,7 +455,7 @@ app.get("/download/:sessionId", (req, res) => {
   });
   archive.pipe(res);
 
-  session.events.forEach((event, index) => {
+  item.events.forEach((event, index) => {
     archive.file(event.clip_file, {
       name: `highlight_${String(index + 1).padStart(2, "0")}.mp4`,
     });
@@ -257,25 +464,31 @@ app.get("/download/:sessionId", (req, res) => {
 });
 
 app.post("/upload", async (req, res) => {
-  const { sessionId, uploadOriginal } = req.body as {
-    sessionId?: string;
+  const { id, uploadOriginal } = req.body as {
+    id?: string;
     uploadOriginal?: boolean;
   };
-  const session = sessionId ? sessions.get(sessionId) : undefined;
-  if (!session) {
-    res.status(404).json({ message: "session not found" });
+  const item = id ? queue.find((i) => i.id === id) : undefined;
+  if (!item) {
+    res.status(404).json({ message: "item not found" });
+    return;
+  }
+  if (item.status !== "done") {
+    res.status(409).json({ message: "아직 처리되지 않은 항목입니다." });
     return;
   }
 
   const cookie = req.get("cookie");
   if (!cookie) {
-    res.status(401).json({ message: "관리자 로그인이 필요합니다." });
+    res.status(401).json({ message: "로그인이 필요합니다." });
     return;
   }
 
+  const wantOriginal = !!uploadOriginal && item.hasOriginal && !!item.inputVideo;
+
   try {
-    if (uploadOriginal) {
-      const { size } = await fsp.stat(session.tempVideo);
+    if (wantOriginal) {
+      const { size } = await fsp.stat(item.inputVideo!);
       if (size > MAX_ORIGINAL_UPLOAD_BYTES) {
         res.status(413).json({
           message: "원본 영상은 최대 60MB까지 업로드할 수 있습니다.",
@@ -291,9 +504,9 @@ app.post("/upload", async (req, res) => {
         method: "POST",
         headers: { "content-type": "application/json", cookie },
         body: JSON.stringify({
-          originalFilename: session.originalFilename,
-          durationSec: session.durationSec,
-          events: session.events.map((event) => ({
+          originalFilename: item.originalFilename,
+          durationSec: item.durationSec,
+          events: item.events.map((event) => ({
             eventSec: event.event_sec,
             startSec: event.start_sec,
             endSec: event.end_sec,
@@ -311,7 +524,7 @@ app.post("/upload", async (req, res) => {
     // 2) Upload each clip file to its highlight.
     let uploadedClips = 0;
     for (const { highlightId, index } of ingest.highlights) {
-      const event = session.events[index];
+      const event = item.events[index];
       if (!event) continue;
       const buffer = await fsp.readFile(event.clip_file);
       const form = new FormData();
@@ -323,39 +536,33 @@ app.post("/upload", async (req, res) => {
 
       const clipRes = await fetch(
         `${API_BASE_URL}${API_PREFIX}/highlights/${highlightId}/clip`,
-        {
-          method: "POST",
-          headers: { cookie },
-          body: form,
-        },
+        { method: "POST", headers: { cookie }, body: form },
       );
       await assertUpstreamResponse(clipRes, "clip upload");
       uploadedClips += 1;
     }
 
     // 3) Optionally upload the original (off by default to save bucket capacity).
-    //    The job already groups the original with its highlights, mapping them.
     let uploadedOriginal = false;
-    if (uploadOriginal) {
-      const buffer = await fsp.readFile(session.tempVideo);
+    if (wantOriginal) {
+      const buffer = await fsp.readFile(item.inputVideo!);
       const form = new FormData();
       form.append(
         "file",
         new Blob([buffer], { type: "video/mp4" }),
-        session.originalFilename,
+        item.originalFilename,
       );
 
       const srcRes = await fetch(
         `${API_BASE_URL}${API_PREFIX}/videos/${ingest.jobId}/source`,
-        {
-          method: "POST",
-          headers: { cookie },
-          body: form,
-        },
+        { method: "POST", headers: { cookie }, body: form },
       );
       await assertUpstreamResponse(srcRes, "original upload");
       uploadedOriginal = true;
     }
+
+    // Success — drop the cache entry so it won't be offered again.
+    await discardItem(item);
 
     res.json({ jobId: ingest.jobId, uploadedClips, uploadedOriginal });
   } catch (error) {
@@ -364,8 +571,41 @@ app.post("/upload", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`[internal-sidecar] listening on http://localhost:${PORT}`);
-  console.log(`[internal-sidecar] worker dir: ${WORKER_DIR}`);
-  console.log(`[internal-sidecar] api: ${API_BASE_URL}${API_PREFIX}`);
+app.delete("/queue/:id", async (req, res) => {
+  const item = queue.find((i) => i.id === req.params.id);
+  if (!item) {
+    res.status(404).json({ message: "item not found" });
+    return;
+  }
+  if (item.status === "processing") {
+    res.status(409).json({ message: "처리 중인 항목은 삭제할 수 없습니다." });
+    return;
+  }
+  await discardItem(item);
+  res.status(204).end();
 });
+
+/** Remove an item from the queue and delete its on-disk cache/temp files. */
+async function discardItem(item: QueueItem): Promise<void> {
+  const index = queue.indexOf(item);
+  if (index !== -1) queue.splice(index, 1);
+  if (item.cacheDir) {
+    await fsp.rm(item.cacheDir, { recursive: true, force: true });
+    await removeIfEmptyDir(path.dirname(item.cacheDir));
+  } else if (item.inputVideo) {
+    await fsp.rm(item.inputVideo, { force: true });
+  }
+}
+
+async function main(): Promise<void> {
+  await pruneCache();
+  await rehydrateCache();
+  app.listen(PORT, () => {
+    console.log(`[internal-sidecar] listening on http://localhost:${PORT}`);
+    console.log(`[internal-sidecar] worker dir: ${WORKER_DIR}`);
+    console.log(`[internal-sidecar] cache dir: ${CACHE_ROOT}`);
+    console.log(`[internal-sidecar] api: ${API_BASE_URL}${API_PREFIX}`);
+  });
+}
+
+void main();

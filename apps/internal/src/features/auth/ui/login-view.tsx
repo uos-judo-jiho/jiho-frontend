@@ -1,7 +1,11 @@
 import { FormEvent, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import { apiErrorMessage, loginAdmin, type AdminProfile } from "@/lib/auth";
+import {
+  apiErrorMessage,
+  loginAdmin,
+  type AdminProfile,
+} from "@/features/auth/api/auth";
 
 interface LoginViewProps {
   onLogin: (profile: AdminProfile) => void;
@@ -29,7 +33,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
           UOS Judo Internal
         </p>
         <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-900">
-          관리자 로그인
+          로그인
         </h1>
         <p className="mt-2 text-sm leading-6 text-slate-500">
           하이라이트 처리와 서버 업로드를 위해 관리자 인증이 필요합니다.
@@ -48,7 +52,7 @@ export default function LoginView({ onLogin }: LoginViewProps) {
               autoComplete="username"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="관리자 이메일"
+              placeholder="이메일(아이디)"
               className="h-11 w-full rounded-lg border border-slate-300 px-3 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
             />
           </div>
