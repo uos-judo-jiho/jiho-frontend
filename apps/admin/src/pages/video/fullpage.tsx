@@ -119,7 +119,7 @@ export const VideoLabelingFullpage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-neutral-950 text-sm text-neutral-300">
+      <div className="flex min-h-screen items-center justify-center bg-neutral-100 text-sm text-neutral-600">
         라벨링 데이터를 불러오는 중...
       </div>
     );
@@ -127,7 +127,7 @@ export const VideoLabelingFullpage = () => {
 
   if (isError || !jobQuery.data) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-950 px-6 text-center text-white">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-100 px-6 text-center text-neutral-900">
         <p>영상 라벨링 데이터를 불러오지 못했습니다.</p>
         <Button asChild variant="secondary">
           <Link to={RouterUrl.영상.목록}>목록으로 돌아가기</Link>
@@ -137,14 +137,14 @@ export const VideoLabelingFullpage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white">
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-neutral-950/95 backdrop-blur">
+    <div className="min-h-screen bg-neutral-100 text-neutral-900">
+      <header className="sticky top-0 z-30 border-b border-neutral-200 bg-white/95 shadow-sm backdrop-blur">
         <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
             <Link
               to={RouterUrl.영상.목록}
               aria-label="영상 목록으로"
-              className="rounded-md p-2 text-neutral-300 hover:bg-white/10 hover:text-white"
+              className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
             >
               <ArrowLeft className="h-5 w-5" />
             </Link>
@@ -152,7 +152,7 @@ export const VideoLabelingFullpage = () => {
               <h1 className="truncate text-sm font-semibold sm:text-base">
                 {jobQuery.data.originalFilename}
               </h1>
-              <p className="text-xs text-neutral-400">
+              <p className="text-xs text-neutral-500">
                 완료 {labeledCount}/{highlights.length}
               </p>
             </div>
@@ -164,7 +164,7 @@ export const VideoLabelingFullpage = () => {
               aria-label="이전 하이라이트"
               disabled={activeIndex <= 0}
               onClick={() => openHighlight(highlights[activeIndex - 1].id)}
-              className="rounded-md p-2 text-neutral-300 hover:bg-white/10 disabled:opacity-30"
+              className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 disabled:opacity-30"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -176,7 +176,7 @@ export const VideoLabelingFullpage = () => {
               aria-label="다음 하이라이트"
               disabled={activeIndex >= highlights.length - 1}
               onClick={() => openHighlight(highlights[activeIndex + 1].id)}
-              className="rounded-md p-2 text-neutral-300 hover:bg-white/10 disabled:opacity-30"
+              className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 disabled:opacity-30"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -186,9 +186,9 @@ export const VideoLabelingFullpage = () => {
 
       <main className="mx-auto max-w-screen-2xl px-3 py-4 sm:px-6 sm:py-6">
         {highlights.length === 0 ? (
-          <section className="rounded-xl border border-white/10 bg-white/5 p-8 text-center">
+          <section className="rounded-xl border border-neutral-200 bg-white p-8 text-center shadow-sm">
             <ListVideo className="mx-auto h-8 w-8 text-neutral-400" />
-            <p className="mt-3 text-neutral-300">
+            <p className="mt-3 text-neutral-600">
               라벨링할 하이라이트가 없습니다.
             </p>
             {nextJob && (
@@ -202,7 +202,7 @@ export const VideoLabelingFullpage = () => {
             <section className="min-w-0">
               {isCurrentJobComplete &&
                 activeHighlight.isLabeledByCurrentUser && (
-                  <div className="mb-4 flex flex-col gap-3 rounded-xl border border-green-500/30 bg-green-500/10 p-4 text-sm text-green-100 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="mb-4 flex flex-col gap-3 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800 sm:flex-row sm:items-center sm:justify-between">
                     <span>이 영상의 모든 하이라이트를 라벨링했습니다.</span>
                     {nextJob ? (
                       <Button size="sm" onClick={openNextJob}>
@@ -225,8 +225,8 @@ export const VideoLabelingFullpage = () => {
             </section>
 
             <aside className="hidden lg:block">
-              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-xl border border-white/10 bg-white/5 p-3">
-                <h2 className="mb-2 px-2 text-sm font-semibold text-neutral-200">
+              <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-xl border border-neutral-200 bg-white p-3 shadow-sm">
+                <h2 className="mb-2 px-2 text-sm font-semibold text-neutral-700">
                   하이라이트 목록
                 </h2>
                 <div className="space-y-1">
@@ -238,8 +238,8 @@ export const VideoLabelingFullpage = () => {
                       className={cn(
                         "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm",
                         index === activeIndex
-                          ? "bg-white text-neutral-950"
-                          : "text-neutral-300 hover:bg-white/10",
+                          ? "bg-neutral-900 text-white"
+                          : "text-neutral-600 hover:bg-neutral-100",
                       )}
                     >
                       <span>하이라이트 {index + 1}</span>

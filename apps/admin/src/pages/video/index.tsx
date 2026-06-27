@@ -1,11 +1,11 @@
 import { RouterUrl } from "@/app/routers/router-url";
 import { PageHeader } from "@/components/layouts/PageHeader";
-import { cn } from "@/shared/lib/utils";
 import {
-  type VideoJobStatus,
   type VideoJobListItem,
+  type VideoJobStatus,
 } from "@/features/video/api";
 import { useVideoJobs } from "@/features/video/hooks";
+import { cn } from "@/shared/lib/utils";
 import { Expand, Film } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -91,11 +91,11 @@ const JobRow = ({ job }: { job: VideoJobListItem }) => {
       </Link>
       {job.status === "done" && job.highlightCount > 0 && (
         <Link
-          하이라이트 전체화면uterUrl.영상.풀페이지({ jobId: job.id })}
+          to={RouterUrl.영상.풀페이지({ jobId: job.id })}
           className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-2 text-sm font-semibold text-white hover:bg-neutral-700"
         >
           <Expand className="h-4 w-4" />
-          집중 라벨링
+          전체화면으로
         </Link>
       )}
     </li>
