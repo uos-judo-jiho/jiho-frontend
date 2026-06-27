@@ -7,6 +7,8 @@ const sidecar = axios.create({ baseURL: "/sidecar" });
 
 export const MAX_ORIGINAL_UPLOAD_BYTES = 60 * 1024 * 1024;
 
+export type ItemStatus = "queued" | "processing" | "done" | "failed";
+
 export interface ProcessedHighlight {
   index: number;
   eventSec: number;
@@ -17,11 +19,19 @@ export interface ProcessedHighlight {
   clipUrl: string;
 }
 
-export interface ProcessResult {
-  sessionId: string;
+export interface QueueItem {
+  id: string;
   originalFilename: string;
+  status: ItemStatus;
+  createdAt: string;
   durationSec: number | null;
+  hasOriginal: boolean;
+  error: string | null;
   highlights: ProcessedHighlight[];
+}
+
+export interface QueueState {
+  items: QueueItem[];
 }
 
 export interface UploadResult {
@@ -37,42 +47,52 @@ export function sidecarErrorMessage(error: unknown, fallback: string): string {
   return error instanceof Error ? error.message : fallback;
 }
 
-/** Send a local video to the sidecar, which runs the Python worker on it. */
-export async function processVideo(
-  file: File,
-  onProgress?: (percent: number) => void,
-): Promise<ProcessResult> {
-  const form = new FormData();
-  form.append("video", file);
+/** Preview URLs must hit the proxied /sidecar route. */
+function withClipPrefix(state: QueueState): QueueState {
+  return {
+    items: state.items.map((item) => ({
+      ...item,
+      highlights: item.highlights.map((h) => ({
+        ...h,
+        clipUrl: h.clipUrl.startsWith("/sidecar")
+          ? h.clipUrl
+          : `/sidecar${h.clipUrl}`,
+      })),
+    })),
+  };
+}
 
-  const { data } = await sidecar.post<ProcessResult>("/process", form, {
+/** Queue one or more local videos for sequential worker processing. */
+export async function processVideos(
+  files: File[],
+  onProgress?: (percent: number) => void,
+): Promise<QueueState> {
+  const form = new FormData();
+  for (const file of files) form.append("videos", file);
+
+  const { data } = await sidecar.post<QueueState>("/process", form, {
     onUploadProgress: (event) => {
       if (onProgress && event.total) {
         onProgress(Math.round((event.loaded / event.total) * 100));
       }
     },
   });
-
-  // Prefix preview URLs so the browser hits the proxied sidecar route.
-  return {
-    ...data,
-    highlights: data.highlights.map((h) => ({
-      ...h,
-      clipUrl: `/sidecar${h.clipUrl}`,
-    })),
-  };
+  return withClipPrefix(data);
 }
 
-/**
- * Ask the sidecar to upload the processed highlights to the real API.
- * When `uploadOriginal` is true the source video is uploaded too (default false).
- */
-export async function uploadSession(
-  sessionId: string,
+/** Current queue state (queued / processing / done-not-uploaded items). */
+export async function fetchQueue(): Promise<QueueState> {
+  const { data } = await sidecar.get<QueueState>("/queue");
+  return withClipPrefix(data);
+}
+
+/** Upload one finished item to the real API; deletes its cache on success. */
+export async function uploadItem(
+  id: string,
   uploadOriginal = false,
 ): Promise<UploadResult> {
   const upload = () =>
-    sidecar.post<UploadResult>("/upload", { sessionId, uploadOriginal });
+    sidecar.post<UploadResult>("/upload", { id, uploadOriginal });
 
   try {
     const { data } = await upload();
@@ -86,8 +106,13 @@ export async function uploadSession(
   }
 }
 
-export function downloadHighlights(sessionId: string): void {
+/** Drop a queued/finished/failed item and delete its cached files. */
+export async function discardItem(id: string): Promise<void> {
+  await sidecar.delete(`/queue/${encodeURIComponent(id)}`);
+}
+
+export function downloadHighlights(id: string): void {
   const link = document.createElement("a");
-  link.href = `/sidecar/download/${encodeURIComponent(sessionId)}`;
+  link.href = `/sidecar/download/${encodeURIComponent(id)}`;
   link.click();
 }
