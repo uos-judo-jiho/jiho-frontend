@@ -208,11 +208,7 @@ export const HighlightLabelCard = ({
         </dl>
       </div>
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="md:w-1/2"
-        aria-disabled={highlight.isLabeledByCurrentUser}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="md:w-1/2">
         <fieldset
           disabled={highlight.isLabeledByCurrentUser}
           className="flex flex-col gap-3 disabled:cursor-not-allowed disabled:opacity-50"
