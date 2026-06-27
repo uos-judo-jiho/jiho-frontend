@@ -211,7 +211,7 @@ export const VideoLabelingFullpage = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={() => setIsListOpen(true)}
@@ -220,27 +220,9 @@ export const VideoLabelingFullpage = () => {
               <ListVideo className="h-4 w-4" />
               <span className="hidden sm:inline">목록</span>
             </button>
-            <button
-              type="button"
-              aria-label="이전 하이라이트"
-              disabled={!canMovePrevious}
-              onClick={movePrevious}
-              className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 disabled:opacity-30"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <span className="min-w-14 text-center text-sm tabular-nums">
+            <span className="rounded-md bg-neutral-100 px-2.5 py-1.5 text-sm font-medium tabular-nums text-neutral-600">
               {highlights.length > 0 ? activeIndex + 1 : 0}/{highlights.length}
             </span>
-            <button
-              type="button"
-              aria-label="다음 하이라이트"
-              disabled={!canMoveNext}
-              onClick={moveNext}
-              className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 disabled:opacity-30"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
           </div>
         </div>
       </header>
