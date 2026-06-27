@@ -19,6 +19,7 @@ import { match, P } from "ts-pattern";
 
 const StaffAndAbove = ["root", "president", "manager", "staff"];
 const GeneralAndAbove = [...StaffAndAbove, "general"];
+const VideoLabelingRoles = [...GeneralAndAbove, "graduate"];
 
 const menuItems = [
   { icon: Home, label: "홈", path: RouterUrl.홈 },
@@ -56,7 +57,7 @@ const menuItems = [
     icon: Film,
     label: "영상 라벨링",
     path: RouterUrl.영상.목록,
-    allowedRoles: StaffAndAbove,
+    allowedRoles: VideoLabelingRoles,
   },
 ];
 

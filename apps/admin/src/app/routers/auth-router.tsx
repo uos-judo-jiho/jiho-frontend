@@ -25,6 +25,7 @@ import { RouterUrl } from "./router-url";
 
 const StaffAndAbove = ["root", "president", "manager", "staff"];
 const GeneralAndAbove = [...StaffAndAbove, "general"];
+const VideoLabelingRoles = [...GeneralAndAbove, "graduate"];
 
 const ProtectedRoute = ({
   allowedRoles,
@@ -225,11 +226,11 @@ export const AuthRouter = () => {
         }
       />
 
-      {/* 영상 라벨링 - Staff 이상 */}
+      {/* 영상 라벨링 - etc 제외 */}
       <Route
         path={RouterUrl.영상.목록}
         element={
-          <ProtectedRoute allowedRoles={StaffAndAbove}>
+          <ProtectedRoute allowedRoles={VideoLabelingRoles}>
             {WithHelmet(<VideoLabelingPage />, "하이라이트 라벨링")}
           </ProtectedRoute>
         }
@@ -237,7 +238,7 @@ export const AuthRouter = () => {
       <Route
         path={RouterUrl.영상.상세({ id: ":id" as unknown as number })}
         element={
-          <ProtectedRoute allowedRoles={StaffAndAbove}>
+          <ProtectedRoute allowedRoles={VideoLabelingRoles}>
             {WithHelmet(<VideoLabelingDetailPage />, "영상 라벨링")}
           </ProtectedRoute>
         }

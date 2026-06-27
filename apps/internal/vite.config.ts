@@ -2,35 +2,63 @@ import path from "path";
 
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv, type ProxyOptions } from "vite";
 
 const srcDir = path.resolve(__dirname, "src");
 
-// The internal app is a local-only tool. The browser talks to the local Node
-// sidecar (which runs the Python worker and forwards uploads to the real API),
-// so we proxy /sidecar to the sidecar process during development.
-const SIDECAR_TARGET = process.env.VITE_SIDECAR_TARGET || "http://localhost:5174";
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const sidecarTarget = env.VITE_SIDECAR_TARGET || "http://localhost:5174";
+  const apiTarget = (
+    env.VITE_API_PROXY_TARGET ||
+    env.API_BASE_URL ||
+    "https://api.uosjudo.com"
+  )
+    .replace(/\/api\/?$/, "")
+    .replace(/\/$/, "");
 
-export default defineConfig({
-  base: "/",
-  plugins: [tailwindcss(), react()],
-  resolve: {
-    alias: {
-      "@": srcDir,
+  const apiProxy: ProxyOptions = {
+    target: apiTarget,
+    changeOrigin: true,
+    secure: false,
+    ws: true,
+    configure: (proxy) => {
+      proxy.on("proxyRes", (proxyRes) => {
+        const setCookie = proxyRes.headers["set-cookie"];
+        if (setCookie) {
+          proxyRes.headers["set-cookie"] = setCookie.map((cookie) =>
+            cookie
+              .replace(/;\s*Secure/gi, "")
+              .replace(/;\s*Domain=[^;]+/gi, "")
+              .replace(/;\s*SameSite=None/gi, "; SameSite=Lax"),
+          );
+        }
+      });
     },
-  },
-  server: {
-    port: 3002,
-    proxy: {
-      "/sidecar": {
-        target: SIDECAR_TARGET,
-        changeOrigin: true,
-        rewrite: (p) => p.replace(/^\/sidecar/, ""),
+  };
+
+  return {
+    base: "/",
+    plugins: [tailwindcss(), react()],
+    resolve: {
+      alias: {
+        "@": srcDir,
       },
     },
-  },
-  build: {
-    outDir: "dist",
-    emptyOutDir: true,
-  },
+    server: {
+      port: 3002,
+      proxy: {
+        "/api": apiProxy,
+        "/sidecar": {
+          target: sidecarTarget,
+          changeOrigin: true,
+          rewrite: (requestPath) => requestPath.replace(/^\/sidecar/, ""),
+        },
+      },
+    },
+    build: {
+      outDir: "dist",
+      emptyOutDir: true,
+    },
+  };
 });
