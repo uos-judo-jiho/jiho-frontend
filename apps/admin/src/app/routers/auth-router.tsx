@@ -16,6 +16,9 @@ import { TrainingLogPage } from "@/pages/training-log";
 import { TrainingLogDetail } from "@/pages/training-log/training-log-detail";
 import { UserPage } from "@/pages/user";
 import { UserDetailPage } from "@/pages/user/detail";
+import { VideoLabelingPage } from "@/pages/video";
+import { VideoLabelingDetailPage } from "@/pages/video/detail";
+import { VideoLabelingFullpage } from "@/pages/video/fullpage";
 import WriteArticlePage from "@/pages/WriteArticlePage";
 import { v2Admin } from "@packages/api";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -23,6 +26,7 @@ import { RouterUrl } from "./router-url";
 
 const StaffAndAbove = ["root", "president", "manager", "staff"];
 const GeneralAndAbove = [...StaffAndAbove, "general"];
+const VideoLabelingRoles = [...GeneralAndAbove, "graduate"];
 
 const ProtectedRoute = ({
   allowedRoles,
@@ -219,6 +223,34 @@ export const AuthRouter = () => {
         element={
           <ProtectedRoute allowedRoles={StaffAndAbove}>
             {WithHelmet(<Awards />, "수상내역")}
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 영상 라벨링 - etc 제외 */}
+      <Route
+        path={RouterUrl.영상.풀페이지({
+          jobId: ":jobId" as unknown as number,
+        })}
+        element={
+          <ProtectedRoute allowedRoles={VideoLabelingRoles}>
+            {WithHelmet(<VideoLabelingFullpage />, "하이라이트 전체화면")}
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={RouterUrl.영상.목록}
+        element={
+          <ProtectedRoute allowedRoles={VideoLabelingRoles}>
+            {WithHelmet(<VideoLabelingPage />, "하이라이트 라벨링")}
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={RouterUrl.영상.상세({ id: ":id" as unknown as number })}
+        element={
+          <ProtectedRoute allowedRoles={VideoLabelingRoles}>
+            {WithHelmet(<VideoLabelingDetailPage />, "영상 라벨링")}
           </ProtectedRoute>
         }
       />

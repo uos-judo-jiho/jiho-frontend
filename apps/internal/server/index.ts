@@ -17,21 +17,66 @@ import fs from "node:fs";
 import fsp from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
+import archiver from "archiver";
 import express from "express";
 import multer from "multer";
 
+// Node 22 provides loadEnvFile(), but this app still uses Node 18 type definitions.
+const loadEnvFile = (
+  process as NodeJS.Process & { loadEnvFile(path?: string): void }
+).loadEnvFile;
+try {
+  loadEnvFile(fileURLToPath(new URL("../.env", import.meta.url)));
+} catch (error) {
+  if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+}
+
 const PORT = Number(process.env.PORT ?? 5174);
 // Absolute path to the jiho-video-worker checkout.
-const WORKER_DIR = process.env.WORKER_DIR ?? path.resolve(process.cwd(), "../../../jiho-video-worker");
+const WORKER_DIR =
+  process.env.WORKER_DIR ??
+  path.resolve(process.cwd(), "../../../jiho-video-worker");
 // Command that runs Python with the worker deps (uv-managed venv by default).
 const WORKER_BIN = process.env.WORKER_BIN ?? "uv";
 const WORKER_ARGS_PREFIX = (process.env.WORKER_ARGS ?? "run python").split(" ");
 // Real API base + admin v2 prefix.
-const API_BASE_URL = (process.env.API_BASE_URL ?? "http://localhost:4000").replace(/\/$/, "");
+const API_BASE_URL = (
+  process.env.API_BASE_URL ?? "http://localhost:4000"
+).replace(/\/$/, "");
 const API_PREFIX = process.env.API_PREFIX ?? "/api/v2/admin";
 
 const RESULT_PREFIX = "RESULT_JSON:";
+const MAX_ORIGINAL_UPLOAD_BYTES = 60 * 1024 * 1024;
+
+function errorMessage(error: unknown): string {
+  if (!(error instanceof Error)) return String(error);
+  return error.cause === undefined
+    ? error.message
+    : `${error.message}: ${errorMessage(error.cause)}`;
+}
+
+class UpstreamError extends Error {
+  constructor(
+    readonly status: number,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+async function assertUpstreamResponse(
+  response: Response,
+  operation: string,
+): Promise<void> {
+  if (!response.ok) {
+    throw new UpstreamError(
+      response.status,
+      `${operation} failed (${response.status}): ${await response.text()}`,
+    );
+  }
+}
 
 interface RunnerEvent {
   event_sec: number;
@@ -58,14 +103,25 @@ interface Session {
 
 const sessions = new Map<string, Session>();
 
-const upload = multer({ dest: path.join(os.tmpdir(), "jiho-internal-uploads") });
+const upload = multer({
+  dest: path.join(os.tmpdir(), "jiho-internal-uploads"),
+});
 const app = express();
 app.use(express.json());
 
 /** Run local_runner.py and return its parsed RESULT_JSON. */
-function runWorker(videoPath: string, outputDir: string): Promise<RunnerResult> {
+function runWorker(
+  videoPath: string,
+  outputDir: string,
+): Promise<RunnerResult> {
   return new Promise((resolve, reject) => {
-    const args = [...WORKER_ARGS_PREFIX, "local_runner.py", videoPath, "--output", outputDir];
+    const args = [
+      ...WORKER_ARGS_PREFIX,
+      "local_runner.py",
+      videoPath,
+      "--output",
+      outputDir,
+    ];
     const child = spawn(WORKER_BIN, args, { cwd: WORKER_DIR });
 
     let stdout = "";
@@ -76,7 +132,9 @@ function runWorker(videoPath: string, outputDir: string): Promise<RunnerResult> 
     child.on("error", reject);
     child.on("close", (code) => {
       if (code !== 0) {
-        reject(new Error(`worker exited with code ${code}: ${stderr.slice(-500)}`));
+        reject(
+          new Error(`worker exited with code ${code}: ${stderr.slice(-500)}`),
+        );
         return;
       }
       const line = stdout
@@ -90,7 +148,9 @@ function runWorker(videoPath: string, outputDir: string): Promise<RunnerResult> 
       try {
         resolve(JSON.parse(line.slice(RESULT_PREFIX.length)) as RunnerResult);
       } catch (error) {
-        reject(new Error(`failed to parse RESULT_JSON: ${(error as Error).message}`));
+        reject(
+          new Error(`failed to parse RESULT_JSON: ${(error as Error).message}`),
+        );
       }
     });
   });
@@ -98,7 +158,10 @@ function runWorker(videoPath: string, outputDir: string): Promise<RunnerResult> 
 
 async function readDurationSec(outputDir: string): Promise<number | null> {
   try {
-    const raw = await fsp.readFile(path.join(outputDir, "events.json"), "utf-8");
+    const raw = await fsp.readFile(
+      path.join(outputDir, "events.json"),
+      "utf-8",
+    );
     const parsed = JSON.parse(raw) as { duration_sec?: number };
     return parsed.duration_sec ?? null;
   } catch {
@@ -113,7 +176,9 @@ app.post("/process", upload.single("video"), async (req, res) => {
     return;
   }
 
-  const outputDir = await fsp.mkdtemp(path.join(os.tmpdir(), "jiho-highlights-"));
+  const outputDir = await fsp.mkdtemp(
+    path.join(os.tmpdir(), "jiho-highlights-"),
+  );
   try {
     const result = await runWorker(file.path, outputDir);
     const durationSec = await readDurationSec(outputDir);
@@ -141,7 +206,7 @@ app.post("/process", upload.single("video"), async (req, res) => {
       })),
     });
   } catch (error) {
-    res.status(500).json({ message: (error as Error).message });
+    res.status(500).json({ message: errorMessage(error) });
   }
 });
 
@@ -157,33 +222,87 @@ app.get("/clip/:sessionId/:index", (req, res) => {
   fs.createReadStream(event.clip_file).pipe(res);
 });
 
+app.get("/download/:sessionId", (req, res) => {
+  const session = sessions.get(req.params.sessionId);
+  if (!session) {
+    res.status(404).json({ message: "session not found" });
+    return;
+  }
+  if (session.events.length === 0) {
+    res.status(400).json({ message: "no highlights to download" });
+    return;
+  }
+
+  const baseName =
+    path
+      .parse(session.originalFilename)
+      .name.replace(/[^a-zA-Z0-9_-]+/g, "_")
+      .replace(/^_+|_+$/g, "") || "video";
+  const archive = archiver("zip", { zlib: { level: 9 } });
+
+  res.attachment(`${baseName}_highlights.zip`);
+  archive.on("error", (error) => {
+    if (!res.headersSent)
+      res.status(500).json({ message: errorMessage(error) });
+    else res.destroy(error);
+  });
+  archive.pipe(res);
+
+  session.events.forEach((event, index) => {
+    archive.file(event.clip_file, {
+      name: `highlight_${String(index + 1).padStart(2, "0")}.mp4`,
+    });
+  });
+  void archive.finalize();
+});
+
 app.post("/upload", async (req, res) => {
-  const { sessionId, uploadOriginal } = req.body as { sessionId?: string; uploadOriginal?: boolean };
+  const { sessionId, uploadOriginal } = req.body as {
+    sessionId?: string;
+    uploadOriginal?: boolean;
+  };
   const session = sessionId ? sessions.get(sessionId) : undefined;
   if (!session) {
     res.status(404).json({ message: "session not found" });
     return;
   }
 
+  const cookie = req.get("cookie");
+  if (!cookie) {
+    res.status(401).json({ message: "관리자 로그인이 필요합니다." });
+    return;
+  }
+
   try {
-    // 1) Create the job + highlight rows.
-    const ingestRes = await fetch(`${API_BASE_URL}${API_PREFIX}/videos/ingest`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        originalFilename: session.originalFilename,
-        durationSec: session.durationSec,
-        events: session.events.map((event) => ({
-          eventSec: event.event_sec,
-          startSec: event.start_sec,
-          endSec: event.end_sec,
-          confidence: event.confidence,
-        })),
-      }),
-    });
-    if (!ingestRes.ok) {
-      throw new Error(`ingest failed (${ingestRes.status}): ${await ingestRes.text()}`);
+    if (uploadOriginal) {
+      const { size } = await fsp.stat(session.tempVideo);
+      if (size > MAX_ORIGINAL_UPLOAD_BYTES) {
+        res.status(413).json({
+          message: "원본 영상은 최대 60MB까지 업로드할 수 있습니다.",
+        });
+        return;
+      }
     }
+
+    // 1) Create the job + highlight rows.
+    const ingestRes = await fetch(
+      `${API_BASE_URL}${API_PREFIX}/videos/ingest`,
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", cookie },
+        body: JSON.stringify({
+          originalFilename: session.originalFilename,
+          durationSec: session.durationSec,
+          events: session.events.map((event) => ({
+            eventSec: event.event_sec,
+            startSec: event.start_sec,
+            endSec: event.end_sec,
+            confidence: event.confidence,
+          })),
+        }),
+      },
+    );
+    await assertUpstreamResponse(ingestRes, "ingest");
     const ingest = (await ingestRes.json()) as {
       jobId: number;
       highlights: { highlightId: number; index: number }[];
@@ -196,15 +315,21 @@ app.post("/upload", async (req, res) => {
       if (!event) continue;
       const buffer = await fsp.readFile(event.clip_file);
       const form = new FormData();
-      form.append("file", new Blob([buffer], { type: "video/mp4" }), `highlight_${index + 1}.mp4`);
+      form.append(
+        "file",
+        new Blob([buffer], { type: "video/mp4" }),
+        `highlight_${index + 1}.mp4`,
+      );
 
-      const clipRes = await fetch(`${API_BASE_URL}${API_PREFIX}/highlights/${highlightId}/clip`, {
-        method: "POST",
-        body: form,
-      });
-      if (!clipRes.ok) {
-        throw new Error(`clip upload failed (${clipRes.status}): ${await clipRes.text()}`);
-      }
+      const clipRes = await fetch(
+        `${API_BASE_URL}${API_PREFIX}/highlights/${highlightId}/clip`,
+        {
+          method: "POST",
+          headers: { cookie },
+          body: form,
+        },
+      );
+      await assertUpstreamResponse(clipRes, "clip upload");
       uploadedClips += 1;
     }
 
@@ -214,21 +339,28 @@ app.post("/upload", async (req, res) => {
     if (uploadOriginal) {
       const buffer = await fsp.readFile(session.tempVideo);
       const form = new FormData();
-      form.append("file", new Blob([buffer], { type: "video/mp4" }), session.originalFilename);
+      form.append(
+        "file",
+        new Blob([buffer], { type: "video/mp4" }),
+        session.originalFilename,
+      );
 
-      const srcRes = await fetch(`${API_BASE_URL}${API_PREFIX}/videos/${ingest.jobId}/source`, {
-        method: "POST",
-        body: form,
-      });
-      if (!srcRes.ok) {
-        throw new Error(`original upload failed (${srcRes.status}): ${await srcRes.text()}`);
-      }
+      const srcRes = await fetch(
+        `${API_BASE_URL}${API_PREFIX}/videos/${ingest.jobId}/source`,
+        {
+          method: "POST",
+          headers: { cookie },
+          body: form,
+        },
+      );
+      await assertUpstreamResponse(srcRes, "original upload");
       uploadedOriginal = true;
     }
 
     res.json({ jobId: ingest.jobId, uploadedClips, uploadedOriginal });
   } catch (error) {
-    res.status(500).json({ message: (error as Error).message });
+    const status = error instanceof UpstreamError ? error.status : 500;
+    res.status(status).json({ message: errorMessage(error) });
   }
 });
 
