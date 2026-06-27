@@ -28,22 +28,24 @@ const additionalSchema = z.object({
     )
     .optional(),
   studentId: z.string().trim().max(20, "학번은 20자 이하여야 합니다.").optional(),
+  // 010 프리픽스는 UI 에서 고정되고, 폼에는 뒤 8자리(1234-5678)만 담는다.
   phoneNumber: z
     .string()
     .trim()
     .refine(
-      (v) => v === "" || /^010-\d{4}-\d{4}$/.test(v),
-      "연락처는 010으로 시작하는 11자리여야 합니다. (예: 010-1234-5678)",
+      (v) => v === "" || /^\d{4}-\d{4}$/.test(v),
+      "연락처 뒤 8자리를 입력해주세요. (예: 1234-5678)",
     )
     .optional(),
 });
 
-/** 숫자만 추출해 010-1234-5678 형태로 포맷한다(부분 입력도 점진적으로 포맷). */
-const formatPhone = (value: string): string => {
-  const digits = value.replace(/\D/g, "").slice(0, 11);
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
-  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+const PHONE_PREFIX = "010";
+
+/** 010 이후 8자리를 1234-5678 형태로 포맷한다(부분 입력도 점진적으로 포맷). */
+const formatPhoneSuffix = (value: string): string => {
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+  if (digits.length <= 4) return digits;
+  return `${digits.slice(0, 4)}-${digits.slice(4)}`;
 };
 
 type AdditionalValues = z.infer<typeof additionalSchema>;
@@ -62,10 +64,10 @@ const toAdditionalPayload = (values: AdditionalValues): AdditionalPayload => {
   if (values.name) payload.name = values.name;
   if (values.major) payload.major = values.major;
   if (values.studentId) payload.studentId = values.studentId;
-  // 표시용 하이픈을 제거하고 숫자만 전송한다.
+  // 010 프리픽스를 붙이고 하이픈을 제거해 숫자 11자리로 전송한다.
   if (values.phoneNumber) {
     const digits = values.phoneNumber.replace(/\D/g, "");
-    if (digits) payload.phoneNumber = digits;
+    if (digits) payload.phoneNumber = `${PHONE_PREFIX}${digits}`;
   }
   if (values.year && values.year.trim() !== "")
     payload.year = Number(values.year);
@@ -348,7 +350,9 @@ const ADDITIONAL_FIELDS: {
   type?: string;
   inputMode?: "numeric";
   maxLength?: number;
-  /** 입력 시 숫자만 남기고 최대 길이로 자른다(연락처 등). */
+  /** 좌측에 고정 표시되는 프리픽스(예: 연락처 "010"). */
+  prefix?: string;
+  /** 입력 시 숫자만 남기고 뒤 8자리를 1234-5678 로 포맷한다(연락처). */
   digitsOnly?: boolean;
 }[] = [
   { name: "name", label: "이름", placeholder: "이름" },
@@ -358,10 +362,11 @@ const ADDITIONAL_FIELDS: {
   {
     name: "phoneNumber",
     label: "연락처",
-    placeholder: "010-1234-5678 (숫자만 입력)",
+    placeholder: "1234-5678",
     type: "tel",
     inputMode: "numeric",
-    maxLength: 13, // 010-1234-5678
+    maxLength: 9, // 1234-5678
+    prefix: PHONE_PREFIX,
     digitsOnly: true,
   },
 ];
@@ -390,15 +395,16 @@ const AdditionalFieldsSection = ({
           type={field.type}
           inputMode={field.inputMode}
           maxLength={field.maxLength}
+          prefix={field.prefix}
           placeholder={field.placeholder}
           invalid={!!errors[field.name]}
           registration={register(
             field.name,
             field.digitsOnly
               ? {
-                  // 숫자만 받아 010-1234-5678 형태로 자동 포맷해 표시한다.
+                  // 숫자만 받아 뒤 8자리를 1234-5678 형태로 자동 포맷해 표시한다.
                   onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    e.target.value = formatPhone(e.target.value);
+                    e.target.value = formatPhoneSuffix(e.target.value);
                   },
                 }
               : undefined,
@@ -437,6 +443,7 @@ const TextInput = ({
   placeholder,
   inputMode,
   maxLength,
+  prefix,
 }: {
   registration: UseFormRegisterReturn;
   invalid?: boolean;
@@ -444,21 +451,51 @@ const TextInput = ({
   placeholder?: string;
   inputMode?: "numeric";
   maxLength?: number;
-}) => (
-  <input
-    type={type}
-    placeholder={placeholder}
-    inputMode={inputMode}
-    maxLength={maxLength}
-    {...registration}
-    className={cn(
-      "h-11 w-full rounded-lg border bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2",
-      invalid
-        ? "border-red-500 focus:border-red-500 focus:ring-red-100"
-        : "border-slate-200 focus:border-slate-400 focus:ring-slate-200",
-    )}
-  />
-);
+  prefix?: string;
+}) => {
+  const borderClass = invalid
+    ? "border-red-500 focus-within:border-red-500 focus-within:ring-red-100"
+    : "border-slate-200 focus-within:border-slate-400 focus-within:ring-slate-200";
+
+  if (prefix) {
+    return (
+      <div
+        className={cn(
+          "flex h-11 w-full items-center rounded-lg border bg-white focus-within:ring-2",
+          borderClass,
+        )}
+      >
+        <span className="select-none border-r border-slate-200 px-3 text-sm text-slate-500">
+          {prefix}
+        </span>
+        <input
+          type={type}
+          placeholder={placeholder}
+          inputMode={inputMode}
+          maxLength={maxLength}
+          {...registration}
+          className="h-full w-full rounded-r-lg bg-transparent px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <input
+      type={type}
+      placeholder={placeholder}
+      inputMode={inputMode}
+      maxLength={maxLength}
+      {...registration}
+      className={cn(
+        "h-11 w-full rounded-lg border bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2",
+        invalid
+          ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+          : "border-slate-200 focus:border-slate-400 focus:ring-slate-200",
+      )}
+    />
+  );
+};
 
 const SubmitButton = ({
   pending,
