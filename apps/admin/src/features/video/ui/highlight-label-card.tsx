@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/shared/lib/utils";
-import { useMemo, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 import {
   type CreateVideoLabelBody,
   type Score,
@@ -25,7 +27,32 @@ const SCORES: { value: Score; label: string }[] = [
   { value: "IPPON", label: "한판" },
 ];
 
+const labelFormSchema = z.object({
+  techniqueResult: z.enum(["NONE", "ATTEMPT", "SUCCESS"]),
+  score: z.enum(["NONE", "YUKO", "WAZA_ARI", "IPPON"]),
+  technique: z.string().max(100, "기술명은 100자 이하여야 합니다."),
+  highlightScore: z
+    .string()
+    .refine(
+      (v) =>
+        v.trim() === "" ||
+        (/^\d+$/.test(v.trim()) && Number(v) >= 0 && Number(v) <= 10),
+      "0~10 사이 정수여야 합니다.",
+    ),
+  correctedEventSec: z
+    .string()
+    .refine(
+      (v) => v.trim() === "" || !Number.isNaN(Number(v)),
+      "숫자를 입력해주세요.",
+    ),
+  memo: z.string().max(1000, "메모는 1000자 이하여야 합니다."),
+});
+
+type LabelFormValues = z.infer<typeof labelFormSchema>;
+
 const formatSec = (sec: number) => `${sec.toFixed(1)}초`;
+
+const toNullable = (value: string) => (value.trim() === "" ? null : value.trim());
 
 interface Props {
   index: number;
@@ -36,49 +63,44 @@ interface Props {
 export const HighlightLabelCard = ({ index, highlight, jobId }: Props) => {
   const label = highlight.latestLabel;
 
-  const [techniqueResult, setTechniqueResult] = useState<TechniqueResult>(
-    label?.techniqueResult ?? "NONE",
-  );
-  const [score, setScore] = useState<Score>(label?.score ?? "NONE");
-  const [technique, setTechnique] = useState(label?.technique ?? "");
-  const [highlightScore, setHighlightScore] = useState(
-    label?.highlightScore != null ? String(label.highlightScore) : "",
-  );
-  const [correctedEventSec, setCorrectedEventSec] = useState(
-    label?.correctedEventSec != null ? String(label.correctedEventSec) : "",
-  );
-  const [memo, setMemo] = useState(label?.memo ?? "");
-
   const mutation = useCreateHighlightLabel(jobId);
 
-  const highlightScoreError = useMemo(() => {
-    if (highlightScore.trim() === "") return null;
-    const n = Number(highlightScore);
-    if (!Number.isInteger(n) || n < 0 || n > 10) {
-      return "0~10 사이 정수여야 합니다.";
-    }
-    return null;
-  }, [highlightScore]);
-
-  const handleSubmit = () => {
-    if (highlightScoreError) {
-      toast.error(highlightScoreError);
-      return;
-    }
-    if (memo.length > 1000) {
-      toast.error("메모는 1000자 이하여야 합니다.");
-      return;
-    }
-
-    const body: CreateVideoLabelBody = {
-      techniqueResult,
-      score: score === "NONE" ? "NONE" : score,
-      technique: technique.trim() === "" ? null : technique.trim(),
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<LabelFormValues>({
+    resolver: zodResolver(labelFormSchema),
+    defaultValues: {
+      techniqueResult: label?.techniqueResult ?? "NONE",
+      score: label?.score ?? "NONE",
+      technique: label?.technique ?? "",
       highlightScore:
-        highlightScore.trim() === "" ? null : Number(highlightScore),
+        label?.highlightScore != null ? String(label.highlightScore) : "",
       correctedEventSec:
-        correctedEventSec.trim() === "" ? null : Number(correctedEventSec),
-      memo: memo.trim() === "" ? null : memo.trim(),
+        label?.correctedEventSec != null ? String(label.correctedEventSec) : "",
+      memo: label?.memo ?? "",
+    },
+  });
+
+  const memoLength = watch("memo").length;
+
+  const onSubmit = (values: LabelFormValues) => {
+    const body: CreateVideoLabelBody = {
+      techniqueResult: values.techniqueResult,
+      score: values.score,
+      technique: toNullable(values.technique),
+      highlightScore:
+        values.highlightScore.trim() === ""
+          ? null
+          : Number(values.highlightScore),
+      correctedEventSec:
+        values.correctedEventSec.trim() === ""
+          ? null
+          : Number(values.correctedEventSec),
+      memo: toNullable(values.memo),
     };
 
     mutation.mutate(
@@ -131,79 +153,95 @@ export const HighlightLabelCard = ({ index, highlight, jobId }: Props) => {
         </dl>
       </div>
 
-      <div className="flex flex-col gap-3 md:w-1/2">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-3 md:w-1/2"
+      >
         <Field label="기술 결과" required>
-          <SegmentedControl
-            options={TECHNIQUE_RESULTS}
-            value={techniqueResult}
-            onChange={setTechniqueResult}
+          <Controller
+            control={control}
+            name="techniqueResult"
+            render={({ field }) => (
+              <SegmentedControl
+                options={TECHNIQUE_RESULTS}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
         </Field>
 
         <Field label="점수">
-          <SegmentedControl
-            options={SCORES}
-            value={score}
-            onChange={setScore}
+          <Controller
+            control={control}
+            name="score"
+            render={({ field }) => (
+              <SegmentedControl
+                options={SCORES}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
         </Field>
 
-        <Field label="기술명">
+        <Field label="기술명" error={errors.technique?.message}>
           <Input
-            value={technique}
+            {...register("technique")}
             maxLength={100}
             placeholder="예) 업어치기"
-            onChange={(e) => setTechnique(e.target.value)}
+            aria-invalid={!!errors.technique}
           />
         </Field>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="하이라이트 점수 (0~10)">
+          <Field
+            label="하이라이트 점수 (0~10)"
+            error={errors.highlightScore?.message}
+          >
             <Input
+              {...register("highlightScore")}
               type="number"
               min={0}
               max={10}
               step={1}
-              value={highlightScore}
-              aria-invalid={!!highlightScoreError}
               placeholder="0~10"
-              onChange={(e) => setHighlightScore(e.target.value)}
+              aria-invalid={!!errors.highlightScore}
             />
-            {highlightScoreError && (
-              <p className="mt-1 text-xs text-red-600">{highlightScoreError}</p>
-            )}
           </Field>
 
-          <Field label="보정 이벤트 시각(초)">
+          <Field
+            label="보정 이벤트 시각(초)"
+            error={errors.correctedEventSec?.message}
+          >
             <Input
+              {...register("correctedEventSec")}
               type="number"
               step="0.1"
-              value={correctedEventSec}
               placeholder={highlight.eventSec.toFixed(1)}
-              onChange={(e) => setCorrectedEventSec(e.target.value)}
+              aria-invalid={!!errors.correctedEventSec}
             />
           </Field>
         </div>
 
-        <Field label={`메모 (${memo.length}/1000)`}>
+        <Field label={`메모 (${memoLength}/1000)`} error={errors.memo?.message}>
           <Textarea
-            value={memo}
+            {...register("memo")}
             maxLength={1000}
             rows={3}
             placeholder="특이사항을 적어주세요."
-            onChange={(e) => setMemo(e.target.value)}
+            aria-invalid={!!errors.memo}
           />
         </Field>
 
         <Button
-          type="button"
-          onClick={handleSubmit}
+          type="submit"
           disabled={mutation.isPending}
           className="mt-1 self-end"
         >
           {mutation.isPending ? "저장 중..." : "라벨 저장"}
         </Button>
-      </div>
+      </form>
     </div>
   );
 };
@@ -211,10 +249,12 @@ export const HighlightLabelCard = ({ index, highlight, jobId }: Props) => {
 const Field = ({
   label,
   required,
+  error,
   children,
 }: {
   label: string;
   required?: boolean;
+  error?: string;
   children: React.ReactNode;
 }) => (
   <label className="flex flex-col gap-1">
@@ -223,6 +263,7 @@ const Field = ({
       {required && <span className="ml-0.5 text-red-500">*</span>}
     </span>
     {children}
+    {error && <p className="text-xs text-red-600">{error}</p>}
   </label>
 );
 
