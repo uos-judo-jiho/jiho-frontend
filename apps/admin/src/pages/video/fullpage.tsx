@@ -196,7 +196,7 @@ export const VideoLabelingFullpage = () => {
           <div className="flex min-w-0 items-center gap-3">
             <Link
               to={RouterUrl.영상.풀페이지.목록}
-              aria-label="집중 라벨링 목록으로"
+              aria-label="하이라이트 전체화면 목록으로"
               className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
             >
               <ArrowLeft className="h-5 w-5" />

@@ -28,7 +28,9 @@ export const VideoFullpageListPage = () => {
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-lg font-bold sm:text-xl">집중 라벨링</h1>
+            <h1 className="text-lg font-bold sm:text-xl">
+              하이라이트 전체화면
+            </h1>
             <p className="text-sm text-neutral-500">
               작업할 영상을 선택하세요.
             </p>

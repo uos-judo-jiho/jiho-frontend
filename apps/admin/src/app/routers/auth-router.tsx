@@ -233,7 +233,7 @@ export const AuthRouter = () => {
         path={RouterUrl.영상.풀페이지.목록}
         element={
           <ProtectedRoute allowedRoles={VideoLabelingRoles}>
-            {WithHelmet(<VideoFullpageListPage />, "집중 라벨링")}
+            {WithHelmet(<VideoFullpageListPage />, "하이라이트 전체화면")}
           </ProtectedRoute>
         }
       />
