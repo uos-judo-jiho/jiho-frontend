@@ -32,11 +32,19 @@ const additionalSchema = z.object({
     .string()
     .trim()
     .refine(
-      (v) => v === "" || /^010\d{8}$/.test(v),
-      "연락처는 010으로 시작하는 숫자 11자리여야 합니다. (예: 01012345678)",
+      (v) => v === "" || /^010-\d{4}-\d{4}$/.test(v),
+      "연락처는 010으로 시작하는 11자리여야 합니다. (예: 010-1234-5678)",
     )
     .optional(),
 });
+
+/** 숫자만 추출해 010-1234-5678 형태로 포맷한다(부분 입력도 점진적으로 포맷). */
+const formatPhone = (value: string): string => {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 3) return digits;
+  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+};
 
 type AdditionalValues = z.infer<typeof additionalSchema>;
 
@@ -54,7 +62,11 @@ const toAdditionalPayload = (values: AdditionalValues): AdditionalPayload => {
   if (values.name) payload.name = values.name;
   if (values.major) payload.major = values.major;
   if (values.studentId) payload.studentId = values.studentId;
-  if (values.phoneNumber) payload.phoneNumber = values.phoneNumber;
+  // 표시용 하이픈을 제거하고 숫자만 전송한다.
+  if (values.phoneNumber) {
+    const digits = values.phoneNumber.replace(/\D/g, "");
+    if (digits) payload.phoneNumber = digits;
+  }
   if (values.year && values.year.trim() !== "")
     payload.year = Number(values.year);
   return payload;
@@ -346,10 +358,10 @@ const ADDITIONAL_FIELDS: {
   {
     name: "phoneNumber",
     label: "연락처",
-    placeholder: "01012345678 (- 없이 숫자만)",
+    placeholder: "010-1234-5678 (숫자만 입력)",
     type: "tel",
     inputMode: "numeric",
-    maxLength: 11,
+    maxLength: 13, // 010-1234-5678
     digitsOnly: true,
   },
 ];
@@ -384,11 +396,9 @@ const AdditionalFieldsSection = ({
             field.name,
             field.digitsOnly
               ? {
-                  // "-" 등 숫자가 아닌 입력은 즉시 제거하고 최대 길이로 자른다.
+                  // 숫자만 받아 010-1234-5678 형태로 자동 포맷해 표시한다.
                   onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                    e.target.value = e.target.value
-                      .replace(/\D/g, "")
-                      .slice(0, field.maxLength ?? 11);
+                    e.target.value = formatPhone(e.target.value);
                   },
                 }
               : undefined,
