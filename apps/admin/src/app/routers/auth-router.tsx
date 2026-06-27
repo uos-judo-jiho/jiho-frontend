@@ -229,7 +229,7 @@ export const AuthRouter = () => {
 
       {/* 영상 라벨링 - etc 제외 */}
       <Route
-        path={RouterUrl.영상.풀페이지({
+        path={RouterUrl.영상.풀페이지.상세({
           jobId: ":jobId" as unknown as number,
         })}
         element={

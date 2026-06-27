@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Check,
@@ -7,6 +6,7 @@ import {
   ListVideo,
   X,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Link,
   useNavigate,
@@ -16,12 +16,12 @@ import {
 
 import { RouterUrl } from "@/app/routers/router-url";
 import { Button } from "@/components/ui/button";
+import type { VideoHighlight, VideoJobListItem } from "@/features/video/api";
 import {
   useVideoEvents,
   useVideoJobDetail,
   useVideoJobs,
 } from "@/features/video/hooks";
-import type { VideoHighlight, VideoJobListItem } from "@/features/video/api";
 import { HighlightLabelCard } from "@/features/video/ui/highlight-label-card";
 import { cn } from "@/shared/lib/utils";
 
@@ -103,7 +103,7 @@ export const VideoLabelingFullpage = () => {
 
   const openNextJob = () => {
     if (!nextJob) return;
-    navigate(RouterUrl.영상.풀페이지({ jobId: nextJob.id }), {
+    navigate(RouterUrl.영상.풀페이지.상세({ jobId: nextJob.id }), {
       replace: true,
     });
   };
@@ -111,7 +111,7 @@ export const VideoLabelingFullpage = () => {
   const openJob = (targetJobId: number) => {
     setIsListOpen(false);
     if (targetJobId === jobId) return;
-    navigate(RouterUrl.영상.풀페이지({ jobId: targetJobId }));
+    navigate(RouterUrl.영상.풀페이지.상세({ jobId: targetJobId }));
   };
 
   const openJobHighlight = (
@@ -120,7 +120,7 @@ export const VideoLabelingFullpage = () => {
     replace = false,
   ) => {
     navigate(
-      `${RouterUrl.영상.풀페이지({ jobId: targetJobId })}?highlightId=${highlightId}`,
+      `${RouterUrl.영상.풀페이지.상세({ jobId: targetJobId })}?highlightId=${highlightId}`,
       { replace },
     );
   };

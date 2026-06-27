@@ -19,7 +19,10 @@ export const RouterUrl = {
   영상: {
     목록: "/videos",
     상세: ({ id }: { id: number }) => `/videos/${id}`,
-    풀페이지: ({ jobId }: { jobId: number }) => `/videos/fullpage/${jobId}`,
+    풀페이지: {
+      목록: "/videos/fullpage",
+      상세: ({ jobId }: { jobId: number }) => `/videos/fullpage/${jobId}`,
+    },
   },
   훈련일지: {
     목록: "/training",
