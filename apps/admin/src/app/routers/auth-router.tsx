@@ -16,6 +16,8 @@ import { TrainingLogPage } from "@/pages/training-log";
 import { TrainingLogDetail } from "@/pages/training-log/training-log-detail";
 import { UserPage } from "@/pages/user";
 import { UserDetailPage } from "@/pages/user/detail";
+import { VideoLabelingPage } from "@/pages/video";
+import { VideoLabelingDetailPage } from "@/pages/video/detail";
 import WriteArticlePage from "@/pages/WriteArticlePage";
 import { v2Admin } from "@packages/api";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -219,6 +221,24 @@ export const AuthRouter = () => {
         element={
           <ProtectedRoute allowedRoles={StaffAndAbove}>
             {WithHelmet(<Awards />, "수상내역")}
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 영상 라벨링 - Staff 이상 */}
+      <Route
+        path={RouterUrl.영상.목록}
+        element={
+          <ProtectedRoute allowedRoles={StaffAndAbove}>
+            {WithHelmet(<VideoLabelingPage />, "하이라이트 라벨링")}
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={RouterUrl.영상.상세({ id: ":id" as unknown as number })}
+        element={
+          <ProtectedRoute allowedRoles={StaffAndAbove}>
+            {WithHelmet(<VideoLabelingDetailPage />, "영상 라벨링")}
           </ProtectedRoute>
         }
       />

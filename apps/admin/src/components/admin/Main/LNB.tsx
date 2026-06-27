@@ -8,6 +8,7 @@ import {
   Home,
   LogOut,
   Menu,
+  Film,
   Newspaper,
   Trophy,
   Users,
@@ -49,6 +50,12 @@ const menuItems = [
     icon: Trophy,
     label: "수상내역",
     path: RouterUrl.수상내역,
+    allowedRoles: StaffAndAbove,
+  },
+  {
+    icon: Film,
+    label: "영상 라벨링",
+    path: RouterUrl.영상.목록,
     allowedRoles: StaffAndAbove,
   },
 ];

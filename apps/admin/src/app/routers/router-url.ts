@@ -16,6 +16,10 @@ export const RouterUrl = {
     작성: "/notice/write",
   },
   수상내역: "/awards",
+  영상: {
+    목록: "/videos",
+    상세: ({ id }: { id: number }) => `/videos/${id}`,
+  },
   훈련일지: {
     목록: "/training",
     상세: ({ id }: { id: number }) => `/training/${id}`,
@@ -40,6 +44,7 @@ export const RouteLabels: Record<string, string> = {
   notice: "공지",
   gallery: "갤러리",
   awards: "수상내역",
+  videos: "영상 라벨링",
   write: "작성",
   users: "회원",
   mypage: "마이페이지",
