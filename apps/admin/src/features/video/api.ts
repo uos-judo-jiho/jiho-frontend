@@ -1,16 +1,11 @@
-import axios from "axios";
-
 /**
- * 영상 라벨링 엔드포인트는 아직 swagger(orval) 생성 대상이 아니라서
- * admin 스코프(`/api/v2/admin`)로 직접 axios 호출한다.
- * baseURL 은 생성된 @packages/api 클라이언트와 동일 출처를 사용한다.
+ * 영상 라벨링 화면에서 쓰는 도메인 타입.
+ *
+ * orval 생성 모델(@packages/api 의 GetApiV2AdminVideos... 류)과 형태가 동일하지만,
+ * 해당 모델 타입은 v2Admin 네임스페이스로 재노출되지 않아 직접 import 할 수 없다.
+ * 따라서 컴포넌트 prop 타입은 여기서 명시적으로 유지한다.
+ * 실제 데이터 패칭/라벨 저장은 `./hooks` 의 생성 훅을 사용한다.
  */
-const baseURL = `${import.meta.env.VITE_API_BASE_URL}/v2/admin`;
-
-export const videoApi = axios.create({
-  baseURL,
-  withCredentials: true,
-});
 
 export type VideoJobStatus = "uploaded" | "processing" | "done" | "failed";
 export type TechniqueResult = "NONE" | "ATTEMPT" | "SUCCESS";
@@ -51,21 +46,6 @@ export interface VideoJobListItem {
   updatedAt: string;
 }
 
-export interface VideoJobDetail {
-  id: number;
-  originalFilename: string;
-  originalPath: string;
-  originalVideoUrl: string;
-  eventsJsonPath: string;
-  eventsJsonUrl: string;
-  status: VideoJobStatus;
-  durationSec: number | null;
-  errorMessage: string | null;
-  createdAt: string;
-  updatedAt: string;
-  highlights: VideoHighlight[];
-}
-
 export interface CreateVideoLabelBody {
   techniqueResult: TechniqueResult;
   score?: Score | null;
@@ -74,28 +54,3 @@ export interface CreateVideoLabelBody {
   correctedEventSec?: number | null;
   memo?: string | null;
 }
-
-export const getVideoJobs = async (): Promise<VideoJobListItem[]> => {
-  const { data } = await videoApi.get<{ jobs: VideoJobListItem[] }>("/videos");
-  return data.jobs;
-};
-
-export const getVideoJobDetail = async (
-  jobId: number,
-): Promise<VideoJobDetail> => {
-  const { data } = await videoApi.get<{ job: VideoJobDetail }>(
-    `/videos/${jobId}`,
-  );
-  return data.job;
-};
-
-export const createHighlightLabel = async (
-  highlightId: number,
-  body: CreateVideoLabelBody,
-): Promise<{ labelId: number }> => {
-  const { data } = await videoApi.post<{ labelId: number }>(
-    `/highlights/${highlightId}/label`,
-    body,
-  );
-  return data;
-};

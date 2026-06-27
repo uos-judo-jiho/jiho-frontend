@@ -82,7 +82,7 @@ export const HighlightLabelCard = ({ index, highlight, jobId }: Props) => {
     };
 
     mutation.mutate(
-      { highlightId: highlight.id, body },
+      { highlightId: highlight.id, data: body },
       {
         onSuccess: () => toast.success("라벨을 저장했어요."),
         onError: () => toast.error("라벨 저장에 실패했어요."),
