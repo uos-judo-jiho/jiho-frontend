@@ -6,16 +6,18 @@ import {
   type VideoJobListItem,
 } from "@/features/video/api";
 import { useVideoJobs } from "@/features/video/hooks";
-import { Film } from "lucide-react";
+import { Expand, Film } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const STATUS_META: Record<VideoJobStatus, { label: string; className: string }> =
-  {
-    done: { label: "완료", className: "bg-green-100 text-green-700" },
-    processing: { label: "처리중", className: "bg-blue-100 text-blue-700" },
-    uploaded: { label: "업로드됨", className: "bg-neutral-100 text-neutral-600" },
-    failed: { label: "실패", className: "bg-red-100 text-red-700" },
-  };
+const STATUS_META: Record<
+  VideoJobStatus,
+  { label: string; className: string }
+> = {
+  done: { label: "완료", className: "bg-green-100 text-green-700" },
+  processing: { label: "처리중", className: "bg-blue-100 text-blue-700" },
+  uploaded: { label: "업로드됨", className: "bg-neutral-100 text-neutral-600" },
+  failed: { label: "실패", className: "bg-red-100 text-red-700" },
+};
 
 const formatDate = (value: string) =>
   new Date(value).toLocaleString("ko-KR", {
@@ -36,7 +38,9 @@ export const VideoLabelingPage = () => {
 
       {isLoading && <p className="text-neutral-500">불러오는 중...</p>}
       {isError && (
-        <p className="text-red-600">목록을 불러오지 못했어요. 다시 시도해주세요.</p>
+        <p className="text-red-600">
+          목록을 불러오지 못했어요. 다시 시도해주세요.
+        </p>
       )}
 
       {jobs && jobs.length === 0 && (
@@ -58,10 +62,10 @@ const JobRow = ({ job }: { job: VideoJobListItem }) => {
   const status = STATUS_META[job.status];
 
   return (
-    <li>
+    <li className="flex flex-col gap-2 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:items-center">
       <Link
         to={RouterUrl.영상.상세({ id: job.id })}
-        className="flex items-center justify-between rounded-xl border bg-white p-4 shadow-sm transition-colors hover:bg-neutral-50"
+        className="flex min-w-0 flex-1 items-center justify-between transition-colors hover:text-neutral-600"
       >
         <div className="flex min-w-0 flex-col gap-1">
           <span className="truncate font-semibold text-neutral-900">
@@ -85,6 +89,15 @@ const JobRow = ({ job }: { job: VideoJobListItem }) => {
           </span>
         </div>
       </Link>
+      {job.status === "done" && job.highlightCount > 0 && (
+        <Link
+          하이라이트 전체화면uterUrl.영상.풀페이지({ jobId: job.id })}
+          className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-2 text-sm font-semibold text-white hover:bg-neutral-700"
+        >
+          <Expand className="h-4 w-4" />
+          집중 라벨링
+        </Link>
+      )}
     </li>
   );
 };

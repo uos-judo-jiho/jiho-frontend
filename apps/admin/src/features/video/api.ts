@@ -9,8 +9,11 @@ import { v2AdminModel } from "@packages/api/model";
 export type VideoJobStatus = v2AdminModel.GetApiV2AdminVideos200JobsItemStatus;
 export type VideoJobListItem = v2AdminModel.GetApiV2AdminVideos200JobsItem;
 export type VideoJobDetail = v2AdminModel.GetApiV2AdminVideosJobId200Job;
+export type VideoEvent =
+  v2AdminModel.GetApiV2AdminVideosJobIdEvents200EventsItem;
 export type VideoHighlight =
-  v2AdminModel.GetApiV2AdminVideosJobId200JobHighlightsItem;
+  v2AdminModel.GetApiV2AdminVideosJobId200JobHighlightsItem &
+    Pick<VideoEvent, "isLabeledByCurrentUser">;
 export type LatestVideoLabel =
   v2AdminModel.GetApiV2AdminVideosJobId200JobHighlightsItemLatestLabel;
 

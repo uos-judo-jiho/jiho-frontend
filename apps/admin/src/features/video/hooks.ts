@@ -25,16 +25,32 @@ export const useVideoJobDetail = (jobId: number) =>
     },
   });
 
+export const useVideoEvents = (jobId: number) =>
+  v2Admin.useGetApiV2AdminVideosJobIdEvents(jobId, {
+    axios: { withCredentials: true },
+    query: {
+      enabled: Number.isFinite(jobId) && jobId > 0,
+      select: (res) => res.data.events,
+      staleTime: 30 * 1000,
+    },
+  });
+
 export const useCreateHighlightLabel = (jobId: number) => {
   const queryClient = useQueryClient();
 
   return v2Admin.usePostApiV2AdminHighlightsHighlightIdLabel({
     axios: { withCredentials: true },
     mutation: {
-      onSuccess: () =>
-        queryClient.invalidateQueries({
-          queryKey: v2Admin.getGetApiV2AdminVideosJobIdQueryKey(jobId),
-        }),
+      onSuccess: async () => {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: v2Admin.getGetApiV2AdminVideosJobIdEventsQueryKey(jobId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: v2Admin.getGetApiV2AdminVideosJobIdQueryKey(jobId),
+          }),
+        ]);
+      },
     },
   });
 };

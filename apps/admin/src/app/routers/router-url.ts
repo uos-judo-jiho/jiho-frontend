@@ -19,6 +19,7 @@ export const RouterUrl = {
   영상: {
     목록: "/videos",
     상세: ({ id }: { id: number }) => `/videos/${id}`,
+    풀페이지: ({ jobId }: { jobId: number }) => `/videos/fullpage/${jobId}`,
   },
   훈련일지: {
     목록: "/training",
@@ -45,6 +46,7 @@ export const RouteLabels: Record<string, string> = {
   gallery: "갤러리",
   awards: "수상내역",
   videos: "영상 라벨링",
+  fullpage: "하이라이트 전체화면",
   write: "작성",
   users: "회원",
   mypage: "마이페이지",
