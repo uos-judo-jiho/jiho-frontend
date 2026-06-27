@@ -12,9 +12,9 @@
     "./_generated/v2/api": "./src/_generated/v2/api/index.ts"
   },
   "scripts": {
-    "generate": "orval",
-    "generate:watch": "orval --watch",
-    "generate:prod": "NODE_ENV=production orval"
+    "gen": "orval",
+    "gen:watch": "orval --watch",
+    "gen:prod": "NODE_ENV=production orval"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.11",
