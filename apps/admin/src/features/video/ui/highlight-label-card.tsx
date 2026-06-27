@@ -119,8 +119,8 @@ export const HighlightLabelCard = ({
     },
   });
 
-  const memoLength = watch("memo").length;
-  const correctedEventSecInput = watch("correctedEventSec");
+  const memoLength = watch("memo", "").length;
+  const correctedEventSecInput = watch("correctedEventSec", "");
   const correctedEventSecNumber = Number(correctedEventSecInput);
   const correctedAbsoluteSec =
     correctedEventSecInput.trim() !== "" &&
