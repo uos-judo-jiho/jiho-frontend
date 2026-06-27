@@ -43,6 +43,21 @@ export default defineConfig({
         rewrite: (path) => path,
         secure: false,
         ws: true,
+        // prod api(https)를 프록시할 때, 인증 쿠키가 http://localhost 에 저장되도록
+        // Set-Cookie 의 Secure/Domain 을 제거하고 SameSite 를 Lax 로 맞춘다.
+        configure: (proxy) => {
+          proxy.on("proxyRes", (proxyRes) => {
+            const setCookie = proxyRes.headers["set-cookie"];
+            if (setCookie) {
+              proxyRes.headers["set-cookie"] = setCookie.map((cookie) =>
+                cookie
+                  .replace(/;\s*Secure/gi, "")
+                  .replace(/;\s*Domain=[^;]+/gi, "")
+                  .replace(/;\s*SameSite=None/gi, "; SameSite=Lax"),
+              );
+            }
+          });
+        },
       },
     },
   },
