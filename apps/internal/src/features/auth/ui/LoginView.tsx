@@ -1,7 +1,11 @@
 import { FormEvent, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import { apiErrorMessage, loginAdmin, type AdminProfile } from "@/lib/auth";
+import {
+  apiErrorMessage,
+  loginAdmin,
+  type AdminProfile,
+} from "@/features/auth/api/auth";
 
 interface LoginViewProps {
   onLogin: (profile: AdminProfile) => void;

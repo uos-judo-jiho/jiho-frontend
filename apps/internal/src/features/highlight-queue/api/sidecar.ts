@@ -1,11 +1,14 @@
 import axios from "axios";
 
-import { refreshAdminSession } from "@/lib/auth";
+import { refreshAdminSession } from "@/features/auth/api/auth";
 
 // In dev, Vite proxies /sidecar -> the local Node sidecar (see vite.config.ts).
 const sidecar = axios.create({ baseURL: "/sidecar" });
 
 export const MAX_ORIGINAL_UPLOAD_BYTES = 60 * 1024 * 1024;
+
+/** React Query key for the sidecar processing queue. */
+export const QUEUE_QUERY_KEY = ["sidecar-queue"] as const;
 
 export type ItemStatus = "queued" | "processing" | "done" | "failed";
 

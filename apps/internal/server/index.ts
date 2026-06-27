@@ -57,6 +57,8 @@ const CACHE_ROOT = path.join(WORKER_DIR, ".tmp");
 
 const RESULT_PREFIX = "RESULT_JSON:";
 const MAX_ORIGINAL_UPLOAD_BYTES = 60 * 1024 * 1024;
+// 캐시 보관 기한(일). 0 이하면 기한 만료 정리를 끈다.
+const CACHE_TTL_DAYS = Number(process.env.CACHE_TTL_DAYS ?? 14);
 
 function errorMessage(error: unknown): string {
   if (!(error instanceof Error)) return String(error);
@@ -267,6 +269,68 @@ async function pump(): Promise<void> {
     }
   } finally {
     pumping = false;
+  }
+}
+
+/** Best-effort: remove a date directory if it has no remaining entries. */
+async function removeIfEmptyDir(dir: string): Promise<void> {
+  try {
+    if ((await fsp.readdir(dir)).length === 0) await fsp.rmdir(dir);
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Housekeeping on startup: delete cache entries that are either unusable
+ * (no result.json — a crashed/partial run) or older than CACHE_TTL_DAYS,
+ * then drop now-empty date folders so .tmp doesn't grow without bound.
+ */
+async function pruneCache(): Promise<void> {
+  let dateDirs: string[];
+  try {
+    dateDirs = await fsp.readdir(CACHE_ROOT);
+  } catch {
+    return; // no cache yet
+  }
+
+  const ttlMs = CACHE_TTL_DAYS * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  let removed = 0;
+
+  for (const dateDir of dateDirs) {
+    const datePath = path.join(CACHE_ROOT, dateDir);
+    let idDirs: string[];
+    try {
+      idDirs = await fsp.readdir(datePath);
+    } catch {
+      continue;
+    }
+
+    for (const id of idDirs) {
+      const dir = path.join(datePath, id);
+      try {
+        const stat = await fsp.stat(dir);
+        if (!stat.isDirectory()) continue;
+        const hasResult = await fsp
+          .access(path.join(dir, "result.json"))
+          .then(() => true)
+          .catch(() => false);
+        const expired = CACHE_TTL_DAYS > 0 && now - stat.mtimeMs > ttlMs;
+        if (!hasResult || expired) {
+          await fsp.rm(dir, { recursive: true, force: true });
+          removed += 1;
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+
+    await removeIfEmptyDir(datePath);
+  }
+
+  if (removed > 0) {
+    console.log(`[internal-sidecar] pruned ${removed} stale cache entr(y/ies)`);
   }
 }
 
@@ -527,12 +591,14 @@ async function discardItem(item: QueueItem): Promise<void> {
   if (index !== -1) queue.splice(index, 1);
   if (item.cacheDir) {
     await fsp.rm(item.cacheDir, { recursive: true, force: true });
+    await removeIfEmptyDir(path.dirname(item.cacheDir));
   } else if (item.inputVideo) {
     await fsp.rm(item.inputVideo, { force: true });
   }
 }
 
 async function main(): Promise<void> {
+  await pruneCache();
   await rehydrateCache();
   app.listen(PORT, () => {
     console.log(`[internal-sidecar] listening on http://localhost:${PORT}`);
