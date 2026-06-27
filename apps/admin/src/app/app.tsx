@@ -1,15 +1,14 @@
 import { AuthRouter, PublicRouter } from "@/app/routers";
+import { AuthenticatedLayout } from "@/components/layouts/AuthenticatedLayout";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
-import SheetWrapper from "@/components/layouts/SheetWrapper";
 import { v2Admin } from "@packages/api";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const App = () => {
   const [refreshTried, setRefreshTried] = useState(false);
 
   const navigation = useNavigate();
-  const location = useLocation();
 
   const {
     data: adminProfile,
@@ -44,23 +43,16 @@ export const App = () => {
   }, [error?.status, isLoading, navigation, refreshMutation, refreshTried]);
 
   const isAuthorized = isSuccess && adminProfile?.data;
-  const isVideoFullpage = /^\/videos\/fullpage\/\d+\/?$/.test(
-    location.pathname,
-  );
 
-  return (
-    <DefaultLayout showSidebar={!!isAuthorized && !isVideoFullpage}>
-      {isLoading ? null : isAuthorized ? (
-        isVideoFullpage ? (
-          <AuthRouter />
-        ) : (
-          <SheetWrapper>
-            <AuthRouter />
-          </SheetWrapper>
-        )
-      ) : (
-        <PublicRouter />
-      )}
+  if (isLoading) return null;
+
+  return isAuthorized ? (
+    <AuthenticatedLayout>
+      <AuthRouter />
+    </AuthenticatedLayout>
+  ) : (
+    <DefaultLayout>
+      <PublicRouter />
     </DefaultLayout>
   );
 };

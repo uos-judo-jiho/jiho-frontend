@@ -19,6 +19,7 @@ import { UserDetailPage } from "@/pages/user/detail";
 import { VideoLabelingPage } from "@/pages/video";
 import { VideoLabelingDetailPage } from "@/pages/video/detail";
 import { VideoLabelingFullpage } from "@/pages/video/fullpage";
+import { VideoFullpageListPage } from "@/pages/video/fullpage-list";
 import WriteArticlePage from "@/pages/WriteArticlePage";
 import { v2Admin } from "@packages/api";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -228,6 +229,14 @@ export const AuthRouter = () => {
       />
 
       {/* 영상 라벨링 - etc 제외 */}
+      <Route
+        path={RouterUrl.영상.풀페이지.목록}
+        element={
+          <ProtectedRoute allowedRoles={VideoLabelingRoles}>
+            {WithHelmet(<VideoFullpageListPage />, "집중 라벨링")}
+          </ProtectedRoute>
+        }
+      />
       <Route
         path={RouterUrl.영상.풀페이지.상세({
           jobId: ":jobId" as unknown as number,

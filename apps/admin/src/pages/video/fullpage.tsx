@@ -1,6 +1,5 @@
 import {
   ArrowLeft,
-  Check,
   ChevronLeft,
   ChevronRight,
   ListVideo,
@@ -16,14 +15,13 @@ import {
 
 import { RouterUrl } from "@/app/routers/router-url";
 import { Button } from "@/components/ui/button";
-import type { VideoHighlight, VideoJobListItem } from "@/features/video/api";
 import {
   useVideoEvents,
   useVideoJobDetail,
   useVideoJobs,
 } from "@/features/video/hooks";
+import { FullpageNavigationPanel } from "@/features/video/ui/fullpage-navigation-panel";
 import { HighlightLabelCard } from "@/features/video/ui/highlight-label-card";
-import { cn } from "@/shared/lib/utils";
 
 export const VideoLabelingFullpage = () => {
   const { jobId: jobIdParam } = useParams<{ jobId: string }>();
@@ -185,7 +183,7 @@ export const VideoLabelingFullpage = () => {
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-100 px-6 text-center text-neutral-900">
         <p>영상 라벨링 데이터를 불러오지 못했습니다.</p>
         <Button asChild variant="secondary">
-          <Link to={RouterUrl.영상.목록}>목록으로 돌아가기</Link>
+          <Link to={RouterUrl.영상.풀페이지.목록}>목록으로 돌아가기</Link>
         </Button>
       </div>
     );
@@ -197,8 +195,8 @@ export const VideoLabelingFullpage = () => {
         <div className="mx-auto flex max-w-screen-2xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex min-w-0 items-center gap-3">
             <Link
-              to={RouterUrl.영상.목록}
-              aria-label="영상 목록으로"
+              to={RouterUrl.영상.풀페이지.목록}
+              aria-label="집중 라벨링 목록으로"
               className="rounded-md p-2 text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
             >
               <ArrowLeft className="h-5 w-5" />
@@ -273,7 +271,9 @@ export const VideoLabelingFullpage = () => {
                       </Button>
                     ) : (
                       <Button asChild size="sm" variant="secondary">
-                        <Link to={RouterUrl.영상.목록}>목록으로 돌아가기</Link>
+                        <Link to={RouterUrl.영상.풀페이지.목록}>
+                          목록으로 돌아가기
+                        </Link>
                       </Button>
                     )}
                   </div>
@@ -367,91 +367,3 @@ export const VideoLabelingFullpage = () => {
     </div>
   );
 };
-
-interface FullpageNavigationPanelProps {
-  jobs: VideoJobListItem[];
-  currentJobId: number;
-  highlights: VideoHighlight[];
-  activeIndex: number;
-  onSelectJob: (jobId: number) => void;
-  onSelectHighlight: (highlightId: number) => void;
-  className?: string;
-}
-
-const FullpageNavigationPanel = ({
-  jobs,
-  currentJobId,
-  highlights,
-  activeIndex,
-  onSelectJob,
-  onSelectHighlight,
-  className,
-}: FullpageNavigationPanelProps) => (
-  <div
-    className={cn(
-      "overflow-y-auto rounded-xl border border-neutral-200 bg-white p-3 shadow-sm",
-      className,
-    )}
-  >
-    <section>
-      <h2 className="mb-2 px-2 text-sm font-semibold text-neutral-700">
-        영상 목록
-      </h2>
-      <div className="space-y-1">
-        {jobs.map((job) => (
-          <button
-            key={job.id}
-            type="button"
-            onClick={() => onSelectJob(job.id)}
-            className={cn(
-              "w-full rounded-lg px-3 py-2 text-left",
-              job.id === currentJobId
-                ? "bg-neutral-900 text-white"
-                : "text-neutral-700 hover:bg-neutral-100",
-            )}
-          >
-            <span className="block truncate text-sm font-medium">
-              #{job.id} {job.originalFilename}
-            </span>
-            <span
-              className={cn(
-                "mt-0.5 block text-xs",
-                job.id === currentJobId
-                  ? "text-neutral-300"
-                  : "text-neutral-500",
-              )}
-            >
-              하이라이트 {job.highlightCount}개
-            </span>
-          </button>
-        ))}
-      </div>
-    </section>
-
-    <section className="mt-4 border-t border-neutral-200 pt-4">
-      <h2 className="mb-2 px-2 text-sm font-semibold text-neutral-700">
-        현재 영상 하이라이트
-      </h2>
-      <div className="space-y-1">
-        {highlights.map((highlight, index) => (
-          <button
-            key={highlight.id}
-            type="button"
-            onClick={() => onSelectHighlight(highlight.id)}
-            className={cn(
-              "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm",
-              index === activeIndex
-                ? "bg-indigo-50 font-semibold text-indigo-700"
-                : "text-neutral-600 hover:bg-neutral-100",
-            )}
-          >
-            <span>하이라이트 {index + 1}</span>
-            {highlight.isLabeledByCurrentUser && (
-              <Check className="h-4 w-4 text-green-600" />
-            )}
-          </button>
-        ))}
-      </div>
-    </section>
-  </div>
-);
