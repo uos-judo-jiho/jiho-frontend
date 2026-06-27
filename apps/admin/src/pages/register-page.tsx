@@ -31,7 +31,10 @@ const additionalSchema = z.object({
   phoneNumber: z
     .string()
     .trim()
-    .max(20, "연락처는 20자 이하여야 합니다.")
+    .refine(
+      (v) => v === "" || /^010\d{8}$/.test(v),
+      "연락처는 010으로 시작하는 숫자 11자리여야 합니다. (예: 01012345678)",
+    )
     .optional(),
 });
 
@@ -331,12 +334,24 @@ const ADDITIONAL_FIELDS: {
   label: string;
   placeholder: string;
   type?: string;
+  inputMode?: "numeric";
+  maxLength?: number;
+  /** 입력 시 숫자만 남기고 최대 길이로 자른다(연락처 등). */
+  digitsOnly?: boolean;
 }[] = [
   { name: "name", label: "이름", placeholder: "이름" },
   { name: "major", label: "학과", placeholder: "소속 학과" },
   { name: "year", label: "기수", placeholder: "예) 15", type: "number" },
   { name: "studentId", label: "학번", placeholder: "학번" },
-  { name: "phoneNumber", label: "연락처", placeholder: "010-0000-0000" },
+  {
+    name: "phoneNumber",
+    label: "연락처",
+    placeholder: "01012345678 (- 없이 숫자만)",
+    type: "tel",
+    inputMode: "numeric",
+    maxLength: 11,
+    digitsOnly: true,
+  },
 ];
 
 const AdditionalFieldsSection = ({
@@ -345,7 +360,10 @@ const AdditionalFieldsSection = ({
   hint,
 }: {
   // 두 폼(가입/프로필)이 공유 — AdditionalValues 필드를 register 할 수 있으면 된다.
-  register: (name: keyof AdditionalValues) => UseFormRegisterReturn;
+  register: (
+    name: keyof AdditionalValues,
+    options?: { onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void },
+  ) => UseFormRegisterReturn;
   errors: Partial<Record<keyof AdditionalValues, FieldError>>;
   hint: string;
 }) => (
@@ -358,9 +376,23 @@ const AdditionalFieldsSection = ({
       <Field key={field.name} label={field.label} error={errors[field.name]}>
         <TextInput
           type={field.type}
+          inputMode={field.inputMode}
+          maxLength={field.maxLength}
           placeholder={field.placeholder}
           invalid={!!errors[field.name]}
-          registration={register(field.name)}
+          registration={register(
+            field.name,
+            field.digitsOnly
+              ? {
+                  // "-" 등 숫자가 아닌 입력은 즉시 제거하고 최대 길이로 자른다.
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                    e.target.value = e.target.value
+                      .replace(/\D/g, "")
+                      .slice(0, field.maxLength ?? 11);
+                  },
+                }
+              : undefined,
+          )}
         />
       </Field>
     ))}
@@ -393,15 +425,21 @@ const TextInput = ({
   invalid,
   type = "text",
   placeholder,
+  inputMode,
+  maxLength,
 }: {
   registration: UseFormRegisterReturn;
   invalid?: boolean;
   type?: string;
   placeholder?: string;
+  inputMode?: "numeric";
+  maxLength?: number;
 }) => (
   <input
     type={type}
     placeholder={placeholder}
+    inputMode={inputMode}
+    maxLength={maxLength}
     {...registration}
     className={cn(
       "h-11 w-full rounded-lg border bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2",
