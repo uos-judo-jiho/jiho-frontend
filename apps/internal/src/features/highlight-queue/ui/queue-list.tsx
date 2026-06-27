@@ -1,6 +1,6 @@
 import { type QueueItem } from "@/features/highlight-queue/api/sidecar";
 import { isBusy } from "@/features/highlight-queue/lib/format";
-import { QueueItemCard } from "@/features/highlight-queue/ui/QueueItemCard";
+import { QueueItemCard } from "@/features/highlight-queue/ui/queue-item-card";
 
 export function QueueList({ items }: { items: QueueItem[] }) {
   const pendingCount = items.filter((item) => isBusy(item.status)).length;

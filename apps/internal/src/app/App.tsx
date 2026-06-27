@@ -7,8 +7,8 @@ import {
   logoutAdmin,
   type AdminProfile,
 } from "@/features/auth/api/auth";
-import LoginView from "@/features/auth/ui/LoginView";
-import { UploaderPage } from "@/pages/UploaderPage";
+import LoginView from "@/features/auth/ui/login-view";
+import { UploaderPage } from "@/pages/uploader-page";
 
 const SESSION_QUERY_KEY = ["admin-session"] as const;
 

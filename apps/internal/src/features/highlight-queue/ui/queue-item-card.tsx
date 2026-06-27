@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -46,7 +46,9 @@ export function QueueItemCard({ item }: { item: QueueItem }) {
     mutationFn: () => discardItem(item.id),
     onSuccess: () => void invalidateQueue(),
     onError: (error: unknown) =>
-      toast.error(`삭제 실패: ${sidecarErrorMessage(error, "알 수 없는 오류")}`),
+      toast.error(
+        `삭제 실패: ${sidecarErrorMessage(error, "알 수 없는 오류")}`,
+      ),
   });
 
   const status = STATUS_META[item.status];

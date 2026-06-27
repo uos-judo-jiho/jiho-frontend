@@ -5,8 +5,8 @@ import {
   QUEUE_QUERY_KEY,
 } from "@/features/highlight-queue/api/sidecar";
 import { isBusy } from "@/features/highlight-queue/lib/format";
-import { QueueList } from "@/features/highlight-queue/ui/QueueList";
-import { UploaderForm } from "@/features/highlight-queue/ui/UploaderForm";
+import { QueueList } from "@/features/highlight-queue/ui/queue-list";
+import { UploaderForm } from "@/features/highlight-queue/ui/uploader-form";
 
 export function UploaderPage() {
   const queueQuery = useQuery({
