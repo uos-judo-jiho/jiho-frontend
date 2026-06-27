@@ -158,7 +158,7 @@ app.get("/clip/:sessionId/:index", (req, res) => {
 });
 
 app.post("/upload", async (req, res) => {
-  const sessionId = (req.body as { sessionId?: string }).sessionId;
+  const { sessionId, uploadOriginal } = req.body as { sessionId?: string; uploadOriginal?: boolean };
   const session = sessionId ? sessions.get(sessionId) : undefined;
   if (!session) {
     res.status(404).json({ message: "session not found" });
@@ -208,7 +208,25 @@ app.post("/upload", async (req, res) => {
       uploadedClips += 1;
     }
 
-    res.json({ jobId: ingest.jobId, uploadedClips });
+    // 3) Optionally upload the original (off by default to save bucket capacity).
+    //    The job already groups the original with its highlights, mapping them.
+    let uploadedOriginal = false;
+    if (uploadOriginal) {
+      const buffer = await fsp.readFile(session.tempVideo);
+      const form = new FormData();
+      form.append("file", new Blob([buffer], { type: "video/mp4" }), session.originalFilename);
+
+      const srcRes = await fetch(`${API_BASE_URL}${API_PREFIX}/videos/${ingest.jobId}/source`, {
+        method: "POST",
+        body: form,
+      });
+      if (!srcRes.ok) {
+        throw new Error(`original upload failed (${srcRes.status}): ${await srcRes.text()}`);
+      }
+      uploadedOriginal = true;
+    }
+
+    res.json({ jobId: ingest.jobId, uploadedClips, uploadedOriginal });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }

@@ -16,6 +16,7 @@ export default function App() {
   const [file, setFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
   const [result, setResult] = useState<ProcessResult | null>(null);
+  const [uploadOriginal, setUploadOriginal] = useState(false);
 
   const processMutation = useMutation({
     mutationFn: (video: File) => processVideo(video, setProgress),
@@ -29,9 +30,10 @@ export default function App() {
   });
 
   const uploadMutation = useMutation({
-    mutationFn: (sessionId: string) => uploadSession(sessionId),
+    mutationFn: (sessionId: string) => uploadSession(sessionId, uploadOriginal),
     onSuccess: (data) => {
-      toast.success(`업로드 완료 — job #${data.jobId} (${data.uploadedClips}개 클립)`);
+      const originalNote = data.uploadedOriginal ? ", 원본 포함" : "";
+      toast.success(`업로드 완료 — job #${data.jobId} (${data.uploadedClips}개 클립${originalNote})`);
     },
     onError: (error: unknown) => {
       toast.error(`업로드 실패: ${error instanceof Error ? error.message : "알 수 없는 오류"}`);
@@ -97,14 +99,25 @@ export default function App() {
                 </span>
               )}
             </h2>
-            <button
-              type="button"
-              disabled={uploadMutation.isPending || result.highlights.length === 0}
-              onClick={() => uploadMutation.mutate(result.sessionId)}
-              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50 hover:bg-emerald-500"
-            >
-              {uploadMutation.isPending ? "업로드 중…" : "서버에 업로드"}
-            </button>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 text-sm text-gray-600">
+                <input
+                  type="checkbox"
+                  checked={uploadOriginal}
+                  onChange={(e) => setUploadOriginal(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300"
+                />
+                원본도 업로드
+              </label>
+              <button
+                type="button"
+                disabled={uploadMutation.isPending || result.highlights.length === 0}
+                onClick={() => uploadMutation.mutate(result.sessionId)}
+                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50 hover:bg-emerald-500"
+              >
+                {uploadMutation.isPending ? "업로드 중…" : "서버에 업로드"}
+              </button>
+            </div>
           </div>
 
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">

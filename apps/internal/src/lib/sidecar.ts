@@ -23,6 +23,7 @@ export interface ProcessResult {
 export interface UploadResult {
   jobId: number;
   uploadedClips: number;
+  uploadedOriginal: boolean;
 }
 
 /** Send a local video to the sidecar, which runs the Python worker on it. */
@@ -48,8 +49,11 @@ export async function processVideo(
   };
 }
 
-/** Ask the sidecar to upload the processed highlights to the real API. */
-export async function uploadSession(sessionId: string): Promise<UploadResult> {
-  const { data } = await sidecar.post<UploadResult>("/upload", { sessionId });
+/**
+ * Ask the sidecar to upload the processed highlights to the real API.
+ * When `uploadOriginal` is true the source video is uploaded too (default false).
+ */
+export async function uploadSession(sessionId: string, uploadOriginal = false): Promise<UploadResult> {
+  const { data } = await sidecar.post<UploadResult>("/upload", { sessionId, uploadOriginal });
   return data;
 }
