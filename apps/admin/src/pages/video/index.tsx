@@ -1,13 +1,19 @@
 import { RouterUrl } from "@/app/routers/router-url";
+import { KebabMenu } from "@/components/ui/kebab-menu";
 import { PageHeader } from "@/components/layouts/PageHeader";
 import {
   type VideoJobListItem,
   type VideoJobStatus,
 } from "@/features/video/api";
-import { useVideoJobs } from "@/features/video/hooks";
+import {
+  useDeleteVideoJob,
+  useIsRoot,
+  useVideoJobs,
+} from "@/features/video/hooks";
 import { cn } from "@/shared/lib/utils";
 import { ArrowUpRightFromSquareIcon, Expand, Film } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const STATUS_META: Record<
   VideoJobStatus,
@@ -69,6 +75,24 @@ export const VideoLabelingPage = () => {
 
 const JobRow = ({ job }: { job: VideoJobListItem }) => {
   const status = STATUS_META[job.status];
+  const isRoot = useIsRoot();
+  const deleteJob = useDeleteVideoJob();
+
+  const handleDelete = () => {
+    if (
+      !window.confirm(
+        `'${job.originalFilename}' 영상과 하이라이트·라벨을 모두 삭제할까요? 되돌릴 수 없어요.`,
+      )
+    )
+      return;
+    deleteJob.mutate(
+      { jobId: job.id },
+      {
+        onSuccess: () => toast.success("영상을 삭제했어요."),
+        onError: () => toast.error("영상 삭제에 실패했어요."),
+      },
+    );
+  };
 
   return (
     <li className="flex flex-col gap-2 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:items-center">
@@ -106,6 +130,19 @@ const JobRow = ({ job }: { job: VideoJobListItem }) => {
           <Expand className="h-4 w-4" />
           전체화면으로
         </Link>
+      )}
+      {isRoot && (
+        <KebabMenu
+          className="self-end sm:self-auto"
+          actions={[
+            {
+              label: deleteJob.isPending ? "삭제 중…" : "영상 삭제",
+              onSelect: handleDelete,
+              destructive: true,
+              disabled: deleteJob.isPending,
+            },
+          ]}
+        />
       )}
     </li>
   );
