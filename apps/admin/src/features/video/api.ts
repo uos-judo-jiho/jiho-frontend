@@ -14,8 +14,8 @@ export type VideoEvent =
 export type VideoHighlight =
   v2AdminModel.GetApiV2AdminVideosJobId200JobHighlightsItem &
     Pick<VideoEvent, "isLabeledByCurrentUser">;
-export type LatestVideoLabel =
-  v2AdminModel.GetApiV2AdminVideosJobId200JobHighlightsItemLatestLabel;
+export type CurrentUserLabel =
+  v2AdminModel.GetApiV2AdminVideosJobId200JobHighlightsItemCurrentUserLabel;
 
 export type CreateVideoLabelBody =
   v2AdminModel.PostApiV2AdminHighlightsHighlightIdLabelBody;

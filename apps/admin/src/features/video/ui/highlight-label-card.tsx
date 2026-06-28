@@ -88,7 +88,7 @@ export const HighlightLabelCard = ({
   jobId,
   onSaved,
 }: Props) => {
-  const label = highlight.latestLabel;
+  const label = highlight.currentUserLabel;
   const clipDuration = Math.max(0, highlight.endSec - highlight.startSec);
   const defaultRelativeEventSec =
     label?.correctedEventSec != null
