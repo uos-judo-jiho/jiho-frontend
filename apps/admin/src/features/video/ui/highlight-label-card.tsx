@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { KebabMenu } from "@/components/ui/kebab-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/shared/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +13,11 @@ import {
   type TechniqueResult,
   type VideoHighlight,
 } from "../api";
-import { useCreateHighlightLabel } from "../hooks";
+import {
+  useCreateHighlightLabel,
+  useDeleteHighlight,
+  useIsRoot,
+} from "../hooks";
 import { TECHNIQUE_VALUES } from "../techniques";
 import { TechniqueSelect } from "./technique-select";
 
@@ -91,6 +96,24 @@ export const HighlightLabelCard = ({
       : null;
 
   const mutation = useCreateHighlightLabel(jobId);
+  const isRoot = useIsRoot();
+  const deleteHighlight = useDeleteHighlight(jobId);
+
+  const handleDeleteHighlight = () => {
+    if (
+      !window.confirm(
+        `#${index + 1} 하이라이트와 라벨을 삭제할까요? 되돌릴 수 없어요.`,
+      )
+    )
+      return;
+    deleteHighlight.mutate(
+      { highlightId: highlight.id },
+      {
+        onSuccess: () => toast.success("하이라이트를 삭제했어요."),
+        onError: () => toast.error("하이라이트 삭제에 실패했어요."),
+      },
+    );
+  };
 
   const {
     register,
@@ -168,17 +191,33 @@ export const HighlightLabelCard = ({
           <span className="text-sm font-semibold text-neutral-800">
             #{index + 1}
           </span>
-          {highlight.isLabeledByCurrentUser ? (
-            <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
-              내 라벨 완료
-            </span>
-          ) : (
-            label && (
-              <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
-                기존 라벨 있음
+          <div className="flex items-center gap-1">
+            {highlight.isLabeledByCurrentUser ? (
+              <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                내 라벨 완료
               </span>
-            )
-          )}
+            ) : (
+              label && (
+                <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
+                  기존 라벨 있음
+                </span>
+              )
+            )}
+            {isRoot && (
+              <KebabMenu
+                actions={[
+                  {
+                    label: deleteHighlight.isPending
+                      ? "삭제 중…"
+                      : "하이라이트 삭제",
+                    onSelect: handleDeleteHighlight,
+                    destructive: true,
+                    disabled: deleteHighlight.isPending,
+                  },
+                ]}
+              />
+            )}
+          </div>
         </div>
         <video
           src={highlight.clipUrl}

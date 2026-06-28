@@ -1,23 +1,15 @@
 import { RouterUrl } from "@/app/routers/router-url";
 import { PageHeader } from "@/components/layouts/PageHeader";
+import { KebabMenu } from "@/components/ui/kebab-menu";
+import { type VideoJobListItem } from "@/features/video/api";
 import {
-  type VideoJobListItem,
-  type VideoJobStatus,
-} from "@/features/video/api";
-import { useVideoJobs } from "@/features/video/hooks";
-import { cn } from "@/shared/lib/utils";
-import { ArrowUpRightFromSquareIcon, Expand, Film } from "lucide-react";
+  useDeleteVideoJob,
+  useIsRoot,
+  useVideoJobs,
+} from "@/features/video/hooks";
+import { ArrowUpRightFromSquareIcon, ChevronRight, Film } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const STATUS_META: Record<
-  VideoJobStatus,
-  { label: string; className: string }
-> = {
-  done: { label: "완료", className: "bg-green-100 text-green-700" },
-  processing: { label: "처리중", className: "bg-blue-100 text-blue-700" },
-  uploaded: { label: "업로드됨", className: "bg-neutral-100 text-neutral-600" },
-  failed: { label: "실패", className: "bg-red-100 text-red-700" },
-};
+import { toast } from "sonner";
 
 const formatDate = (value: string) =>
   new Date(value).toLocaleString("ko-KR", {
@@ -57,7 +49,7 @@ export const VideoLabelingPage = () => {
       )}
 
       {jobs && jobs.length > 0 && (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {jobs.map((job) => (
             <JobRow key={job.id} job={job} />
           ))}
@@ -68,44 +60,60 @@ export const VideoLabelingPage = () => {
 };
 
 const JobRow = ({ job }: { job: VideoJobListItem }) => {
-  const status = STATUS_META[job.status];
+  const isRoot = useIsRoot();
+  const deleteJob = useDeleteVideoJob();
+
+  const handleDelete = () => {
+    if (
+      !window.confirm(
+        `'${job.originalFilename}' 영상과 하이라이트·라벨을 모두 삭제할까요? 되돌릴 수 없어요.`,
+      )
+    )
+      return;
+    deleteJob.mutate(
+      { jobId: job.id },
+      {
+        onSuccess: () => toast.success("영상을 삭제했어요."),
+        onError: () => toast.error("영상 삭제에 실패했어요."),
+      },
+    );
+  };
 
   return (
-    <li className="flex flex-col gap-2 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:items-center">
+    <li className="flex flex-col gap-2 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:items-center ">
       <Link
         to={RouterUrl.영상.상세({ id: job.id })}
         className="flex min-w-0 flex-1 items-center justify-between transition-colors hover:text-neutral-600"
       >
-        <div className="flex min-w-0 flex-col gap-1">
-          <span className="truncate font-semibold text-neutral-900">
-            {job.originalFilename}
-          </span>
-          <span className="text-xs text-neutral-500">
-            {formatDate(job.createdAt)}
-          </span>
-        </div>
-        <div className="flex shrink-0 items-center gap-3">
-          <span className="text-sm text-neutral-600">
-            하이라이트 {job.highlightCount}개
-          </span>
-          <span
-            className={cn(
-              "rounded-full px-2.5 py-1 text-xs font-medium",
-              status.className,
-            )}
-          >
-            {status.label}
-          </span>
+        <div className="flex gap-4 items-center justify-between w-full">
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="truncate font-semibold text-neutral-900">
+              {job.originalFilename}
+            </span>
+            <div className="flex shrink-0 items-center gap-3">
+              <span className="text-sm text-neutral-600">
+                하이라이트 {job.highlightCount}개
+              </span>
+            </div>
+            <span className="text-xs text-neutral-500">
+              {formatDate(job.createdAt)}
+            </span>
+          </div>
+          <ChevronRight className="h-5 w-5 text-neutral-600" />
         </div>
       </Link>
-      {job.status === "done" && job.highlightCount > 0 && (
-        <Link
-          to={RouterUrl.영상.풀페이지.상세({ jobId: job.id })}
-          className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-2 text-sm font-semibold text-white hover:bg-neutral-700"
-        >
-          <Expand className="h-4 w-4" />
-          전체화면으로
-        </Link>
+      {isRoot && (
+        <KebabMenu
+          className="self-end sm:self-auto"
+          actions={[
+            {
+              label: deleteJob.isPending ? "삭제 중…" : "영상 삭제",
+              onSelect: handleDelete,
+              destructive: true,
+              disabled: deleteJob.isPending,
+            },
+          ]}
+        />
       )}
     </li>
   );

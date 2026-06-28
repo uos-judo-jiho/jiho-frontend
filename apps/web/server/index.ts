@@ -56,9 +56,11 @@ app.use("/_internal", bffRouter);
 app.use("/_internal", bffErrorHandler);
 
 // API proxy for both development and production
-// Body parsing middleware only for admin routes (other routes are GET-only)
-app.use("/api/admin", express.json({ limit: "10mb" }));
-app.use("/api/admin", express.urlencoded({ extended: true, limit: "10mb" }));
+// Body parsing middleware only for admin routes (other routes are GET-only).
+// admin v2 엔드포인트는 /api/v2/admin/* 경로이므로 그 prefix 에 파서를 마운트해야
+// req.body 가 채워진다. (이전엔 /api/admin 에 걸려 있어 로그인 본문이 유실됐다.)
+app.use("/api/v2/admin", express.json({ limit: "10mb" }));
+app.use("/api/v2/admin", express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Add X-Robots-Tag header to prevent crawling of API routes
 app.use("/api", (_req, res, next) => {
@@ -88,10 +90,18 @@ app.use("/api", async (req, res) => {
 
     console.log(`[${req.method}] ${fullUrl}`);
 
+    // 본문이 있을 때만 JSON 으로 전달한다. 본문 없는 POST(logout/refresh 등)에
+    // Content-Type: application/json 을 붙이면 Fastify 가 "빈 본문" 으로 거부한다.
+    const hasBody =
+      req.method !== "GET" &&
+      req.method !== "HEAD" &&
+      req.body != null &&
+      Object.keys(req.body).length > 0;
+
     const response = await fetch(fullUrl, {
       method: req.method,
       headers: {
-        "Content-Type": "application/json",
+        ...(hasBody && { "Content-Type": "application/json" }),
         "User-Agent": req.headers["user-agent"] || "proxy",
         ...(req.headers.authorization && {
           Authorization: req.headers.authorization,
@@ -100,10 +110,7 @@ app.use("/api", async (req, res) => {
           Cookie: req.headers.cookie,
         }),
       },
-      body:
-        req.method !== "GET" && req.method !== "HEAD"
-          ? JSON.stringify(req.body)
-          : undefined,
+      body: hasBody ? JSON.stringify(req.body) : undefined,
     });
 
     console.log(JSON.stringify(response));

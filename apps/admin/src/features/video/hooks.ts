@@ -35,6 +35,48 @@ export const useVideoEvents = (jobId: number) =>
     },
   });
 
+/** 영상/하이라이트 삭제는 root 권한에서만 허용된다(서버 게이팅과 일치). */
+export const useIsRoot = (): boolean => {
+  const { data } = v2Admin.useGetApiV2AdminMe({
+    axios: { withCredentials: true },
+    query: { retry: false, select: (res) => res.data.user.role === "root" },
+  });
+  return data ?? false;
+};
+
+export const useDeleteVideoJob = () => {
+  const queryClient = useQueryClient();
+
+  return v2Admin.useDeleteApiV2AdminVideosJobId({
+    axios: { withCredentials: true },
+    mutation: {
+      onSuccess: () =>
+        queryClient.invalidateQueries({
+          queryKey: v2Admin.getGetApiV2AdminVideosQueryKey(),
+        }),
+    },
+  });
+};
+
+export const useDeleteHighlight = (jobId: number) => {
+  const queryClient = useQueryClient();
+
+  return v2Admin.useDeleteApiV2AdminHighlightsHighlightId({
+    axios: { withCredentials: true },
+    mutation: {
+      onSuccess: () =>
+        Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: v2Admin.getGetApiV2AdminVideosJobIdQueryKey(jobId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: v2Admin.getGetApiV2AdminVideosJobIdEventsQueryKey(jobId),
+          }),
+        ]),
+    },
+  });
+};
+
 export const useCreateHighlightLabel = (jobId: number) => {
   const queryClient = useQueryClient();
 
