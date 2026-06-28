@@ -7,14 +7,7 @@ import {
   useIsRoot,
   useVideoJobs,
 } from "@/features/video/hooks";
-import {
-  AlignVerticalDistributeCenter,
-  ArrowUpRightFromSquareIcon,
-  ChevronRight,
-  Expand,
-  Film,
-  FlipVertical2Icon,
-} from "lucide-react";
+import { ArrowUpRightFromSquareIcon, ChevronRight, Film } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
