@@ -394,6 +394,7 @@ function SegmentedRadioGroup<T extends string>({
               "border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50",
               "peer-checked:border-neutral-900 peer-checked:bg-neutral-900 peer-checked:font-semibold peer-checked:text-white",
               "peer-focus-visible:ring-2 peer-focus-visible:ring-neutral-400 peer-focus-visible:ring-offset-1",
+              "hover:peer-checked:bg-neutral-800 hover:peer-checked:text-white",
             )}
           >
             {opt.label}
