@@ -62,7 +62,13 @@ const menuItems = [
 ];
 
 export const LNB = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    // 모바일에서는 기본적으로 접힌 상태로 시작한다.
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
   const location = useLocation();
 
   const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
@@ -129,7 +135,7 @@ export const LNB = () => {
               to={item.path}
               title={isCollapsed ? item.label : ""}
               className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors group",
+                "flex items-center px-4 py-3 rounded-lg transition-colors group text-sm",
                 isCollapsed ? "justify-center px-2" : "justify-start",
                 isActive(item.path)
                   ? "bg-neutral-100 text-neutral-900 font-semibold"
@@ -142,6 +148,7 @@ export const LNB = () => {
                   isActive(item.path)
                     ? "text-neutral-900"
                     : "text-neutral-500 group-hover:text-neutral-700",
+                  isCollapsed ? "mr-0" : "mr-3",
                 )}
               />
               <span className={cn("truncate", isCollapsed ? "w-0" : "w-auto")}>
