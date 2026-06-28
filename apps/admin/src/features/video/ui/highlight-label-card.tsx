@@ -4,7 +4,11 @@ import { KebabMenu } from "@/components/ui/kebab-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/shared/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import {
+  Controller,
+  useForm,
+  type UseFormRegisterReturn,
+} from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
@@ -247,30 +251,16 @@ export const HighlightLabelCard = ({
           className="flex flex-col gap-3 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Field label="기술 결과" required>
-            <Controller
-              control={control}
-              name="techniqueResult"
-              render={({ field }) => (
-                <SegmentedControl
-                  options={TECHNIQUE_RESULTS}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
+            <SegmentedRadioGroup
+              options={TECHNIQUE_RESULTS}
+              registration={register("techniqueResult")}
             />
           </Field>
 
           <Field label="점수">
-            <Controller
-              control={control}
-              name="score"
-              render={({ field }) => (
-                <SegmentedControl
-                  options={SCORES}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
+            <SegmentedRadioGroup
+              options={SCORES}
+              registration={register("score")}
             />
           </Field>
 
@@ -376,31 +366,40 @@ const Field = ({
   </label>
 );
 
-function SegmentedControl<T extends string>({
+/**
+ * 라디오 그룹처럼 동작하는 세그먼트 컨트롤.
+ * 네이티브 <input type="radio"> 를 RHF register 로 직접 연결해
+ * 키보드/스크린리더 접근성과 폼 검증(zod enum)을 그대로 살린다.
+ */
+function SegmentedRadioGroup<T extends string>({
   options,
-  value,
-  onChange,
+  registration,
 }: {
   options: { value: T; label: string }[];
-  value: T;
-  onChange: (value: T) => void;
+  registration: UseFormRegisterReturn;
 }) {
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div role="radiogroup" className="flex flex-wrap gap-1.5">
       {options.map((opt) => (
-        <button
-          key={opt.value}
-          type="button"
-          onClick={() => onChange(opt.value)}
-          className={cn(
-            "rounded-md border px-3 py-1.5 text-sm transition-colors",
-            value === opt.value
-              ? "border-neutral-900 bg-neutral-900 font-semibold text-white"
-              : "border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50",
-          )}
-        >
-          {opt.label}
-        </button>
+        <label key={opt.value} className="cursor-pointer">
+          <input
+            type="radio"
+            value={opt.value}
+            {...registration}
+            className="peer sr-only"
+          />
+          <span
+            className={cn(
+              "block rounded-md border px-3 py-1.5 text-sm transition-colors",
+              "border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50",
+              "peer-checked:border-neutral-900 peer-checked:bg-neutral-900 peer-checked:font-semibold peer-checked:text-white",
+              "peer-focus-visible:ring-2 peer-focus-visible:ring-neutral-400 peer-focus-visible:ring-offset-1",
+              "hover:peer-checked:bg-neutral-800 hover:peer-checked:text-white",
+            )}
+          >
+            {opt.label}
+          </span>
+        </label>
       ))}
     </div>
   );

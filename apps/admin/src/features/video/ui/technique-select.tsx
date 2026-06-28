@@ -168,7 +168,7 @@ export const TechniqueSelect = ({ value, onChange, invalid }: Props) => {
           ) : (
             filteredGroups.map((group) => (
               <div key={group.label}>
-                <p className="sticky top-0 bg-neutral-50 px-3 py-1.5 text-xs font-semibold text-neutral-500">
+                <p className="sticky top-[-4px] bg-neutral-50 px-3 py-1.5 text-xs font-semibold text-neutral-500 border-b border-neutral-200">
                   {group.label}
                 </p>
                 {group.options.map((option) => {
