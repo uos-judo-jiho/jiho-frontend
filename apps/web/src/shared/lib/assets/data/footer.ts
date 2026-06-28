@@ -15,6 +15,5 @@ export const footerData = {
     instagram: { title: "인스타그램 | ", href: "@uos_judo" },
     email: { title: "이메일 | ", href: "uosjudojiho@gmail.com" },
     tel: { title: "연락처 | ", href: "010-2222-3333" },
-    dev: { title: "개발자 연락처 | ", href: "uosjudojiho@gmail.com" },
   },
 } as const;

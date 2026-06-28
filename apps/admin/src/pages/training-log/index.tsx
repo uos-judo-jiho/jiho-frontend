@@ -29,6 +29,9 @@ export const TrainingLogPage = () => {
 
   return (
     <FormContainer title="훈련일지 관리">
+      <p className="text-sm text-muted-foreground mb-2">
+        새로운 훈련 일지를 자유롭게 작성해주세요.
+      </p>
       <Row justifyContent="space-between">
         <Link to="/training/write">
           <NewArticleButton>새 글쓰기</NewArticleButton>

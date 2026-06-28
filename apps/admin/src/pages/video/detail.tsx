@@ -1,14 +1,16 @@
 import { RouterUrl } from "@/app/routers/router-url";
-import { KebabMenu } from "@/components/ui/kebab-menu";
 import { PageHeader } from "@/components/layouts/PageHeader";
-import { HighlightLabelCard } from "@/features/video/ui/highlight-label-card";
+import { Button } from "@/components/ui/button";
+import { KebabMenu } from "@/components/ui/kebab-menu";
 import {
   useDeleteVideoJob,
   useIsRoot,
   useVideoEvents,
   useVideoJobDetail,
 } from "@/features/video/hooks";
-import { ArrowLeft, Film } from "lucide-react";
+import { HighlightLabelCard } from "@/features/video/ui/highlight-label-card";
+import { ArrowUpRightFromSquareIcon, Film } from "lucide-react";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -50,14 +52,6 @@ export const VideoLabelingDetailPage = () => {
 
   return (
     <div className="space-y-6 p-6">
-      <Link
-        to={RouterUrl.영상.목록}
-        className="inline-flex items-center gap-1 text-sm text-neutral-500 hover:text-neutral-800"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        목록으로
-      </Link>
-
       <PageHeader
         icon={Film}
         title={job?.originalFilename ?? "영상 라벨링"}
@@ -77,6 +71,19 @@ export const VideoLabelingDetailPage = () => {
           ) : undefined
         }
       />
+
+      <Link
+        to={RouterUrl.영상.풀페이지.상세({ jobId })}
+        title="하이라이트 전체화면으로 이동"
+        className={"mb-4 inline-block"}
+      >
+        <Button>
+          <div className="flex items-center gap-4">
+            전체화면으로 보기
+            <ArrowUpRightFromSquareIcon className="h-5 w-5" />
+          </div>
+        </Button>
+      </Link>
 
       {(isLoading || isEventsLoading) && (
         <p className="text-neutral-500">불러오는 중...</p>

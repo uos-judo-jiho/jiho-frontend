@@ -196,13 +196,7 @@ export const HighlightLabelCard = ({
               <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
                 내 라벨 완료
               </span>
-            ) : (
-              label && (
-                <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
-                  기존 라벨 있음
-                </span>
-              )
-            )}
+            ) : null}
             {isRoot && (
               <KebabMenu
                 actions={[

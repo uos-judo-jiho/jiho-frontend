@@ -134,12 +134,6 @@ const Footer = () => {
                 {footerData.connetUs.email.href}
               </HyperLink>
             </DescriptionItem>
-            <DescriptionItem>
-              {footerData.connetUs.dev.title}
-              <HyperLink to="mailto: uosjudojiho@gmail.com">
-                {footerData.connetUs.dev.href}
-              </HyperLink>
-            </DescriptionItem>
           </DescriptionList>
         </MobileRowColLayout>
         {/* MARK: Home 훈련 일지 지호지 */}
