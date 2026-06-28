@@ -7,6 +7,7 @@ import {
 import { isBusy } from "@/features/highlight-queue/lib/format";
 import { QueueList } from "@/features/highlight-queue/ui/queue-list";
 import { UploaderForm } from "@/features/highlight-queue/ui/uploader-form";
+import { LabelExportPanel } from "@/features/labels/ui/label-export-panel";
 
 export function UploaderPage() {
   const queueQuery = useQuery({
@@ -24,6 +25,7 @@ export function UploaderPage() {
     <main className="mx-auto max-w-5xl px-6 py-8">
       <UploaderForm />
       <QueueList items={items} />
+      <LabelExportPanel />
     </main>
   );
 }
