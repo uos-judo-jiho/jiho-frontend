@@ -475,7 +475,7 @@ const TextInput = ({
           inputMode={inputMode}
           maxLength={maxLength}
           {...registration}
-          className="h-full w-full rounded-r-lg bg-transparent px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
+          className="h-full w-full rounded-r-lg bg-transparent px-4 text-base md:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none"
         />
       </div>
     );
@@ -489,7 +489,7 @@ const TextInput = ({
       maxLength={maxLength}
       {...registration}
       className={cn(
-        "h-11 w-full rounded-lg border bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2",
+        "h-11 w-full rounded-lg border bg-white px-4 text-base md:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2",
         invalid
           ? "border-red-500 focus:border-red-500 focus:ring-red-100"
           : "border-slate-200 focus:border-slate-400 focus:ring-slate-200",

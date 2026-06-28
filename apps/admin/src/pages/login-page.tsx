@@ -88,7 +88,7 @@ export const LoginPage = () => {
               <input
                 id="email"
                 {...register("email")}
-                className="h-11 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                className="h-11 w-full rounded-lg border border-slate-200 bg-white px-4 text-base md:text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 placeholder="이메일(아이디)"
               />
               {errors.email && (
@@ -106,7 +106,7 @@ export const LoginPage = () => {
                 id="password"
                 type="password"
                 {...register("password")}
-                className="h-11 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
+                className="h-11 w-full rounded-lg border border-slate-200 bg-white px-4 text-base md:text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200"
                 placeholder="비밀번호"
               />
               {errors.password && (
