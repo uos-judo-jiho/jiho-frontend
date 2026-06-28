@@ -21,13 +21,13 @@ const HomeSectionMore = () => {
 
   return (
     <SheetWrapper>
-      <div className="flex flex-col w-full max-w-4xl mx-auto my-16 px-4">
+      <div className="flex flex-col w-full max-w-4xl mx-auto px-4">
         <Title
           title={"게시글 전체보기"}
           color={Constants.LOGO_BLACK}
           heading={2}
         />
-        <div className="flex flex-col gap-6 w-full pt-5">
+        <div className="flex flex-col gap-2 w-full pt-5 md:gap-6">
           <MoreCard title="훈련일지" linkTo="/photo" data={trainings} />
           <MoreCard
             title="지호지"

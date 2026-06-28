@@ -1,5 +1,6 @@
 import { RouterUrl } from "@/app/routers/router-url";
 import { PageHeader } from "@/components/layouts/PageHeader";
+import { Button } from "@/components/ui/button";
 import { KebabMenu } from "@/components/ui/kebab-menu";
 import { type VideoJobListItem } from "@/features/video/api";
 import {
@@ -27,16 +28,20 @@ export const VideoLabelingPage = () => {
         title="하이라이트 라벨링"
         description="분석된 영상 하이라이트를 검토하고 라벨을 달아요."
         className="justify-normal gap-4"
-        rightElement={
-          <Link
-            to={RouterUrl.영상.풀페이지.목록}
-            title="하이라이트 전체화면으로 이동"
-          >
-            <ArrowUpRightFromSquareIcon className="h-5 w-5 text-neutral-600 transition-colors hover:text-neutral-900" />
-          </Link>
-        }
       />
 
+      <Link
+        to={RouterUrl.영상.풀페이지.목록}
+        title="하이라이트 전체화면으로 이동"
+        className={"mb-4 inline-block"}
+      >
+        <Button>
+          <div className="flex items-center gap-4">
+            전체화면으로 보기
+            <ArrowUpRightFromSquareIcon className="h-5 w-5" />
+          </div>
+        </Button>
+      </Link>
       {isLoading && <p className="text-neutral-500">불러오는 중...</p>}
       {isError && (
         <p className="text-red-600">
