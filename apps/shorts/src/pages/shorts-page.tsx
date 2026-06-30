@@ -2,6 +2,7 @@ import { useVideoHighlights, useVideoJobs, useNextJobPrefetch } from "@/hooks/us
 import { useIsLandscape } from "@/hooks/use-orientation";
 import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
+import { OnboardingOverlay, useOnboarding } from "@/components/onboarding-overlay";
 import { RotatePrompt } from "@/components/rotate-prompt";
 import { ShortsCard } from "@/components/shorts-card";
 import { VideoPreloader } from "@/components/video-preloader";
@@ -9,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 export const ShortsPage = () => {
   const isLandscape = useIsLandscape();
+  const { needsOnboarding, complete } = useOnboarding();
   const jobsQuery = useVideoJobs();
   const jobs = jobsQuery.data ?? [];
 
@@ -148,6 +150,7 @@ export const ShortsPage = () => {
 
   return (
     <div className="relative h-dvh overflow-hidden bg-black">
+      {needsOnboarding && <OnboardingOverlay onDone={complete} />}
       {!isLandscape && <RotatePrompt />}
       <div className="absolute inset-x-0 top-0 z-30 h-0.5 bg-white/10">
         <div

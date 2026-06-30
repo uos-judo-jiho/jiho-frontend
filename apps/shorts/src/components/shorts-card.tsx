@@ -2,11 +2,13 @@ import { cn } from "@/lib/utils";
 import { useCreateLabel } from "@/hooks/use-highlights";
 import { useSwipe, type SwipeDirection } from "@/hooks/use-swipe";
 import { Check, Heart, Tag } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { VideoHighlight } from "@/api/video";
 import { SwipeFeedback, type FeedbackType } from "./swipe-feedback";
 import { TechniqueSheet } from "./technique-sheet";
+
+const CONTROLS_HIDE_DELAY = 3000;
 
 interface Props {
   highlight: VideoHighlight;
@@ -18,7 +20,10 @@ interface Props {
 
 export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [isPaused, setIsPaused] = useState(false);
+  const [showControls, setShowControls] = useState(true);
   const [feedback, setFeedback] = useState<FeedbackType>(null);
   const [liked, setLiked] = useState(false);
   const [technique, setTechnique] = useState<string | null>(
@@ -26,6 +31,19 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
   );
   const [sheetOpen, setSheetOpen] = useState(false);
   const mutation = useCreateLabel(jobId);
+
+  const resetControlsTimer = useCallback(() => {
+    setShowControls(true);
+    if (controlsTimer.current) clearTimeout(controlsTimer.current);
+    controlsTimer.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_DELAY);
+  }, []);
+
+  useEffect(() => {
+    resetControlsTimer();
+    return () => {
+      if (controlsTimer.current) clearTimeout(controlsTimer.current);
+    };
+  }, [resetControlsTimer]);
 
   const saveLabel = useCallback(
     (params: { techniqueResult: "NONE" | "SUCCESS"; score: "NONE" | "WAZA_ARI" }) => {
@@ -85,11 +103,20 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
     }
   }, []);
 
-  const { onTouchStart, onTouchEnd } = useSwipe({
+  const { onTouchStart: swipeTouchStart, onTouchEnd } = useSwipe({
     onSwipe: handleSwipe,
     onDoubleTap: handleDoubleTap,
     onTap: handleTap,
   });
+
+  // 터치 시 컨트롤 타이머 리셋 후 스와이프 핸들러로 위임
+  const onTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      resetControlsTimer();
+      swipeTouchStart(e);
+    },
+    [resetControlsTimer, swipeTouchStart],
+  );
 
   const isAlreadyLabeled = highlight.isLabeledByCurrentUser;
   const clipDuration = (highlight.endSec - highlight.startSec).toFixed(1);
@@ -97,7 +124,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-black">
-      {/* ── 영상 (full-screen, 모든 컨트롤은 overlay) ── */}
+      {/* ── 영상 (full-screen) ── */}
       <div
         className="absolute inset-0"
         onTouchStart={onTouchStart}
@@ -127,10 +154,15 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
 
       <SwipeFeedback feedback={feedback} onDone={() => setFeedback(null)} />
 
-      {/* 하단 그라데이션 */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-black/80 to-transparent" />
+      {/* 하단 그라데이션 — 컨트롤 표시 여부와 무관하게 항상 렌더 */}
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-500",
+          showControls ? "opacity-100" : "opacity-0",
+        )}
+      />
 
-      {/* 상단 좌: 카운터 + 완료 뱃지 */}
+      {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
       <div className="absolute left-4 top-4 z-20 flex items-center gap-2">
         <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
           {index + 1} / {total}
@@ -143,7 +175,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
         )}
       </div>
 
-      {/* 우측: 액션 버튼 (세로 중앙) */}
+      {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
       <div className="absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-5">
         <button
           type="button"
@@ -178,8 +210,13 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
         </button>
       </div>
 
-      {/* 하단 좌: 기술명 태그 + 메타 (버튼 바 바로 위) */}
-      <div className="pointer-events-none absolute bottom-14 left-4 right-16 z-20">
+      {/* 하단 좌: 기술명 태그 + 메타 */}
+      <div
+        className={cn(
+          "pointer-events-none absolute bottom-14 left-4 right-16 z-20 transition-opacity duration-500",
+          showControls ? "opacity-100" : "opacity-0",
+        )}
+      >
         {technique && (
           <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
             <Tag className="h-3 w-3" />
@@ -191,40 +228,47 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
         </p>
       </div>
 
-      {/* 하단 버튼 바 (overlay) */}
-      {!isAlreadyLabeled ? (
-        <div className="absolute inset-x-0 bottom-0 z-20 grid grid-cols-2 border-t border-white/10 bg-black/70 backdrop-blur-sm">
-          <button
-            type="button"
-            disabled={mutation.isPending}
-            onClick={() => {
-              setFeedback("none");
-              saveLabel({ techniqueResult: "NONE", score: "NONE" });
-            }}
-            className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-red-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
-          >
-            <span className="text-lg">👈</span>
-            무효
-          </button>
-          <button
-            type="button"
-            disabled={mutation.isPending}
-            onClick={() => {
-              setFeedback("success");
-              saveLabel({ techniqueResult: "SUCCESS", score: "WAZA_ARI" });
-            }}
-            className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-green-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
-          >
-            득점
-            <span className="text-lg">👉</span>
-          </button>
-        </div>
-      ) : (
-        <div className="absolute inset-x-0 bottom-0 z-20 flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 py-3.5 text-sm text-neutral-400 backdrop-blur-sm">
-          <Check className="h-4 w-4 text-green-400" />
-          라벨링 완료 · 스와이프해서 다음으로
-        </div>
-      )}
+      {/* 하단 버튼 바 — 터치 시 등장, 3초 후 자동 숨김 */}
+      <div
+        className={cn(
+          "absolute inset-x-0 bottom-0 z-20 transition-all duration-500",
+          showControls ? "translate-y-0 opacity-100" : "translate-y-full opacity-0",
+        )}
+      >
+        {!isAlreadyLabeled ? (
+          <div className="grid grid-cols-2 border-t border-white/10 bg-black/70 backdrop-blur-sm">
+            <button
+              type="button"
+              disabled={mutation.isPending}
+              onClick={() => {
+                setFeedback("none");
+                saveLabel({ techniqueResult: "NONE", score: "NONE" });
+              }}
+              className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-red-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
+            >
+              <span className="text-lg">👈</span>
+              무효
+            </button>
+            <button
+              type="button"
+              disabled={mutation.isPending}
+              onClick={() => {
+                setFeedback("success");
+                saveLabel({ techniqueResult: "SUCCESS", score: "WAZA_ARI" });
+              }}
+              className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-green-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
+            >
+              득점
+              <span className="text-lg">👉</span>
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 py-3.5 text-sm text-neutral-400 backdrop-blur-sm">
+            <Check className="h-4 w-4 text-green-400" />
+            라벨링 완료 · 스와이프해서 다음으로
+          </div>
+        )}
+      </div>
 
       <TechniqueSheet
         open={sheetOpen}
