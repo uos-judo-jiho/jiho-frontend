@@ -64,7 +64,7 @@ export default defineConfig({
     },
   },
   preview: {
-    port: 3002,
+    port: 3003,
     proxy: {
       "/api": {
         target: "https://api.uosjudo.com",
