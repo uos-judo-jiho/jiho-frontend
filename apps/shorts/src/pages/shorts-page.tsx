@@ -1,7 +1,8 @@
-import { useVideoHighlights, useVideoJobs } from "@/hooks/use-highlights";
+import { useVideoHighlights, useVideoJobs, useNextJobPrefetch } from "@/hooks/use-highlights";
 import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { ShortsCard } from "@/components/shorts-card";
+import { VideoPreloader } from "@/components/video-preloader";
 import { cn } from "@/lib/utils";
 
 export const ShortsPage = () => {
@@ -23,6 +24,18 @@ export const ShortsPage = () => {
 
   const activeHighlights = unlabeledHighlights.length > 0 ? unlabeledHighlights : allHighlights;
   const activeHighlight = activeHighlights[highlightIndex];
+
+  // 다음 2개 클립 URL — 현재 job 내 남은 것 + 다음 job 첫 번째
+  const preloadUrls = useMemo(() => {
+    const urls: string[] = [];
+    for (let i = highlightIndex + 1; i <= highlightIndex + 2 && i < activeHighlights.length; i++) {
+      urls.push(activeHighlights[i].clipUrl);
+    }
+    return urls;
+  }, [activeHighlights, highlightIndex]);
+
+  // 마지막 2개 하이라이트 진입 시 다음 job 데이터 prefetch
+  useNextJobPrefetch(jobs, jobIndex, highlightIndex, activeHighlights.length);
 
   const moveToNext = useCallback(() => {
     const nextIndex = highlightIndex + 1;
@@ -184,6 +197,8 @@ export const ShortsPage = () => {
         total={activeHighlights.length}
         onLabeled={moveToNext}
       />
+
+      <VideoPreloader urls={preloadUrls} />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import {
   createHighlightLabel,
@@ -8,6 +8,7 @@ import {
   getVideoJobs,
   type CreateLabelBody,
   type VideoHighlight,
+  type VideoJobListItem,
 } from "@/api/video";
 
 export const useVideoJobs = () =>
@@ -56,6 +57,39 @@ export const useVideoHighlights = (jobId: number): {
     isLoading: detailQuery.isLoading || eventsQuery.isLoading,
     isError: detailQuery.isError || eventsQuery.isError,
   };
+};
+
+/**
+ * 현재 하이라이트가 마지막 N개 안에 들어오면 다음 job의 상세 + 이벤트를
+ * 미리 prefetch해서 스와이프 전환 시 로딩 없이 바로 보이도록 한다.
+ */
+const PREFETCH_AHEAD = 2;
+
+export const useNextJobPrefetch = (
+  jobs: VideoJobListItem[],
+  jobIndex: number,
+  highlightIndex: number,
+  totalHighlights: number,
+) => {
+  const queryClient = useQueryClient();
+  const nextJob = jobs[jobIndex + 1];
+
+  useEffect(() => {
+    if (!nextJob) return;
+    const remainingAfterCurrent = totalHighlights - highlightIndex - 1;
+    if (remainingAfterCurrent > PREFETCH_AHEAD) return;
+
+    void queryClient.prefetchQuery({
+      queryKey: ["videoJobDetail", nextJob.id],
+      queryFn: () => getVideoJobDetail(nextJob.id),
+      staleTime: 30 * 1000,
+    });
+    void queryClient.prefetchQuery({
+      queryKey: ["videoEvents", nextJob.id],
+      queryFn: () => getVideoEvents(nextJob.id),
+      staleTime: 30 * 1000,
+    });
+  }, [nextJob, highlightIndex, totalHighlights, queryClient]);
 };
 
 export const useCreateLabel = (jobId: number) => {
