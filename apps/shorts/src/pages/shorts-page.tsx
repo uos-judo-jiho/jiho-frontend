@@ -1,7 +1,8 @@
 import { useVideoHighlights, useVideoJobs, useNextJobPrefetch } from "@/hooks/use-highlights";
 import { useIsLandscape } from "@/hooks/use-orientation";
 import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { OnboardingOverlay, useOnboarding } from "@/components/onboarding-overlay";
 import { RotatePrompt } from "@/components/rotate-prompt";
 import { ShortsCard } from "@/components/shorts-card";
@@ -11,6 +12,16 @@ import { cn } from "@/lib/utils";
 export const ShortsPage = () => {
   const isLandscape = useIsLandscape();
   const { needsOnboarding, complete } = useOnboarding();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Capture initial URL params once — refs are stable across renders
+  const initialJobId = useRef(searchParams.get("jobId"));
+  const initialHighlightId = useRef(searchParams.get("highlightId"));
+  // Skip restoration phase if there are no URL params to restore
+  const [urlInitialized, setUrlInitialized] = useState(
+    !initialJobId.current && !initialHighlightId.current,
+  );
+
   const jobsQuery = useVideoJobs();
   const jobs = jobsQuery.data ?? [];
 
@@ -26,9 +37,36 @@ export const ShortsPage = () => {
   );
 
   const allHighlights = highlights;
-
   const activeHighlights = unlabeledHighlights.length > 0 ? unlabeledHighlights : allHighlights;
   const activeHighlight = activeHighlights[highlightIndex];
+
+  // Restore jobIndex from URL once jobs load
+  useEffect(() => {
+    if (urlInitialized || !initialJobId.current || jobs.length === 0) return;
+    const idx = jobs.findIndex((j) => String(j.id) === initialJobId.current);
+    if (idx !== -1) setJobIndex(idx);
+    if (!initialHighlightId.current) setUrlInitialized(true);
+  }, [jobs, urlInitialized]);
+
+  // Restore highlightIndex from URL once highlights for the target job load
+  useEffect(() => {
+    if (urlInitialized || !initialHighlightId.current || activeHighlights.length === 0) return;
+    const idx = activeHighlights.findIndex((h) => String(h.id) === initialHighlightId.current);
+    if (idx !== -1) setHighlightIndex(idx);
+    setUrlInitialized(true);
+  }, [activeHighlights, urlInitialized]);
+
+  // Sync URL to current state; replace: true keeps the history stack clean
+  useEffect(() => {
+    if (!urlInitialized) return;
+    const job = jobs[jobIndex];
+    const highlight = activeHighlights[highlightIndex];
+    if (!job || !highlight) return;
+    setSearchParams(
+      { jobId: String(job.id), highlightId: String(highlight.id) },
+      { replace: true },
+    );
+  }, [urlInitialized, jobIndex, highlightIndex, jobs, activeHighlights, setSearchParams]);
 
   // 다음 2개 클립 URL — 현재 job 내 남은 것 + 다음 job 첫 번째
   const preloadUrls = useMemo(() => {
