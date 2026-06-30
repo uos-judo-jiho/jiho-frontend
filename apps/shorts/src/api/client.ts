@@ -9,7 +9,8 @@ apiClient.interceptors.response.use(
   (res) => res,
   (error) => {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      window.location.href = "https://admin.uosjudo.com/login";
+      const returnUrl = encodeURIComponent(window.location.href);
+      window.location.href = `https://admin.uosjudo.com/login?redirectTo=${returnUrl}`;
     }
     return Promise.reject(error);
   },
