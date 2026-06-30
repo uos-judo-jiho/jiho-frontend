@@ -22,7 +22,7 @@ import { VideoFullpageListPage } from "@/pages/video/fullpage";
 import { VideoLabelingFullpage } from "@/pages/video/fullpage/detail";
 import WriteArticlePage from "@/pages/WriteArticlePage";
 import { v2Admin } from "@packages/api";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useSearchParams } from "react-router-dom";
 import { RouterUrl } from "./router-url";
 
 const StaffAndAbove = ["root", "president", "manager", "staff"];
@@ -68,10 +68,52 @@ const ProtectedRouteInner = ({
   return <>{children}</>;
 };
 
+const resolveRedirectUrl = (redirectTo: string | null) => {
+  if (!redirectTo) {
+    return RouterUrl.홈;
+  }
+
+  try {
+    const url = new URL(redirectTo, window.location.origin);
+    if (url.origin !== window.location.origin) {
+      return RouterUrl.홈;
+    }
+    // 리다이렉트 대상이 다시 로그인/회원가입이면 루프 방지를 위해 홈으로
+    if (url.pathname === RouterUrl.로그인 || url.pathname === RouterUrl.회원가입) {
+      return RouterUrl.홈;
+    }
+    return url.pathname + url.search + url.hash;
+  } catch (error) {
+    return RouterUrl.홈;
+  }
+};
+
+/**
+ * 이미 로그인/회원가입 한 유저가 /login, /register 로 접근한 경우
+ * redirectTo 쿼리 파라미터로 이동 (없으면 홈)
+ */
+const AuthRedirect = () => {
+  const [searchParams] = useSearchParams();
+  return <Navigate to={resolveRedirectUrl(searchParams.get("redirectTo"))} replace />;
+};
+
 export const AuthRouter = () => {
   return (
     <Routes>
       <Route path={RouterUrl.홈} element={WithHelmet(<HomePage />, "홈")} />
+
+      {/**
+       * 로그인/회원가입
+       * - 이미 로그인/회원가입 한 유저의 경우, /login, /register ?redirectTo={url} 로 이동
+       * */}
+      <Route
+        path={RouterUrl.로그인}
+        element={WithHelmet(<AuthRedirect />, "로그인")}
+      />
+      <Route
+        path={RouterUrl.회원가입}
+        element={WithHelmet(<AuthRedirect />, "회원가입")}
+      />
 
       {/* 마이페이지 */}
       <Route
