@@ -1,7 +1,7 @@
-import { useVideoHighlights, useVideoJobs } from "@/hooks/useHighlights";
+import { useVideoHighlights, useVideoJobs } from "@/hooks/use-highlights";
 import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-import { ShortsCard } from "@/components/ShortsCard";
+import { ShortsCard } from "@/components/shorts-card";
 import { cn } from "@/lib/utils";
 
 export const ShortsPage = () => {

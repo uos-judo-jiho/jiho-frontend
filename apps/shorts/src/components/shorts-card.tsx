@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
-import { useCreateLabel } from "@/hooks/useHighlights";
-import { useSwipe, type SwipeDirection } from "@/hooks/useSwipe";
+import { useCreateLabel } from "@/hooks/use-highlights";
+import { useSwipe, type SwipeDirection } from "@/hooks/use-swipe";
 import { Check, Heart, Tag } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { VideoHighlight } from "@/api/video";
-import { SwipeFeedback, type FeedbackType } from "./SwipeFeedback";
-import { TechniqueSheet } from "./TechniqueSheet";
+import { SwipeFeedback, type FeedbackType } from "./swipe-feedback";
+import { TechniqueSheet } from "./technique-sheet";
 
 interface Props {
   highlight: VideoHighlight;
