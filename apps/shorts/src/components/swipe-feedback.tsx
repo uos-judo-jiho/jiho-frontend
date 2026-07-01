@@ -39,22 +39,22 @@ export const SwipeDragOverlay = ({
       }
     : direction === "right"
       ? {
-          Icon: ThumbsUp,
-          label: "기술성공",
-          border: "border-green-400",
-          text: "text-green-300",
-          bg: "bg-green-500/15",
-        }
-      : {
           Icon: Swords,
           label: "기술시도",
           border: "border-amber-400",
           text: "text-amber-300",
           bg: "bg-amber-500/15",
+        }
+      : {
+          Icon: ThumbsUp,
+          label: "기술성공",
+          border: "border-green-400",
+          text: "text-green-300",
+          bg: "bg-green-500/15",
         };
 
   const { Icon } = stamp;
-  // 스탬프는 미는 방향과 같은 쪽에 고정 — 오른쪽=기술성공, 왼쪽=기술시도가 직관적.
+  // 스탬프는 미는 방향과 같은 쪽에 고정 — 왼쪽=기술성공, 오른쪽=기술시도가 직관적.
   const side = labeled
     ? "left-1/2 -translate-x-1/2"
     : direction === "right"

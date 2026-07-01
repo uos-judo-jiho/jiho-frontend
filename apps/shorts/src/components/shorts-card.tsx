@@ -127,7 +127,6 @@ export const ShortsCard = ({
         },
         {
           onSuccess: () => {
-            toast.success("저장됨");
             setTimeout(onLabeled, 700);
           },
           onError: () => toast.error("저장 실패. 다시 시도해주세요."),
@@ -147,7 +146,8 @@ export const ShortsCard = ({
         onLabeled();
         return;
       }
-      if (direction === "right") {
+      // 왼쪽=기술성공, 오른쪽=기술시도.
+      if (direction === "left") {
         setFeedback("success");
         saveLabel({ techniqueResult: "SUCCESS", score });
       } else {

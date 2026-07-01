@@ -215,7 +215,7 @@ export const ShortsPage = () => {
     setVideoTime({ current: 0, duration: 0 });
   }, [activeHighlight?.id]);
 
-  // 방치 데모 — 오른쪽(기술성공)↔왼쪽(기술시도)을 번갈아 끌고 잠깐 멈췄다 놓는
+  // 방치 데모 — 왼쪽(기술성공)↔오른쪽(기술시도)을 번갈아 끌고 잠깐 멈췄다 놓는
   // 가상 드래그를 만든다(실제 스와이프와 동일한 이동·스탬프).
   useEffect(() => {
     if (!showSwipeHint) return;
