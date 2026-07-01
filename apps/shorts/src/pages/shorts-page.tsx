@@ -157,6 +157,10 @@ export const ShortsPage = () => {
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   const loopCount = useRef(0);
   const lastTime = useRef(0);
+  // 현재 클립의 재생 시간(초). 하단 스크러버 표시·시크에 사용.
+  const [videoTime, setVideoTime] = useState({ current: 0, duration: 0 });
+  const scrubTrackRef = useRef<HTMLDivElement>(null);
+  const scrubbing = useRef(false);
 
   // 반복 재생 감지(loop 재시작) → 2회 이후 3번째 재생부터 라벨 스와이프 힌트.
   const handleTimeUpdate = useCallback(() => {
@@ -173,6 +177,10 @@ export const ShortsPage = () => {
       }
     }
     lastTime.current = v.currentTime;
+    setVideoTime({
+      current: v.currentTime,
+      duration: Number.isFinite(v.duration) ? v.duration : 0,
+    });
   }, [activeHighlight]);
 
   const handleInteract = useCallback(() => {
@@ -180,7 +188,18 @@ export const ShortsPage = () => {
     loopCount.current = 0;
   }, []);
 
-  // 현재 클립이 바뀌면 재생을 시작하고 힌트 카운트를 초기화.
+  // 스크러버 트랙 위 x좌표 → 해당 시각으로 시크.
+  const seekToClientX = useCallback((clientX: number) => {
+    const track = scrubTrackRef.current;
+    const v = currentVideoRef.current;
+    if (!track || !v || !Number.isFinite(v.duration) || v.duration <= 0) return;
+    const rect = track.getBoundingClientRect();
+    const frac = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    v.currentTime = frac * v.duration;
+    setVideoTime({ current: v.currentTime, duration: v.duration });
+  }, []);
+
+  // 현재 클립이 바뀌면 재생을 시작하고 힌트/시간 상태를 초기화.
   useEffect(() => {
     const v = currentVideoRef.current;
     if (v) {
@@ -190,6 +209,7 @@ export const ShortsPage = () => {
     loopCount.current = 0;
     lastTime.current = 0;
     setShowSwipeHint(false);
+    setVideoTime({ current: 0, duration: 0 });
   }, [activeHighlight?.id]);
 
   // 드래그 중: 손가락을 따라 피드가 이동(끝단엔 고무줄 저항).
@@ -344,25 +364,9 @@ export const ShortsPage = () => {
     );
   }
 
-  const progress =
-    highlights.length > 0
-      ? Math.round(
-          ((highlights.length - unlabeledHighlights.length) /
-            highlights.length) *
-            100,
-        )
-      : 0;
-
   return (
     <div className="relative h-dvh overflow-hidden bg-black">
       {needsOnboarding && <OnboardingOverlay onDone={complete} />}
-
-      <div className="absolute inset-x-0 top-[var(--safe-top)] z-30 h-0.5 bg-white/10">
-        <div
-          className="h-full bg-indigo-500 transition-all duration-500"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
 
       {/* 세로 피드 — 드래그 중 위/아래 이웃 클립이 손가락을 따라 미리 보인다 */}
       <div
@@ -410,6 +414,7 @@ export const ShortsPage = () => {
                 preload="auto"
                 muted={offset !== 0}
                 onTimeUpdate={offset === 0 ? handleTimeUpdate : undefined}
+                onLoadedMetadata={offset === 0 ? handleTimeUpdate : undefined}
                 className={cn(
                   "h-full w-full bg-black object-contain",
                   offset === 0 && showSwipeHint && "animate-swipe-hint",
@@ -440,6 +445,50 @@ export const ShortsPage = () => {
 
       {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
       <div ref={setControlsLayer} />
+
+      {/* 하단 재생 스크러버 — 현재 클립의 시간 표시 + 드래그로 시크(라벨바 위) */}
+      <div className="fixed inset-x-0 bottom-[calc(var(--safe-bottom)+3.5rem)] z-30 px-4">
+        <div className="flex items-center gap-2">
+          <span className="w-9 text-right text-[10px] font-medium tabular-nums text-white/80 drop-shadow">
+            {videoTime.current.toFixed(1)}
+          </span>
+          <div
+            ref={scrubTrackRef}
+            className="relative flex-1 cursor-pointer touch-none py-2"
+            onPointerDown={(e) => {
+              scrubbing.current = true;
+              e.currentTarget.setPointerCapture(e.pointerId);
+              handleInteract();
+              seekToClientX(e.clientX);
+            }}
+            onPointerMove={(e) => {
+              if (scrubbing.current) seekToClientX(e.clientX);
+            }}
+            onPointerUp={() => {
+              scrubbing.current = false;
+            }}
+            onPointerCancel={() => {
+              scrubbing.current = false;
+            }}
+          >
+            <div className="h-1 rounded-full bg-white/25">
+              <div
+                className="h-full rounded-full bg-white"
+                style={{
+                  width: `${
+                    videoTime.duration > 0
+                      ? (videoTime.current / videoTime.duration) * 100
+                      : 0
+                  }%`,
+                }}
+              />
+            </div>
+          </div>
+          <span className="w-9 text-[10px] font-medium tabular-nums text-white/60 drop-shadow">
+            {videoTime.duration.toFixed(1)}
+          </span>
+        </div>
+      </div>
 
       <VideoPreloader urls={preloadUrls} />
     </div>
