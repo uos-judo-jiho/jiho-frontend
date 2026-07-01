@@ -1,5 +1,6 @@
 import { useClipNavigation } from "@/features/clip-navigation";
 import { useIdleHint } from "@/features/idle-hint";
+import { animate, motion, useMotionValue } from "framer-motion";
 import {
   OnboardingOverlay,
   useOnboarding,
@@ -9,6 +10,9 @@ import { VideoPreloader } from "@/shared/ui/video-preloader";
 import { useOrientationMode } from "@/shared/lib/use-orientation";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+
+// 세로 피드 스냅/전환 트윈 — 기존 CSS transition(0.32s, 같은 cubic-bezier)과 동일.
+const FEED_SNAP = { duration: 0.32, ease: [0.16, 1, 0.3, 1] } as const;
 
 export const ShortsPage = () => {
   const { needsOnboarding, complete } = useOnboarding();
@@ -31,10 +35,9 @@ export const ShortsPage = () => {
     markLabeled,
   } = useClipNavigation();
 
-  const [dragY, setDragY] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [noTransition, setNoTransition] = useState(false);
-  const pendingCommit = useRef<"next" | "prev" | null>(null);
+  // 세로 피드 위치(px) — framer-motion MotionValue. 드래그는 set()으로 즉시 추종,
+  // 스냅/커밋은 animate()로 트윈(0.32s). 리렌더 없이 transform만 갱신된다.
+  const feedY = useMotionValue(0);
   const feedRef = useRef<HTMLDivElement>(null);
   // 카드 컨트롤을 포탈할 고정 레이어(피드 transform 밖). 스크롤 시 UI 고정용.
   const [controlsLayer, setControlsLayer] = useState<HTMLDivElement | null>(
@@ -98,61 +101,60 @@ export const ShortsPage = () => {
     setVideoTime({ current: 0, duration: 0 });
   }, [activeHighlight?.id]);
 
-  // 드래그 중: 손가락을 따라 피드가 이동(끝단엔 고무줄 저항).
+  // 커밋 후 인덱스를 바꾸고 위치를 즉시 0으로 되돌린다(jump=무전환) — 끊김 없음.
+  const commitMove = useCallback(
+    (dir: "next" | "prev") => {
+      if (dir === "next") moveToNext();
+      else moveToPrev();
+      feedY.jump(0);
+    },
+    [feedY, moveToNext, moveToPrev],
+  );
+
+  // 드래그 중: 손가락을 따라 피드가 이동(끝단엔 고무줄 저항). set()은 즉시 반영.
   const handleVerticalDragMove = useCallback(
     (deltaY: number) => {
-      setDragging(true);
       let dy = deltaY;
       if (dy < 0 && !canNext) dy *= 0.25;
       if (dy > 0 && !canPrev) dy *= 0.25;
-      setDragY(dy);
+      feedY.set(dy);
     },
-    [canNext, canPrev],
+    [canNext, canPrev, feedY],
   );
 
   // 임계값 미달로 손을 떼면 원위치로 스냅.
   const handleVerticalDragCancel = useCallback(() => {
-    setDragging(false);
-    setDragY(0);
-  }, []);
+    animate(feedY, 0, FEED_SNAP);
+  }, [feedY]);
 
-  // 임계값 넘으면 이웃 클립 위치까지 애니메이션(전환 종료 시 인덱스 확정).
+  // 임계값 넘으면 이웃 클립 위치까지 애니메이션하고 완료 시 인덱스를 확정한다.
   const handleVerticalSwipe = useCallback(
     (direction: "up" | "down") => {
-      setDragging(false);
       const height = feedRef.current?.clientHeight ?? window.innerHeight;
+      // onComplete는 자연 완료 시에만 호출 — 드래그로 중단되면 커밋하지 않는다
+      // (기존 CSS transitionend 의미와 동일).
       if (direction === "up") {
         if (!canNext) {
-          setDragY(0);
+          animate(feedY, 0, FEED_SNAP);
           return;
         }
-        pendingCommit.current = "next";
-        setDragY(-height);
+        animate(feedY, -height, {
+          ...FEED_SNAP,
+          onComplete: () => commitMove("next"),
+        });
       } else {
         if (!canPrev) {
-          setDragY(0);
+          animate(feedY, 0, FEED_SNAP);
           return;
         }
-        pendingCommit.current = "prev";
-        setDragY(height);
+        animate(feedY, height, {
+          ...FEED_SNAP,
+          onComplete: () => commitMove("prev"),
+        });
       }
     },
-    [canNext, canPrev],
+    [canNext, canPrev, feedY, commitMove],
   );
-
-  // 전환이 끝나면 인덱스를 바꾸고 무전환으로 위치를 0으로 되돌려 끊김을 없앤다.
-  const handleFeedTransitionEnd = useCallback(() => {
-    const commit = pendingCommit.current;
-    if (!commit) return;
-    pendingCommit.current = null;
-    setNoTransition(true);
-    if (commit === "next") moveToNext();
-    else moveToPrev();
-    setDragY(0);
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => setNoTransition(false)),
-    );
-  }, [moveToNext, moveToPrev]);
 
   // 기술x 등 버튼용 — 위로 슬라이드 애니메이션을 켜고, 저장과 최소 0.3초 지연을
   // Promise.all 로 함께 기다린 뒤 다음 클립으로 커밋한다(타이머 기반이라 안정적).
@@ -161,23 +163,14 @@ export const ShortsPage = () => {
       savePromise.catch(() => { }); // 미처리 거부 방지(아래 Promise.all에서 재처리)
       if (!canNext) return;
       const height = feedRef.current?.clientHeight ?? window.innerHeight;
-      pendingCommit.current = null; // transitionEnd 커밋과 겹치지 않게
-      setDragging(false);
-      setDragY(-height);
+      animate(feedY, -height, FEED_SNAP);
       Promise.all([savePromise, new Promise((r) => setTimeout(r, 300))])
-        .then(() => {
-          setNoTransition(true);
-          moveToNext();
-          setDragY(0);
-          requestAnimationFrame(() =>
-            requestAnimationFrame(() => setNoTransition(false)),
-          );
-        })
+        .then(() => commitMove("next"))
         .catch(() => {
-          setDragY(0); // 저장 실패 → 원위치(이동하지 않음)
+          animate(feedY, 0, FEED_SNAP); // 저장 실패 → 원위치(이동하지 않음)
         });
     },
-    [canNext, moveToNext],
+    [canNext, feedY, commitMove],
   );
 
   if (isLoading) {
@@ -238,19 +231,9 @@ export const ShortsPage = () => {
     >
       {needsOnboarding && <OnboardingOverlay onDone={complete} />}
 
-      {/* 세로 피드 — 드래그 중 위/아래 이웃 클립이 손가락을 따라 미리 보인다 */}
-      <div
-        ref={feedRef}
-        className="absolute inset-0"
-        style={{
-          transform: `translateY(${dragY}px)`,
-          transition:
-            dragging || noTransition
-              ? "none"
-              : "transform 0.32s cubic-bezier(0.16,1,0.3,1)",
-        }}
-        onTransitionEnd={handleFeedTransitionEnd}
-      >
+      {/* 세로 피드 — 드래그 중 위/아래 이웃 클립이 손가락을 따라 미리 보인다.
+          위치(y)는 framer-motion MotionValue로 구동(드래그=set, 스냅=animate). */}
+      <motion.div ref={feedRef} className="absolute inset-0" style={{ y: feedY }}>
         {/* 지속(keyed) 영상 슬롯 — 이전/현재/다음. 스왑 시 요소가 재사용돼
             리마운트/검은 프레임(깜빡임)이 없다. 현재만 소리·재생·힌트 대상. */}
         {(
@@ -323,7 +306,7 @@ export const ShortsPage = () => {
             toggleOrientation={toggleOrientation}
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
       <div ref={setControlsLayer} />
