@@ -54,12 +54,12 @@ export const SwipeDragOverlay = ({
         };
 
   const { Icon } = stamp;
-  // 스탬프는 미는 방향의 반대편 가장자리에 고정 (Tinder LIKE/NOPE 스타일).
+  // 스탬프는 미는 방향과 같은 쪽에 고정 — 오른쪽=기술성공, 왼쪽=기술시도가 직관적.
   const side = labeled
     ? "left-1/2 -translate-x-1/2"
     : direction === "right"
-      ? "left-6"
-      : "right-6";
+      ? "right-6"
+      : "left-6";
 
   return (
     <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
