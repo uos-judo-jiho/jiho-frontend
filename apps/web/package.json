@@ -34,11 +34,11 @@
     "@packages/api": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.1.2",
-    "@tailwindcss/vite": "^4.0.9",
+    "@tailwindcss/vite": "^4.3.2",
     "@tanstack/react-query": "^5.66.11",
     "@uiw/react-markdown-preview": "^5.1.5",
     "@uiw/react-md-editor": "^4.0.8",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^6.0.3",
     "axios": "^1.3.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -64,7 +64,7 @@
     "sirv": "^3.0.2",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.0.2",
-    "tailwindcss": "^4.0.9",
+    "tailwindcss": "^4.3.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.6"
   },
@@ -72,14 +72,14 @@
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.24.1",
     "@babel/register": "^7.23.7",
-    "@tailwindcss/postcss": "^4.0.9",
+    "@tailwindcss/postcss": "^4.3.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/compression": "^1.8.1",
     "@types/express": "^4.17.23",
     "@types/jest": "^29.5.0",
-    "@types/node": "^18.19.78",
+    "@types/node": "^22.10.0",
     "@types/react": "^18.0.29",
     "@types/react-dom": "^18.0.11",
     "@types/react-router-dom": "^5.3.3",
@@ -89,7 +89,7 @@
     "prettier": "^3.7.4",
     "serve": "^14.2.4",
     "tsx": "^4.20.6",
-    "vite": "^6.4.1"
+    "vite": "^8.1.2"
   },
   "browserslist": {
     "production": [
