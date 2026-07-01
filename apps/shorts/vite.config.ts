@@ -22,7 +22,8 @@ export default defineConfig({
         theme_color: "#0f0c0c",
         background_color: "#0f0c0c",
         display: "standalone",
-        orientation: "landscape",
+        // 가로/세로 모드 전환을 지원하므로 방향을 고정하지 않는다.
+        orientation: "any",
         start_url: "/",
         icons: [
           {
