@@ -40,10 +40,12 @@ interface Props {
   index: number;
   total: number;
   onLabeled: () => void;
-  /** 위 스와이프 — 라벨 없이 다음 클립으로. */
-  onNext: () => void;
-  /** 아래 스와이프 — 라벨 없이 이전 클립으로. */
-  onPrev: () => void;
+  /** 위/아래 스와이프 확정 (위=다음, 아래=이전) — 라벨 없이 이동. */
+  onVerticalSwipe: (direction: "up" | "down") => void;
+  /** 수직 드래그 실시간 delta(px) — 페이지의 세로 피드 이동에 사용. */
+  onVerticalDragMove: (deltaY: number) => void;
+  /** 수직 드래그 취소(임계값 미달) — 원위치. */
+  onVerticalDragCancel: () => void;
 }
 
 export const ShortsCard = ({
@@ -52,8 +54,9 @@ export const ShortsCard = ({
   index,
   total,
   onLabeled,
-  onNext,
-  onPrev,
+  onVerticalSwipe,
+  onVerticalDragMove,
+  onVerticalDragCancel,
 }: Props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -171,23 +174,16 @@ export const ShortsCard = ({
     }
   }, []);
 
-  // 위/아래 스와이프 — 라벨(투표) 없이 다음/이전 클립으로 이동.
-  const handleVerticalSwipe = useCallback(
-    (direction: "up" | "down") => {
-      setDragX(0);
-      if (direction === "up") onNext();
-      else onPrev();
-    },
-    [onNext, onPrev],
-  );
-
   const {
     onTouchStart: swipeTouchStart,
     onTouchMove,
     onTouchEnd,
   } = useSwipe({
     onSwipe: handleSwipe,
-    onVerticalSwipe: handleVerticalSwipe,
+    // 수직 제스처는 페이지의 세로 피드(다음/이전 미리보기)로 위임한다.
+    onVerticalSwipe,
+    onVerticalDragMove,
+    onVerticalDragCancel,
     onDoubleTap: handleDoubleTap,
     onTap: handleTap,
     onDragMove: handleDragMove,

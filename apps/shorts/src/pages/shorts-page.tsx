@@ -8,6 +8,17 @@ import { ShortsCard } from "@/components/shorts-card";
 import { VideoPreloader } from "@/components/video-preloader";
 import { cn } from "@/lib/utils";
 
+/** 세로 스와이프 중 위/아래에 미리 보이는 이웃 클립(정지 프레임). */
+const PreviewClip = ({ url }: { url: string }) => (
+  <video
+    src={url}
+    muted
+    playsInline
+    preload="auto"
+    className="h-full w-full bg-black object-contain"
+  />
+);
+
 export const ShortsPage = () => {
   const { mode: orientationMode, toggle: toggleOrientation } = useOrientationMode();
   const { needsOnboarding, complete } = useOnboarding();
@@ -103,6 +114,79 @@ export const ShortsPage = () => {
       setHighlightIndex(0);
     }
   }, [highlightIndex, jobIndex]);
+
+  // ── 세로 페이저(릴스/쇼츠식) — 수직 드래그 시 위/아래 이웃 클립을 미리 보여준다 ──
+  const prevHighlight =
+    highlightIndex > 0 ? activeHighlights[highlightIndex - 1] : null;
+  const nextHighlight =
+    highlightIndex + 1 < activeHighlights.length
+      ? activeHighlights[highlightIndex + 1]
+      : null;
+  const canNext =
+    highlightIndex + 1 < activeHighlights.length || jobIndex + 1 < jobs.length;
+  const canPrev = highlightIndex > 0 || jobIndex > 0;
+
+  const [dragY, setDragY] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [noTransition, setNoTransition] = useState(false);
+  const pendingCommit = useRef<"next" | "prev" | null>(null);
+  const feedRef = useRef<HTMLDivElement>(null);
+
+  // 드래그 중: 손가락을 따라 피드가 이동(끝단엔 고무줄 저항).
+  const handleVerticalDragMove = useCallback(
+    (deltaY: number) => {
+      setDragging(true);
+      let dy = deltaY;
+      if (dy < 0 && !canNext) dy *= 0.25;
+      if (dy > 0 && !canPrev) dy *= 0.25;
+      setDragY(dy);
+    },
+    [canNext, canPrev],
+  );
+
+  // 임계값 미달로 손을 떼면 원위치로 스냅.
+  const handleVerticalDragCancel = useCallback(() => {
+    setDragging(false);
+    setDragY(0);
+  }, []);
+
+  // 임계값 넘으면 이웃 클립 위치까지 애니메이션(전환 종료 시 인덱스 확정).
+  const handleVerticalSwipe = useCallback(
+    (direction: "up" | "down") => {
+      setDragging(false);
+      const height = feedRef.current?.clientHeight ?? window.innerHeight;
+      if (direction === "up") {
+        if (!canNext) {
+          setDragY(0);
+          return;
+        }
+        pendingCommit.current = "next";
+        setDragY(-height);
+      } else {
+        if (!canPrev) {
+          setDragY(0);
+          return;
+        }
+        pendingCommit.current = "prev";
+        setDragY(height);
+      }
+    },
+    [canNext, canPrev],
+  );
+
+  // 전환이 끝나면 인덱스를 바꾸고 무전환으로 위치를 0으로 되돌려 끊김을 없앤다.
+  const handleFeedTransitionEnd = useCallback(() => {
+    const commit = pendingCommit.current;
+    if (!commit) return;
+    pendingCommit.current = null;
+    setNoTransition(true);
+    if (commit === "next") moveToNext();
+    else moveToPrev();
+    setDragY(0);
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => setNoTransition(false)),
+    );
+  }, [moveToNext, moveToPrev]);
 
   if (jobsQuery.isLoading) {
     return (
@@ -257,16 +341,45 @@ export const ShortsPage = () => {
         </div>
       )}
 
-      <ShortsCard
-        key={activeHighlight.id}
-        highlight={activeHighlight}
-        jobId={currentJob.id}
-        index={highlightIndex}
-        total={activeHighlights.length}
-        onLabeled={moveToNext}
-        onNext={moveToNext}
-        onPrev={moveToPrev}
-      />
+      {/* 세로 피드 — 드래그 중 위/아래 이웃 클립이 손가락을 따라 미리 보인다 */}
+      <div
+        ref={feedRef}
+        className="absolute inset-0"
+        style={{
+          transform: `translateY(${dragY}px)`,
+          transition:
+            dragging || noTransition
+              ? "none"
+              : "transform 0.32s cubic-bezier(0.16,1,0.3,1)",
+        }}
+        onTransitionEnd={handleFeedTransitionEnd}
+      >
+        {prevHighlight && (
+          <div className="absolute inset-0 -translate-y-full">
+            <PreviewClip url={prevHighlight.clipUrl} />
+          </div>
+        )}
+
+        <div className="absolute inset-0">
+          <ShortsCard
+            key={activeHighlight.id}
+            highlight={activeHighlight}
+            jobId={currentJob.id}
+            index={highlightIndex}
+            total={activeHighlights.length}
+            onLabeled={moveToNext}
+            onVerticalSwipe={handleVerticalSwipe}
+            onVerticalDragMove={handleVerticalDragMove}
+            onVerticalDragCancel={handleVerticalDragCancel}
+          />
+        </div>
+
+        {nextHighlight && (
+          <div className="absolute inset-0 translate-y-full">
+            <PreviewClip url={nextHighlight.clipUrl} />
+          </div>
+        )}
+      </div>
 
       <VideoPreloader urls={preloadUrls} />
     </div>

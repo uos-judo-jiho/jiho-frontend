@@ -5,8 +5,12 @@ export type VerticalDirection = "up" | "down";
 
 interface SwipeHandlers {
   onSwipe?: (direction: SwipeDirection) => void;
-  /** 위/아래 스와이프 — 라벨 없이 이전/다음 클립으로 이동. */
+  /** 위/아래 스와이프 확정 — 라벨 없이 이전/다음 클립으로 이동. */
   onVerticalSwipe?: (direction: VerticalDirection) => void;
+  /** 손가락이 상하로 움직이는 동안 실시간 delta(px). 아래 +, 위 -. */
+  onVerticalDragMove?: (deltaY: number) => void;
+  /** 수직 스와이프가 임계값을 못 넘기고 손을 뗐을 때 (원위치 복귀 신호). */
+  onVerticalDragCancel?: () => void;
   onDoubleTap?: () => void;
   onTap?: () => void;
   /** 손가락이 좌우로 움직이는 동안 실시간 delta(px)를 전달. 오른쪽 +, 왼쪽 -. */
@@ -26,6 +30,8 @@ type DragAxis = "none" | "horizontal" | "vertical";
 export const useSwipe = ({
   onSwipe,
   onVerticalSwipe,
+  onVerticalDragMove,
+  onVerticalDragCancel,
   onDoubleTap,
   onTap,
   onDragMove,
@@ -58,12 +64,14 @@ export const useSwipe = ({
           Math.abs(deltaX) >= Math.abs(deltaY) ? "horizontal" : "vertical";
       }
 
-      // 카드 실시간 이동은 수평 드래그에서만.
+      // 카드 실시간 이동은 수평 드래그에서만, 세로 피드 이동은 수직 드래그에서만.
       if (dragAxis.current === "horizontal") {
         onDragMove?.(deltaX);
+      } else if (dragAxis.current === "vertical") {
+        onVerticalDragMove?.(deltaY);
       }
     },
-    [onDragMove],
+    [onDragMove, onVerticalDragMove],
   );
 
   const onTouchEnd = useCallback(
@@ -81,10 +89,12 @@ export const useSwipe = ({
         return;
       }
 
-      // 수직 드래그였다면: 임계값 넘으면 라벨 없이 이전/다음 이동.
+      // 수직 드래그였다면: 임계값 넘으면 라벨 없이 이전/다음 이동, 아니면 원위치.
       if (dragAxis.current === "vertical") {
         if (Math.abs(deltaY) > VERTICAL_SWIPE_THRESHOLD) {
           onVerticalSwipe?.(deltaY > 0 ? "down" : "up");
+        } else {
+          onVerticalDragCancel?.();
         }
         return;
       }
@@ -106,7 +116,14 @@ export const useSwipe = ({
         }
       }
     },
-    [onSwipe, onVerticalSwipe, onDoubleTap, onTap, onDragCancel],
+    [
+      onSwipe,
+      onVerticalSwipe,
+      onVerticalDragCancel,
+      onDoubleTap,
+      onTap,
+      onDragCancel,
+    ],
   );
 
   return { onTouchStart, onTouchMove, onTouchEnd };
