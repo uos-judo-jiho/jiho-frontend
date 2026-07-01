@@ -38,6 +38,8 @@ interface Props {
   jobId: number;
   index: number;
   total: number;
+  /** 동영상(잡) 제목 — 하단에 최대 2줄로 표시. */
+  title: string;
   onLabeled: () => void;
   /** 위/아래 스와이프 확정 (위=다음, 아래=이전) — 라벨 없이 이동. */
   onVerticalSwipe: (direction: "up" | "down") => void;
@@ -60,6 +62,7 @@ export const ShortsCard = ({
   jobId,
   index,
   total,
+  title,
   onLabeled,
   onVerticalSwipe,
   onVerticalDragMove,
@@ -379,21 +382,17 @@ export const ShortsCard = ({
               )}
             </div>
 
-            {/* 하단 좌: 기술명 태그 + 메타 */}
-            <div
-              className={cn(
-                "pointer-events-none fixed bottom-[calc(var(--safe-bottom)+3rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
-                showControls ? "opacity-100" : "opacity-0",
+            {/* 하단 좌: 기술명 태그 + 동영상 제목(최대 2줄) — 진행바 바로 위 */}
+            <div className="pointer-events-none fixed bottom-[calc(var(--safe-bottom)+0.75rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20">
+              {technique && (
+                <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                  <Tag className="h-3 w-3" />
+                  {technique}
+                </div>
               )}
-            >
-              <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-                {technique && (
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-                    <Tag className="h-3 w-3" />
-                    {technique}
-                  </div>
-                )}
-              </div>
+              <p className="line-clamp-2 text-sm font-medium leading-snug text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                {title}
+              </p>
             </div>
           </>,
           controlsLayer,

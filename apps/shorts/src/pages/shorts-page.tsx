@@ -432,6 +432,7 @@ export const ShortsPage = () => {
             jobId={currentJob.id}
             index={highlightIndex}
             total={activeHighlights.length}
+            title={currentJob.originalFilename}
             onLabeled={moveToNext}
             onVerticalSwipe={handleVerticalSwipe}
             onVerticalDragMove={handleVerticalDragMove}
@@ -447,47 +448,37 @@ export const ShortsPage = () => {
       {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
       <div ref={setControlsLayer} />
 
-      {/* 하단 재생 스크러버 — 현재 클립의 시간 표시 + 드래그로 시크 */}
-      <div className="fixed inset-x-0 bottom-[calc(var(--safe-bottom)+0.75rem)] z-30 px-4">
-        <div className="flex items-center gap-2">
-          <span className="w-9 text-right text-[10px] font-medium tabular-nums text-white/80 drop-shadow">
-            {videoTime.current.toFixed(1)}
-          </span>
+      {/* 유튜브식 하단 진행바 — 시간 텍스트 없이 얇게, 드래그로 시크 */}
+      <div
+        ref={scrubTrackRef}
+        className="fixed inset-x-0 bottom-[var(--safe-bottom)] z-30 cursor-pointer touch-none pt-3"
+        onPointerDown={(e) => {
+          scrubbing.current = true;
+          e.currentTarget.setPointerCapture(e.pointerId);
+          handleInteract();
+          seekToClientX(e.clientX);
+        }}
+        onPointerMove={(e) => {
+          if (scrubbing.current) seekToClientX(e.clientX);
+        }}
+        onPointerUp={() => {
+          scrubbing.current = false;
+        }}
+        onPointerCancel={() => {
+          scrubbing.current = false;
+        }}
+      >
+        <div className="h-[3px] w-full bg-white/25">
           <div
-            ref={scrubTrackRef}
-            className="relative flex-1 cursor-pointer touch-none py-2"
-            onPointerDown={(e) => {
-              scrubbing.current = true;
-              e.currentTarget.setPointerCapture(e.pointerId);
-              handleInteract();
-              seekToClientX(e.clientX);
+            className="h-full bg-indigo-400"
+            style={{
+              width: `${
+                videoTime.duration > 0
+                  ? (videoTime.current / videoTime.duration) * 100
+                  : 0
+              }%`,
             }}
-            onPointerMove={(e) => {
-              if (scrubbing.current) seekToClientX(e.clientX);
-            }}
-            onPointerUp={() => {
-              scrubbing.current = false;
-            }}
-            onPointerCancel={() => {
-              scrubbing.current = false;
-            }}
-          >
-            <div className="h-1 rounded-full bg-white/25">
-              <div
-                className="h-full rounded-full bg-white"
-                style={{
-                  width: `${
-                    videoTime.duration > 0
-                      ? (videoTime.current / videoTime.duration) * 100
-                      : 0
-                  }%`,
-                }}
-              />
-            </div>
-          </div>
-          <span className="w-9 text-[10px] font-medium tabular-nums text-white/60 drop-shadow">
-            {videoTime.duration.toFixed(1)}
-          </span>
+          />
         </div>
       </div>
 
