@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run type-check && vite build",
-    "build:prod": "NODE_ENV=production npm run build",
+    "build": "pnpm run type-check && vite build",
+    "build:prod": "NODE_ENV=production pnpm run build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit",
