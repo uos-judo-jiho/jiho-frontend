@@ -41,8 +41,6 @@ interface Props {
   /** 동영상(잡) 제목 — 하단에 최대 2줄로 표시. */
   title: string;
   onLabeled: () => void;
-  /** 위로 스와이프하듯 애니메이션과 함께 다음 클립으로 이동(기술x 버튼용). */
-  onSwipeUpNext: () => void;
   /** 위/아래 스와이프 확정 (위=다음, 아래=이전) — 라벨 없이 이동. */
   onVerticalSwipe: (direction: "up" | "down") => void;
   /** 수직 드래그 실시간 delta(px) — 페이지의 세로 피드 이동에 사용. */
@@ -68,7 +66,6 @@ export const ShortsCard = ({
   total,
   title,
   onLabeled,
-  onSwipeUpNext,
   onVerticalSwipe,
   onVerticalDragMove,
   onVerticalDragCancel,
@@ -324,11 +321,8 @@ export const ShortsCard = ({
                   disabled={mutation.isPending}
                   onClick={() => {
                     if (mutation.isPending) return;
-                    if (!isAlreadyLabeled) {
-                      // 저장만 하고(이동은 애니메이션이 담당) 위로 스와이프하듯 넘어간다.
-                      saveLabel({ techniqueResult: "NONE", score: "NONE" }, false);
-                    }
-                    onSwipeUpNext();
+                    setFeedback("none");
+                    saveLabel({ techniqueResult: "NONE", score: "NONE" });
                   }}
                   className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2"
                 >

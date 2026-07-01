@@ -482,7 +482,6 @@ export const ShortsPage = () => {
             total={activeHighlights.length}
             title={currentJob.originalFilename.replace(/\.[^.]+$/, "")}
             onLabeled={moveToNext}
-            onSwipeUpNext={() => handleVerticalSwipe("up")}
             onVerticalSwipe={handleVerticalSwipe}
             onVerticalDragMove={handleVerticalDragMove}
             onVerticalDragCancel={handleVerticalDragCancel}
