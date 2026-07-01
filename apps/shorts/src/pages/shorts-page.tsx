@@ -1,16 +1,14 @@
 import { useVideoHighlights, useVideoJobs, useNextJobPrefetch } from "@/hooks/use-highlights";
-import { useIsLandscape, useOrientationMode } from "@/hooks/use-orientation";
+import { useOrientationMode } from "@/hooks/use-orientation";
 import { ChevronDown, ChevronUp, Loader2, Smartphone } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { OnboardingOverlay, useOnboarding } from "@/components/onboarding-overlay";
-import { RotatePrompt } from "@/components/rotate-prompt";
 import { ShortsCard } from "@/components/shorts-card";
 import { VideoPreloader } from "@/components/video-preloader";
 import { cn } from "@/lib/utils";
 
 export const ShortsPage = () => {
-  const isLandscape = useIsLandscape();
   const { mode: orientationMode, toggle: toggleOrientation } = useOrientationMode();
   const { needsOnboarding, complete } = useOnboarding();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -192,8 +190,6 @@ export const ShortsPage = () => {
   return (
     <div className="relative h-dvh overflow-hidden bg-black">
       {needsOnboarding && <OnboardingOverlay onDone={complete} />}
-      {/* 가로 모드를 선택한 경우에만 세로일 때 회전 안내. 세로 모드면 표시하지 않음. */}
-      {orientationMode === "landscape" && !isLandscape && <RotatePrompt />}
 
       {/* 가로 <-> 세로 모드 전환 */}
       <button
