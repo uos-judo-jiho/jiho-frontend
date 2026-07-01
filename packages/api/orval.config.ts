@@ -15,10 +15,8 @@ const docTargets = IS_PROD
 
 const baseUrl = IS_PROD ? "https://api.uosjudo.com" : "http://localhost:4000";
 
-const tanstackQueryOptions: QueryOptions = {
+const baseQueryOptions = {
   version: 5,
-  useQuery: true,
-  useMutation: true,
   useInfinite: true,
   usePrefetch: true,
   useSuspenseQuery: true,
@@ -26,6 +24,24 @@ const tanstackQueryOptions: QueryOptions = {
   shouldExportHttpClient: false,
   shouldExportQueryKey: true,
   shouldSplitQueryKey: true,
+} as const;
+
+// NOTE: orval generates a GET operation as a *mutation* (not a query) when
+// `useMutation` is enabled alongside `useQuery`. v2Api is entirely read-only
+// GET endpoints consumed via query/suspense hooks, so it must NOT enable
+// useMutation — otherwise no `*QueryOptions`/suspense hooks are emitted and
+// SSR (and the client) crash with "(void 0) is not a function".
+const apiQueryOptions: QueryOptions = {
+  ...baseQueryOptions,
+  useQuery: true,
+  useMutation: false,
+};
+
+// v2Admin has write endpoints, so it keeps mutation hooks.
+const adminQueryOptions: QueryOptions = {
+  ...baseQueryOptions,
+  useQuery: true,
+  useMutation: true,
 };
 
 export default defineConfig({
@@ -42,7 +58,7 @@ export default defineConfig({
       baseUrl,
       override: {
         transformer: responseTransformer,
-        query: tanstackQueryOptions,
+        query: apiQueryOptions,
       },
     },
   },
@@ -59,7 +75,7 @@ export default defineConfig({
       baseUrl,
       override: {
         transformer: responseTransformer,
-        query: tanstackQueryOptions,
+        query: adminQueryOptions,
       },
     },
   },
