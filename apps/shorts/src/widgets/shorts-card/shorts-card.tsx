@@ -51,6 +51,10 @@ interface Props {
   orientationMode: "landscape" | "portrait";
   /** 가로/세로 모드 전환. */
   toggleOrientation: () => void;
+  /** 현재 음소거 여부(자동재생 정책상 음소거로 시작). */
+  muted: boolean;
+  /** 음소거 토글. */
+  onToggleMute: () => void;
 }
 
 export const ShortsCard = ({
@@ -69,6 +73,8 @@ export const ShortsCard = ({
   onInteract,
   orientationMode,
   toggleOrientation,
+  muted,
+  onToggleMute,
 }: Props) => {
   // 라벨링 도메인(기술/점수/좋아요·저장·피드백)은 feature 훅이 담당.
   const label = useLabelHighlight({ highlight, onLabeled, onLabelSaved });
@@ -243,6 +249,8 @@ export const ShortsCard = ({
         showControls={showControls}
         orientationMode={orientationMode}
         toggleOrientation={toggleOrientation}
+        muted={muted}
+        onToggleMute={onToggleMute}
         isAlreadyLabeled={label.isAlreadyLabeled}
         isPending={label.isPending}
         liked={label.liked}

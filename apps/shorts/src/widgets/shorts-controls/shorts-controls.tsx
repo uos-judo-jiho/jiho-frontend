@@ -3,7 +3,7 @@ import {
   type SuccessScore,
 } from "@/features/label-highlight/use-label-highlight";
 import { cn } from "@/shared/lib/utils";
-import { Ban, Check, Heart, Smartphone, Tag } from "lucide-react";
+import { Ban, Check, Heart, Smartphone, Tag, Volume2, VolumeX } from "lucide-react";
 import { createPortal } from "react-dom";
 
 interface Props {
@@ -15,6 +15,8 @@ interface Props {
   showControls: boolean;
   orientationMode: "landscape" | "portrait";
   toggleOrientation: () => void;
+  muted: boolean;
+  onToggleMute: () => void;
   isAlreadyLabeled: boolean;
   isPending: boolean;
   liked: boolean;
@@ -39,6 +41,8 @@ export const ShortsControls = ({
   showControls,
   orientationMode,
   toggleOrientation,
+  muted,
+  onToggleMute,
   isAlreadyLabeled,
   isPending,
   liked,
@@ -82,6 +86,20 @@ export const ShortsControls = ({
             )}
           />
           {orientationMode === "landscape" ? "세로" : "가로"}
+        </button>
+        {/* 음소거 토글 — 자동재생은 음소거로 시작, 여기서 소리 켜기/끄기 */}
+        <button
+          type="button"
+          onClick={onToggleMute}
+          aria-label={muted ? "소리 켜기" : "음소거"}
+          className="flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
+        >
+          {muted ? (
+            <VolumeX className="h-4 w-4" />
+          ) : (
+            <Volume2 className="h-4 w-4" />
+          )}
+          {muted ? "소리" : "음소거"}
         </button>
         <div className="flex items-center gap-2">
           {isAlreadyLabeled && (

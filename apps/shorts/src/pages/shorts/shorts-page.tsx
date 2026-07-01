@@ -59,6 +59,12 @@ export const ShortsPage = () => {
   const scrubTrackRef = useRef<HTMLDivElement>(null);
   const scrubbing = useRef(false);
 
+  // 현재 클립이 재생 가능할 만큼 못 받았을 때 로딩 스피너 표시(검은 화면 방치 방지).
+  const [buffering, setBuffering] = useState(false);
+  // 자동재생 정책상 음소거로 시작(항상 재생 보장). 첫 조작 시 소리를 복원한다.
+  const [muted, setMuted] = useState(true);
+  const soundUnlocked = useRef(false);
+
   // 재생 시간 갱신 — 스크러버 표시 + 방치 힌트 루프 감지로 전달.
   const handleTimeUpdate = useCallback(() => {
     const v = currentVideoRef.current;
@@ -72,7 +78,18 @@ export const ShortsPage = () => {
 
   const handleInteract = useCallback(() => {
     idleHint.reset();
+    // 첫 조작(사용자 제스처) 안에서 음소거를 해제 — 정책상 gesture 안에서만 허용됨.
+    if (!soundUnlocked.current) {
+      soundUnlocked.current = true;
+      setMuted(false);
+    }
   }, [idleHint]);
+
+  // 음소거 토글(명시적 조작 이후엔 자동 해제 로직을 끈다).
+  const toggleMute = useCallback(() => {
+    soundUnlocked.current = true;
+    setMuted((m) => !m);
+  }, []);
 
   // 스크러버 트랙 위 x좌표 → 해당 시각으로 시크.
   const seekToClientX = useCallback((clientX: number) => {
@@ -92,6 +109,8 @@ export const ShortsPage = () => {
     videoRefs.current.forEach((el, id) => {
       if (id === currentId) {
         el.currentTime = 0;
+        // 재생 가능할 만큼(HAVE_FUTURE_DATA) 못 받았으면 스피너 — canplay/playing에서 해제.
+        setBuffering(el.readyState < 3);
         void el.play().catch(() => { });
       } else {
         el.pause();
@@ -276,9 +295,20 @@ export const ShortsPage = () => {
                   loop
                   playsInline
                   preload="auto"
-                  muted={offset !== 0}
+                  muted={offset === 0 ? muted : true}
                   onTimeUpdate={offset === 0 ? handleTimeUpdate : undefined}
                   onLoadedMetadata={offset === 0 ? handleTimeUpdate : undefined}
+                  // 버퍼링 시작 → 스피너. 준비되면(canplay) 재생 재시도 + 스피너 해제.
+                  onWaiting={offset === 0 ? () => setBuffering(true) : undefined}
+                  onPlaying={offset === 0 ? () => setBuffering(false) : undefined}
+                  onCanPlay={
+                    offset === 0
+                      ? (e) => {
+                        setBuffering(false);
+                        void e.currentTarget.play().catch(() => { });
+                      }
+                      : undefined
+                  }
                   className="h-full w-full bg-black object-contain"
                 />
               </div>
@@ -304,9 +334,18 @@ export const ShortsPage = () => {
             onInteract={handleInteract}
             orientationMode={orientationMode}
             toggleOrientation={toggleOrientation}
+            muted={muted}
+            onToggleMute={toggleMute}
           />
         </div>
       </motion.div>
+
+      {/* 버퍼링 스피너 — 다운로드가 덜 된 클립으로 넘겼을 때 검은 화면 대신 표시 */}
+      {buffering && (
+        <div className="pointer-events-none fixed inset-0 z-20 flex items-center justify-center">
+          <Loader2 className="h-10 w-10 animate-spin text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
+        </div>
+      )}
 
       {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
       <div ref={setControlsLayer} />
