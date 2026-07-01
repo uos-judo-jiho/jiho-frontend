@@ -1,4 +1,5 @@
 import { useClipNavigation } from "@/features/clip-navigation";
+import { useIdleHint } from "@/features/idle-hint";
 import {
   OnboardingOverlay,
   useOnboarding,
@@ -45,43 +46,30 @@ export const ShortsPage = () => {
   // 윈도우(이전/현재/다음) 영상 요소 — 현재만 재생, 이웃은 정지시키기 위해 참조.
   const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map());
   const [hDragX, setHDragX] = useState(0); // 좌우 라벨 드래그 → 현재 슬롯 이동
-  const [showSwipeHint, setShowSwipeHint] = useState(false);
-  // 데모 힌트가 만들어내는 가상 드래그 값(px). 실제 스와이프와 동일하게
-  // 영상 이동 + SwipeDragOverlay 스탬프를 구동한다. 오른쪽(+)↔왼쪽(-) 번갈아.
-  const [hintDragX, setHintDragX] = useState(0);
-  const loopCount = useRef(0);
-  const lastTime = useRef(0);
+  // 방치 힌트(반복 재생 감지 + 데모 애니메이션)는 feature 훅이 담당(rxjs animationFrames).
+  const idleHint = useIdleHint({
+    activeHighlightId: activeHighlight?.id,
+    isLabeled: !!activeHighlight?.isLabeledByCurrentUser,
+  });
   // 현재 클립의 재생 시간(초). 하단 스크러버 표시·시크에 사용.
   const [videoTime, setVideoTime] = useState({ current: 0, duration: 0 });
   const scrubTrackRef = useRef<HTMLDivElement>(null);
   const scrubbing = useRef(false);
 
-  // 반복 재생 감지(loop 재시작) → 2회 이후 3번째 재생부터 라벨 스와이프 힌트.
+  // 재생 시간 갱신 — 스크러버 표시 + 방치 힌트 루프 감지로 전달.
   const handleTimeUpdate = useCallback(() => {
     const v = currentVideoRef.current;
     if (!v) return;
-    if (v.currentTime + 0.1 < lastTime.current) {
-      loopCount.current += 1;
-      // 2회 반복 후(3번째 재생)부터 데모 힌트를 켠다.
-      if (
-        loopCount.current >= 2 &&
-        activeHighlight &&
-        !activeHighlight.isLabeledByCurrentUser
-      ) {
-        setShowSwipeHint(true);
-      }
-    }
-    lastTime.current = v.currentTime;
+    idleHint.notifyTime(v.currentTime);
     setVideoTime({
       current: v.currentTime,
       duration: Number.isFinite(v.duration) ? v.duration : 0,
     });
-  }, [activeHighlight]);
+  }, [idleHint]);
 
   const handleInteract = useCallback(() => {
-    setShowSwipeHint(false);
-    loopCount.current = 0;
-  }, []);
+    idleHint.reset();
+  }, [idleHint]);
 
   // 스크러버 트랙 위 x좌표 → 해당 시각으로 시크.
   const seekToClientX = useCallback((clientX: number) => {
@@ -95,7 +83,7 @@ export const ShortsPage = () => {
   }, []);
 
   // 현재 클립만 재생하고 이웃(이전/다음)은 정지시킨다(자동재생 방지).
-  // 클립이 바뀌면 힌트/시간 상태도 초기화.
+  // 클립이 바뀌면 재생 시간 상태도 초기화(힌트 초기화는 useIdleHint가 담당).
   useEffect(() => {
     const currentId = activeHighlight?.id;
     videoRefs.current.forEach((el, id) => {
@@ -107,40 +95,8 @@ export const ShortsPage = () => {
         el.currentTime = 0; // 이웃은 첫 프레임으로
       }
     });
-    loopCount.current = 0;
-    lastTime.current = 0;
-    setShowSwipeHint(false);
     setVideoTime({ current: 0, duration: 0 });
   }, [activeHighlight?.id]);
-
-  // 방치 데모 — 왼쪽(기술성공)↔오른쪽(기술시도)을 번갈아 끌고 잠깐 멈췄다 놓는
-  // 가상 드래그를 만든다(실제 스와이프와 동일한 이동·스탬프).
-  useEffect(() => {
-    if (!showSwipeHint) return;
-    const AMP = 82; // 임계값(60)보다 커서 스탬프가 꽉 찬 상태로 보인다
-    const HALF = 2400; // 한 방향 주기(ms)
-    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
-    const easeIn = (t: number) => t * t * t;
-    const halfX = (p: number) => {
-      if (p < 0.15 || p >= 0.9) return 0;
-      if (p < 0.4) return AMP * easeOut((p - 0.15) / 0.25);
-      if (p < 0.7) return AMP;
-      return AMP * (1 - easeIn((p - 0.7) / 0.2));
-    };
-    let raf = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const el = (now - start) % (HALF * 2);
-      const p = (el % HALF) / HALF;
-      setHintDragX(halfX(p) * (el < HALF ? 1 : -1)); // 오른쪽 먼저, 그다음 왼쪽
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(raf);
-      setHintDragX(0);
-    };
-  }, [showSwipeHint]);
 
   // 드래그 중: 손가락을 따라 피드가 이동(끝단엔 고무줄 저항).
   const handleVerticalDragMove = useCallback(
@@ -317,9 +273,9 @@ export const ShortsPage = () => {
                 style={
                   offset === 0
                     ? {
-                      transform: `translateX(${hDragX + hintDragX}px) rotate(${(hDragX + hintDragX) * 0.02}deg)`,
+                      transform: `translateX(${hDragX + idleHint.hintDragX}px) rotate(${(hDragX + idleHint.hintDragX) * 0.02}deg)`,
                       transition:
-                        hDragX !== 0 || hintDragX !== 0
+                        hDragX !== 0 || idleHint.hintDragX !== 0
                           ? "none"
                           : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
                     }
@@ -360,7 +316,7 @@ export const ShortsPage = () => {
             onVerticalDragCancel={handleVerticalDragCancel}
             controlsLayer={controlsLayer}
             videoRef={currentVideoRef}
-            hintDragX={hintDragX}
+            hintDragX={idleHint.hintDragX}
             onHorizontalDragMove={setHDragX}
             onInteract={handleInteract}
             orientationMode={orientationMode}
