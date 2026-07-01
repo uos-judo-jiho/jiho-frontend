@@ -19,7 +19,8 @@ export const useVideoJobs = () =>
     select: (jobs) =>
       jobs
         .filter((job) => job.status === "done" && job.highlightCount > 0)
-        .sort((a, b) => a.id - b.id),
+        // 영상(job)은 최신순으로 노출(10번 → 9번 …). 영상 내 하이라이트 순서는 그대로.
+        .sort((a, b) => b.id - a.id),
   });
 
 export const useVideoHighlights = (jobId: number): {
