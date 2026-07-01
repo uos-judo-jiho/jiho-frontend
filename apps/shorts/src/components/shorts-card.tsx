@@ -117,6 +117,21 @@ export const ShortsCard = ({
     };
   }, [resetControlsTimer]);
 
+  // key 없이 유지되므로, 클립이 바뀌면 클립별 상태를 여기서 초기화한다.
+  // (isAlreadyLabeled·완료 뱃지·우측 버튼은 highlight prop으로 즉시 반영됨)
+  useEffect(() => {
+    setLiked(false);
+    setTechnique(highlight.currentUserLabel?.technique ?? null);
+    setScore(initialScore(highlight.currentUserLabel?.score));
+    setFeedback(null);
+    setIsPaused(false);
+    setSheetOpen(false);
+    setDragX(0);
+    onHorizontalDragMove(0);
+    resetControlsTimer();
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- 클립 id 변경 시에만 초기화
+  }, [highlight.id]);
+
   const saveLabel = useCallback(
     (
       params: { techniqueResult: TechniqueResult; score: Score },

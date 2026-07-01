@@ -508,8 +508,8 @@ export const ShortsPage = () => {
         )}
 
         <div className="absolute inset-0">
+          {/* key 없이 유지 — 클립 변경 시 리마운트하지 않아 포탈 컨트롤이 깜빡이지 않는다. */}
           <ShortsCard
-            key={activeHighlight.id}
             highlight={activeHighlight}
             jobId={currentJob.id}
             index={highlightIndex}
