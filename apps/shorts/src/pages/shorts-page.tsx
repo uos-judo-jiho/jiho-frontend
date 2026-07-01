@@ -9,7 +9,6 @@ import {
   useVideoHighlights,
   useVideoJobs,
 } from "@/hooks/use-highlights";
-import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -155,8 +154,9 @@ export const ShortsPage = () => {
   const currentVideoRef = useRef<HTMLVideoElement>(null);
   const [hDragX, setHDragX] = useState(0); // 좌우 라벨 드래그 → 현재 슬롯 이동
   const [showSwipeHint, setShowSwipeHint] = useState(false);
-  // 데모 힌트 방향(랜덤) — 왼쪽=기술시도, 오른쪽=기술성공.
-  const [hintDir, setHintDir] = useState<"left" | "right">("right");
+  // 데모 힌트가 만들어내는 가상 드래그 값(px). 실제 스와이프와 동일하게
+  // 영상 이동 + SwipeDragOverlay 스탬프를 구동한다. 오른쪽(+)↔왼쪽(-) 번갈아.
+  const [hintDragX, setHintDragX] = useState(0);
   const loopCount = useRef(0);
   const lastTime = useRef(0);
   // 현재 클립의 재생 시간(초). 하단 스크러버 표시·시크에 사용.
@@ -170,14 +170,13 @@ export const ShortsPage = () => {
     if (!v) return;
     if (v.currentTime + 0.1 < lastTime.current) {
       loopCount.current += 1;
-      // 2회 반복 후(3번째 재생) 딱 한 번 힌트를 켜고 방향을 랜덤 선택.
+      // 2회 반복 후(3번째 재생)부터 데모 힌트를 켠다.
       if (
-        loopCount.current === 2 &&
+        loopCount.current >= 2 &&
         activeHighlight &&
         !activeHighlight.isLabeledByCurrentUser
       ) {
         setShowSwipeHint(true);
-        setHintDir(Math.random() < 0.5 ? "left" : "right");
       }
     }
     lastTime.current = v.currentTime;
@@ -215,6 +214,35 @@ export const ShortsPage = () => {
     setShowSwipeHint(false);
     setVideoTime({ current: 0, duration: 0 });
   }, [activeHighlight?.id]);
+
+  // 방치 데모 — 오른쪽(기술성공)↔왼쪽(기술시도)을 번갈아 끌고 잠깐 멈췄다 놓는
+  // 가상 드래그를 만든다(실제 스와이프와 동일한 이동·스탬프).
+  useEffect(() => {
+    if (!showSwipeHint) return;
+    const AMP = 82; // 임계값(60)보다 커서 스탬프가 꽉 찬 상태로 보인다
+    const HALF = 2400; // 한 방향 주기(ms)
+    const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+    const easeIn = (t: number) => t * t * t;
+    const halfX = (p: number) => {
+      if (p < 0.15 || p >= 0.9) return 0;
+      if (p < 0.4) return AMP * easeOut((p - 0.15) / 0.25);
+      if (p < 0.7) return AMP;
+      return AMP * (1 - easeIn((p - 0.7) / 0.2));
+    };
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const el = (now - start) % (HALF * 2);
+      const p = (el % HALF) / HALF;
+      setHintDragX(halfX(p) * (el < HALF ? 1 : -1)); // 오른쪽 먼저, 그다음 왼쪽
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      setHintDragX(0);
+    };
+  }, [showSwipeHint]);
 
   // 드래그 중: 손가락을 따라 피드가 이동(끝단엔 고무줄 저항).
   const handleVerticalDragMove = useCallback(
@@ -401,11 +429,12 @@ export const ShortsPage = () => {
               style={{
                 transform:
                   offset === 0
-                    ? `translateX(${hDragX}px) rotate(${hDragX * 0.02}deg)`
+                    ? `translateX(${hDragX + hintDragX}px) rotate(${(hDragX + hintDragX) * 0.02}deg)`
                     : `translateY(${offset * 100}%)`,
                 transition:
-                  // 커밋 리셋(윈도우 이동) 프레임엔 전환을 꺼서 재슬라이드를 막는다.
-                  noTransition || (offset === 0 && hDragX !== 0)
+                  // 커밋 리셋·실드래그·데모 진행 중엔 전환을 꺼서 재슬라이드/충돌을 막는다.
+                  noTransition ||
+                  (offset === 0 && (hDragX !== 0 || hintDragX !== 0))
                     ? "none"
                     : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
               }}
@@ -420,14 +449,7 @@ export const ShortsPage = () => {
                 muted={offset !== 0}
                 onTimeUpdate={offset === 0 ? handleTimeUpdate : undefined}
                 onLoadedMetadata={offset === 0 ? handleTimeUpdate : undefined}
-                className={cn(
-                  "h-full w-full bg-black object-contain",
-                  offset === 0 &&
-                    showSwipeHint &&
-                    (hintDir === "left"
-                      ? "animate-swipe-demo-left"
-                      : "animate-swipe-demo-right"),
-                )}
+                className="h-full w-full bg-black object-contain"
               />
             </div>
           ) : null,
@@ -447,29 +469,12 @@ export const ShortsPage = () => {
             onVerticalDragCancel={handleVerticalDragCancel}
             controlsLayer={controlsLayer}
             videoRef={currentVideoRef}
+            hintDragX={hintDragX}
             onHorizontalDragMove={setHDragX}
             onInteract={handleInteract}
           />
         </div>
       </div>
-
-      {/* 방치 데모 힌트 — 드래그 모션(영상)에 맞춰 라벨 오버레이가 나타났다 사라진다 */}
-      {showSwipeHint && (
-        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
-          <div
-            className={cn(
-              "animate-swipe-demo-label flex items-center gap-2 rounded-2xl border-2 px-6 py-4 text-lg font-extrabold backdrop-blur-sm",
-              hintDir === "right"
-                ? "border-green-400 bg-green-500/15 text-green-300"
-                : "border-amber-400 bg-amber-500/15 text-amber-300",
-            )}
-          >
-            {hintDir === "left" && <span>👈</span>}
-            {hintDir === "left" ? "기술시도" : "기술성공"}
-            {hintDir === "right" && <span>👉</span>}
-          </div>
-        </div>
-      )}
 
       {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
       <div ref={setControlsLayer} />

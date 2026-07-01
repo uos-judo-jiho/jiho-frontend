@@ -51,6 +51,8 @@ interface Props {
   controlsLayer: HTMLElement | null;
   /** 현재 클립의 <video> — 페이지의 지속(keyed) 슬롯에서 렌더하고 여기로 전달. */
   videoRef: React.RefObject<HTMLVideoElement | null>;
+  /** 방치 데모가 만드는 가상 드래그(px) — 실제 스와이프처럼 스탬프를 구동. */
+  hintDragX: number;
   /** 좌우 라벨 드래그 실시간 delta(px) — 페이지가 현재 영상 슬롯을 이동시킨다. */
   onHorizontalDragMove: (deltaX: number) => void;
   /** 사용자가 조작을 시작함(idle 힌트 리셋용). */
@@ -69,6 +71,7 @@ export const ShortsCard = ({
   onVerticalDragCancel,
   controlsLayer,
   videoRef,
+  hintDragX,
   onHorizontalDragMove,
   onInteract,
 }: Props) => {
@@ -237,7 +240,7 @@ export const ShortsCard = ({
 
       {/* 실시간 스와이프 스탬프 (기술시도/기술성공 · 완료 클립은 다음) */}
       <SwipeDragOverlay
-        dragX={dragX}
+        dragX={dragX + hintDragX}
         threshold={SWIPE_THRESHOLD}
         labeled={isAlreadyLabeled}
       />
