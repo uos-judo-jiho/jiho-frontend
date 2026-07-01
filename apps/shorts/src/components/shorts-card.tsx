@@ -47,6 +47,12 @@ interface Props {
   onVerticalDragCancel: () => void;
   /** 컨트롤(카운터·액션·라벨·하단바)을 렌더할 고정 레이어. 세로 피드 transform 밖. */
   controlsLayer: HTMLElement | null;
+  /** 현재 클립의 <video> — 페이지의 지속(keyed) 슬롯에서 렌더하고 여기로 전달. */
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  /** 좌우 라벨 드래그 실시간 delta(px) — 페이지가 현재 영상 슬롯을 이동시킨다. */
+  onHorizontalDragMove: (deltaX: number) => void;
+  /** 사용자가 조작을 시작함(idle 힌트 리셋용). */
+  onInteract: () => void;
 }
 
 export const ShortsCard = ({
@@ -59,11 +65,13 @@ export const ShortsCard = ({
   onVerticalDragMove,
   onVerticalDragCancel,
   controlsLayer,
+  videoRef,
+  onHorizontalDragMove,
+  onInteract,
 }: Props) => {
   const { mode: orientationMode, toggle: toggleOrientation } =
     useOrientationMode();
 
-  const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isPaused, setIsPaused] = useState(false);
@@ -79,25 +87,7 @@ export const ShortsCard = ({
     initialScore(highlight.currentUserLabel?.score),
   );
   const [sheetOpen, setSheetOpen] = useState(false);
-  // 방치(반복 재생) 감지: loop 재시작 횟수를 세어 3번째 재생부터 스와이프 힌트.
-  const [showSwipeHint, setShowSwipeHint] = useState(false);
-  const loopCount = useRef(0);
-  const lastTime = useRef(0);
   const mutation = useCreateLabel(jobId);
-
-  // 재생 위치가 뒤로 크게 점프하면 loop 가 재시작된 것 → 반복 횟수 집계.
-  const handleTimeUpdate = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.currentTime + 0.1 < lastTime.current) {
-      loopCount.current += 1;
-      // 2회 자동 반복 후(=3번째 재생)부터, 라벨 전 클립에 한해 힌트를 켠다.
-      if (loopCount.current >= 2 && !highlight.isLabeledByCurrentUser) {
-        setShowSwipeHint(true);
-      }
-    }
-    lastTime.current = video.currentTime;
-  }, [highlight.isLabeledByCurrentUser]);
 
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
@@ -144,6 +134,7 @@ export const ShortsCard = ({
   const handleSwipe = useCallback(
     (direction: SwipeDirection) => {
       setDragX(0);
+      onHorizontalDragMove(0);
       if (mutation.isPending) return;
       // 이미 라벨링된 클립은 좌우 어느 쪽으로 스와이프해도 다음으로 넘어간다.
       if (highlight.isLabeledByCurrentUser) {
@@ -164,20 +155,25 @@ export const ShortsCard = ({
       onLabeled,
       saveLabel,
       score,
+      onHorizontalDragMove,
     ],
   );
 
-  // 드래그 중: 손가락을 따라 카드 이동. 라벨링 중(mutation)일 땐 잠금.
+  // 드래그 중: 손가락을 따라 영상 이동(페이지가 현재 슬롯을 이동). 라벨링 중엔 잠금.
   const handleDragMove = useCallback(
     (deltaX: number) => {
       if (mutation.isPending) return;
       setDragX(deltaX);
+      onHorizontalDragMove(deltaX);
     },
-    [mutation.isPending],
+    [mutation.isPending, onHorizontalDragMove],
   );
 
   // 임계값 미달로 손을 떼면 원위치.
-  const handleDragCancel = useCallback(() => setDragX(0), []);
+  const handleDragCancel = useCallback(() => {
+    setDragX(0);
+    onHorizontalDragMove(0);
+  }, [onHorizontalDragMove]);
 
   const handleDoubleTap = useCallback(() => {
     if (mutation.isPending || highlight.isLabeledByCurrentUser) return;
@@ -195,7 +191,7 @@ export const ShortsCard = ({
       video.pause();
       setIsPaused(true);
     }
-  }, []);
+  }, [videoRef]);
 
   const {
     onTouchStart: swipeTouchStart,
@@ -216,45 +212,25 @@ export const ShortsCard = ({
   // 터치 시 컨트롤 타이머 리셋 후 스와이프 핸들러로 위임
   const onTouchStart = useCallback(
     (e: React.TouchEvent) => {
-      // 사용자가 조작을 시작하면 idle 스와이프 힌트를 끄고 반복 카운트를 초기화.
-      setShowSwipeHint(false);
-      loopCount.current = 0;
+      // 사용자가 조작을 시작하면 idle 스와이프 힌트를 끄도록 페이지에 알린다.
+      onInteract();
       resetControlsTimer();
       swipeTouchStart(e);
     },
-    [resetControlsTimer, swipeTouchStart],
+    [onInteract, resetControlsTimer, swipeTouchStart],
   );
 
   const isAlreadyLabeled = highlight.isLabeledByCurrentUser;
 
   return (
-    <div className="relative h-dvh w-full overflow-hidden bg-black">
-      {/* ── 영상 (full-screen) — 드래그 시 손가락을 따라 이동 ── */}
+    <div className="relative h-dvh w-full overflow-hidden">
+      {/* ── 터치 레이어 — 영상은 페이지의 지속(keyed) 슬롯에서 렌더된다 ── */}
       <div
         className="absolute inset-0"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        style={{
-          transform: `translateX(${dragX}px) rotate(${dragX * 0.02}deg)`,
-          transition:
-            dragX === 0 ? "transform 0.25s cubic-bezier(0.16,1,0.3,1)" : "none",
-        }}
-      >
-        <video
-          ref={videoRef}
-          src={highlight.clipUrl}
-          autoPlay
-          loop
-          playsInline
-          preload="auto"
-          onTimeUpdate={handleTimeUpdate}
-          className={cn(
-            "h-full w-full object-contain",
-            showSwipeHint && "animate-swipe-hint",
-          )}
-        />
-      </div>
+      />
 
       {/* 실시간 스와이프 스탬프 (기술시도/기술성공 · 완료 클립은 다음) */}
       <SwipeDragOverlay

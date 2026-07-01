@@ -9,20 +9,10 @@ import {
   useVideoHighlights,
   useVideoJobs,
 } from "@/hooks/use-highlights";
+import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-
-/** 세로 스와이프 중 위/아래에 미리 보이는 이웃 클립(정지 프레임). */
-const PreviewClip = ({ url }: { url: string }) => (
-  <video
-    src={url}
-    muted
-    playsInline
-    preload="auto"
-    className="h-full w-full bg-black object-contain"
-  />
-);
 
 export const ShortsPage = () => {
   const { needsOnboarding, complete } = useOnboarding();
@@ -160,6 +150,47 @@ export const ShortsPage = () => {
   const [controlsLayer, setControlsLayer] = useState<HTMLDivElement | null>(
     null,
   );
+
+  // 현재 클립 영상은 페이지가 소유(지속 요소) — 스왑 시 재사용해 깜빡임을 막는다.
+  const currentVideoRef = useRef<HTMLVideoElement>(null);
+  const [hDragX, setHDragX] = useState(0); // 좌우 라벨 드래그 → 현재 슬롯 이동
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
+  const loopCount = useRef(0);
+  const lastTime = useRef(0);
+
+  // 반복 재생 감지(loop 재시작) → 2회 이후 3번째 재생부터 라벨 스와이프 힌트.
+  const handleTimeUpdate = useCallback(() => {
+    const v = currentVideoRef.current;
+    if (!v) return;
+    if (v.currentTime + 0.1 < lastTime.current) {
+      loopCount.current += 1;
+      if (
+        loopCount.current >= 2 &&
+        activeHighlight &&
+        !activeHighlight.isLabeledByCurrentUser
+      ) {
+        setShowSwipeHint(true);
+      }
+    }
+    lastTime.current = v.currentTime;
+  }, [activeHighlight]);
+
+  const handleInteract = useCallback(() => {
+    setShowSwipeHint(false);
+    loopCount.current = 0;
+  }, []);
+
+  // 현재 클립이 바뀌면 재생을 시작하고 힌트 카운트를 초기화.
+  useEffect(() => {
+    const v = currentVideoRef.current;
+    if (v) {
+      v.currentTime = 0;
+      void v.play().catch(() => {});
+    }
+    loopCount.current = 0;
+    lastTime.current = 0;
+    setShowSwipeHint(false);
+  }, [activeHighlight?.id]);
 
   // 드래그 중: 손가락을 따라 피드가 이동(끝단엔 고무줄 저항).
   const handleVerticalDragMove = useCallback(
@@ -346,10 +377,46 @@ export const ShortsPage = () => {
         }}
         onTransitionEnd={handleFeedTransitionEnd}
       >
-        {prevHighlight && (
-          <div className="absolute inset-0 -translate-y-full">
-            <PreviewClip url={prevHighlight.clipUrl} />
-          </div>
+        {/* 지속(keyed) 영상 슬롯 — 이전/현재/다음. 스왑 시 요소가 재사용돼
+            리마운트/검은 프레임(깜빡임)이 없다. 현재만 소리·재생·힌트 대상. */}
+        {(
+          [
+            { highlight: prevHighlight, offset: -1 },
+            { highlight: activeHighlight, offset: 0 },
+            { highlight: nextHighlight, offset: 1 },
+          ] as const
+        ).map(({ highlight, offset }) =>
+          highlight ? (
+            <div
+              key={highlight.id}
+              className="absolute inset-0"
+              style={{
+                transform:
+                  offset === 0
+                    ? `translateX(${hDragX}px) rotate(${hDragX * 0.02}deg)`
+                    : `translateY(${offset * 100}%)`,
+                transition:
+                  offset === 0 && hDragX !== 0
+                    ? "none"
+                    : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
+              }}
+            >
+              <video
+                ref={offset === 0 ? currentVideoRef : undefined}
+                src={highlight.clipUrl}
+                autoPlay
+                loop
+                playsInline
+                preload="auto"
+                muted={offset !== 0}
+                onTimeUpdate={offset === 0 ? handleTimeUpdate : undefined}
+                className={cn(
+                  "h-full w-full bg-black object-contain",
+                  offset === 0 && showSwipeHint && "animate-swipe-hint",
+                )}
+              />
+            </div>
+          ) : null,
         )}
 
         <div className="absolute inset-0">
@@ -364,14 +431,11 @@ export const ShortsPage = () => {
             onVerticalDragMove={handleVerticalDragMove}
             onVerticalDragCancel={handleVerticalDragCancel}
             controlsLayer={controlsLayer}
+            videoRef={currentVideoRef}
+            onHorizontalDragMove={setHDragX}
+            onInteract={handleInteract}
           />
         </div>
-
-        {nextHighlight && (
-          <div className="absolute inset-0 translate-y-full">
-            <PreviewClip url={nextHighlight.clipUrl} />
-          </div>
-        )}
       </div>
 
       {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
