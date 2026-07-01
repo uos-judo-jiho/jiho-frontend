@@ -1,4 +1,4 @@
-import type { Score, VideoHighlight } from "@/api/video";
+import type { Score, TechniqueResult, VideoHighlight } from "@/api/video";
 import { useCreateLabel } from "@/hooks/use-highlights";
 import {
   SWIPE_THRESHOLD,
@@ -84,7 +84,7 @@ export const ShortsCard = ({
   }, [resetControlsTimer]);
 
   const saveLabel = useCallback(
-    (params: { techniqueResult: "NONE" | "SUCCESS"; score: Score }) => {
+    (params: { techniqueResult: TechniqueResult; score: Score }) => {
       mutation.mutate(
         {
           highlightId: highlight.id,
@@ -122,8 +122,8 @@ export const ShortsCard = ({
         setFeedback("success");
         saveLabel({ techniqueResult: "SUCCESS", score });
       } else {
-        setFeedback("none");
-        saveLabel({ techniqueResult: "NONE", score: "NONE" });
+        setFeedback("attempt");
+        saveLabel({ techniqueResult: "ATTEMPT", score: "NONE" });
       }
     },
     [
@@ -215,7 +215,7 @@ export const ShortsCard = ({
         />
       </div>
 
-      {/* 실시간 스와이프 스탬프 (기술아님/기술성공 · 완료 클립은 다음) */}
+      {/* 실시간 스와이프 스탬프 (기술시도/기술성공 · 완료 클립은 다음) */}
       <SwipeDragOverlay
         dragX={dragX}
         threshold={SWIPE_THRESHOLD}
@@ -357,13 +357,13 @@ export const ShortsCard = ({
               type="button"
               disabled={mutation.isPending}
               onClick={() => {
-                setFeedback("none");
-                saveLabel({ techniqueResult: "NONE", score: "NONE" });
+                setFeedback("attempt");
+                saveLabel({ techniqueResult: "ATTEMPT", score: "NONE" });
               }}
-              className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-red-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
+              className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-amber-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
             >
               <span className="text-lg">👈</span>
-              기술아님
+              기술시도
             </button>
             <button
               type="button"

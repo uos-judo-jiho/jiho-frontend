@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { ArrowRight, Heart, ThumbsUp, XCircleIcon } from "lucide-react";
+import { ArrowRight, Heart, Swords, ThumbsUp, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export type FeedbackType = "success" | "none" | "like" | null;
+export type FeedbackType = "success" | "attempt" | "none" | "like" | null;
 
 interface DragOverlayProps {
   /** 현재 드래그 거리(px). 오른쪽 +, 왼쪽 -. */
@@ -46,11 +46,11 @@ export const SwipeDragOverlay = ({
           bg: "bg-green-500/15",
         }
       : {
-          Icon: XCircleIcon,
-          label: "기술아님",
-          border: "border-red-400",
-          text: "text-red-300",
-          bg: "bg-red-500/15",
+          Icon: Swords,
+          label: "기술시도",
+          border: "border-amber-400",
+          text: "text-amber-300",
+          bg: "bg-amber-500/15",
         };
 
   const { Icon } = stamp;
@@ -101,9 +101,16 @@ const CONFIG = {
     border: "border-green-400",
     text: "text-green-300",
   },
+  attempt: {
+    icon: Swords,
+    label: "기술시도",
+    bg: "bg-amber-500/20",
+    border: "border-amber-400",
+    text: "text-amber-300",
+  },
   none: {
     icon: XCircleIcon,
-    label: "기술아님",
+    label: "기술없음",
     bg: "bg-red-500/20",
     border: "border-red-400",
     text: "text-red-300",
