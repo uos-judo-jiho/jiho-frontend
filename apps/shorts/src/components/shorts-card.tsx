@@ -29,9 +29,6 @@ const SCORE_OPTIONS: { value: SuccessScore; label: string }[] = [
   { value: "IPPON", label: "한판" },
 ];
 
-const scoreLabel = (score: SuccessScore) =>
-  SCORE_OPTIONS.find((o) => o.value === score)?.label ?? "";
-
 /** 저장된 라벨의 점수를 선택 상태로 복원. 무점수/없음이면 기본값 절반. */
 const initialScore = (score: Score | undefined): SuccessScore =>
   score === "YUKO" || score === "IPPON" ? score : "WAZA_ARI";
@@ -208,8 +205,6 @@ export const ShortsCard = ({
   );
 
   const isAlreadyLabeled = highlight.isLabeledByCurrentUser;
-  const clipDuration = (highlight.endSec - highlight.startSec).toFixed(1);
-  const confidence = (highlight.confidence * 100).toFixed(0);
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-black">
@@ -397,14 +392,7 @@ export const ShortsCard = ({
                     {technique}
                   </div>
                 )}
-                {/* 기술성공 시 부여될 점수 */}
-                <div className="inline-flex items-center rounded-full bg-amber-400/90 px-3 py-1 text-xs font-bold text-black backdrop-blur-sm">
-                  {scoreLabel(score)}
-                </div>
               </div>
-              <p className="text-xs text-white/60">
-                신뢰도 {confidence}% · {clipDuration}초
-              </p>
             </div>
 
             {/* 하단 버튼 바 — 터치 시 등장, 3초 후 자동 숨김 */}
