@@ -94,6 +94,16 @@ export const ShortsPage = () => {
     }
   }, [activeHighlights.length, highlightIndex, jobIndex, jobs.length]);
 
+  // 위/아래 스와이프용 — 라벨 없이 이전 클립으로 이동. 잡 첫 클립이면 이전 잡 첫 클립으로.
+  const moveToPrev = useCallback(() => {
+    if (highlightIndex > 0) {
+      setHighlightIndex(highlightIndex - 1);
+    } else if (jobIndex > 0) {
+      setJobIndex(jobIndex - 1);
+      setHighlightIndex(0);
+    }
+  }, [highlightIndex, jobIndex]);
+
   if (jobsQuery.isLoading) {
     return (
       <div className="flex h-dvh items-center justify-center bg-black text-white">
@@ -254,6 +264,8 @@ export const ShortsPage = () => {
         index={highlightIndex}
         total={activeHighlights.length}
         onLabeled={moveToNext}
+        onNext={moveToNext}
+        onPrev={moveToPrev}
       />
 
       <VideoPreloader urls={preloadUrls} />
