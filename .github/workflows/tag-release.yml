@@ -1,0 +1,68 @@
+name: Tag Release
+
+# 각 배포 파이프라인이 성공적으로 종료되면 해당 도메인(app)에 대한
+# 롤백용 태그를 생성한다.
+#   태그 형식: @uos-judo-jiho/<app>-<YYMMDD>-<6-digit-hash>
+#   예) @uos-judo-jiho/web-260701-c0fdd8
+on:
+  workflow_run:
+    workflows:
+      - "Build and Deploy (apps/Web)"
+      - "Build and Deploy (apps/Admin)"
+      - "Build and Deploy (apps/shorts)"
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    # 배포가 성공했을 때만 태그를 만든다.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout deployed commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Create and push release tag
+        env:
+          WORKFLOW_NAME: ${{ github.event.workflow_run.name }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+
+          # 트리거된 워크플로우 이름 -> app slug 매핑
+          case "$WORKFLOW_NAME" in
+            *"apps/Web"*)    APP="web" ;;
+            *"apps/Admin"*)  APP="admin" ;;
+            *"apps/shorts"*) APP="shorts" ;;
+            *)
+              echo "Unknown workflow name: $WORKFLOW_NAME" >&2
+              exit 1
+              ;;
+          esac
+
+          DATE="$(TZ=Asia/Seoul date +%y%m%d)"
+          SHORT_HASH="$(echo "$HEAD_SHA" | cut -c1-6)"
+          TAG="@uos-judo-jiho/${APP}-${DATE}-${SHORT_HASH}"
+
+          echo "Tagging deploy: $TAG (commit $HEAD_SHA)"
+
+          # 같은 커밋을 재배포(re-run)해 태그가 이미 있으면 조용히 종료한다.
+          if git rev-parse -q --verify "refs/tags/${TAG}" >/dev/null; then
+            echo "Tag ${TAG} already exists. Skipping."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git tag -a "$TAG" "$HEAD_SHA" \
+            -m "Deploy ${APP} @ ${DATE} (${SHORT_HASH})"
+          git push origin "refs/tags/${TAG}"
+
+          echo "Pushed tag ${TAG}"
