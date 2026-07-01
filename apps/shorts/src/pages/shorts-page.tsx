@@ -4,11 +4,7 @@ import {
 } from "@/components/onboarding-overlay";
 import { ShortsCard } from "@/components/shorts-card";
 import { VideoPreloader } from "@/components/video-preloader";
-import {
-  useNextJobPrefetch,
-  useVideoHighlights,
-  useVideoJobs,
-} from "@/hooks/use-highlights";
+import { useHighlightsFeed } from "@/hooks/use-highlights";
 import { useOrientationMode } from "@/hooks/use-orientation";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -20,46 +16,46 @@ export const ShortsPage = () => {
     useOrientationMode();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Capture initial URL params once — refs are stable across renders
-  const initialJobId = useRef(searchParams.get("jobId"));
+  // 최초 URL의 highlightId를 한 번만 캡처(복원용) — ref는 렌더 간 안정적.
   const initialHighlightId = useRef(searchParams.get("highlightId"));
-  // Skip restoration phase if there are no URL params to restore
   const [urlInitialized, setUrlInitialized] = useState(
-    !initialJobId.current && !initialHighlightId.current,
+    !initialHighlightId.current,
   );
 
-  const jobsQuery = useVideoJobs();
-  const jobs = jobsQuery.data ?? [];
+  // 잡 선택 없이, 미라벨 → (소진 시) 라벨 순으로 이어지는 플랫 피드(커서 페이지네이션).
+  const {
+    highlights: rawHighlights,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useHighlightsFeed();
 
-  const [jobIndex, setJobIndex] = useState(0);
   const [highlightIndex, setHighlightIndex] = useState(0);
+  // 라벨 저장에 성공한 하이라이트 id — 목록에서 빼지 않고 '완료'로만 표시(안정된 인덱스).
+  const [labeledIds, setLabeledIds] = useState<Set<number>>(() => new Set());
 
-  const currentJob = jobs[jobIndex];
-  const { highlights, isLoading, isError } = useVideoHighlights(
-    currentJob?.id ?? 0,
+  const markLabeled = useCallback((id: number) => {
+    setLabeledIds((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  }, []);
+
+  // 라벨된 항목은 목록에 그대로 두되 '완료' 뱃지가 뜨도록 플래그만 덮어쓴다.
+  const activeHighlights = useMemo(
+    () =>
+      rawHighlights.map((h) =>
+        labeledIds.has(h.id) ? { ...h, isLabeledByCurrentUser: true } : h,
+      ),
+    [rawHighlights, labeledIds],
   );
-
-  const unlabeledHighlights = useMemo(
-    () => highlights.filter((h) => !h.isLabeledByCurrentUser),
-    [highlights],
-  );
-
-  const allHighlights = highlights;
-  // 라벨해도 목록에서 즉시 빼지 않는다(안정된 목록) — 인덱스가 밀리지 않아
-  // 스와이프/슬라이드가 튀지 않고, 라벨된 클립은 '완료' 뱃지로 표시된다.
-  const activeHighlights = allHighlights;
   const activeHighlight = activeHighlights[highlightIndex];
 
-  // Restore jobIndex from URL once jobs load
-  useEffect(() => {
-    if (urlInitialized || !initialJobId.current || jobs.length === 0) return;
-    const idx = jobs.findIndex((j) => String(j.id) === initialJobId.current);
-    if (idx !== -1) setJobIndex(idx);
-    if (!initialHighlightId.current) setUrlInitialized(true);
-    // oxlint-disable-next-line react-hooks/exhaustive-deps -- one-time restore from URL once jobs load
-  }, [jobs, urlInitialized]);
-
-  // Restore highlightIndex from URL once highlights for the target job load
+  // URL의 highlightId로 위치 복원(로드된 페이지 범위 내에서 best-effort).
   useEffect(() => {
     if (
       urlInitialized ||
@@ -74,27 +70,33 @@ export const ShortsPage = () => {
     setUrlInitialized(true);
   }, [activeHighlights, urlInitialized]);
 
-  // Sync URL to current state; replace: true keeps the history stack clean
+  // 현재 위치를 URL에 반영(replace로 히스토리 오염 방지).
   useEffect(() => {
     if (!urlInitialized) return;
-    const job = jobs[jobIndex];
     const highlight = activeHighlights[highlightIndex];
-    if (!job || !highlight) return;
-    setSearchParams(
-      { jobId: String(job.id), highlightId: String(highlight.id) },
-      { replace: true },
-    );
+    if (!highlight) return;
+    setSearchParams({ highlightId: String(highlight.id) }, { replace: true });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- activeHighlights는 파생 배열; 인덱스가 동기화를 주도
+  }, [urlInitialized, highlightIndex, activeHighlights, setSearchParams]);
+
+  // 끝에서 3개 이내로 접근하면 다음 페이지를 미리 로드(커서 페이지네이션).
+  useEffect(() => {
+    if (
+      hasNextPage &&
+      !isFetchingNextPage &&
+      highlightIndex >= activeHighlights.length - 3
+    ) {
+      fetchNextPage();
+    }
   }, [
-    urlInitialized,
-    jobIndex,
     highlightIndex,
-    // oxlint-disable-next-line react-hooks/exhaustive-deps -- jobs/activeHighlights are derived arrays; indices drive the sync
-    jobs,
-    activeHighlights,
-    setSearchParams,
+    activeHighlights.length,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
   ]);
 
-  // 다음 2개 클립 URL — 현재 job 내 남은 것 + 다음 job 첫 번째
+  // 다음 2개 클립 URL 프리로드.
   const preloadUrls = useMemo(() => {
     const urls: string[] = [];
     for (
@@ -107,31 +109,14 @@ export const ShortsPage = () => {
     return urls;
   }, [activeHighlights, highlightIndex]);
 
-  // 마지막 2개 하이라이트 진입 시 다음 job 데이터 prefetch
-  useNextJobPrefetch(jobs, jobIndex, highlightIndex, activeHighlights.length);
-
   const moveToNext = useCallback(() => {
-    const nextIndex = highlightIndex + 1;
-    if (nextIndex < activeHighlights.length) {
-      setHighlightIndex(nextIndex);
-    } else {
-      const nextJobIndex = jobIndex + 1;
-      if (nextJobIndex < jobs.length) {
-        setJobIndex(nextJobIndex);
-        setHighlightIndex(0);
-      }
-    }
-  }, [activeHighlights.length, highlightIndex, jobIndex, jobs.length]);
+    setHighlightIndex((i) => (i + 1 < activeHighlights.length ? i + 1 : i));
+  }, [activeHighlights.length]);
 
-  // 위/아래 스와이프용 — 라벨 없이 이전 클립으로 이동. 잡 첫 클립이면 이전 잡 첫 클립으로.
+  // 위/아래 스와이프용 — 라벨 없이 이전 클립으로 이동.
   const moveToPrev = useCallback(() => {
-    if (highlightIndex > 0) {
-      setHighlightIndex(highlightIndex - 1);
-    } else if (jobIndex > 0) {
-      setJobIndex(jobIndex - 1);
-      setHighlightIndex(0);
-    }
-  }, [highlightIndex, jobIndex]);
+    setHighlightIndex((i) => (i > 0 ? i - 1 : i));
+  }, []);
 
   // ── 세로 페이저(릴스/쇼츠식) — 수직 드래그 시 위/아래 이웃 클립을 미리 보여준다 ──
   const prevHighlight =
@@ -140,9 +125,9 @@ export const ShortsPage = () => {
     highlightIndex + 1 < activeHighlights.length
       ? activeHighlights[highlightIndex + 1]
       : null;
-  const canNext =
-    highlightIndex + 1 < activeHighlights.length || jobIndex + 1 < jobs.length;
-  const canPrev = highlightIndex > 0 || jobIndex > 0;
+  // 로드된 클립 범위 내에서만 이동을 허용(경계에서 프리로드가 다음 페이지를 채운다).
+  const canNext = highlightIndex + 1 < activeHighlights.length;
+  const canPrev = highlightIndex > 0;
 
   const [dragY, setDragY] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -215,7 +200,7 @@ export const ShortsPage = () => {
     videoRefs.current.forEach((el, id) => {
       if (id === currentId) {
         el.currentTime = 0;
-        void el.play().catch(() => {});
+        void el.play().catch(() => { });
       } else {
         el.pause();
         el.currentTime = 0; // 이웃은 첫 프레임으로
@@ -316,7 +301,7 @@ export const ShortsPage = () => {
   // Promise.all 로 함께 기다린 뒤 다음 클립으로 커밋한다(타이머 기반이라 안정적).
   const swipeUpNextWithSave = useCallback(
     (savePromise: Promise<unknown>) => {
-      savePromise.catch(() => {}); // 미처리 거부 방지(아래 Promise.all에서 재처리)
+      savePromise.catch(() => { }); // 미처리 거부 방지(아래 Promise.all에서 재처리)
       if (!canNext) return;
       const height = feedRef.current?.clientHeight ?? window.innerHeight;
       pendingCommit.current = null; // transitionEnd 커밋과 겹치지 않게
@@ -338,7 +323,7 @@ export const ShortsPage = () => {
     [canNext, moveToNext],
   );
 
-  if (jobsQuery.isLoading) {
+  if (isLoading) {
     return (
       <div className="flex h-dvh items-center justify-center bg-black text-white">
         <div className="flex flex-col items-center gap-3">
@@ -349,7 +334,7 @@ export const ShortsPage = () => {
     );
   }
 
-  if (jobsQuery.isError) {
+  if (isError) {
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-black px-6 text-center text-white">
         <p className="text-lg font-semibold">데이터를 불러오지 못했어요.</p>
@@ -366,79 +351,33 @@ export const ShortsPage = () => {
     );
   }
 
-  if (jobs.length === 0) {
+  if (activeHighlights.length === 0) {
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-3 bg-black px-6 text-center text-white">
-        <p className="text-lg font-semibold">라벨링할 영상이 없어요</p>
+        <p className="text-lg font-semibold">라벨링할 하이라이트가 없어요</p>
         <p className="text-sm text-neutral-400">
-          영상이 업로드되면 알려드릴게요.
+          새 하이라이트가 준비되면 알려드릴게요.
         </p>
       </div>
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex h-dvh items-center justify-center bg-black text-white">
-        <Loader2 className="h-8 w-8 animate-spin text-indigo-400" />
-      </div>
-    );
-  }
-
-  if (isError || !activeHighlight) {
-    const isAllDone =
-      !isError && allHighlights.length > 0 && unlabeledHighlights.length === 0;
-    const hasNextJob = jobIndex + 1 < jobs.length;
-
+  if (!activeHighlight) {
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-black px-6 text-center text-white">
-        {isAllDone ? (
-          <>
-            <div className="text-5xl">🎉</div>
-            <p className="text-xl font-bold">이 영상 완료!</p>
-            <p className="text-sm text-neutral-400">
-              {currentJob?.originalFilename}의 모든 하이라이트를 라벨링했어요.
-            </p>
-            {hasNextJob ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setJobIndex((prev) => prev + 1);
-                  setHighlightIndex(0);
-                }}
-                className="mt-2 rounded-xl bg-indigo-500 px-6 py-3 text-sm font-semibold hover:bg-indigo-400"
-              >
-                다음 영상으로
-              </button>
-            ) : (
-              <p className="mt-2 text-sm text-green-400 font-medium">
-                모든 영상 완료! 수고하셨어요 🥋
-              </p>
-            )}
-          </>
-        ) : (
-          <>
-            <p className="text-lg font-semibold">
-              하이라이트를 불러오지 못했어요.
-            </p>
-            <button
-              type="button"
-              onClick={() => window.location.reload()}
-              className="rounded-xl bg-white/10 px-6 py-3 text-sm hover:bg-white/20"
-            >
-              새로고침
-            </button>
-          </>
-        )}
+        <div className="text-5xl">🎉</div>
+        <p className="text-xl font-bold">모든 하이라이트 완료!</p>
+        <p className="mt-1 text-sm text-green-400 font-medium">
+          수고하셨어요 🥋
+        </p>
       </div>
     );
   }
 
   return (
     <div
-      className={`shorts-root${
-        orientationMode === "landscape" ? " shorts-root--landscape" : ""
-      }`}
+      className={`shorts-root${orientationMode === "landscape" ? " shorts-root--landscape" : ""
+        }`}
     >
       {needsOnboarding && <OnboardingOverlay onDone={complete} />}
 
@@ -477,12 +416,12 @@ export const ShortsPage = () => {
                 style={
                   offset === 0
                     ? {
-                        transform: `translateX(${hDragX + hintDragX}px) rotate(${(hDragX + hintDragX) * 0.02}deg)`,
-                        transition:
-                          hDragX !== 0 || hintDragX !== 0
-                            ? "none"
-                            : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
-                      }
+                      transform: `translateX(${hDragX + hintDragX}px) rotate(${(hDragX + hintDragX) * 0.02}deg)`,
+                      transition:
+                        hDragX !== 0 || hintDragX !== 0
+                          ? "none"
+                          : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
+                    }
                     : undefined
                 }
               >
@@ -511,11 +450,9 @@ export const ShortsPage = () => {
           {/* key 없이 유지 — 클립 변경 시 리마운트하지 않아 포탈 컨트롤이 깜빡이지 않는다. */}
           <ShortsCard
             highlight={activeHighlight}
-            jobId={currentJob.id}
-            index={highlightIndex}
-            total={activeHighlights.length}
-            title={currentJob.originalFilename.replace(/\.[^.]+$/, "")}
+            title={activeHighlight.originalFilename.replace(/\.[^.]+$/, "")}
             onLabeled={moveToNext}
+            onLabelSaved={markLabeled}
             onSwipeUpNext={swipeUpNextWithSave}
             onVerticalSwipe={handleVerticalSwipe}
             onVerticalDragMove={handleVerticalDragMove}
@@ -558,11 +495,10 @@ export const ShortsPage = () => {
           <div
             className="h-full bg-indigo-400"
             style={{
-              width: `${
-                videoTime.duration > 0
-                  ? (videoTime.current / videoTime.duration) * 100
-                  : 0
-              }%`,
+              width: `${videoTime.duration > 0
+                ? (videoTime.current / videoTime.duration) * 100
+                : 0
+                }%`,
             }}
           />
         </div>
