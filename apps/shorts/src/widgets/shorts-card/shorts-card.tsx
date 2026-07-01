@@ -1,11 +1,11 @@
-import type { Score, TechniqueResult, VideoHighlight } from "@/api/video";
-import { useCreateLabel } from "@/hooks/use-highlights";
+import type { Score, TechniqueResult, VideoHighlight } from "@/entities/video";
+import { useCreateLabel } from "@/entities/video";
 import {
   SWIPE_THRESHOLD,
   useSwipe,
   type SwipeDirection,
-} from "@/hooks/use-swipe";
-import { cn } from "@/lib/utils";
+} from "@/shared/gesture/use-swipe";
+import { cn } from "@/shared/lib/utils";
 import { Ban, Check, Heart, Smartphone, Tag } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -14,8 +14,8 @@ import {
   SwipeDragOverlay,
   SwipeFeedback,
   type FeedbackType,
-} from "./swipe-feedback";
-import { TechniqueSheet } from "./technique-sheet";
+} from "@/shared/ui/swipe-feedback";
+import { TechniqueSheet } from "@/features/label-highlight/ui/technique-sheet";
 
 const CONTROLS_HIDE_DELAY = 3000;
 

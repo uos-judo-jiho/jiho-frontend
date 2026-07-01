@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 import { ArrowRight, Heart, Swords, ThumbsUp, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 

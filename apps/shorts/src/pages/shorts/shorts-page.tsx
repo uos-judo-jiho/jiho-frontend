@@ -1,11 +1,11 @@
 import {
   OnboardingOverlay,
   useOnboarding,
-} from "@/components/onboarding-overlay";
-import { ShortsCard } from "@/components/shorts-card";
-import { VideoPreloader } from "@/components/video-preloader";
-import { useHighlightsFeed } from "@/hooks/use-highlights";
-import { useOrientationMode } from "@/hooks/use-orientation";
+} from "@/widgets/onboarding/onboarding-overlay";
+import { ShortsCard } from "@/widgets/shorts-card/shorts-card";
+import { VideoPreloader } from "@/shared/ui/video-preloader";
+import { useHighlightsFeed } from "@/entities/video";
+import { useOrientationMode } from "@/shared/lib/use-orientation";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
