@@ -7,7 +7,7 @@ import {
   getUnlabeledHighlights,
   type CreateLabelBody,
   type FeedHighlight,
-} from "@/api/video";
+} from "./api";
 
 const FEED_QUERY_BASE = {
   initialPageParam: undefined as number | undefined,

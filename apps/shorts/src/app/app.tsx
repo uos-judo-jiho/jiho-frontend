@@ -2,7 +2,7 @@ import { AUTH_PATHS, LoginPage, Register } from "@packages/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
-import { ShortsPage } from "@/pages/shorts-page";
+import { ShortsPage } from "@/pages/shorts/shorts-page";
 
 const queryClient = new QueryClient({
   defaultOptions: {
