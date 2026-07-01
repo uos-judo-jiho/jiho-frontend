@@ -41,6 +41,8 @@ interface Props {
   /** 동영상(잡) 제목 — 하단에 최대 2줄로 표시. */
   title: string;
   onLabeled: () => void;
+  /** 위로 스와이프하듯 애니메이션과 함께 다음 클립으로 이동(기술x 버튼용). */
+  onSwipeUpNext: () => void;
   /** 위/아래 스와이프 확정 (위=다음, 아래=이전) — 라벨 없이 이동. */
   onVerticalSwipe: (direction: "up" | "down") => void;
   /** 수직 드래그 실시간 delta(px) — 페이지의 세로 피드 이동에 사용. */
@@ -66,6 +68,7 @@ export const ShortsCard = ({
   total,
   title,
   onLabeled,
+  onSwipeUpNext,
   onVerticalSwipe,
   onVerticalDragMove,
   onVerticalDragCancel,
@@ -112,7 +115,10 @@ export const ShortsCard = ({
   }, [resetControlsTimer]);
 
   const saveLabel = useCallback(
-    (params: { techniqueResult: TechniqueResult; score: Score }) => {
+    (
+      params: { techniqueResult: TechniqueResult; score: Score },
+      advance = true,
+    ) => {
       mutation.mutate(
         {
           highlightId: highlight.id,
@@ -126,8 +132,9 @@ export const ShortsCard = ({
           },
         },
         {
+          // advance=false 면 저장만 하고 이동은 호출자가(예: 위로 스와이프 애니메이션) 담당.
           onSuccess: () => {
-            setTimeout(onLabeled, 700);
+            if (advance) setTimeout(onLabeled, 700);
           },
           onError: () => toast.error("저장 실패. 다시 시도해주세요."),
         },
@@ -311,23 +318,23 @@ export const ShortsCard = ({
             {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
             <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+3rem)] z-20 flex flex-col items-center gap-3">
               {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
+              {!isAlreadyLabeled ? (
               <button
                 type="button"
                 disabled={mutation.isPending}
                 onClick={() => {
                   if (mutation.isPending) return;
-                  if (isAlreadyLabeled) {
-                    onLabeled();
-                    return;
+                  if (!isAlreadyLabeled) {
+                    // 저장만 하고(이동은 애니메이션이 담당) 위로 스와이프하듯 넘어간다.
+                    saveLabel({ techniqueResult: "NONE", score: "NONE" }, false);
                   }
-                  setFeedback("none");
-                  saveLabel({ techniqueResult: "NONE", score: "NONE" });
+                  onSwipeUpNext();
                 }}
                 className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2"
               >
                 <Ban className="h-4 w-4 drop-shadow-md" strokeWidth={1.5} />
                 <span className="text-xs font-medium drop-shadow">기술 x</span>
-              </button>
+              </button>):null}
 
               <button
                 type="button"
