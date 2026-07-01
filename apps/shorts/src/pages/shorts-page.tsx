@@ -155,6 +155,8 @@ export const ShortsPage = () => {
   const currentVideoRef = useRef<HTMLVideoElement>(null);
   const [hDragX, setHDragX] = useState(0); // 좌우 라벨 드래그 → 현재 슬롯 이동
   const [showSwipeHint, setShowSwipeHint] = useState(false);
+  // 데모 힌트 방향(랜덤) — 왼쪽=기술시도, 오른쪽=기술성공.
+  const [hintDir, setHintDir] = useState<"left" | "right">("right");
   const loopCount = useRef(0);
   const lastTime = useRef(0);
   // 현재 클립의 재생 시간(초). 하단 스크러버 표시·시크에 사용.
@@ -168,12 +170,14 @@ export const ShortsPage = () => {
     if (!v) return;
     if (v.currentTime + 0.1 < lastTime.current) {
       loopCount.current += 1;
+      // 2회 반복 후(3번째 재생) 딱 한 번 힌트를 켜고 방향을 랜덤 선택.
       if (
-        loopCount.current >= 2 &&
+        loopCount.current === 2 &&
         activeHighlight &&
         !activeHighlight.isLabeledByCurrentUser
       ) {
         setShowSwipeHint(true);
+        setHintDir(Math.random() < 0.5 ? "left" : "right");
       }
     }
     lastTime.current = v.currentTime;
@@ -418,7 +422,11 @@ export const ShortsPage = () => {
                 onLoadedMetadata={offset === 0 ? handleTimeUpdate : undefined}
                 className={cn(
                   "h-full w-full bg-black object-contain",
-                  offset === 0 && showSwipeHint && "animate-swipe-hint",
+                  offset === 0 &&
+                    showSwipeHint &&
+                    (hintDir === "left"
+                      ? "animate-swipe-demo-left"
+                      : "animate-swipe-demo-right"),
                 )}
               />
             </div>
@@ -444,6 +452,24 @@ export const ShortsPage = () => {
           />
         </div>
       </div>
+
+      {/* 방치 데모 힌트 — 드래그 모션(영상)에 맞춰 라벨 오버레이가 나타났다 사라진다 */}
+      {showSwipeHint && (
+        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
+          <div
+            className={cn(
+              "animate-swipe-demo-label flex items-center gap-2 rounded-2xl border-2 px-6 py-4 text-lg font-extrabold backdrop-blur-sm",
+              hintDir === "right"
+                ? "border-green-400 bg-green-500/15 text-green-300"
+                : "border-amber-400 bg-amber-500/15 text-amber-300",
+            )}
+          >
+            {hintDir === "left" && <span>👈</span>}
+            {hintDir === "left" ? "기술시도" : "기술성공"}
+            {hintDir === "right" && <span>👉</span>}
+          </div>
+        </div>
+      )}
 
       {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
       <div ref={setControlsLayer} />

@@ -49,29 +49,61 @@
     padding-bottom: var(--safe-bottom);
   }
 
-  /* 방치(반복 재생) 시 "좌우로 스와이프해 라벨링" 을 유도하는 가로 바운스.
-     한 주기의 절반은 정지, 나머지에서 좌우로 살짝 흔든다. */
-  .animate-swipe-hint {
-    animation: swipe-hint 2.4s ease-in-out infinite;
+  /* 방치(반복 재생) 시 라벨 스와이프를 유도하는 "드래그해서 잠깐 대기" 데모.
+     한쪽으로 끌고 잠시 멈춘 뒤 놓는 동작을 반복한다(좌/우 두 방향). */
+  .animate-swipe-demo-left {
+    animation: swipe-demo-left 2.6s ease-in-out infinite;
+  }
+  .animate-swipe-demo-right {
+    animation: swipe-demo-right 2.6s ease-in-out infinite;
+  }
+  /* 데모 드래그가 멈춰있는 동안 라벨 오버레이가 나타났다 사라진다. */
+  .animate-swipe-demo-label {
+    animation: swipe-demo-label 2.6s ease-in-out infinite;
   }
 }
 
-@keyframes swipe-hint {
+@keyframes swipe-demo-left {
   0%,
-  55%,
+  12% {
+    transform: translateX(0);
+  }
+  38%,
+  62% {
+    transform: translateX(-64px);
+  }
+  88%,
   100% {
     transform: translateX(0);
   }
-  63% {
-    transform: translateX(-16px);
+}
+
+@keyframes swipe-demo-right {
+  0%,
+  12% {
+    transform: translateX(0);
   }
-  71% {
-    transform: translateX(16px);
+  38%,
+  62% {
+    transform: translateX(64px);
   }
-  79% {
-    transform: translateX(-10px);
+  88%,
+  100% {
+    transform: translateX(0);
   }
-  87% {
-    transform: translateX(10px);
+}
+
+@keyframes swipe-demo-label {
+  0%,
+  28% {
+    opacity: 0;
+  }
+  40%,
+  60% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    opacity: 0;
   }
 }
