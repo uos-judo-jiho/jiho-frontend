@@ -3,7 +3,7 @@ import {
   type SuccessScore,
 } from "@/features/label-highlight/use-label-highlight";
 import { cn } from "@/shared/lib/utils";
-import { Ban, Check, Heart, Smartphone, Tag, Volume2, VolumeX } from "lucide-react";
+import { Ban, Heart, Smartphone, Tag, Volume2, VolumeX } from "lucide-react";
 import { createPortal } from "react-dom";
 
 interface Props {
@@ -66,48 +66,42 @@ export const ShortsControls = ({
         )}
       />
 
-      {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
-      <div className="fixed left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex flex-col gap-2">
-        {/* 가로 <-> 세로 모드 전환 */}
-        <button
-          type="button"
-          onClick={toggleOrientation}
-          aria-label={
-            orientationMode === "landscape"
-              ? "세로 모드로 전환"
-              : "가로 모드로 전환"
-          }
-          className="flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
-        >
-          <Smartphone
-            className={cn(
-              "h-4 w-4",
-              orientationMode === "landscape" && "rotate-90",
+      {/* 상단 */}
+      <div className="fixed left-[calc(var(--safe-left)+1rem)] w-[calc(100%-var(--safe-left)-var(--safe-right)-2rem)] top-[calc(var(--safe-top)+1rem)] z-20">
+        <div className="w-full flex flex-row justify-between">
+          {/* 가로 <-> 세로 모드 전환 */}
+          <button
+            type="button"
+            onClick={toggleOrientation}
+            aria-label={
+              orientationMode === "landscape"
+                ? "세로 모드로 전환"
+                : "가로 모드로 전환"
+            }
+            className="flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
+          >
+            <Smartphone
+              className={cn(
+                "h-4 w-4",
+                orientationMode === "landscape" && "rotate-90",
+              )}
+            />
+            {orientationMode === "landscape" ? "세로" : "가로"}
+          </button>
+          {/* 음소거 토글 — 자동재생은 음소거로 시작, 여기서 소리 켜기/끄기 */}
+          <button
+            type="button"
+            onClick={onToggleMute}
+            aria-label={muted ? "소리 켜기" : "음소거"}
+            className="flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
+          >
+            {muted ? (
+              <VolumeX className="h-4 w-4" />
+            ) : (
+              <Volume2 className="h-4 w-4" />
             )}
-          />
-          {orientationMode === "landscape" ? "세로" : "가로"}
-        </button>
-        {/* 음소거 토글 — 자동재생은 음소거로 시작, 여기서 소리 켜기/끄기 */}
-        <button
-          type="button"
-          onClick={onToggleMute}
-          aria-label={muted ? "소리 켜기" : "음소거"}
-          className="flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
-        >
-          {muted ? (
-            <VolumeX className="h-4 w-4" />
-          ) : (
-            <Volume2 className="h-4 w-4" />
-          )}
-          {muted ? "소리" : "음소거"}
-        </button>
-        <div className="flex items-center gap-2">
-          {isAlreadyLabeled && (
-            <div className="flex items-center gap-1 rounded-full bg-green-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-              <Check className="h-3 w-3" />
-              완료
-            </div>
-          )}
+            {muted ? "소리" : "음소거"}
+          </button>
         </div>
       </div>
 
