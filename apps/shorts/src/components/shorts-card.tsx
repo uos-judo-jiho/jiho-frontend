@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 import { useCreateLabel } from "@/hooks/use-highlights";
-import { useSwipe, type SwipeDirection } from "@/hooks/use-swipe";
+import { SWIPE_THRESHOLD, useSwipe, type SwipeDirection } from "@/hooks/use-swipe";
 import { Check, Heart, Tag } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { VideoHighlight } from "@/api/video";
-import { SwipeFeedback, type FeedbackType } from "./swipe-feedback";
+import { SwipeDragOverlay, SwipeFeedback, type FeedbackType } from "./swipe-feedback";
 import { TechniqueSheet } from "./technique-sheet";
 
 const CONTROLS_HIDE_DELAY = 3000;
@@ -25,6 +25,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
   const [isPaused, setIsPaused] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [feedback, setFeedback] = useState<FeedbackType>(null);
+  const [dragX, setDragX] = useState(0);
   const [liked, setLiked] = useState(false);
   const [technique, setTechnique] = useState<string | null>(
     highlight.currentUserLabel?.technique ?? null,
@@ -73,7 +74,13 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
 
   const handleSwipe = useCallback(
     (direction: SwipeDirection) => {
-      if (mutation.isPending || highlight.isLabeledByCurrentUser) return;
+      setDragX(0);
+      if (mutation.isPending) return;
+      // 이미 라벨링된 클립은 좌우 어느 쪽으로 스와이프해도 다음으로 넘어간다.
+      if (highlight.isLabeledByCurrentUser) {
+        onLabeled();
+        return;
+      }
       if (direction === "right") {
         setFeedback("success");
         saveLabel({ techniqueResult: "SUCCESS", score: "WAZA_ARI" });
@@ -82,8 +89,20 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
         saveLabel({ techniqueResult: "NONE", score: "NONE" });
       }
     },
-    [highlight.isLabeledByCurrentUser, mutation.isPending, saveLabel],
+    [highlight.isLabeledByCurrentUser, mutation.isPending, onLabeled, saveLabel],
   );
+
+  // 드래그 중: 손가락을 따라 카드 이동. 라벨링 중(mutation)일 땐 잠금.
+  const handleDragMove = useCallback(
+    (deltaX: number) => {
+      if (mutation.isPending) return;
+      setDragX(deltaX);
+    },
+    [mutation.isPending],
+  );
+
+  // 임계값 미달로 손을 떼면 원위치.
+  const handleDragCancel = useCallback(() => setDragX(0), []);
 
   const handleDoubleTap = useCallback(() => {
     if (mutation.isPending || highlight.isLabeledByCurrentUser) return;
@@ -103,10 +122,12 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
     }
   }, []);
 
-  const { onTouchStart: swipeTouchStart, onTouchEnd } = useSwipe({
+  const { onTouchStart: swipeTouchStart, onTouchMove, onTouchEnd } = useSwipe({
     onSwipe: handleSwipe,
     onDoubleTap: handleDoubleTap,
     onTap: handleTap,
+    onDragMove: handleDragMove,
+    onDragCancel: handleDragCancel,
   });
 
   // 터치 시 컨트롤 타이머 리셋 후 스와이프 핸들러로 위임
@@ -124,11 +145,16 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-black">
-      {/* ── 영상 (full-screen) ── */}
+      {/* ── 영상 (full-screen) — 드래그 시 손가락을 따라 이동 ── */}
       <div
         className="absolute inset-0"
         onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+        style={{
+          transform: `translateX(${dragX}px) rotate(${dragX * 0.02}deg)`,
+          transition: dragX === 0 ? "transform 0.25s cubic-bezier(0.16,1,0.3,1)" : "none",
+        }}
       >
         <video
           ref={videoRef}
@@ -140,6 +166,13 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
           className="h-full w-full object-contain"
         />
       </div>
+
+      {/* 실시간 스와이프 스탬프 (무효/득점 · 완료 클립은 다음) */}
+      <SwipeDragOverlay
+        dragX={dragX}
+        threshold={SWIPE_THRESHOLD}
+        labeled={isAlreadyLabeled}
+      />
 
       {/* 일시정지 아이콘 */}
       {isPaused && (

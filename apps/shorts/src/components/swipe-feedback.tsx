@@ -1,8 +1,92 @@
 import { cn } from "@/lib/utils";
-import { Heart, ThumbsDown, ThumbsUp } from "lucide-react";
+import { ArrowRight, Heart, ThumbsUp, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export type FeedbackType = "success" | "none" | "like" | null;
+
+interface DragOverlayProps {
+  /** 현재 드래그 거리(px). 오른쪽 +, 왼쪽 -. */
+  dragX: number;
+  /** 스와이프가 확정되는 임계값(px). */
+  threshold: number;
+  /** 이미 라벨링된 클립이면 방향과 무관하게 "다음"으로 표시. */
+  labeled: boolean;
+}
+
+/**
+ * 손가락을 따라 실시간으로 나타나는 무효/득점 스탬프 (네이티브 스와이프 느낌).
+ * 드래그 거리에 비례해 진해지고, 임계값을 넘으면 꽉 찬 상태로 보인다.
+ */
+export const SwipeDragOverlay = ({
+  dragX,
+  threshold,
+  labeled,
+}: DragOverlayProps) => {
+  const intensity = Math.min(Math.abs(dragX) / threshold, 1);
+  if (intensity <= 0.02) return null;
+
+  const committed = intensity >= 1;
+  const direction: "left" | "right" = dragX > 0 ? "right" : "left";
+
+  // 라벨링 완료 클립은 좌우 모두 "다음"으로 안내.
+  const stamp = labeled
+    ? {
+        Icon: ArrowRight,
+        label: "다음",
+        border: "border-white",
+        text: "text-white",
+        bg: "bg-white/10",
+      }
+    : direction === "right"
+      ? {
+          Icon: ThumbsUp,
+          label: "득점",
+          border: "border-green-400",
+          text: "text-green-300",
+          bg: "bg-green-500/15",
+        }
+      : {
+          Icon: XCircleIcon,
+          label: "무효",
+          border: "border-red-400",
+          text: "text-red-300",
+          bg: "bg-red-500/15",
+        };
+
+  const { Icon } = stamp;
+  // 스탬프는 미는 방향의 반대편 가장자리에 고정 (Tinder LIKE/NOPE 스타일).
+  const side = labeled
+    ? "left-1/2 -translate-x-1/2"
+    : direction === "right"
+      ? "left-6"
+      : "right-6";
+
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+      <div
+        className={cn("absolute top-1/2 -translate-y-1/2", side)}
+        style={{
+          opacity: 0.25 + intensity * 0.75,
+          transform: `scale(${0.8 + intensity * 0.2})`,
+        }}
+      >
+        <div
+          className={cn(
+            "flex flex-col items-center gap-2 rounded-2xl border-2 px-6 py-4 backdrop-blur-sm transition-colors",
+            stamp.border,
+            stamp.text,
+            committed ? stamp.bg : "bg-black/20",
+          )}
+        >
+          <Icon className="h-10 w-10" strokeWidth={2} />
+          <span className="text-lg font-extrabold tracking-wide">
+            {stamp.label}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 interface Props {
   feedback: FeedbackType;
@@ -18,7 +102,7 @@ const CONFIG = {
     text: "text-green-300",
   },
   none: {
-    icon: ThumbsDown,
+    icon: XCircleIcon,
     label: "무효",
     bg: "bg-red-500/20",
     border: "border-red-400",

@@ -1,6 +1,6 @@
 import { useVideoHighlights, useVideoJobs, useNextJobPrefetch } from "@/hooks/use-highlights";
-import { useIsLandscape } from "@/hooks/use-orientation";
-import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { useIsLandscape, useOrientationMode } from "@/hooks/use-orientation";
+import { ChevronDown, ChevronUp, Loader2, Smartphone } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { OnboardingOverlay, useOnboarding } from "@/components/onboarding-overlay";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 
 export const ShortsPage = () => {
   const isLandscape = useIsLandscape();
+  const { mode: orientationMode, toggle: toggleOrientation } = useOrientationMode();
   const { needsOnboarding, complete } = useOnboarding();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -191,7 +192,21 @@ export const ShortsPage = () => {
   return (
     <div className="relative h-dvh overflow-hidden bg-black">
       {needsOnboarding && <OnboardingOverlay onDone={complete} />}
-      {!isLandscape && <RotatePrompt />}
+      {/* 가로 모드를 선택한 경우에만 세로일 때 회전 안내. 세로 모드면 표시하지 않음. */}
+      {orientationMode === "landscape" && !isLandscape && <RotatePrompt />}
+
+      {/* 가로 <-> 세로 모드 전환 */}
+      <button
+        type="button"
+        onClick={toggleOrientation}
+        aria-label={orientationMode === "landscape" ? "세로 모드로 전환" : "가로 모드로 전환"}
+        className="absolute right-4 top-6 z-30 flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
+      >
+        <Smartphone
+          className={cn("h-4 w-4", orientationMode === "landscape" && "rotate-90")}
+        />
+        {orientationMode === "landscape" ? "세로" : "가로"}
+      </button>
       <div className="absolute inset-x-0 top-0 z-30 h-0.5 bg-white/10">
         <div
           className="h-full bg-indigo-500 transition-all duration-500"
