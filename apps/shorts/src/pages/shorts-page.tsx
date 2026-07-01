@@ -432,7 +432,7 @@ export const ShortsPage = () => {
             jobId={currentJob.id}
             index={highlightIndex}
             total={activeHighlights.length}
-            title={currentJob.originalFilename}
+            title={currentJob.originalFilename.replace(/\.[^.]+$/, "")}
             onLabeled={moveToNext}
             onVerticalSwipe={handleVerticalSwipe}
             onVerticalDragMove={handleVerticalDragMove}
