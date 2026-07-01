@@ -69,4 +69,12 @@
   width: 100dvh;
   height: 100dvw;
   transform: translate(-50%, -50%) rotate(90deg);
+
+  /* 콘텐츠가 90°(CW) 회전하므로 safe-area inset도 그에 맞게 재매핑한다.
+     콘텐츠-상=기기-우, 콘텐츠-우=기기-하, 콘텐츠-하=기기-좌, 콘텐츠-좌=기기-상.
+     이 변수들은 .shorts-root 하위(포탈된 컨트롤 포함)로 상속돼 적용된다. */
+  --safe-top: env(safe-area-inset-right, 0px);
+  --safe-right: env(safe-area-inset-bottom, 0px);
+  --safe-bottom: env(safe-area-inset-left, 0px);
+  --safe-left: env(safe-area-inset-top, 0px);
 }
