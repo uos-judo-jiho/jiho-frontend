@@ -9,6 +9,8 @@ import { createPortal } from "react-dom";
 interface Props {
   /** 컨트롤을 렌더할 고정 레이어(세로 피드 transform 밖). 없으면 렌더하지 않음. */
   controlsLayer: HTMLElement | null;
+  /** 좋아요 버튼 ref — 더블탭 하트가 날아갈 도착점 계산에 사용. */
+  likeButtonRef?: React.Ref<HTMLButtonElement>;
   /** 자동숨김 상태 — 하단 그라데이션 페이드에만 사용(버튼은 항상 노출). */
   showControls: boolean;
   orientationMode: "landscape" | "portrait";
@@ -33,6 +35,7 @@ interface Props {
  */
 export const ShortsControls = ({
   controlsLayer,
+  likeButtonRef,
   showControls,
   orientationMode,
   toggleOrientation,
@@ -110,13 +113,14 @@ export const ShortsControls = ({
         ) : null}
 
         <button
+          ref={likeButtonRef}
           type="button"
           onClick={() => {
             if (!isAlreadyLabeled && !isPending) onToggleLike();
           }}
           className={cn(
             "flex flex-col items-center gap-1 transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2",
-            liked ? "text-pink-400" : "text-white",
+            liked ? "text-red-500" : "text-white",
           )}
         >
           <Heart

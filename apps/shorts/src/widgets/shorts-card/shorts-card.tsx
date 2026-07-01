@@ -6,11 +6,20 @@ import {
   useSwipe,
   type SwipeDirection,
 } from "@/shared/gesture/use-swipe";
+import { FlyingHeart } from "@/shared/ui/flying-heart";
 import { SwipeDragOverlay, SwipeFeedback } from "@/shared/ui/swipe-feedback";
 import { ShortsControls } from "@/widgets/shorts-controls/shorts-controls";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 const CONTROLS_HIDE_DELAY = 3000;
+
+/** 더블탭으로 스폰된, 좋아요 버튼으로 날아가는 하트 하나. */
+interface FlyingHeartItem {
+  id: number;
+  from: { x: number; y: number };
+  to: { x: number; y: number };
+}
 
 interface Props {
   highlight: VideoHighlight;
@@ -69,6 +78,25 @@ export const ShortsCard = ({
   const [isPaused, setIsPaused] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [dragX, setDragX] = useState(0);
+
+  // 좋아요 버튼 위치(날아가는 하트의 도착점) + 진행 중인 하트들.
+  const likeButtonRef = useRef<HTMLButtonElement>(null);
+  const [flyingHearts, setFlyingHearts] = useState<FlyingHeartItem[]>([]);
+  const flyingIdRef = useRef(0);
+
+  // 더블탭 지점(from) → 좋아요 버튼 중심(to)으로 날아가는 하트를 하나 추가.
+  const spawnFlyingHeart = useCallback((from: { x: number; y: number }) => {
+    const btn = likeButtonRef.current;
+    if (!btn) return;
+    const r = btn.getBoundingClientRect();
+    const to = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    const id = ++flyingIdRef.current;
+    setFlyingHearts((prev) => [...prev, { id, from, to }]);
+  }, []);
+
+  const removeFlyingHeart = useCallback((id: number) => {
+    setFlyingHearts((prev) => prev.filter((h) => h.id !== id));
+  }, []);
 
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
@@ -129,10 +157,16 @@ export const ShortsCard = ({
     onHorizontalDragMove(0);
   }, [onHorizontalDragMove]);
 
-  const handleDoubleTap = useCallback(() => {
-    if (label.isPending || label.isAlreadyLabeled) return;
-    label.toggleLikeWithFeedback();
-  }, [label]);
+  // 더블탭 = 좋아요 토글. 켤 때만 터치 지점에서 좋아요 버튼으로 하트가 날아간다.
+  const handleDoubleTap = useCallback(
+    (point: { x: number; y: number }) => {
+      if (label.isPending || label.isAlreadyLabeled) return;
+      const turningOn = !label.liked;
+      label.toggleLike();
+      if (turningOn) spawnFlyingHeart(point);
+    },
+    [label, spawnFlyingHeart],
+  );
 
   const handleTap = useCallback(() => {
     const video = videoRef.current;
@@ -205,6 +239,7 @@ export const ShortsCard = ({
 
       <ShortsControls
         controlsLayer={controlsLayer}
+        likeButtonRef={likeButtonRef}
         showControls={showControls}
         orientationMode={orientationMode}
         toggleOrientation={toggleOrientation}
@@ -219,6 +254,21 @@ export const ShortsCard = ({
         onTechniqueNone={() => onSwipeUpNext(label.saveNone())}
         title={title}
       />
+
+      {/* 날아가는 하트 — 뷰포트 좌표(터치 xy·버튼 rect)를 쓰므로 어떤 transform도 없는
+          document.body에 포탈한다. 가로 모드(shorts-root 90° 회전)에서도 좌표가 맞는다. */}
+      {flyingHearts.length > 0 &&
+        createPortal(
+          flyingHearts.map((h) => (
+            <FlyingHeart
+              key={h.id}
+              from={h.from}
+              to={h.to}
+              onDone={() => removeFlyingHeart(h.id)}
+            />
+          )),
+          document.body,
+        )}
 
       <TechniqueSheet
         open={label.sheetOpen}

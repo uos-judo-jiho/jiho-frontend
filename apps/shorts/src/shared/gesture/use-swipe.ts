@@ -12,7 +12,8 @@ interface SwipeHandlers {
   onVerticalDragMove?: (deltaY: number) => void;
   /** 수직 스와이프가 임계값을 못 넘기고 손을 뗐을 때 (원위치 복귀 신호). */
   onVerticalDragCancel?: () => void;
-  onDoubleTap?: () => void;
+  /** 더블탭 — 두 번째 탭의 뷰포트 좌표를 전달(날아가는 하트 시작점). */
+  onDoubleTap?: (point: { x: number; y: number }) => void;
   onTap?: () => void;
   /** 손가락이 좌우로 움직이는 동안 실시간 delta(px)를 전달. 오른쪽 +, 왼쪽 -. */
   onDragMove?: (deltaX: number) => void;
@@ -53,11 +54,11 @@ export const useSwipe = ({
   const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 탭/더블탭 판정 — 280ms 안에 두 번이면 더블탭, 아니면 지연 후 단일 탭.
-  const handleTap = () => {
+  const handleTap = (xy: [number, number]) => {
     const now = Date.now();
     if (now - lastTapTime.current < DOUBLE_TAP_DELAY) {
       if (tapTimer.current) clearTimeout(tapTimer.current);
-      onDoubleTap?.();
+      onDoubleTap?.({ x: xy[0], y: xy[1] });
       lastTapTime.current = 0;
     } else {
       lastTapTime.current = now;
@@ -66,10 +67,10 @@ export const useSwipe = ({
   };
 
   return useDrag(
-    ({ movement: [mx, my], last, tap, axis }) => {
+    ({ movement: [mx, my], last, tap, axis, xy }) => {
       // 거의 안 움직였으면(threshold 미만) 탭 — 릴리즈 시점에만 판정.
       if (tap) {
-        if (last) handleTap();
+        if (last) handleTap(xy);
         return;
       }
       // 손을 뗀 순간: 잠긴 축에서 임계값 넘으면 스와이프, 아니면 원위치 신호.
