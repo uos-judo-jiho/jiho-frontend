@@ -31,9 +31,13 @@ const DRAG_DECISION_DISTANCE = 10;
 
 /**
  * 쇼츠 카드 제스처 인식 — @use-gesture/react useDrag 기반.
- * - lockDirection: 우세한 축(수평=라벨 드래그 / 수직=피드 이동)으로 잠금
+ * - 축 잠금을 콘텐츠 좌표에서 직접 계산(수평=라벨 드래그 / 수직=피드 이동)
  * - threshold(10px) + filterTaps: 10px 미만은 탭(더블탭 판정), 이상은 드래그
- * - transform: 가로 모드(CSS 90° 회전) 시 기기 델타를 콘텐츠 좌표로 재매핑
+ * - 가로 모드(CSS 90° 회전) 시 기기 델타를 콘텐츠 좌표로 재매핑
+ *
+ * 주의: @use-gesture의 axis:'lock'은 회전 전(raw) 좌표로 축을 정하므로
+ * transform과 함께 쓰면 가로 모드에서 축이 어긋난다(기기 가로 스와이프가
+ * 라벨 드래그로 잘못 잠겨 탐색이 먹통). 그래서 잠금을 직접 처리한다.
  * 반환값 bind()를 대상 요소에 스프레드해서 쓴다.
  */
 export const useSwipe = ({
@@ -47,11 +51,18 @@ export const useSwipe = ({
   onDragCancel,
   orientation = "portrait",
 }: SwipeHandlers) => {
-  // 콜백 재생성을 피하려고 최신 방향을 ref로 유지(transform은 매 포인터 이동에서 호출).
+  // 콜백 재생성을 피하려고 최신 방향을 ref로 유지.
   const orientationRef = useRef(orientation);
   orientationRef.current = orientation;
   const lastTapTime = useRef(0);
   const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 이 제스처에서 잠긴 축(콘텐츠 좌표 기준). 제스처 시작마다 초기화.
+  const axisLock = useRef<"none" | "x" | "y">("none");
+
+  // 기기 델타 → 콘텐츠 델타. 가로 모드는 화면이 90°(CW) 회전돼 있어 보정한다.
+  // 콘텐츠 x = 기기 y, 콘텐츠 y = -기기 x.
+  const toContent = (mx: number, my: number): [number, number] =>
+    orientationRef.current === "landscape" ? [my, -mx] : [mx, my];
 
   // 탭/더블탭 판정 — 280ms 안에 두 번이면 더블탭, 아니면 지연 후 단일 탭.
   const handleTap = (xy: [number, number]) => {
@@ -67,28 +78,41 @@ export const useSwipe = ({
   };
 
   return useDrag(
-    ({ movement: [mx, my], last, tap, axis, xy }) => {
+    ({ movement: [mx, my], first, last, tap, xy }) => {
+      if (first) axisLock.current = "none";
       // 거의 안 움직였으면(threshold 미만) 탭 — 릴리즈 시점에만 판정.
       if (tap) {
         if (last) handleTap(xy);
         return;
       }
+
+      const [cx, cy] = toContent(mx, my);
+      // 우세한 축으로 잠금(콘텐츠 좌표 기준) — 한 번 정해지면 제스처 끝까지 유지.
+      if (
+        axisLock.current === "none" &&
+        (Math.abs(cx) > DRAG_DECISION_DISTANCE ||
+          Math.abs(cy) > DRAG_DECISION_DISTANCE)
+      ) {
+        axisLock.current = Math.abs(cx) >= Math.abs(cy) ? "x" : "y";
+      }
+
       // 손을 뗀 순간: 잠긴 축에서 임계값 넘으면 스와이프, 아니면 원위치 신호.
       if (last) {
-        if (axis === "x") {
-          if (Math.abs(mx) > SWIPE_THRESHOLD)
-            onSwipe?.(mx > 0 ? "right" : "left");
+        if (axisLock.current === "x") {
+          if (Math.abs(cx) > SWIPE_THRESHOLD)
+            onSwipe?.(cx > 0 ? "right" : "left");
           else onDragCancel?.();
-        } else if (axis === "y") {
-          if (Math.abs(my) > VERTICAL_SWIPE_THRESHOLD)
-            onVerticalSwipe?.(my > 0 ? "down" : "up");
+        } else if (axisLock.current === "y") {
+          if (Math.abs(cy) > VERTICAL_SWIPE_THRESHOLD)
+            onVerticalSwipe?.(cy > 0 ? "down" : "up");
           else onVerticalDragCancel?.();
         }
         return;
       }
+
       // 드래그 중: 잠긴 축의 실시간 delta 전달(수평=라벨, 수직=피드 이동).
-      if (axis === "x") onDragMove?.(mx);
-      else if (axis === "y") onVerticalDragMove?.(my);
+      if (axisLock.current === "x") onDragMove?.(cx);
+      else if (axisLock.current === "y") onVerticalDragMove?.(cy);
     },
     {
       filterTaps: true,
@@ -96,10 +120,6 @@ export const useSwipe = ({
       // (10px 미만은 탭, 이상은 드래그). 기본 tapsThreshold(3px)면 3~10px가 사각지대가 됨.
       tapsThreshold: DRAG_DECISION_DISTANCE,
       threshold: DRAG_DECISION_DISTANCE,
-      // v10에서 lockDirection이 axis로 통합됨 — 'lock'이 우세 축으로 잠금.
-      axis: "lock",
-      transform: ([x, y]) =>
-        orientationRef.current === "landscape" ? [y, -x] : [x, y],
     },
   );
 };
