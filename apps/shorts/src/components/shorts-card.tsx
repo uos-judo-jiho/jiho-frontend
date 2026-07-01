@@ -41,8 +41,9 @@ interface Props {
   /** 동영상(잡) 제목 — 하단에 최대 2줄로 표시. */
   title: string;
   onLabeled: () => void;
-  /** 위로 스와이프하듯 애니메이션과 함께 다음 클립으로 이동(기술x 버튼용). */
-  onSwipeUpNext: () => void;
+  /** 위로 스와이프하듯 애니메이션과 함께 다음 클립으로 이동(기술x 버튼용).
+      저장 Promise를 받아 최소 지연과 함께 커밋한다. */
+  onSwipeUpNext: (savePromise: Promise<unknown>) => void;
   /** 위/아래 스와이프 확정 (위=다음, 아래=이전) — 라벨 없이 이동. */
   onVerticalSwipe: (direction: "up" | "down") => void;
   /** 수직 드래그 실시간 delta(px) — 페이지의 세로 피드 이동에 사용. */
@@ -118,9 +119,10 @@ export const ShortsCard = ({
     (
       params: { techniqueResult: TechniqueResult; score: Score },
       advance = true,
-    ) => {
-      mutation.mutate(
-        {
+    ): Promise<unknown> => {
+      // advance=false 면 저장만 하고 이동은 호출자가(예: 위로 스와이프 애니메이션) 담당.
+      return mutation
+        .mutateAsync({
           highlightId: highlight.id,
           data: {
             techniqueResult: params.techniqueResult,
@@ -130,15 +132,15 @@ export const ShortsCard = ({
             correctedEventSec: null,
             memo: null,
           },
-        },
-        {
-          // advance=false 면 저장만 하고 이동은 호출자가(예: 위로 스와이프 애니메이션) 담당.
-          onSuccess: () => {
-            if (advance) setTimeout(onLabeled, 700);
-          },
-          onError: () => toast.error("저장 실패. 다시 시도해주세요."),
-        },
-      );
+        })
+        .then((res) => {
+          if (advance) setTimeout(onLabeled, 700);
+          return res;
+        })
+        .catch((e) => {
+          toast.error("저장 실패. 다시 시도해주세요.");
+          throw e;
+        });
     },
     [highlight.id, liked, mutation, onLabeled, technique],
   );
@@ -324,9 +326,10 @@ export const ShortsCard = ({
                   disabled={mutation.isPending}
                   onClick={() => {
                     if (mutation.isPending) return;
-                    // 스탬프 없이 저장만 하고(이동은 애니메이션이 담당) 위로 스와이프하듯 넘어간다.
-                    saveLabel({ techniqueResult: "NONE", score: "NONE" }, false);
-                    onSwipeUpNext();
+                    // 스탬프 없이, 저장과 최소 0.3초 지연을 함께 기다리며 위로 스와이프한다.
+                    onSwipeUpNext(
+                      saveLabel({ techniqueResult: "NONE", score: "NONE" }, false),
+                    );
                   }}
                   className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2"
                 >

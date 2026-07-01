@@ -309,6 +309,32 @@ export const ShortsPage = () => {
     );
   }, [moveToNext, moveToPrev]);
 
+  // 기술x 등 버튼용 — 위로 슬라이드 애니메이션을 켜고, 저장과 최소 0.3초 지연을
+  // Promise.all 로 함께 기다린 뒤 다음 클립으로 커밋한다(타이머 기반이라 안정적).
+  const swipeUpNextWithSave = useCallback(
+    (savePromise: Promise<unknown>) => {
+      savePromise.catch(() => {}); // 미처리 거부 방지(아래 Promise.all에서 재처리)
+      if (!canNext) return;
+      const height = feedRef.current?.clientHeight ?? window.innerHeight;
+      pendingCommit.current = null; // transitionEnd 커밋과 겹치지 않게
+      setDragging(false);
+      setDragY(-height);
+      Promise.all([savePromise, new Promise((r) => setTimeout(r, 300))])
+        .then(() => {
+          setNoTransition(true);
+          moveToNext();
+          setDragY(0);
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => setNoTransition(false)),
+          );
+        })
+        .catch(() => {
+          setDragY(0); // 저장 실패 → 원위치(이동하지 않음)
+        });
+    },
+    [canNext, moveToNext],
+  );
+
   if (jobsQuery.isLoading) {
     return (
       <div className="flex h-dvh items-center justify-center bg-black text-white">
@@ -483,7 +509,7 @@ export const ShortsPage = () => {
             total={activeHighlights.length}
             title={currentJob.originalFilename.replace(/\.[^.]+$/, "")}
             onLabeled={moveToNext}
-            onSwipeUpNext={() => handleVerticalSwipe("up")}
+            onSwipeUpNext={swipeUpNextWithSave}
             onVerticalSwipe={handleVerticalSwipe}
             onVerticalDragMove={handleVerticalDragMove}
             onVerticalDragCancel={handleVerticalDragCancel}
