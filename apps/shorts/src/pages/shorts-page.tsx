@@ -400,7 +400,8 @@ export const ShortsPage = () => {
                     ? `translateX(${hDragX}px) rotate(${hDragX * 0.02}deg)`
                     : `translateY(${offset * 100}%)`,
                 transition:
-                  offset === 0 && hDragX !== 0
+                  // 커밋 리셋(윈도우 이동) 프레임엔 전환을 꺼서 재슬라이드를 막는다.
+                  noTransition || (offset === 0 && hDragX !== 0)
                     ? "none"
                     : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
               }}
