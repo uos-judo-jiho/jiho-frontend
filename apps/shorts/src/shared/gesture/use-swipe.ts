@@ -95,7 +95,8 @@ export const useSwipe = ({
       // (10px 미만은 탭, 이상은 드래그). 기본 tapsThreshold(3px)면 3~10px가 사각지대가 됨.
       tapsThreshold: DRAG_DECISION_DISTANCE,
       threshold: DRAG_DECISION_DISTANCE,
-      lockDirection: true,
+      // v10에서 lockDirection이 axis로 통합됨 — 'lock'이 우세 축으로 잠금.
+      axis: "lock",
       transform: ([x, y]) =>
         orientationRef.current === "landscape" ? [y, -x] : [x, y],
     },
