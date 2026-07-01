@@ -90,11 +90,20 @@ const EMPTY_ADDITIONAL: AdditionalValues = {
 /* 1단계: 필수 가입 정보 (+ 선택 추가 정보)                              */
 /* ------------------------------------------------------------------ */
 
+/* 회원 유형(권한) — API 스키마상 optional 이지만 가입 UX 상 필수로 받는다. */
+const REQUESTED_ROLE_OPTIONS = [
+  { value: "general", label: "재학생" },
+  { value: "graduate", label: "졸업생" },
+] as const;
+
 const signupSchema = additionalSchema.extend({
   email: z
     .string()
     .min(1, "이메일을 입력해주세요.")
     .email("유효한 이메일 주소를 입력해주세요."),
+  requestedRole: z.enum(["general", "graduate"], {
+    error: "회원 유형을 선택해주세요.",
+  }),
   password: z
     .string()
     .min(8, "비밀번호는 8자 이상이어야 합니다.")
@@ -185,6 +194,7 @@ const SignupForm = ({
           email: values.email,
           password: values.password,
           passwordConfirm: values.confirmPassword,
+          requestedRole: values.requestedRole,
           ...toAdditionalPayload(additional),
         },
       },
@@ -224,6 +234,19 @@ const SignupForm = ({
           invalid={!!errors.confirmPassword}
           registration={register("confirmPassword")}
         />
+      </Field>
+
+      <Field label="회원 유형" required error={errors.requestedRole}>
+        <div className="flex gap-3">
+          {REQUESTED_ROLE_OPTIONS.map((option) => (
+            <RadioCard
+              key={option.value}
+              label={option.label}
+              value={option.value}
+              registration={register("requestedRole")}
+            />
+          ))}
+        </div>
       </Field>
 
       <AdditionalFieldsSection
@@ -497,6 +520,35 @@ const TextInput = ({
     />
   );
 };
+
+const RadioCard = ({
+  label,
+  value,
+  registration,
+}: {
+  label: string;
+  value: string;
+  registration: UseFormRegisterReturn;
+}) => (
+  <label className="flex-1 cursor-pointer">
+    <input
+      type="radio"
+      value={value}
+      {...registration}
+      className="peer sr-only"
+    />
+    <span
+      className={cn(
+        "flex h-11 items-center justify-center rounded-lg border text-sm font-medium transition",
+        "border-slate-200 bg-white text-slate-600",
+        "peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white",
+        "peer-focus-visible:ring-2 peer-focus-visible:ring-slate-200",
+      )}
+    >
+      {label}
+    </span>
+  </label>
+);
 
 const SubmitButton = ({
   pending,
