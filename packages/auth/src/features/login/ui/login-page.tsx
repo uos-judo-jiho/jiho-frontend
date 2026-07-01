@@ -54,7 +54,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col">
+    <div className="h-dvh overflow-y-auto bg-white text-slate-900 flex flex-col">
       <div className="mx-auto flex flex-col gap-4 max-w-lg items-center justify-center px-6 py-12 flex-1">
         <div className="w-full rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/60">
           <div className="space-y-2">
