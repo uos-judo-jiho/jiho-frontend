@@ -1,11 +1,19 @@
-import { cn } from "@/lib/utils";
+import type { Score, VideoHighlight } from "@/api/video";
 import { useCreateLabel } from "@/hooks/use-highlights";
-import { SWIPE_THRESHOLD, useSwipe, type SwipeDirection } from "@/hooks/use-swipe";
+import {
+  SWIPE_THRESHOLD,
+  useSwipe,
+  type SwipeDirection,
+} from "@/hooks/use-swipe";
+import { cn } from "@/lib/utils";
 import { Check, Heart, Tag } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import type { Score, VideoHighlight } from "@/api/video";
-import { SwipeDragOverlay, SwipeFeedback, type FeedbackType } from "./swipe-feedback";
+import {
+  SwipeDragOverlay,
+  SwipeFeedback,
+  type FeedbackType,
+} from "./swipe-feedback";
 import { TechniqueSheet } from "./technique-sheet";
 
 const CONTROLS_HIDE_DELAY = 3000;
@@ -34,7 +42,13 @@ interface Props {
   onLabeled: () => void;
 }
 
-export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props) => {
+export const ShortsCard = ({
+  highlight,
+  jobId,
+  index,
+  total,
+  onLabeled,
+}: Props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -56,7 +70,10 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
     if (controlsTimer.current) clearTimeout(controlsTimer.current);
-    controlsTimer.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_DELAY);
+    controlsTimer.current = setTimeout(
+      () => setShowControls(false),
+      CONTROLS_HIDE_DELAY,
+    );
   }, []);
 
   useEffect(() => {
@@ -109,7 +126,13 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
         saveLabel({ techniqueResult: "NONE", score: "NONE" });
       }
     },
-    [highlight.isLabeledByCurrentUser, mutation.isPending, onLabeled, saveLabel, score],
+    [
+      highlight.isLabeledByCurrentUser,
+      mutation.isPending,
+      onLabeled,
+      saveLabel,
+      score,
+    ],
   );
 
   // 드래그 중: 손가락을 따라 카드 이동. 라벨링 중(mutation)일 땐 잠금.
@@ -142,7 +165,11 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
     }
   }, []);
 
-  const { onTouchStart: swipeTouchStart, onTouchMove, onTouchEnd } = useSwipe({
+  const {
+    onTouchStart: swipeTouchStart,
+    onTouchMove,
+    onTouchEnd,
+  } = useSwipe({
     onSwipe: handleSwipe,
     onDoubleTap: handleDoubleTap,
     onTap: handleTap,
@@ -173,7 +200,8 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
         onTouchEnd={onTouchEnd}
         style={{
           transform: `translateX(${dragX}px) rotate(${dragX * 0.02}deg)`,
-          transition: dragX === 0 ? "transform 0.25s cubic-bezier(0.16,1,0.3,1)" : "none",
+          transition:
+            dragX === 0 ? "transform 0.25s cubic-bezier(0.16,1,0.3,1)" : "none",
         }}
       >
         <video
@@ -198,7 +226,11 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       {isPaused && (
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
           <div className="rounded-full bg-black/40 p-5 backdrop-blur-sm">
-            <svg className="h-10 w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="h-10 w-10 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path d="M6 4h4v16H6zm8 0h4v16h-4z" />
             </svg>
           </div>
@@ -229,11 +261,12 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       </div>
 
       {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
-      <div className="absolute right-[calc(var(--safe-right)+0.75rem)] top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-5">
+      <div className="absolute right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-5">
         <button
           type="button"
           onClick={() => {
-            if (!isAlreadyLabeled && !mutation.isPending) setLiked((prev) => !prev);
+            if (!isAlreadyLabeled && !mutation.isPending)
+              setLiked((prev) => !prev);
           }}
           className={cn(
             "flex flex-col items-center gap-1 transition-transform active:scale-90",
@@ -313,7 +346,9 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       <div
         className={cn(
           "absolute inset-x-0 bottom-0 z-20 transition-all duration-500",
-          showControls ? "translate-y-0 opacity-100" : "translate-y-full opacity-0",
+          showControls
+            ? "translate-y-0 opacity-100"
+            : "translate-y-full opacity-0",
         )}
       >
         {!isAlreadyLabeled ? (
