@@ -2,8 +2,9 @@ name: Tag Release
 
 # 각 배포 파이프라인이 성공적으로 종료되면 해당 도메인(app)에 대한
 # 롤백용 태그를 생성한다.
-#   태그 형식: @uos-judo-jiho/<app>-<YYMMDD>-<6-digit-hash>
-#   예) @uos-judo-jiho/web-260701-c0fdd8
+#   태그 형식: @uos-judo-jiho/<app>-<YYMMDD>-<HHMMSS>-<6-digit-hash>
+#   예) @uos-judo-jiho/web-260701-143052-c0fdd8
+#   (날짜/시각은 KST(Asia/Seoul) 기준)
 on:
   workflow_run:
     workflows:
@@ -47,8 +48,9 @@ jobs:
           esac
 
           DATE="$(TZ=Asia/Seoul date +%y%m%d)"
+          TIME="$(TZ=Asia/Seoul date +%H%M%S)"
           SHORT_HASH="$(echo "$HEAD_SHA" | cut -c1-6)"
-          TAG="@uos-judo-jiho/${APP}-${DATE}-${SHORT_HASH}"
+          TAG="@uos-judo-jiho/${APP}-${DATE}-${TIME}-${SHORT_HASH}"
 
           echo "Tagging deploy: $TAG (commit $HEAD_SHA)"
 
@@ -62,7 +64,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git tag -a "$TAG" "$HEAD_SHA" \
-            -m "Deploy ${APP} @ ${DATE} (${SHORT_HASH})"
+            -m "Deploy ${APP} @ ${DATE} ${TIME} KST (${SHORT_HASH})"
           git push origin "refs/tags/${TAG}"
 
           echo "Pushed tag ${TAG}"
