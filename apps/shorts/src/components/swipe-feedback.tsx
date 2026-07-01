@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { ArrowRight, Heart, ThumbsUp, XCircleIcon } from "lucide-react";
+import { ArrowRight, Heart, Swords, ThumbsUp, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export type FeedbackType = "success" | "none" | "like" | null;
+export type FeedbackType = "success" | "attempt" | "none" | "like" | null;
 
 interface DragOverlayProps {
   /** 현재 드래그 거리(px). 오른쪽 +, 왼쪽 -. */
@@ -39,22 +39,22 @@ export const SwipeDragOverlay = ({
       }
     : direction === "right"
       ? {
+          Icon: Swords,
+          label: "기술시도",
+          border: "border-amber-400",
+          text: "text-amber-300",
+          bg: "bg-amber-500/15",
+        }
+      : {
           Icon: ThumbsUp,
-          label: "득점",
+          label: "기술성공",
           border: "border-green-400",
           text: "text-green-300",
           bg: "bg-green-500/15",
-        }
-      : {
-          Icon: XCircleIcon,
-          label: "무효",
-          border: "border-red-400",
-          text: "text-red-300",
-          bg: "bg-red-500/15",
         };
 
   const { Icon } = stamp;
-  // 스탬프는 미는 방향의 반대편 가장자리에 고정 (Tinder LIKE/NOPE 스타일).
+  // 영상이 비켜난 반대편(빈 공간)에 스탬프를 고정 — 왼쪽으로 밀면 오른쪽에 표시.
   const side = labeled
     ? "left-1/2 -translate-x-1/2"
     : direction === "right"
@@ -96,14 +96,21 @@ interface Props {
 const CONFIG = {
   success: {
     icon: ThumbsUp,
-    label: "득점!",
+    label: "기술성공!",
     bg: "bg-green-500/20",
     border: "border-green-400",
     text: "text-green-300",
   },
+  attempt: {
+    icon: Swords,
+    label: "기술시도",
+    bg: "bg-amber-500/20",
+    border: "border-amber-400",
+    text: "text-amber-300",
+  },
   none: {
     icon: XCircleIcon,
-    label: "무효",
+    label: "기술없음",
     bg: "bg-red-500/20",
     border: "border-red-400",
     text: "text-red-300",

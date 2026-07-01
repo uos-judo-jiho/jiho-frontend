@@ -1,41 +1,84 @@
 import { cn } from "@/lib/utils";
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 const TECHNIQUE_GROUPS = [
   {
     label: "손기술",
     options: [
-      "업어치기", "한팔업어치기", "빗당겨치기", "어깨로 메치기", "다리들어메치기",
-      "띄어치기", "모로떨어뜨리기", "업어떨어뜨리기", "다리잡아메치기", "오금잡아메치기",
-      "발목잡아메치기", "안뒤축되치기",
+      "업어치기",
+      "한팔업어치기",
+      "빗당겨치기",
+      "어깨로 메치기",
+      "다리들어메치기",
+      "띄어치기",
+      "모로떨어뜨리기",
+      "업어떨어뜨리기",
+      "다리잡아메치기",
+      "오금잡아메치기",
+      "발목잡아메치기",
+      "안뒤축되치기",
     ],
   },
   {
     label: "허리기술",
     options: [
-      "허리띄기", "허리껴치기", "허리돌리기", "허리채기", "허리후리기",
-      "허리튀기", "뒤허리안아메치기", "소매들어 허리채기",
+      "허리띄기",
+      "허리껴치기",
+      "허리돌리기",
+      "허리채기",
+      "허리후리기",
+      "허리튀기",
+      "뒤허리안아메치기",
+      "소매들어 허리채기",
     ],
   },
   {
     label: "발기술",
     options: [
-      "나오는발차기", "무릎대돌리기", "발목받치기", "밭다리후리기", "안다리후리기",
-      "발뒤축후리기", "안뒤축후리기", "모두걸기", "허벅다리걸기", "다리대돌리기",
-      "허리대돌리기", "밭다리걸기", "밭다리되치기", "안다리되치기", "허벅다리되치기",
+      "나오는발차기",
+      "무릎대돌리기",
+      "발목받치기",
+      "밭다리후리기",
+      "안다리후리기",
+      "발뒤축후리기",
+      "안뒤축후리기",
+      "모두걸기",
+      "허벅다리걸기",
+      "다리대돌리기",
+      "허리대돌리기",
+      "밭다리걸기",
+      "밭다리되치기",
+      "안다리되치기",
+      "허벅다리되치기",
     ],
   },
   {
     label: "앞 버림기술",
-    options: ["배대뒤치기", "안오금띄기", "누우면서던지기", "끌어누우며던지기", "뒤집어넘기기"],
+    options: [
+      "배대뒤치기",
+      "안오금띄기",
+      "누우면서던지기",
+      "끌어누우며던지기",
+      "뒤집어넘기기",
+    ],
   },
   {
     label: "옆 버림기술",
     options: [
-      "옆으로 떨어뜨리기", "모로띄기", "오금대떨어뜨리기", "모로걸기", "모로돌리기",
-      "허벅다리감아치기", "밭다리감아치기", "안쪽감아치기", "바깥감아치기",
-      "허리후리기감아치기", "허리튀겨감아치기", "안뒤축감아치기",
+      "옆으로 떨어뜨리기",
+      "모로띄기",
+      "오금대떨어뜨리기",
+      "모로걸기",
+      "모로돌리기",
+      "허벅다리감아치기",
+      "밭다리감아치기",
+      "안쪽감아치기",
+      "바깥감아치기",
+      "허리후리기감아치기",
+      "허리튀겨감아치기",
+      "안뒤축감아치기",
     ],
   },
 ] as const;
@@ -47,7 +90,12 @@ interface Props {
   selected: string | null;
 }
 
-export const TechniqueSheet = ({ open, onClose, onSelect, selected }: Props) => {
+export const TechniqueSheet = ({
+  open,
+  onClose,
+  onSelect,
+  selected,
+}: Props) => {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -66,7 +114,11 @@ export const TechniqueSheet = ({ open, onClose, onSelect, selected }: Props) => 
       : group.options,
   })).filter((group) => group.options.length > 0);
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  // 세로 피드 래퍼의 transform 이 fixed 를 가두지 않도록 body 로 포탈한다.
+  // (그렇지 않으면 닫힌 시트가 드래그 중 다음 영상보다 먼저 드러난다.)
+  return createPortal(
     <>
       <div
         className={cn(
@@ -108,7 +160,9 @@ export const TechniqueSheet = ({ open, onClose, onSelect, selected }: Props) => 
 
         <div className="flex-1 overflow-y-auto px-4 pb-[calc(2rem+var(--safe-bottom))]">
           {filtered.length === 0 ? (
-            <p className="py-8 text-center text-sm text-neutral-500">검색 결과 없음</p>
+            <p className="py-8 text-center text-sm text-neutral-500">
+              검색 결과 없음
+            </p>
           ) : (
             filtered.map((group) => (
               <div key={group.label} className="mb-4">
@@ -140,6 +194,7 @@ export const TechniqueSheet = ({ open, onClose, onSelect, selected }: Props) => 
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 };

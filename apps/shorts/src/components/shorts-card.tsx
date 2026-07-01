@@ -1,25 +1,89 @@
-import { cn } from "@/lib/utils";
+import type { Score, TechniqueResult, VideoHighlight } from "@/api/video";
 import { useCreateLabel } from "@/hooks/use-highlights";
-import { SWIPE_THRESHOLD, useSwipe, type SwipeDirection } from "@/hooks/use-swipe";
-import { Check, Heart, Tag } from "lucide-react";
+import {
+  SWIPE_THRESHOLD,
+  useSwipe,
+  type SwipeDirection,
+} from "@/hooks/use-swipe";
+import { cn } from "@/lib/utils";
+import { Ban, Check, Heart, Smartphone, Tag } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
-import type { VideoHighlight } from "@/api/video";
-import { SwipeDragOverlay, SwipeFeedback, type FeedbackType } from "./swipe-feedback";
+import {
+  SwipeDragOverlay,
+  SwipeFeedback,
+  type FeedbackType,
+} from "./swipe-feedback";
 import { TechniqueSheet } from "./technique-sheet";
 
 const CONTROLS_HIDE_DELAY = 3000;
+
+/** 기술성공 시 부여하는 점수. NONE(무점수)은 제외한 3단계. */
+type SuccessScore = Exclude<Score, "NONE">;
+
+const SCORE_OPTIONS: { value: SuccessScore; label: string }[] = [
+  { value: "YUKO", label: "유효" },
+  { value: "WAZA_ARI", label: "절반" },
+  { value: "IPPON", label: "한판" },
+];
+
+/** 저장된 라벨의 점수를 선택 상태로 복원. 무점수/없음이면 기본값 절반. */
+const initialScore = (score: Score | undefined): SuccessScore =>
+  score === "YUKO" || score === "IPPON" ? score : "WAZA_ARI";
 
 interface Props {
   highlight: VideoHighlight;
   jobId: number;
   index: number;
   total: number;
+  /** 동영상(잡) 제목 — 하단에 최대 2줄로 표시. */
+  title: string;
   onLabeled: () => void;
+  /** 위로 스와이프하듯 애니메이션과 함께 다음 클립으로 이동(기술x 버튼용).
+      저장 Promise를 받아 최소 지연과 함께 커밋한다. */
+  onSwipeUpNext: (savePromise: Promise<unknown>) => void;
+  /** 위/아래 스와이프 확정 (위=다음, 아래=이전) — 라벨 없이 이동. */
+  onVerticalSwipe: (direction: "up" | "down") => void;
+  /** 수직 드래그 실시간 delta(px) — 페이지의 세로 피드 이동에 사용. */
+  onVerticalDragMove: (deltaY: number) => void;
+  /** 수직 드래그 취소(임계값 미달) — 원위치. */
+  onVerticalDragCancel: () => void;
+  /** 컨트롤(카운터·액션·라벨·하단바)을 렌더할 고정 레이어. 세로 피드 transform 밖. */
+  controlsLayer: HTMLElement | null;
+  /** 현재 클립의 <video> — 페이지의 지속(keyed) 슬롯에서 렌더하고 여기로 전달. */
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  /** 방치 데모가 만드는 가상 드래그(px) — 실제 스와이프처럼 스탬프를 구동. */
+  hintDragX: number;
+  /** 좌우 라벨 드래그 실시간 delta(px) — 페이지가 현재 영상 슬롯을 이동시킨다. */
+  onHorizontalDragMove: (deltaX: number) => void;
+  /** 사용자가 조작을 시작함(idle 힌트 리셋용). */
+  onInteract: () => void;
+  /** 화면 회전 모드(가로=CSS 90° 회전) — 스와이프 방향 재매핑에 사용. */
+  orientationMode: "landscape" | "portrait";
+  /** 가로/세로 모드 전환. */
+  toggleOrientation: () => void;
 }
 
-export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+export const ShortsCard = ({
+  highlight,
+  jobId,
+  index,
+  total,
+  title,
+  onLabeled,
+  onSwipeUpNext,
+  onVerticalSwipe,
+  onVerticalDragMove,
+  onVerticalDragCancel,
+  controlsLayer,
+  videoRef,
+  hintDragX,
+  onHorizontalDragMove,
+  onInteract,
+  orientationMode,
+  toggleOrientation,
+}: Props) => {
   const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isPaused, setIsPaused] = useState(false);
@@ -30,13 +94,20 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
   const [technique, setTechnique] = useState<string | null>(
     highlight.currentUserLabel?.technique ?? null,
   );
+  // 기술성공 시 부여할 점수(유효/절반/한판). 기본값 절반.
+  const [score, setScore] = useState<SuccessScore>(() =>
+    initialScore(highlight.currentUserLabel?.score),
+  );
   const [sheetOpen, setSheetOpen] = useState(false);
   const mutation = useCreateLabel(jobId);
 
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
     if (controlsTimer.current) clearTimeout(controlsTimer.current);
-    controlsTimer.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_DELAY);
+    controlsTimer.current = setTimeout(
+      () => setShowControls(false),
+      CONTROLS_HIDE_DELAY,
+    );
   }, []);
 
   useEffect(() => {
@@ -46,10 +117,29 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
     };
   }, [resetControlsTimer]);
 
+  // key 없이 유지되므로, 클립이 바뀌면 클립별 상태를 여기서 초기화한다.
+  // (isAlreadyLabeled·완료 뱃지·우측 버튼은 highlight prop으로 즉시 반영됨)
+  useEffect(() => {
+    setLiked(false);
+    setTechnique(highlight.currentUserLabel?.technique ?? null);
+    setScore(initialScore(highlight.currentUserLabel?.score));
+    setFeedback(null);
+    setIsPaused(false);
+    setSheetOpen(false);
+    setDragX(0);
+    onHorizontalDragMove(0);
+    resetControlsTimer();
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- 클립 id 변경 시에만 초기화
+  }, [highlight.id]);
+
   const saveLabel = useCallback(
-    (params: { techniqueResult: "NONE" | "SUCCESS"; score: "NONE" | "WAZA_ARI" }) => {
-      mutation.mutate(
-        {
+    (
+      params: { techniqueResult: TechniqueResult; score: Score },
+      advance = true,
+    ): Promise<unknown> => {
+      // advance=false 면 저장만 하고 이동은 호출자가(예: 위로 스와이프 애니메이션) 담당.
+      return mutation
+        .mutateAsync({
           highlightId: highlight.id,
           data: {
             techniqueResult: params.techniqueResult,
@@ -59,15 +149,15 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
             correctedEventSec: null,
             memo: null,
           },
-        },
-        {
-          onSuccess: () => {
-            toast.success("저장됨");
-            setTimeout(onLabeled, 700);
-          },
-          onError: () => toast.error("저장 실패. 다시 시도해주세요."),
-        },
-      );
+        })
+        .then((res) => {
+          if (advance) setTimeout(onLabeled, 700);
+          return res;
+        })
+        .catch((e) => {
+          toast.error("저장 실패. 다시 시도해주세요.");
+          throw e;
+        });
     },
     [highlight.id, liked, mutation, onLabeled, technique],
   );
@@ -75,34 +165,47 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
   const handleSwipe = useCallback(
     (direction: SwipeDirection) => {
       setDragX(0);
+      onHorizontalDragMove(0);
       if (mutation.isPending) return;
       // 이미 라벨링된 클립은 좌우 어느 쪽으로 스와이프해도 다음으로 넘어간다.
       if (highlight.isLabeledByCurrentUser) {
         onLabeled();
         return;
       }
-      if (direction === "right") {
+      // 왼쪽=기술성공, 오른쪽=기술시도.
+      if (direction === "left") {
         setFeedback("success");
-        saveLabel({ techniqueResult: "SUCCESS", score: "WAZA_ARI" });
+        saveLabel({ techniqueResult: "SUCCESS", score });
       } else {
-        setFeedback("none");
-        saveLabel({ techniqueResult: "NONE", score: "NONE" });
+        setFeedback("attempt");
+        saveLabel({ techniqueResult: "ATTEMPT", score: "NONE" });
       }
     },
-    [highlight.isLabeledByCurrentUser, mutation.isPending, onLabeled, saveLabel],
+    [
+      highlight.isLabeledByCurrentUser,
+      mutation.isPending,
+      onLabeled,
+      saveLabel,
+      score,
+      onHorizontalDragMove,
+    ],
   );
 
-  // 드래그 중: 손가락을 따라 카드 이동. 라벨링 중(mutation)일 땐 잠금.
+  // 드래그 중: 손가락을 따라 영상 이동(페이지가 현재 슬롯을 이동). 라벨링 중엔 잠금.
   const handleDragMove = useCallback(
     (deltaX: number) => {
       if (mutation.isPending) return;
       setDragX(deltaX);
+      onHorizontalDragMove(deltaX);
     },
-    [mutation.isPending],
+    [mutation.isPending, onHorizontalDragMove],
   );
 
   // 임계값 미달로 손을 떼면 원위치.
-  const handleDragCancel = useCallback(() => setDragX(0), []);
+  const handleDragCancel = useCallback(() => {
+    setDragX(0);
+    onHorizontalDragMove(0);
+  }, [onHorizontalDragMove]);
 
   const handleDoubleTap = useCallback(() => {
     if (mutation.isPending || highlight.isLabeledByCurrentUser) return;
@@ -120,56 +223,51 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       video.pause();
       setIsPaused(true);
     }
-  }, []);
+  }, [videoRef]);
 
-  const { onTouchStart: swipeTouchStart, onTouchMove, onTouchEnd } = useSwipe({
+  const {
+    onTouchStart: swipeTouchStart,
+    onTouchMove,
+    onTouchEnd,
+  } = useSwipe({
     onSwipe: handleSwipe,
+    // 수직 제스처는 페이지의 세로 피드(다음/이전 미리보기)로 위임한다.
+    onVerticalSwipe,
+    onVerticalDragMove,
+    onVerticalDragCancel,
     onDoubleTap: handleDoubleTap,
     onTap: handleTap,
     onDragMove: handleDragMove,
     onDragCancel: handleDragCancel,
+    orientation: orientationMode,
   });
 
   // 터치 시 컨트롤 타이머 리셋 후 스와이프 핸들러로 위임
   const onTouchStart = useCallback(
     (e: React.TouchEvent) => {
+      // 사용자가 조작을 시작하면 idle 스와이프 힌트를 끄도록 페이지에 알린다.
+      onInteract();
       resetControlsTimer();
       swipeTouchStart(e);
     },
-    [resetControlsTimer, swipeTouchStart],
+    [onInteract, resetControlsTimer, swipeTouchStart],
   );
 
   const isAlreadyLabeled = highlight.isLabeledByCurrentUser;
-  const clipDuration = (highlight.endSec - highlight.startSec).toFixed(1);
-  const confidence = (highlight.confidence * 100).toFixed(0);
 
   return (
-    <div className="relative h-dvh w-full overflow-hidden bg-black">
-      {/* ── 영상 (full-screen) — 드래그 시 손가락을 따라 이동 ── */}
+    <div className="relative h-full w-full overflow-hidden">
+      {/* ── 터치 레이어 — 영상은 페이지의 지속(keyed) 슬롯에서 렌더된다 ── */}
       <div
         className="absolute inset-0"
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        style={{
-          transform: `translateX(${dragX}px) rotate(${dragX * 0.02}deg)`,
-          transition: dragX === 0 ? "transform 0.25s cubic-bezier(0.16,1,0.3,1)" : "none",
-        }}
-      >
-        <video
-          ref={videoRef}
-          src={highlight.clipUrl}
-          autoPlay
-          loop
-          playsInline
-          preload="auto"
-          className="h-full w-full object-contain"
-        />
-      </div>
+      />
 
-      {/* 실시간 스와이프 스탬프 (무효/득점 · 완료 클립은 다음) */}
+      {/* 실시간 스와이프 스탬프 (기술시도/기술성공 · 완료 클립은 다음) */}
       <SwipeDragOverlay
-        dragX={dragX}
+        dragX={dragX + hintDragX}
         threshold={SWIPE_THRESHOLD}
         labeled={isAlreadyLabeled}
       />
@@ -178,7 +276,11 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       {isPaused && (
         <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
           <div className="rounded-full bg-black/40 p-5 backdrop-blur-sm">
-            <svg className="h-10 w-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="h-10 w-10 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path d="M6 4h4v16H6zm8 0h4v16h-4z" />
             </svg>
           </div>
@@ -187,121 +289,143 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
 
       <SwipeFeedback feedback={feedback} onDone={() => setFeedback(null)} />
 
-      {/* 하단 그라데이션 — 컨트롤 표시 여부와 무관하게 항상 렌더 */}
-      <div
-        className={cn(
-          "pointer-events-none absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-500",
-          showControls ? "opacity-100" : "opacity-0",
-        )}
-      />
+      {/* 컨트롤 레이어 — 세로 피드 transform 밖(#root)으로 포탈해 스크롤 시 고정 */}
+      {controlsLayer &&
+        createPortal(
+          <>
+            {/* 하단 그라데이션 — 컨트롤 표시 여부와 무관하게 항상 렌더 */}
+            <div
+              className={cn(
+                "pointer-events-none fixed inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-500",
+                showControls ? "opacity-100" : "opacity-0",
+              )}
+            />
 
-      {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
-      <div className="absolute left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex items-center gap-2">
-        <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-          {index + 1} / {total}
-        </div>
-        {isAlreadyLabeled && (
-          <div className="flex items-center gap-1 rounded-full bg-green-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-            <Check className="h-3 w-3" />
-            완료
-          </div>
-        )}
-      </div>
+            {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
+            <div className="fixed left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex flex-col gap-2">
+              {/* 가로 <-> 세로 모드 전환 */}
+              <button
+                type="button"
+                onClick={toggleOrientation}
+                aria-label={
+                  orientationMode === "landscape"
+                    ? "세로 모드로 전환"
+                    : "가로 모드로 전환"
+                }
+                className="flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
+              >
+                <Smartphone
+                  className={cn(
+                    "h-4 w-4",
+                    orientationMode === "landscape" && "rotate-90",
+                  )}
+                />
+                {orientationMode === "landscape" ? "세로" : "가로"}
+              </button>
+              <div className="flex items-center gap-2">
+                <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                  {index + 1} / {total}
+                </div>
+                {isAlreadyLabeled && (
+                  <div className="flex items-center gap-1 rounded-full bg-green-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                    <Check className="h-3 w-3" />
+                    완료
+                  </div>
+                )}
+              </div>
+            </div>
 
-      {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
-      <div className="absolute right-[calc(var(--safe-right)+0.75rem)] top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-5">
-        <button
-          type="button"
-          onClick={() => {
-            if (!isAlreadyLabeled && !mutation.isPending) setLiked((prev) => !prev);
-          }}
-          className={cn(
-            "flex flex-col items-center gap-1 transition-transform active:scale-90",
-            liked ? "text-pink-400" : "text-white",
-          )}
-        >
-          <Heart
-            className="h-7 w-7 drop-shadow-lg"
-            fill={liked ? "currentColor" : "none"}
-            strokeWidth={1.5}
-          />
-          <span className="text-xs font-medium drop-shadow">좋아요</span>
-        </button>
+            {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
+            <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+3rem)] z-20 flex flex-col items-center gap-3">
+              {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
+              {!isAlreadyLabeled ? (
+                <button
+                  type="button"
+                  disabled={mutation.isPending}
+                  onClick={() => {
+                    if (mutation.isPending) return;
+                    // 스탬프 없이, 저장과 최소 0.3초 지연을 함께 기다리며 위로 스와이프한다.
+                    onSwipeUpNext(
+                      saveLabel({ techniqueResult: "NONE", score: "NONE" }, false),
+                    );
+                  }}
+                  className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2"
+                >
+                  <Ban className="h-4 w-4 drop-shadow-md" strokeWidth={1.5} />
+                  <span className="text-xs font-medium drop-shadow">기술 x</span>
+                </button>) : null}
 
-        <button
-          type="button"
-          onClick={() => setSheetOpen(true)}
-          className={cn(
-            "flex flex-col items-center gap-1 transition-transform active:scale-90",
-            technique ? "text-indigo-400" : "text-white",
-          )}
-        >
-          <Tag className="h-7 w-7 drop-shadow-lg" strokeWidth={1.5} />
-          <span className="text-xs font-medium drop-shadow">
-            {technique ? "변경" : "기술명"}
-          </span>
-        </button>
-      </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!isAlreadyLabeled && !mutation.isPending)
+                    setLiked((prev) => !prev);
+                }}
+                className={cn(
+                  "flex flex-col items-center gap-1 transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2",
+                  liked ? "text-pink-400" : "text-white",
+                )}
+              >
+                <Heart
+                  className="h-4 w-4 drop-shadow-md"
+                  fill={liked ? "currentColor" : "none"}
+                  strokeWidth={1.5}
+                />
+                <span className="text-xs font-medium drop-shadow">좋아요</span>
+              </button>
 
-      {/* 하단 좌: 기술명 태그 + 메타 */}
-      <div
-        className={cn(
-          "pointer-events-none absolute bottom-[calc(var(--safe-bottom)+3.5rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
-          showControls ? "opacity-100" : "opacity-0",
-        )}
-      >
-        {technique && (
-          <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-            <Tag className="h-3 w-3" />
-            {technique}
-          </div>
-        )}
-        <p className="text-xs text-white/60">
-          신뢰도 {confidence}% · {clipDuration}초
-        </p>
-      </div>
+              <button
+                type="button"
+                onClick={() => setSheetOpen(true)}
+                className={cn(
+                  "flex flex-col items-center gap-1 transition-transform active:scale-90 bg-black/20 rounded-xl p-2",
+                  technique ? "text-indigo-400" : "text-white",
+                )}
+              >
+                <Tag className="h-4 w-4 drop-shadow-md" strokeWidth={1.5} />
+                <span className="text-xs font-medium drop-shadow">
+                  {technique ? "변경" : "기술명"}
+                </span>
+              </button>
 
-      {/* 하단 버튼 바 — 터치 시 등장, 3초 후 자동 숨김 */}
-      <div
-        className={cn(
-          "absolute inset-x-0 bottom-0 z-20 transition-all duration-500",
-          showControls ? "translate-y-0 opacity-100" : "translate-y-full opacity-0",
+              {/* 점수(유효/절반/한판) — 기술성공 시 부여할 점수를 선택. 라벨링 전에만 노출 */}
+              {!isAlreadyLabeled && (
+                <div className="flex flex-col overflow-hidden rounded-xl border border-white/20 bg-black/40 backdrop-blur-sm">
+                  {SCORE_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      disabled={mutation.isPending}
+                      onClick={() => setScore(opt.value)}
+                      className={cn(
+                        "px-3 py-1.5 text-xs font-bold transition-colors disabled:opacity-40",
+                        score === opt.value
+                          ? "bg-amber-400 text-black"
+                          : "text-white/80 hover:bg-white/10",
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* 하단 좌: 기술명 태그 + 동영상 제목(최대 2줄) — 진행바 바로 위 */}
+            <div className="pointer-events-none fixed bottom-[calc(var(--safe-bottom)+0.75rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20">
+              {technique && (
+                <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                  <Tag className="h-3 w-3" />
+                  {technique}
+                </div>
+              )}
+              <p className="line-clamp-2 text-sm font-medium leading-snug text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                {title}
+              </p>
+            </div>
+          </>,
+          controlsLayer,
         )}
-      >
-        {!isAlreadyLabeled ? (
-          <div className="grid grid-cols-2 border-t border-white/10 bg-black/70 pb-safe backdrop-blur-sm">
-            <button
-              type="button"
-              disabled={mutation.isPending}
-              onClick={() => {
-                setFeedback("none");
-                saveLabel({ techniqueResult: "NONE", score: "NONE" });
-              }}
-              className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-red-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
-            >
-              <span className="text-lg">👈</span>
-              무효
-            </button>
-            <button
-              type="button"
-              disabled={mutation.isPending}
-              onClick={() => {
-                setFeedback("success");
-                saveLabel({ techniqueResult: "SUCCESS", score: "WAZA_ARI" });
-              }}
-              className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-green-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
-            >
-              득점
-              <span className="text-lg">👉</span>
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 pt-3.5 pb-[calc(0.875rem+var(--safe-bottom))] text-sm text-neutral-400 backdrop-blur-sm">
-            <Check className="h-4 w-4 text-green-400" />
-            라벨링 완료 · 스와이프해서 다음으로
-          </div>
-        )}
-      </div>
 
       <TechniqueSheet
         open={sheetOpen}

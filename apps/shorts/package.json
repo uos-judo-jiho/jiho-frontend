@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit",
-    "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0"
+    "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",
+    "lint:fix": "oxlint src -c ../../.oxlintrc.json --fix"
   },
   "dependencies": {
     "@packages/api": "workspace:*",
