@@ -17,7 +17,7 @@
     "build:server-ts": "tsc -p tsconfig.server.json",
     "build:prerender": "node script/prerender.js",
     "build:docker": "npm run clean && sh script/docker-build-local.sh",
-    "lint": "eslint src --ext .ts,.tsx,.js --max-warnings=0",
+    "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",
     "orval": "pnpm --filter @packages/api gen",
     "preview": "cross-env NODE_ENV=production tsx server/index.ts",
     "start": "npm run preview",
@@ -90,12 +90,6 @@
     "serve": "^14.2.4",
     "tsx": "^4.20.6",
     "vite": "^6.4.1"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [

@@ -46,6 +46,7 @@ export const ShortsPage = () => {
     const idx = jobs.findIndex((j) => String(j.id) === initialJobId.current);
     if (idx !== -1) setJobIndex(idx);
     if (!initialHighlightId.current) setUrlInitialized(true);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- one-time restore from URL once jobs load
   }, [jobs, urlInitialized]);
 
   // Restore highlightIndex from URL once highlights for the target job load
@@ -66,6 +67,7 @@ export const ShortsPage = () => {
       { jobId: String(job.id), highlightId: String(highlight.id) },
       { replace: true },
     );
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- jobs/activeHighlights are derived arrays; indices drive the sync
   }, [urlInitialized, jobIndex, highlightIndex, jobs, activeHighlights, setSearchParams]);
 
   // 다음 2개 클립 URL — 현재 job 내 남은 것 + 다음 job 첫 번째
