@@ -1,4 +1,5 @@
 import { cn } from "@/shared/lib/utils";
+import { motion } from "framer-motion";
 import { ArrowRight, Heart, Swords, ThumbsUp, XCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -115,20 +116,37 @@ const CONFIG = {
     border: "border-red-400",
     text: "text-red-300",
   },
-  like: {
-    icon: Heart,
-    label: "좋아요!",
-    bg: "bg-pink-500/20",
-    border: "border-pink-400",
-    text: "text-pink-300",
-  },
 } as const;
+
+/**
+ * 인스타식 좋아요 하트 — 가운데에서 팝인(살짝 오버슈트)했다가 잠깐 머문 뒤
+ * 커지며 페이드아웃. 애니메이션이 끝나면 onDone으로 스스로 정리한다.
+ */
+const InstagramHeart = ({ onDone }: { onDone: () => void }) => (
+  <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
+    <motion.div
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{
+        scale: [0, 1.15, 1, 1, 1.1],
+        opacity: [0, 1, 1, 1, 0],
+      }}
+      transition={{ duration: 0.85, times: [0, 0.25, 0.4, 0.7, 1], ease: "easeOut" }}
+      onAnimationComplete={onDone}
+    >
+      <Heart
+        className="h-28 w-28 fill-white text-white drop-shadow-[0_2px_16px_rgba(0,0,0,0.5)]"
+        strokeWidth={1}
+      />
+    </motion.div>
+  </div>
+);
 
 export const SwipeFeedback = ({ feedback, onDone }: Props) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!feedback) return;
+    // 좋아요는 framer onAnimationComplete가 정리하므로 타이머를 걸지 않는다.
+    if (!feedback || feedback === "like") return;
     setVisible(true);
     const t = setTimeout(() => {
       setVisible(false);
@@ -138,6 +156,8 @@ export const SwipeFeedback = ({ feedback, onDone }: Props) => {
   }, [feedback, onDone]);
 
   if (!feedback) return null;
+
+  if (feedback === "like") return <InstagramHeart onDone={onDone} />;
 
   const cfg = CONFIG[feedback];
   const Icon = cfg.icon;
