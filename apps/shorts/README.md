@@ -49,19 +49,20 @@ pnpm -C apps/shorts dev
   쓸 수 있도록 프록시가 자동으로 완화합니다 (`vite.config.ts` 참고).
 - 데이터가 안 보이면 `https://admin.uosjudo.com/login` 에서 먼저 로그인하세요.
 
-### 3. 아이콘 준비 (⚠️ 필수)
+### 3. 아이콘
 
-`vite.config.ts` 의 매니페스트는 아래 PNG 아이콘을 참조합니다.
-**설치형 PWA가 정상 동작하려면 이 파일들이 `public/icons/` 에 있어야 합니다.**
+`public/icons/` 에 UOS 유도부 로고 기반 아이콘이 준비되어 있습니다
+(어두운 테마 배경 + 흰색 엠블럼 + 인디고 글로우).
 
 | 파일 | 크기 | 용도 |
 | --- | --- | --- |
-| `public/icons/icon-192.png` | 192×192 | 홈 화면 아이콘 |
-| `public/icons/icon-512.png` | 512×512 | 스플래시 / 고해상도 |
-| `public/icons/icon-512.png` (`purpose: maskable`) | 512×512 | Android 마스커블 |
+| `icon-192.png` | 192×192 | 홈 화면 / apple-touch 아이콘 |
+| `icon-512.png` | 512×512 | 스플래시 / 고해상도 |
+| `icon-512-maskable.png` | 512×512 | Android 마스커블 (안전영역 여백 포함) |
 
-> 현재 저장소에는 `icon-192.svg` 만 있습니다. 배포 전에 위 PNG를 생성해 커밋하세요.
-> (예: `npx pwa-asset-generator logo.svg public/icons` 등으로 생성)
+로고를 교체하려면 흰색 투명 로고를 소스로 다시 합성하면 됩니다.
+`sharp` 로 어두운 라운드 배경 위에 로고를 중앙 배치해 생성했습니다
+(소스 로고: `apps/web/src/shared/lib/assets/images/logo/logo-removebg-white.webp`).
 
 ### 4. 프로덕션 빌드 & 로컬 검증
 
