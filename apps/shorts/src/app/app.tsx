@@ -1,8 +1,10 @@
 import { AUTH_PATHS, LoginPage, Register } from "@packages/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import { ShortsPage } from "@/pages/shorts/shorts-page";
+import { lockPortrait } from "@/shared/lib/lock-orientation";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -13,7 +15,14 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
+const App = () => {
+  // 물리 방향을 세로로 고정 — 가로 모드는 CSS 90° 회전으로 직접 처리하므로
+  // OS 자동회전으로 뷰포트가 함께 돌아 이중 회전되는 것을 막는다.
+  useEffect(() => {
+    lockPortrait();
+  }, []);
+
+  return (
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <Routes>
@@ -30,6 +39,7 @@ const App = () => (
       />
     </QueryClientProvider>
   </BrowserRouter>
-);
+  );
+};
 
 export default App;

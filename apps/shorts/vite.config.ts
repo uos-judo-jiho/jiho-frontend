@@ -22,8 +22,9 @@ export default defineConfig({
         theme_color: "#0f0c0c",
         background_color: "#0f0c0c",
         display: "standalone",
-        // 가로/세로 모드 전환을 지원하므로 방향을 고정하지 않는다.
-        orientation: "any",
+        // 가로 모드는 앱이 CSS 90° 회전으로 직접 처리한다. 물리 방향은 세로로 고정해
+        // OS 자동회전으로 뷰포트가 함께 돌아 이중 회전되는 것을 막는다.
+        orientation: "portrait",
         start_url: "/",
         icons: [
           {
