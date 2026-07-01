@@ -73,16 +73,14 @@ export const SwipeDragOverlay = ({
       >
         <div
           className={cn(
-            "flex flex-col items-center gap-2 rounded-2xl border-2 px-6 py-4 backdrop-blur-sm transition-colors",
+            "flex items-center gap-1.5 rounded-full border px-3 py-1.5 backdrop-blur-sm transition-colors",
             stamp.border,
             stamp.text,
             committed ? stamp.bg : "bg-black/20",
           )}
         >
-          <Icon className="h-10 w-10" strokeWidth={2} />
-          <span className="text-lg font-extrabold tracking-wide">
-            {stamp.label}
-          </span>
+          <Icon className="h-4 w-4" strokeWidth={2} />
+          <span className="text-xs font-bold tracking-wide">{stamp.label}</span>
         </div>
       </div>
     </div>
@@ -171,13 +169,13 @@ export const SwipeFeedback = ({ feedback, onDone }: Props) => {
     >
       <div
         className={cn(
-          "flex flex-col items-center gap-3 rounded-3xl border-2 px-10 py-8 backdrop-blur-sm",
+          "flex items-center gap-1.5 rounded-full border px-4 py-2 backdrop-blur-sm",
           cfg.bg,
           cfg.border,
         )}
       >
-        <Icon className={cn("h-16 w-16", cfg.text)} strokeWidth={1.5} />
-        <span className={cn("text-2xl font-bold", cfg.text)}>{cfg.label}</span>
+        <Icon className={cn("h-5 w-5", cfg.text)} strokeWidth={2} />
+        <span className={cn("text-sm font-bold", cfg.text)}>{cfg.label}</span>
       </div>
     </div>
   );

@@ -109,11 +109,11 @@ export const useLabelHighlight = ({
     [saveLabel],
   );
 
-  // 더블탭 = 좋아요 토글 + 하트 피드백.
+  // 더블탭 = 좋아요 토글. 켤 때만 인스타식 하트 피드백을 띄운다(끌 때는 X).
   const toggleLikeWithFeedback = useCallback(() => {
+    if (!liked) setFeedback("like");
     setLiked((prev) => !prev);
-    setFeedback("like");
-  }, []);
+  }, [liked]);
 
   const toggleLike = useCallback(() => setLiked((prev) => !prev), []);
 
