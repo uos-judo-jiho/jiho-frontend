@@ -54,12 +54,12 @@ export const SwipeDragOverlay = ({
         };
 
   const { Icon } = stamp;
-  // 스탬프는 미는 방향과 같은 쪽에 고정 — 왼쪽=기술성공, 오른쪽=기술시도가 직관적.
+  // 영상이 비켜난 반대편(빈 공간)에 스탬프를 고정 — 왼쪽으로 밀면 오른쪽에 표시.
   const side = labeled
     ? "left-1/2 -translate-x-1/2"
     : direction === "right"
-      ? "right-6"
-      : "left-6";
+      ? "left-6"
+      : "right-6";
 
   return (
     <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">

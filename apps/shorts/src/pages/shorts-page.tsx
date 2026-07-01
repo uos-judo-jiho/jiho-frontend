@@ -151,7 +151,9 @@ export const ShortsPage = () => {
   );
 
   // 현재 클립 영상은 페이지가 소유(지속 요소) — 스왑 시 재사용해 깜빡임을 막는다.
-  const currentVideoRef = useRef<HTMLVideoElement>(null);
+  const currentVideoRef = useRef<HTMLVideoElement | null>(null);
+  // 윈도우(이전/현재/다음) 영상 요소 — 현재만 재생, 이웃은 정지시키기 위해 참조.
+  const videoRefs = useRef<Map<number, HTMLVideoElement>>(new Map());
   const [hDragX, setHDragX] = useState(0); // 좌우 라벨 드래그 → 현재 슬롯 이동
   const [showSwipeHint, setShowSwipeHint] = useState(false);
   // 데모 힌트가 만들어내는 가상 드래그 값(px). 실제 스와이프와 동일하게
@@ -202,13 +204,19 @@ export const ShortsPage = () => {
     setVideoTime({ current: v.currentTime, duration: v.duration });
   }, []);
 
-  // 현재 클립이 바뀌면 재생을 시작하고 힌트/시간 상태를 초기화.
+  // 현재 클립만 재생하고 이웃(이전/다음)은 정지시킨다(자동재생 방지).
+  // 클립이 바뀌면 힌트/시간 상태도 초기화.
   useEffect(() => {
-    const v = currentVideoRef.current;
-    if (v) {
-      v.currentTime = 0;
-      void v.play().catch(() => {});
-    }
+    const currentId = activeHighlight?.id;
+    videoRefs.current.forEach((el, id) => {
+      if (id === currentId) {
+        el.currentTime = 0;
+        void el.play().catch(() => {});
+      } else {
+        el.pause();
+        el.currentTime = 0; // 이웃은 첫 프레임으로
+      }
+    });
     loopCount.current = 0;
     lastTime.current = 0;
     setShowSwipeHint(false);
@@ -423,34 +431,44 @@ export const ShortsPage = () => {
           ] as const
         ).map(({ highlight, offset }) =>
           highlight ? (
+            // 바깥: 세로 위치(offset)만 담당 — 전환 없이 즉시(윈도우 이동 시 세로 슬라이드 방지).
             <div
               key={highlight.id}
               className="absolute inset-0"
-              style={{
-                transform:
-                  offset === 0
-                    ? `translateX(${hDragX + hintDragX}px) rotate(${(hDragX + hintDragX) * 0.02}deg)`
-                    : `translateY(${offset * 100}%)`,
-                transition:
-                  // 커밋 리셋·실드래그·데모 진행 중엔 전환을 꺼서 재슬라이드/충돌을 막는다.
-                  noTransition ||
-                  (offset === 0 && (hDragX !== 0 || hintDragX !== 0))
-                    ? "none"
-                    : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
-              }}
+              style={{ transform: `translateY(${offset * 100}%)` }}
             >
-              <video
-                ref={offset === 0 ? currentVideoRef : undefined}
-                src={highlight.clipUrl}
-                autoPlay
-                loop
-                playsInline
-                preload="auto"
-                muted={offset !== 0}
-                onTimeUpdate={offset === 0 ? handleTimeUpdate : undefined}
-                onLoadedMetadata={offset === 0 ? handleTimeUpdate : undefined}
-                className="h-full w-full bg-black object-contain"
-              />
+              {/* 안쪽: 현재 슬롯만 좌우 라벨 드래그로 이동/회전(스냅백은 전환). */}
+              <div
+                className="h-full w-full"
+                style={
+                  offset === 0
+                    ? {
+                        transform: `translateX(${hDragX + hintDragX}px) rotate(${(hDragX + hintDragX) * 0.02}deg)`,
+                        transition:
+                          hDragX !== 0 || hintDragX !== 0
+                            ? "none"
+                            : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
+                      }
+                    : undefined
+                }
+              >
+                <video
+                  ref={(el) => {
+                    if (el) videoRefs.current.set(highlight.id, el);
+                    else videoRefs.current.delete(highlight.id);
+                    if (offset === 0) currentVideoRef.current = el;
+                  }}
+                  src={highlight.clipUrl}
+                  autoPlay={offset === 0}
+                  loop
+                  playsInline
+                  preload="auto"
+                  muted={offset !== 0}
+                  onTimeUpdate={offset === 0 ? handleTimeUpdate : undefined}
+                  onLoadedMetadata={offset === 0 ? handleTimeUpdate : undefined}
+                  className="h-full w-full bg-black object-contain"
+                />
+              </div>
             </div>
           ) : null,
         )}
