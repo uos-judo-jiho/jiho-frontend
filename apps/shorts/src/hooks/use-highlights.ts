@@ -1,102 +1,57 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
+import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import { useMemo } from "react";
 
 import {
   createHighlightLabel,
-  getVideoEvents,
-  getVideoJobDetail,
-  getVideoJobs,
+  getUnlabeledHighlights,
   type CreateLabelBody,
-  type VideoHighlight,
-  type VideoJobListItem,
+  type FeedHighlight,
 } from "@/api/video";
 
-export const useVideoJobs = () =>
-  useQuery({
-    queryKey: ["videoJobs"],
-    queryFn: getVideoJobs,
-    staleTime: 30 * 1000,
-    select: (jobs) =>
-      jobs
-        .filter((job) => job.status === "done" && job.highlightCount > 0)
-        // 영상(job)은 최신순으로 노출(10번 → 9번 …). 영상 내 하이라이트 순서는 그대로.
-        .sort((a, b) => b.id - a.id),
-  });
-
-export const useVideoHighlights = (jobId: number): {
-  highlights: VideoHighlight[];
+/**
+ * 로그인 사용자의 미라벨 하이라이트 플랫 피드(커서 페이지네이션).
+ * 최초 로드시 잡 선택 없이 아직 라벨링하지 않은 하이라이트만 노출한다.
+ * staleTime을 무한으로 두어 세션 중 목록이 흔들리지 않게(인덱스 밀림 방지) 유지한다.
+ */
+export const useUnlabeledHighlights = (): {
+  highlights: FeedHighlight[];
   isLoading: boolean;
   isError: boolean;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
 } => {
-  const detailQuery = useQuery({
-    queryKey: ["videoJobDetail", jobId],
-    queryFn: () => getVideoJobDetail(jobId),
-    staleTime: 30 * 1000,
-    enabled: jobId > 0,
+  const query = useInfiniteQuery({
+    queryKey: ["unlabeledHighlights"],
+    queryFn: ({ pageParam }) => getUnlabeledHighlights(pageParam),
+    initialPageParam: undefined as number | undefined,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    staleTime: Number.POSITIVE_INFINITY,
+    refetchOnWindowFocus: false,
   });
 
-  const eventsQuery = useQuery({
-    queryKey: ["videoEvents", jobId],
-    queryFn: () => getVideoEvents(jobId),
-    staleTime: 30 * 1000,
-    enabled: jobId > 0,
-  });
-
-  const highlights = useMemo<VideoHighlight[]>(() => {
-    if (!detailQuery.data || !eventsQuery.data) return [];
-    const eventMap = new Map(
-      eventsQuery.data.map((e) => [e.highlightId, e.isLabeledByCurrentUser]),
-    );
-    return detailQuery.data.highlights.map((h) => ({
-      ...h,
-      isLabeledByCurrentUser: eventMap.get(h.id) ?? false,
-    }));
-  }, [detailQuery.data, eventsQuery.data]);
+  const highlights = useMemo(
+    () => query.data?.pages.flatMap((p) => p.items) ?? [],
+    [query.data],
+  );
 
   return {
     highlights,
-    isLoading: detailQuery.isLoading || eventsQuery.isLoading,
-    isError: detailQuery.isError || eventsQuery.isError,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    hasNextPage: query.hasNextPage,
+    isFetchingNextPage: query.isFetchingNextPage,
+    fetchNextPage: query.fetchNextPage,
   };
 };
 
 /**
- * 현재 하이라이트가 마지막 N개 안에 들어오면 다음 job의 상세 + 이벤트를
- * 미리 prefetch해서 스와이프 전환 시 로딩 없이 바로 보이도록 한다.
+ * 하이라이트 라벨 저장. 미라벨 피드를 즉시 invalidate 하지 않는다 —
+ * 라벨된 항목은 목록에 그대로 두고(안정된 인덱스) '완료' 뱃지로만 표시해
+ * 스와이프/슬라이드가 튀지 않게 한다. 다음 로드 때 서버가 미라벨만 다시 내려준다.
  */
-const PREFETCH_AHEAD = 2;
-
-export const useNextJobPrefetch = (
-  jobs: VideoJobListItem[],
-  jobIndex: number,
-  highlightIndex: number,
-  totalHighlights: number,
-) => {
-  const queryClient = useQueryClient();
-  const nextJob = jobs[jobIndex + 1];
-
-  useEffect(() => {
-    if (!nextJob) return;
-    const remainingAfterCurrent = totalHighlights - highlightIndex - 1;
-    if (remainingAfterCurrent > PREFETCH_AHEAD) return;
-
-    void queryClient.prefetchQuery({
-      queryKey: ["videoJobDetail", nextJob.id],
-      queryFn: () => getVideoJobDetail(nextJob.id),
-      staleTime: 30 * 1000,
-    });
-    void queryClient.prefetchQuery({
-      queryKey: ["videoEvents", nextJob.id],
-      queryFn: () => getVideoEvents(nextJob.id),
-      staleTime: 30 * 1000,
-    });
-  }, [nextJob, highlightIndex, totalHighlights, queryClient]);
-};
-
-export const useCreateLabel = (jobId: number) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
+export const useCreateLabel = () =>
+  useMutation({
     mutationFn: ({
       highlightId,
       data,
@@ -104,10 +59,4 @@ export const useCreateLabel = (jobId: number) => {
       highlightId: number;
       data: CreateLabelBody;
     }) => createHighlightLabel(highlightId, data),
-    onSuccess: () =>
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["videoEvents", jobId] }),
-        queryClient.invalidateQueries({ queryKey: ["videoJobDetail", jobId] }),
-      ]),
   });
-};

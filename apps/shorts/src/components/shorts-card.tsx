@@ -34,12 +34,11 @@ const initialScore = (score: Score | undefined): SuccessScore =>
 
 interface Props {
   highlight: VideoHighlight;
-  jobId: number;
-  index: number;
-  total: number;
   /** 동영상(잡) 제목 — 하단에 최대 2줄로 표시. */
   title: string;
   onLabeled: () => void;
+  /** 라벨 저장 성공 — 해당 하이라이트를 '완료'로 표시(목록에서 빼지는 않음). */
+  onLabelSaved: (highlightId: number) => void;
   /** 위로 스와이프하듯 애니메이션과 함께 다음 클립으로 이동(기술x 버튼용).
       저장 Promise를 받아 최소 지연과 함께 커밋한다. */
   onSwipeUpNext: (savePromise: Promise<unknown>) => void;
@@ -67,11 +66,9 @@ interface Props {
 
 export const ShortsCard = ({
   highlight,
-  jobId,
-  index,
-  total,
   title,
   onLabeled,
+  onLabelSaved,
   onSwipeUpNext,
   onVerticalSwipe,
   onVerticalDragMove,
@@ -99,7 +96,7 @@ export const ShortsCard = ({
     initialScore(highlight.currentUserLabel?.score),
   );
   const [sheetOpen, setSheetOpen] = useState(false);
-  const mutation = useCreateLabel(jobId);
+  const mutation = useCreateLabel();
 
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
@@ -151,6 +148,8 @@ export const ShortsCard = ({
           },
         })
         .then((res) => {
+          // 저장 성공 → '완료'로 표시(목록 유지). advance면 잠시 뒤 다음 클립으로.
+          onLabelSaved(highlight.id);
           if (advance) setTimeout(onLabeled, 700);
           return res;
         })
@@ -159,7 +158,7 @@ export const ShortsCard = ({
           throw e;
         });
     },
-    [highlight.id, liked, mutation, onLabeled, technique],
+    [highlight.id, liked, mutation, onLabeled, onLabelSaved, technique],
   );
 
   const handleSwipe = useCallback(
@@ -323,9 +322,6 @@ export const ShortsCard = ({
                 {orientationMode === "landscape" ? "세로" : "가로"}
               </button>
               <div className="flex items-center gap-2">
-                <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-                  {index + 1} / {total}
-                </div>
                 {isAlreadyLabeled && (
                   <div className="flex items-center gap-1 rounded-full bg-green-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
                     <Check className="h-3 w-3" />
