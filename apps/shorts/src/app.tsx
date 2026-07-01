@@ -1,5 +1,6 @@
+import { AUTH_PATHS, LoginPage, Register } from "@packages/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import { ShortsPage } from "@/pages/shorts-page";
 
@@ -15,7 +16,12 @@ const queryClient = new QueryClient({
 const App = () => (
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
-      <ShortsPage />
+      <Routes>
+        {/* 로그인/회원가입은 공유 패키지(@packages/auth) 페이지를 shorts 서브도메인에서 직접 서빙 */}
+        <Route path={AUTH_PATHS.login} element={<LoginPage />} />
+        <Route path={AUTH_PATHS.register} element={<Register />} />
+        <Route path="*" element={<ShortsPage />} />
+      </Routes>
       <Toaster
         position="top-center"
         toastOptions={{

@@ -1,6 +1,5 @@
 import { WithHelmet } from "@/components/utils/with-helmet";
-import { LoginPage } from "@/pages/login-page";
-import { Register } from "@/pages/register-page";
+import { LoginPage, Register } from "@packages/auth";
 import { Route, Routes } from "react-router-dom";
 import { RouterUrl } from "./router-url";
 

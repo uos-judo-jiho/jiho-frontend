@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "./dist",
+    "composite": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    // 런타임/번들은 package.json 의 "imports"(#) 로 해석되고,
+    // TypeScript(에디터·tsc)는 아래 paths 로 동일 경로를 해석한다.
+    "baseUrl": ".",
+    "paths": {
+      "#shared/*": ["./src/shared/*"],
+      "#features/*": ["./src/features/*"]
+    }
+  },
+  "include": ["src"]
+}

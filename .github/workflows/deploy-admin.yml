@@ -6,6 +6,7 @@ on:
     paths:
       - "apps/admin/**"
       - "packages/api/**"
+      - "packages/auth/**"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
       - "package.json"

@@ -1,25 +1,11 @@
-import { RouterUrl } from "@/app/routers/router-url";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { v2Admin } from "@packages/api";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import * as z from "zod";
 
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "이메일을 입력해주세요.")
-    .refine(
-      (val) => val === "uosjudojiho" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-      {
-        message: "유효한 이메일을 입력해주세요.",
-      },
-    ),
-  password: z.string().min(1, "비밀번호를 입력해주세요."),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+import { AUTH_PATHS } from "#shared/config/paths";
+import { loginSchema, type LoginFormValues } from "../lib/schema";
+import { useLoginMutation } from "../remote/use-login";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -38,13 +24,13 @@ export const LoginPage = () => {
     },
   });
 
-  const loginMutation = v2Admin.usePostApiV2AdminLogin({
+  const loginMutation = useLoginMutation({
     mutation: {
       onSuccess: () => {
         toast.success("로그인에 성공했습니다.");
         const destination = redirectTo
           ? decodeURIComponent(redirectTo)
-          : RouterUrl.홈;
+          : AUTH_PATHS.home;
         if (destination.startsWith("http")) {
           window.location.href = destination;
         } else {
@@ -59,9 +45,6 @@ export const LoginPage = () => {
         toast.error(message);
       },
     },
-    axios: {
-      withCredentials: true,
-    },
   });
 
   const onSubmit = (values: LoginFormValues) => {
@@ -71,13 +54,13 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col">
+    <div className="h-dvh overflow-y-auto bg-white text-slate-900 flex flex-col">
       <div className="mx-auto flex flex-col gap-4 max-w-lg items-center justify-center px-6 py-12 flex-1">
         <div className="w-full rounded-2xl border border-slate-200 bg-white p-8 shadow-lg shadow-slate-200/60">
           <div className="space-y-2">
             <h1 className="text-2xl font-semibold tracking-tight">로그인</h1>
             <p className="text-sm text-slate-500">
-              계정 정보를 입력하고 관리자 페이지로 이동하세요.
+              계정 정보를 입력해 로그인하세요.
             </p>
           </div>
 
@@ -135,7 +118,7 @@ export const LoginPage = () => {
             계정이 없으신가요?
             <br />
             <Link
-              to={RouterUrl.회원가입}
+              to={AUTH_PATHS.register}
               className="text-slate-900 font-medium hover:text-slate-700"
             >
               {"회원가입 >"}

@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* 공유 인증 페이지(@packages/auth)의 Tailwind 클래스를 스캔 대상에 포함 */
+@source "../../../packages/auth/src";
+
 @plugin 'tailwindcss-animate';
 
 @theme inline {
@@ -8,6 +11,16 @@
 }
 
 @layer base {
+  :root {
+    /* 노치·상태바·홈 인디케이터를 피하기 위한 safe-area inset.
+       viewport-fit=cover(index.html)와 함께 동작하며, PWA(standalone)에서
+       상태바 아래까지 화면이 확장될 때 값이 채워진다. 미지원 환경은 0px. */
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+  }
+
   * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -26,5 +39,13 @@
 
   #root {
     height: 100%;
+  }
+}
+
+@layer utilities {
+  /* 하단 고정 바가 홈 인디케이터를 피하도록 내부 콘텐츠에 여백을 준다.
+     바 배경은 화면 맨 아래까지 유지하면서 버튼만 위로 올린다. */
+  .pb-safe {
+    padding-bottom: var(--safe-bottom);
   }
 }

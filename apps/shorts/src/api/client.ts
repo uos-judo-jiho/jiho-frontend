@@ -9,8 +9,11 @@ apiClient.interceptors.response.use(
   (res) => res,
   (error) => {
     if (axios.isAxiosError(error) && error.response?.status === 401) {
-      const returnUrl = encodeURIComponent(window.location.href);
-      window.location.href = `https://admin.uosjudo.com/login?redirectTo=${returnUrl}`;
+      // 이미 로그인 페이지면 리다이렉트 루프를 만들지 않는다.
+      if (window.location.pathname !== "/login") {
+        const returnUrl = encodeURIComponent(window.location.href);
+        window.location.href = `/login?redirectTo=${returnUrl}`;
+      }
     }
     return Promise.reject(error);
   },
