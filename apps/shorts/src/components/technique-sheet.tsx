@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 const TECHNIQUE_GROUPS = [
   {
@@ -66,7 +67,11 @@ export const TechniqueSheet = ({ open, onClose, onSelect, selected }: Props) => 
       : group.options,
   })).filter((group) => group.options.length > 0);
 
-  return (
+  if (typeof document === "undefined") return null;
+
+  // 세로 피드 래퍼의 transform 이 fixed 를 가두지 않도록 body 로 포탈한다.
+  // (그렇지 않으면 닫힌 시트가 드래그 중 다음 영상보다 먼저 드러난다.)
+  return createPortal(
     <>
       <div
         className={cn(
@@ -140,6 +145,7 @@ export const TechniqueSheet = ({ open, onClose, onSelect, selected }: Props) => 
           )}
         </div>
       </div>
-    </>
+    </>,
+    document.body,
   );
 };
