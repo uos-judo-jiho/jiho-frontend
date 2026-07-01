@@ -26,22 +26,24 @@ const baseQueryOptions = {
   shouldSplitQueryKey: true,
 } as const;
 
-// NOTE: orval generates a GET operation as a *mutation* (not a query) when
-// `useMutation` is enabled alongside `useQuery`. v2Api is entirely read-only
-// GET endpoints consumed via query/suspense hooks, so it must NOT enable
-// useMutation — otherwise no `*QueryOptions`/suspense hooks are emitted and
-// SSR (and the client) crash with "(void 0) is not a function".
+// NOTE: orval's method-based hook selection is fragile when the useQuery/
+// useMutation booleans are set explicitly:
+//   - `useQuery: true` forces EVERY operation (incl. POST/PUT/DELETE) to be a
+//     query hook → mutations lose `.mutate` ("o.mutate is not a function").
+//   - `useMutation: true` on an all-GET spec forces every GET into a mutation
+//     → no `*QueryOptions`/suspense hooks ("(void 0) is not a function").
+//
+// v2Api is entirely read-only GET endpoints, so we force queries only.
 const apiQueryOptions: QueryOptions = {
   ...baseQueryOptions,
   useQuery: true,
   useMutation: false,
 };
 
-// v2Admin has write endpoints, so it keeps mutation hooks.
+// v2Admin is mixed (GET + write endpoints). Leave useQuery/useMutation unset so
+// orval decides per HTTP method: GET → query/suspense, POST/PUT/DELETE → mutation.
 const adminQueryOptions: QueryOptions = {
   ...baseQueryOptions,
-  useQuery: true,
-  useMutation: true,
 };
 
 export default defineConfig({
