@@ -8,6 +8,7 @@ import {
   useBeforeInstallPrompt,
 } from "@/shared/lib/use-pwa-install";
 import {
+  ChevronDown,
   Copy,
   Download,
   ExternalLink,
@@ -16,7 +17,7 @@ import {
   Plus,
   Share,
   SquarePlus,
-  X,
+  X
 } from "lucide-react";
 import { useState, type ComponentType, type ReactNode } from "react";
 import { toast } from "sonner";
@@ -46,18 +47,12 @@ const GUIDES: Record<InstallPlatform, Guide> = {
     ],
   },
   "ios-other": {
-    title: "Safari로 열어주세요",
+    title: "홈 화면에 추가",
     steps: [
-      {
-        Icon: ExternalLink,
-        text: "iOS에서는 Safari에서만 앱 설치가 가능해요.",
-      },
-      {
-        Icon: Share,
-        text: "Safari로 이 페이지를 연 뒤 공유 → ‘홈 화면에 추가’를 누르세요.",
-      },
+      { Icon: Share, text: "브라우저의 공유 버튼을 누르세요." },
+      { Icon: ChevronDown, text: "공유 시트에서 ‘더 보기’를 누르세요." },
+      { Icon: SquarePlus, text: "‘홈 화면에 추가’를 선택하면 끝!" },
     ],
-    showCopy: true,
   },
   "android-chrome": {
     title: "홈 화면에 추가",
