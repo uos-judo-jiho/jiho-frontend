@@ -319,22 +319,22 @@ export const ShortsCard = ({
             <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+3rem)] z-20 flex flex-col items-center gap-3">
               {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
               {!isAlreadyLabeled ? (
-              <button
-                type="button"
-                disabled={mutation.isPending}
-                onClick={() => {
-                  if (mutation.isPending) return;
-                  if (!isAlreadyLabeled) {
-                    // 저장만 하고(이동은 애니메이션이 담당) 위로 스와이프하듯 넘어간다.
-                    saveLabel({ techniqueResult: "NONE", score: "NONE" }, false);
-                  }
-                  onSwipeUpNext();
-                }}
-                className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2"
-              >
-                <Ban className="h-4 w-4 drop-shadow-md" strokeWidth={1.5} />
-                <span className="text-xs font-medium drop-shadow">기술 x</span>
-              </button>):null}
+                <button
+                  type="button"
+                  disabled={mutation.isPending}
+                  onClick={() => {
+                    if (mutation.isPending) return;
+                    if (!isAlreadyLabeled) {
+                      // 저장만 하고(이동은 애니메이션이 담당) 위로 스와이프하듯 넘어간다.
+                      saveLabel({ techniqueResult: "NONE", score: "NONE" }, false);
+                    }
+                    onSwipeUpNext();
+                  }}
+                  className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2"
+                >
+                  <Ban className="h-4 w-4 drop-shadow-md" strokeWidth={1.5} />
+                  <span className="text-xs font-medium drop-shadow">기술 x</span>
+                </button>) : null}
 
               <button
                 type="button"
