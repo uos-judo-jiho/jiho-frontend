@@ -6,6 +6,7 @@ import {
   useOnboarding,
 } from "@/widgets/onboarding/onboarding-overlay";
 import { ShortsCard } from "@/widgets/shorts-card/shorts-card";
+import { InstallPrompt } from "@/widgets/install-prompt";
 import { VideoPreloader } from "@/shared/ui/video-preloader";
 import { useOrientationMode } from "@/shared/lib/use-orientation";
 import { Loader2 } from "lucide-react";
@@ -244,6 +245,7 @@ export const ShortsPage = () => {
   }
 
   return (
+    <>
     <div
       className={`shorts-root${orientationMode === "landscape" ? " shorts-root--landscape" : ""
         }`}
@@ -385,5 +387,10 @@ export const ShortsPage = () => {
 
       <VideoPreloader urls={preloadUrls} />
     </div>
+
+    {/* PWA 설치 유도 — 회전하는 shorts-root 밖(기기 뷰포트 기준)에 표시.
+        온보딩이 끝난 뒤에만 노출한다. */}
+    {!needsOnboarding && <InstallPrompt />}
+    </>
   );
 };
