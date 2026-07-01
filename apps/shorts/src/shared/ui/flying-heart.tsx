@@ -20,7 +20,7 @@ export const FlyingHeart = ({ from, to, onDone }: Props) => (
     animate={{
       x: [from.x, from.x, to.x],
       y: [from.y, from.y, to.y],
-      scale: [0, 1.3, 0.3],
+      scale: [0, 1.3, 0.4],
       opacity: [0, 1, 0.9],
     }}
     transition={{ duration: 0.72, times: [0, 0.3, 1], ease: [0.4, 0, 0.2, 1] }}
