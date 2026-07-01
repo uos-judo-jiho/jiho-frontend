@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
-import { AUTH_PATHS } from "../../../shared/config/paths";
-import { extractMessage } from "../../../shared/lib/extract-message";
+import { AUTH_PATHS } from "#shared/config/paths";
+import { extractMessage } from "#shared/lib/extract-message";
 import {
   EMPTY_ADDITIONAL,
   toAdditionalPayload,

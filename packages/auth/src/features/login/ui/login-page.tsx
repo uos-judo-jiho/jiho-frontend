@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { AUTH_PATHS } from "../../../shared/config/paths";
+import { AUTH_PATHS } from "#shared/config/paths";
 import { loginSchema, type LoginFormValues } from "../lib/schema";
 import { useLoginMutation } from "../remote/use-login";
 

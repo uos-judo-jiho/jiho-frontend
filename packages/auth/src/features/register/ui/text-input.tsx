@@ -1,6 +1,6 @@
 import type { UseFormRegisterReturn } from "react-hook-form";
 
-import { cn } from "../../../shared/lib/cn";
+import { cn } from "#shared/lib/cn";
 
 export const TextInput = ({
   registration,

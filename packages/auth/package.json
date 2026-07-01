@@ -10,6 +10,10 @@
     "./login": "./src/features/login/index.ts",
     "./register": "./src/features/register/index.ts"
   },
+  "imports": {
+    "#shared/*": "./src/shared/*",
+    "#features/*": "./src/features/*"
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@packages/api": "workspace:*",
