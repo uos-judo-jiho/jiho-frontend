@@ -106,7 +106,7 @@ export const TechniqueSheet = ({ open, onClose, onSelect, selected }: Props) => 
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 pb-8">
+        <div className="flex-1 overflow-y-auto px-4 pb-[calc(2rem+var(--safe-bottom))]">
           {filtered.length === 0 ? (
             <p className="py-8 text-center text-sm text-neutral-500">검색 결과 없음</p>
           ) : (

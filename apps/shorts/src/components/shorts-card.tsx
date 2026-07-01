@@ -196,7 +196,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       />
 
       {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
-      <div className="absolute left-4 top-4 z-20 flex items-center gap-2">
+      <div className="absolute left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex items-center gap-2">
         <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
           {index + 1} / {total}
         </div>
@@ -209,7 +209,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       </div>
 
       {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
-      <div className="absolute right-3 top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-5">
+      <div className="absolute right-[calc(var(--safe-right)+0.75rem)] top-1/2 z-20 flex -translate-y-1/2 flex-col items-center gap-5">
         <button
           type="button"
           onClick={() => {
@@ -246,7 +246,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       {/* 하단 좌: 기술명 태그 + 메타 */}
       <div
         className={cn(
-          "pointer-events-none absolute bottom-14 left-4 right-16 z-20 transition-opacity duration-500",
+          "pointer-events-none absolute bottom-[calc(var(--safe-bottom)+3.5rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
           showControls ? "opacity-100" : "opacity-0",
         )}
       >
@@ -269,7 +269,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
         )}
       >
         {!isAlreadyLabeled ? (
-          <div className="grid grid-cols-2 border-t border-white/10 bg-black/70 backdrop-blur-sm">
+          <div className="grid grid-cols-2 border-t border-white/10 bg-black/70 pb-safe backdrop-blur-sm">
             <button
               type="button"
               disabled={mutation.isPending}
@@ -296,7 +296,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 py-3.5 text-sm text-neutral-400 backdrop-blur-sm">
+          <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 pt-3.5 pb-[calc(0.875rem+var(--safe-bottom))] text-sm text-neutral-400 backdrop-blur-sm">
             <Check className="h-4 w-4 text-green-400" />
             라벨링 완료 · 스와이프해서 다음으로
           </div>

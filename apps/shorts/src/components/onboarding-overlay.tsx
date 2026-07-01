@@ -106,14 +106,14 @@ export const OnboardingOverlay = ({ onDone }: Props) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-stretch bg-black/95 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-stretch bg-black/95 pl-[var(--safe-left)] pr-[var(--safe-right)] backdrop-blur-sm">
       <style>{KEYFRAMES}</style>
 
       {/* skip */}
       <button
         type="button"
         onClick={onDone}
-        className="absolute right-4 top-3 z-10 rounded-full px-3 py-1 text-xs text-neutral-600 transition-colors hover:text-neutral-300"
+        className="absolute right-[calc(var(--safe-right)+1rem)] top-[calc(var(--safe-top)+0.75rem)] z-10 rounded-full px-3 py-1 text-xs text-neutral-600 transition-colors hover:text-neutral-300"
       >
         건너뛰기
       </button>

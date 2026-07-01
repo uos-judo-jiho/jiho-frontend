@@ -200,14 +200,14 @@ export const ShortsPage = () => {
         type="button"
         onClick={toggleOrientation}
         aria-label={orientationMode === "landscape" ? "세로 모드로 전환" : "가로 모드로 전환"}
-        className="absolute right-4 top-6 z-30 flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
+        className="absolute right-[calc(var(--safe-right)+1rem)] top-[calc(var(--safe-top)+1.5rem)] z-30 flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
       >
         <Smartphone
           className={cn("h-4 w-4", orientationMode === "landscape" && "rotate-90")}
         />
         {orientationMode === "landscape" ? "세로" : "가로"}
       </button>
-      <div className="absolute inset-x-0 top-0 z-30 h-0.5 bg-white/10">
+      <div className="absolute inset-x-0 top-[var(--safe-top)] z-30 h-0.5 bg-white/10">
         <div
           className="h-full bg-indigo-500 transition-all duration-500"
           style={{ width: `${progress}%` }}
@@ -215,7 +215,7 @@ export const ShortsPage = () => {
       </div>
 
       {jobs.length > 1 && (
-        <div className="absolute left-4 top-6 z-30 flex flex-col gap-1">
+        <div className="absolute left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1.5rem)] z-30 flex flex-col gap-1">
           <button
             type="button"
             onClick={() => {
