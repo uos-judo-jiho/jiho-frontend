@@ -9,9 +9,7 @@ import {
   useVideoHighlights,
   useVideoJobs,
 } from "@/hooks/use-highlights";
-import { useOrientationMode } from "@/hooks/use-orientation";
-import { cn } from "@/lib/utils";
-import { Loader2, Smartphone } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -27,8 +25,6 @@ const PreviewClip = ({ url }: { url: string }) => (
 );
 
 export const ShortsPage = () => {
-  const { mode: orientationMode, toggle: toggleOrientation } =
-    useOrientationMode();
   const { needsOnboarding, complete } = useOnboarding();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -330,25 +326,6 @@ export const ShortsPage = () => {
     <div className="relative h-dvh overflow-hidden bg-black">
       {needsOnboarding && <OnboardingOverlay onDone={complete} />}
 
-      {/* 가로 <-> 세로 모드 전환 */}
-      <button
-        type="button"
-        onClick={toggleOrientation}
-        aria-label={
-          orientationMode === "landscape"
-            ? "세로 모드로 전환"
-            : "가로 모드로 전환"
-        }
-        className="absolute right-[calc(var(--safe-right)+1rem)] top-[calc(var(--safe-top)+1.5rem)] z-30 flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
-      >
-        <Smartphone
-          className={cn(
-            "h-4 w-4",
-            orientationMode === "landscape" && "rotate-90",
-          )}
-        />
-        {orientationMode === "landscape" ? "세로" : "가로"}
-      </button>
       <div className="absolute inset-x-0 top-[var(--safe-top)] z-30 h-0.5 bg-white/10">
         <div
           className="h-full bg-indigo-500 transition-all duration-500"

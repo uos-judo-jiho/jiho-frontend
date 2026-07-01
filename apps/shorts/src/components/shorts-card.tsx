@@ -1,12 +1,13 @@
 import type { Score, TechniqueResult, VideoHighlight } from "@/api/video";
 import { useCreateLabel } from "@/hooks/use-highlights";
+import { useOrientationMode } from "@/hooks/use-orientation";
 import {
   SWIPE_THRESHOLD,
   useSwipe,
   type SwipeDirection,
 } from "@/hooks/use-swipe";
 import { cn } from "@/lib/utils";
-import { Ban, Check, Heart, Tag } from "lucide-react";
+import { Ban, Check, Heart, Smartphone, Tag } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "sonner";
@@ -62,6 +63,9 @@ export const ShortsCard = ({
   onVerticalDragCancel,
   controlsLayer,
 }: Props) => {
+  const { mode: orientationMode, toggle: toggleOrientation } =
+    useOrientationMode();
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -269,20 +273,41 @@ export const ShortsCard = ({
             />
 
             {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
-            <div className="fixed left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex items-center gap-2">
-              <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-                {index + 1} / {total}
-              </div>
-              {isAlreadyLabeled && (
-                <div className="flex items-center gap-1 rounded-full bg-green-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-                  <Check className="h-3 w-3" />
-                  완료
+            <div className="fixed left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex flex-col gap-2">
+              {/* 가로 <-> 세로 모드 전환 */}
+              <button
+                type="button"
+                onClick={toggleOrientation}
+                aria-label={
+                  orientationMode === "landscape"
+                    ? "세로 모드로 전환"
+                    : "가로 모드로 전환"
+                }
+                className="flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
+              >
+                <Smartphone
+                  className={cn(
+                    "h-4 w-4",
+                    orientationMode === "landscape" && "rotate-90",
+                  )}
+                />
+                {orientationMode === "landscape" ? "세로" : "가로"}
+              </button>
+              <div className="flex items-center gap-2">
+                <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                  {index + 1} / {total}
                 </div>
-              )}
+                {isAlreadyLabeled && (
+                  <div className="flex items-center gap-1 rounded-full bg-green-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                    <Check className="h-3 w-3" />
+                    완료
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
-            <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-5">
+            <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-3">
               {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
               <button
                 type="button"
@@ -296,12 +321,10 @@ export const ShortsCard = ({
                   setFeedback("none");
                   saveLabel({ techniqueResult: "NONE", score: "NONE" });
                 }}
-                className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40"
+                className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2"
               >
                 <Ban className="h-4 w-4 drop-shadow-md" strokeWidth={1.5} />
-                <span className="text-xs font-medium drop-shadow">
-                  기술없음
-                </span>
+                <span className="text-xs font-medium drop-shadow">기술 x</span>
               </button>
 
               <button
@@ -311,7 +334,7 @@ export const ShortsCard = ({
                     setLiked((prev) => !prev);
                 }}
                 className={cn(
-                  "flex flex-col items-center gap-1 transition-transform active:scale-90",
+                  "flex flex-col items-center gap-1 transition-transform active:scale-90 disabled:opacity-40 bg-black/20 rounded-xl p-2",
                   liked ? "text-pink-400" : "text-white",
                 )}
               >
@@ -327,7 +350,7 @@ export const ShortsCard = ({
                 type="button"
                 onClick={() => setSheetOpen(true)}
                 className={cn(
-                  "flex flex-col items-center gap-1 transition-transform active:scale-90",
+                  "flex flex-col items-center gap-1 transition-transform active:scale-90 bg-black/20 rounded-xl p-2",
                   technique ? "text-indigo-400" : "text-white",
                 )}
               >
