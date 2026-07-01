@@ -131,6 +131,10 @@ export const ShortsPage = () => {
   const [noTransition, setNoTransition] = useState(false);
   const pendingCommit = useRef<"next" | "prev" | null>(null);
   const feedRef = useRef<HTMLDivElement>(null);
+  // 카드 컨트롤을 포탈할 고정 레이어(피드 transform 밖). 스크롤 시 UI 고정용.
+  const [controlsLayer, setControlsLayer] = useState<HTMLDivElement | null>(
+    null,
+  );
 
   // 드래그 중: 손가락을 따라 피드가 이동(끝단엔 고무줄 저항).
   const handleVerticalDragMove = useCallback(
@@ -371,6 +375,7 @@ export const ShortsPage = () => {
             onVerticalSwipe={handleVerticalSwipe}
             onVerticalDragMove={handleVerticalDragMove}
             onVerticalDragCancel={handleVerticalDragCancel}
+            controlsLayer={controlsLayer}
           />
         </div>
 
@@ -380,6 +385,9 @@ export const ShortsPage = () => {
           </div>
         )}
       </div>
+
+      {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
+      <div ref={setControlsLayer} />
 
       <VideoPreloader urls={preloadUrls} />
     </div>

@@ -8,6 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Ban, Check, Heart, Tag } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import {
   SwipeDragOverlay,
@@ -46,6 +47,8 @@ interface Props {
   onVerticalDragMove: (deltaY: number) => void;
   /** 수직 드래그 취소(임계값 미달) — 원위치. */
   onVerticalDragCancel: () => void;
+  /** 컨트롤(카운터·액션·라벨·하단바)을 렌더할 고정 레이어. 세로 피드 transform 밖. */
+  controlsLayer: HTMLElement | null;
 }
 
 export const ShortsCard = ({
@@ -57,6 +60,7 @@ export const ShortsCard = ({
   onVerticalSwipe,
   onVerticalDragMove,
   onVerticalDragCancel,
+  controlsLayer,
 }: Props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -252,16 +256,20 @@ export const ShortsCard = ({
 
       <SwipeFeedback feedback={feedback} onDone={() => setFeedback(null)} />
 
-      {/* 하단 그라데이션 — 컨트롤 표시 여부와 무관하게 항상 렌더 */}
-      <div
-        className={cn(
-          "pointer-events-none absolute inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-500",
+      {/* 컨트롤 레이어 — 세로 피드 transform 밖(#root)으로 포탈해 스크롤 시 고정 */}
+      {controlsLayer &&
+        createPortal(
+          <>
+            {/* 하단 그라데이션 — 컨트롤 표시 여부와 무관하게 항상 렌더 */}
+            <div
+              className={cn(
+                "pointer-events-none fixed inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-500",
           showControls ? "opacity-100" : "opacity-0",
         )}
       />
 
       {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
-      <div className="absolute left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex items-center gap-2">
+      <div className="fixed left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex items-center gap-2">
         <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
           {index + 1} / {total}
         </div>
@@ -274,7 +282,7 @@ export const ShortsCard = ({
       </div>
 
       {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
-      <div className="absolute right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-5">
+      <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-5">
         {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
         <button
           type="button"
@@ -353,7 +361,7 @@ export const ShortsCard = ({
       {/* 하단 좌: 기술명 태그 + 메타 */}
       <div
         className={cn(
-          "pointer-events-none absolute bottom-[calc(var(--safe-bottom)+3.5rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
+          "pointer-events-none fixed bottom-[calc(var(--safe-bottom)+3.5rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
           showControls ? "opacity-100" : "opacity-0",
         )}
       >
@@ -377,7 +385,7 @@ export const ShortsCard = ({
       {/* 하단 버튼 바 — 터치 시 등장, 3초 후 자동 숨김 */}
       <div
         className={cn(
-          "absolute inset-x-0 bottom-0 z-20 transition-all duration-500",
+          "fixed inset-x-0 bottom-0 z-20 transition-all duration-500",
           showControls
             ? "translate-y-0 opacity-100"
             : "translate-y-full opacity-0",
@@ -417,6 +425,9 @@ export const ShortsCard = ({
           </div>
         )}
       </div>
+          </>,
+          controlsLayer,
+        )}
 
       <TechniqueSheet
         open={sheetOpen}
