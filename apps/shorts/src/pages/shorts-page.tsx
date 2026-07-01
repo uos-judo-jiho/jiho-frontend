@@ -115,7 +115,7 @@ export const ShortsPage = () => {
           로그인 상태를 확인하고 새로고침해주세요.
         </p>
         <a
-          href="https://admin.uosjudo.com/login"
+          href="/login"
           className="rounded-xl bg-indigo-500 px-6 py-3 text-sm font-semibold hover:bg-indigo-400"
         >
           로그인하러 가기

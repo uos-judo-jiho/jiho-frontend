@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run type-check && vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@packages/api": "workspace:*",
+    "@packages/auth": "workspace:*",
     "@tailwindcss/vite": "^4.3.2",
     "@tanstack/react-query": "^5.66.11",
     "axios": "^1.3.4",

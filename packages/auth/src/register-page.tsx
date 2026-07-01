@@ -1,5 +1,3 @@
-import { RouterUrl } from "@/app/routers/router-url";
-import { cn } from "@/shared/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v2Admin } from "@packages/api";
 import { useState } from "react";
@@ -11,6 +9,9 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import * as z from "zod";
+
+import { cn } from "./lib/cn";
+import { AUTH_PATHS } from "./paths";
 
 /* ------------------------------------------------------------------ */
 /* 추가 정보(선택) — 가입 시점 / 승인 전 모두 동일 필드를 공유한다.        */
@@ -268,7 +269,7 @@ const SignupForm = ({
         이미 계정이 있으신가요?
         <br />
         <Link
-          to={RouterUrl.로그인}
+          to={AUTH_PATHS.login}
           className="ml-1 font-medium text-slate-900 hover:underline"
         >
           로그인하기
@@ -331,7 +332,7 @@ const SignupProfileForm = ({
         </SubmitButton>
         <button
           type="button"
-          onClick={() => navigate(RouterUrl.로그인)}
+          onClick={() => navigate(AUTH_PATHS.login)}
           className="h-11 w-full rounded-lg border border-slate-200 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
         >
           나중에 입력하고 로그인하기

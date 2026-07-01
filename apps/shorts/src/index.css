@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* 공유 인증 페이지(@packages/auth)의 Tailwind 클래스를 스캔 대상에 포함 */
+@source "../../../packages/auth/src";
+
 @plugin 'tailwindcss-animate';
 
 @theme inline {

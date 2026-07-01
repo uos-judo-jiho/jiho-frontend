@@ -1,10 +1,11 @@
-import { RouterUrl } from "@/app/routers/router-url";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { v2Admin } from "@packages/api";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import * as z from "zod";
+
+import { AUTH_PATHS } from "./paths";
 
 const loginSchema = z.object({
   email: z
@@ -44,7 +45,7 @@ export const LoginPage = () => {
         toast.success("로그인에 성공했습니다.");
         const destination = redirectTo
           ? decodeURIComponent(redirectTo)
-          : RouterUrl.홈;
+          : AUTH_PATHS.home;
         if (destination.startsWith("http")) {
           window.location.href = destination;
         } else {
@@ -77,7 +78,7 @@ export const LoginPage = () => {
           <div className="space-y-2">
             <h1 className="text-2xl font-semibold tracking-tight">로그인</h1>
             <p className="text-sm text-slate-500">
-              계정 정보를 입력하고 관리자 페이지로 이동하세요.
+              계정 정보를 입력해 로그인하세요.
             </p>
           </div>
 
@@ -135,7 +136,7 @@ export const LoginPage = () => {
             계정이 없으신가요?
             <br />
             <Link
-              to={RouterUrl.회원가입}
+              to={AUTH_PATHS.register}
               className="text-slate-900 font-medium hover:text-slate-700"
             >
               {"회원가입 >"}

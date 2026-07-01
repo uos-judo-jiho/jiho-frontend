@@ -42,6 +42,9 @@ importers:
       '@packages/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@packages/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@radix-ui/react-dialog':
         specifier: ^1.1.15
         version: 1.1.18(@types/react-dom@18.3.7(@types/react@18.3.31))(@types/react@18.3.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -278,6 +281,9 @@ importers:
       '@packages/api':
         specifier: workspace:*
         version: link:../../packages/api
+      '@packages/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@tailwindcss/vite':
         specifier: ^4.3.2
         version: 4.3.2(vite@8.1.2(@types/node@26.0.1)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.4)(yaml@2.9.0))
@@ -533,6 +539,49 @@ importers:
       orval:
         specifier: ^8.2.0
         version: 8.19.0(prettier@3.9.4)(typescript@6.0.3)
+
+  packages/auth:
+    dependencies:
+      '@hookform/resolvers':
+        specifier: ^5.2.2
+        version: 5.4.0(react-hook-form@7.80.0(react@18.3.1))
+      '@packages/api':
+        specifier: workspace:*
+        version: link:../api
+      '@tanstack/react-query':
+        specifier: ^5.66.11
+        version: 5.101.2(react@18.3.1)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      react-hook-form:
+        specifier: ^7.71.2
+        version: 7.80.0(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.11.1
+        version: 6.30.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      sonner:
+        specifier: ^2.0.7
+        version: 2.0.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      tailwind-merge:
+        specifier: ^3.0.2
+        version: 3.6.0
+      zod:
+        specifier: ^4.3.6
+        version: 4.4.3
+    devDependencies:
+      '@types/react':
+        specifier: ^18.0.29
+        version: 18.3.31
+      '@types/react-dom':
+        specifier: ^18.0.11
+        version: 18.3.7(@types/react@18.3.31)
 
   packages/jds: {}
 

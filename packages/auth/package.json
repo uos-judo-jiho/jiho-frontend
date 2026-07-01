@@ -1,0 +1,30 @@
+{
+  "name": "@packages/auth",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@packages/api": "workspace:*",
+    "clsx": "^2.1.1",
+    "react-hook-form": "^7.71.2",
+    "tailwind-merge": "^3.0.2",
+    "zod": "^4.3.6"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.66.11",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.11.1",
+    "sonner": "^2.0.7"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.29",
+    "@types/react-dom": "^18.0.11"
+  }
+}
