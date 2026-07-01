@@ -4,11 +4,27 @@ import { SWIPE_THRESHOLD, useSwipe, type SwipeDirection } from "@/hooks/use-swip
 import { Check, Heart, Tag } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import type { VideoHighlight } from "@/api/video";
+import type { Score, VideoHighlight } from "@/api/video";
 import { SwipeDragOverlay, SwipeFeedback, type FeedbackType } from "./swipe-feedback";
 import { TechniqueSheet } from "./technique-sheet";
 
 const CONTROLS_HIDE_DELAY = 3000;
+
+/** 기술성공 시 부여하는 점수. NONE(무점수)은 제외한 3단계. */
+type SuccessScore = Exclude<Score, "NONE">;
+
+const SCORE_OPTIONS: { value: SuccessScore; label: string }[] = [
+  { value: "YUKO", label: "유효" },
+  { value: "WAZA_ARI", label: "절반" },
+  { value: "IPPON", label: "한판" },
+];
+
+const scoreLabel = (score: SuccessScore) =>
+  SCORE_OPTIONS.find((o) => o.value === score)?.label ?? "";
+
+/** 저장된 라벨의 점수를 선택 상태로 복원. 무점수/없음이면 기본값 절반. */
+const initialScore = (score: Score | undefined): SuccessScore =>
+  score === "YUKO" || score === "IPPON" ? score : "WAZA_ARI";
 
 interface Props {
   highlight: VideoHighlight;
@@ -30,6 +46,10 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
   const [technique, setTechnique] = useState<string | null>(
     highlight.currentUserLabel?.technique ?? null,
   );
+  // 기술성공 시 부여할 점수(유효/절반/한판). 기본값 절반.
+  const [score, setScore] = useState<SuccessScore>(() =>
+    initialScore(highlight.currentUserLabel?.score),
+  );
   const [sheetOpen, setSheetOpen] = useState(false);
   const mutation = useCreateLabel(jobId);
 
@@ -47,7 +67,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
   }, [resetControlsTimer]);
 
   const saveLabel = useCallback(
-    (params: { techniqueResult: "NONE" | "SUCCESS"; score: "NONE" | "WAZA_ARI" }) => {
+    (params: { techniqueResult: "NONE" | "SUCCESS"; score: Score }) => {
       mutation.mutate(
         {
           highlightId: highlight.id,
@@ -83,13 +103,13 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
       }
       if (direction === "right") {
         setFeedback("success");
-        saveLabel({ techniqueResult: "SUCCESS", score: "WAZA_ARI" });
+        saveLabel({ techniqueResult: "SUCCESS", score });
       } else {
         setFeedback("none");
         saveLabel({ techniqueResult: "NONE", score: "NONE" });
       }
     },
-    [highlight.isLabeledByCurrentUser, mutation.isPending, onLabeled, saveLabel],
+    [highlight.isLabeledByCurrentUser, mutation.isPending, onLabeled, saveLabel, score],
   );
 
   // 드래그 중: 손가락을 따라 카드 이동. 라벨링 중(mutation)일 땐 잠금.
@@ -167,7 +187,7 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
         />
       </div>
 
-      {/* 실시간 스와이프 스탬프 (무효/득점 · 완료 클립은 다음) */}
+      {/* 실시간 스와이프 스탬프 (기술아님/기술성공 · 완료 클립은 다음) */}
       <SwipeDragOverlay
         dragX={dragX}
         threshold={SWIPE_THRESHOLD}
@@ -241,6 +261,28 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
             {technique ? "변경" : "기술명"}
           </span>
         </button>
+
+        {/* 점수(유효/절반/한판) — 기술성공 시 부여할 점수를 선택. 라벨링 전에만 노출 */}
+        {!isAlreadyLabeled && (
+          <div className="flex flex-col overflow-hidden rounded-xl border border-white/20 bg-black/40 backdrop-blur-sm">
+            {SCORE_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                disabled={mutation.isPending}
+                onClick={() => setScore(opt.value)}
+                className={cn(
+                  "px-3 py-1.5 text-xs font-bold transition-colors disabled:opacity-40",
+                  score === opt.value
+                    ? "bg-amber-400 text-black"
+                    : "text-white/80 hover:bg-white/10",
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 하단 좌: 기술명 태그 + 메타 */}
@@ -250,12 +292,18 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
           showControls ? "opacity-100" : "opacity-0",
         )}
       >
-        {technique && (
-          <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-            <Tag className="h-3 w-3" />
-            {technique}
+        <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+          {technique && (
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+              <Tag className="h-3 w-3" />
+              {technique}
+            </div>
+          )}
+          {/* 기술성공 시 부여될 점수 */}
+          <div className="inline-flex items-center rounded-full bg-amber-400/90 px-3 py-1 text-xs font-bold text-black backdrop-blur-sm">
+            {scoreLabel(score)}
           </div>
-        )}
+        </div>
         <p className="text-xs text-white/60">
           신뢰도 {confidence}% · {clipDuration}초
         </p>
@@ -280,18 +328,18 @@ export const ShortsCard = ({ highlight, jobId, index, total, onLabeled }: Props)
               className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-red-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
             >
               <span className="text-lg">👈</span>
-              무효
+              기술아님
             </button>
             <button
               type="button"
               disabled={mutation.isPending}
               onClick={() => {
                 setFeedback("success");
-                saveLabel({ techniqueResult: "SUCCESS", score: "WAZA_ARI" });
+                saveLabel({ techniqueResult: "SUCCESS", score });
               }}
               className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-green-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
             >
-              득점
+              기술성공
               <span className="text-lg">👉</span>
             </button>
           </div>

@@ -40,14 +40,14 @@ export const SwipeDragOverlay = ({
     : direction === "right"
       ? {
           Icon: ThumbsUp,
-          label: "득점",
+          label: "기술성공",
           border: "border-green-400",
           text: "text-green-300",
           bg: "bg-green-500/15",
         }
       : {
           Icon: XCircleIcon,
-          label: "무효",
+          label: "기술아님",
           border: "border-red-400",
           text: "text-red-300",
           bg: "bg-red-500/15",
@@ -96,14 +96,14 @@ interface Props {
 const CONFIG = {
   success: {
     icon: ThumbsUp,
-    label: "득점!",
+    label: "기술성공!",
     bg: "bg-green-500/20",
     border: "border-green-400",
     text: "text-green-300",
   },
   none: {
     icon: XCircleIcon,
-    label: "무효",
+    label: "기술아님",
     bg: "bg-red-500/20",
     border: "border-red-400",
     text: "text-red-300",
