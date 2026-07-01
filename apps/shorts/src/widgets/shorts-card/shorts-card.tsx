@@ -146,11 +146,7 @@ export const ShortsCard = ({
     }
   }, [videoRef]);
 
-  const {
-    onTouchStart: swipeTouchStart,
-    onTouchMove,
-    onTouchEnd,
-  } = useSwipe({
+  const bindSwipe = useSwipe({
     onSwipe: handleSwipe,
     // 수직 제스처는 페이지의 세로 피드(다음/이전 미리보기)로 위임한다.
     onVerticalSwipe,
@@ -163,25 +159,21 @@ export const ShortsCard = ({
     orientation: orientationMode,
   });
 
-  // 터치 시 컨트롤 타이머 리셋 후 스와이프 핸들러로 위임
-  const onTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      // 사용자가 조작을 시작하면 idle 스와이프 힌트를 끄도록 페이지에 알린다.
-      onInteract();
-      resetControlsTimer();
-      swipeTouchStart(e);
-    },
-    [onInteract, resetControlsTimer, swipeTouchStart],
-  );
+  // 조작 시작 시 컨트롤 타이머 리셋 + idle 힌트 끄기. 캡처 단계라 useDrag의
+  // onPointerDown(버블)과 충돌하지 않고 먼저 실행된다.
+  const handleInteractStart = useCallback(() => {
+    onInteract();
+    resetControlsTimer();
+  }, [onInteract, resetControlsTimer]);
 
   return (
     <div className="relative h-full w-full overflow-hidden">
-      {/* ── 터치 레이어 — 영상은 페이지의 지속(keyed) 슬롯에서 렌더된다 ── */}
+      {/* ── 터치 레이어 — 영상은 페이지의 지속(keyed) 슬롯에서 렌더된다.
+          touch-none: 드래그 중 브라우저 스크롤/줌 방지(@use-gesture 권장). ── */}
       <div
-        className="absolute inset-0"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
+        className="absolute inset-0 touch-none"
+        onPointerDownCapture={handleInteractStart}
+        {...bindSwipe()}
       />
 
       {/* 실시간 스와이프 스탬프 (기술시도/기술성공 · 완료 클립은 다음) */}

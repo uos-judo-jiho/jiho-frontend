@@ -1,4 +1,5 @@
-import { useCallback, useRef } from "react";
+import { useDrag } from "@use-gesture/react";
+import { useRef } from "react";
 
 export type SwipeDirection = "left" | "right";
 export type VerticalDirection = "up" | "down";
@@ -27,8 +28,13 @@ const DOUBLE_TAP_DELAY = 280;
 // 이 거리 이상 이동하면 드래그(스와이프)로 간주하고 탭 판정에서 제외한다.
 const DRAG_DECISION_DISTANCE = 10;
 
-type DragAxis = "none" | "horizontal" | "vertical";
-
+/**
+ * 쇼츠 카드 제스처 인식 — @use-gesture/react useDrag 기반.
+ * - lockDirection: 우세한 축(수평=라벨 드래그 / 수직=피드 이동)으로 잠금
+ * - threshold(10px) + filterTaps: 10px 미만은 탭(더블탭 판정), 이상은 드래그
+ * - transform: 가로 모드(CSS 90° 회전) 시 기기 델타를 콘텐츠 좌표로 재매핑
+ * 반환값 bind()를 대상 요소에 스프레드해서 쓴다.
+ */
 export const useSwipe = ({
   onSwipe,
   onVerticalSwipe,
@@ -40,106 +46,58 @@ export const useSwipe = ({
   onDragCancel,
   orientation = "portrait",
 }: SwipeHandlers) => {
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
-  const dragAxis = useRef<DragAxis>("none");
-  const lastTapTime = useRef(0);
-  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // 콜백 재생성을 피하려고 ref로 최신 방향을 유지.
+  // 콜백 재생성을 피하려고 최신 방향을 ref로 유지(transform은 매 포인터 이동에서 호출).
   const orientationRef = useRef(orientation);
   orientationRef.current = orientation;
+  const lastTapTime = useRef(0);
+  const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // 화면이 90°(CW) 회전됐다면 기기 좌표 델타를 콘텐츠 좌표로 변환.
-  // 콘텐츠 x = 기기 y, 콘텐츠 y = -기기 x.
-  const toContentDelta = (rawX: number, rawY: number): [number, number] =>
-    orientationRef.current === "landscape" ? [rawY, -rawX] : [rawX, rawY];
+  // 탭/더블탭 판정 — 280ms 안에 두 번이면 더블탭, 아니면 지연 후 단일 탭.
+  const handleTap = () => {
+    const now = Date.now();
+    if (now - lastTapTime.current < DOUBLE_TAP_DELAY) {
+      if (tapTimer.current) clearTimeout(tapTimer.current);
+      onDoubleTap?.();
+      lastTapTime.current = 0;
+    } else {
+      lastTapTime.current = now;
+      tapTimer.current = setTimeout(() => onTap?.(), DOUBLE_TAP_DELAY);
+    }
+  };
 
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    dragAxis.current = "none";
-  }, []);
-
-  const onTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      const [deltaX, deltaY] = toContentDelta(
-        e.touches[0].clientX - touchStartX.current,
-        e.touches[0].clientY - touchStartY.current,
-      );
-
-      // 방향이 아직 안 정해졌다면 우세한 축으로 확정(수평=라벨 드래그, 수직=이동).
-      if (
-        dragAxis.current === "none" &&
-        (Math.abs(deltaX) > DRAG_DECISION_DISTANCE ||
-          Math.abs(deltaY) > DRAG_DECISION_DISTANCE)
-      ) {
-        dragAxis.current =
-          Math.abs(deltaX) >= Math.abs(deltaY) ? "horizontal" : "vertical";
+  return useDrag(
+    ({ movement: [mx, my], last, tap, axis }) => {
+      // 거의 안 움직였으면(threshold 미만) 탭 — 릴리즈 시점에만 판정.
+      if (tap) {
+        if (last) handleTap();
+        return;
       }
-
-      // 카드 실시간 이동은 수평 드래그에서만, 세로 피드 이동은 수직 드래그에서만.
-      if (dragAxis.current === "horizontal") {
-        onDragMove?.(deltaX);
-      } else if (dragAxis.current === "vertical") {
-        onVerticalDragMove?.(deltaY);
-      }
-    },
-    [onDragMove, onVerticalDragMove],
-  );
-
-  const onTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      const [deltaX, deltaY] = toContentDelta(
-        e.changedTouches[0].clientX - touchStartX.current,
-        e.changedTouches[0].clientY - touchStartY.current,
-      );
-
-      // 수평 드래그였다면: 임계값 넘으면 스와이프, 아니면 원위치.
-      if (dragAxis.current === "horizontal") {
-        if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
-          onSwipe?.(deltaX > 0 ? "right" : "left");
-        } else {
-          onDragCancel?.();
+      // 손을 뗀 순간: 잠긴 축에서 임계값 넘으면 스와이프, 아니면 원위치 신호.
+      if (last) {
+        if (axis === "x") {
+          if (Math.abs(mx) > SWIPE_THRESHOLD)
+            onSwipe?.(mx > 0 ? "right" : "left");
+          else onDragCancel?.();
+        } else if (axis === "y") {
+          if (Math.abs(my) > VERTICAL_SWIPE_THRESHOLD)
+            onVerticalSwipe?.(my > 0 ? "down" : "up");
+          else onVerticalDragCancel?.();
         }
         return;
       }
-
-      // 수직 드래그였다면: 임계값 넘으면 라벨 없이 이전/다음 이동, 아니면 원위치.
-      if (dragAxis.current === "vertical") {
-        if (Math.abs(deltaY) > VERTICAL_SWIPE_THRESHOLD) {
-          onVerticalSwipe?.(deltaY > 0 ? "down" : "up");
-        } else {
-          onVerticalDragCancel?.();
-        }
-        return;
-      }
-
-      // 탭/더블탭 판정 (거의 움직이지 않았을 때만).
-      if (Math.abs(deltaX) < DRAG_DECISION_DISTANCE && Math.abs(deltaY) < DRAG_DECISION_DISTANCE) {
-        const now = Date.now();
-        const timeSinceLastTap = now - lastTapTime.current;
-
-        if (timeSinceLastTap < DOUBLE_TAP_DELAY) {
-          if (tapTimer.current) clearTimeout(tapTimer.current);
-          onDoubleTap?.();
-          lastTapTime.current = 0;
-        } else {
-          lastTapTime.current = now;
-          tapTimer.current = setTimeout(() => {
-            onTap?.();
-          }, DOUBLE_TAP_DELAY);
-        }
-      }
+      // 드래그 중: 잠긴 축의 실시간 delta 전달(수평=라벨, 수직=피드 이동).
+      if (axis === "x") onDragMove?.(mx);
+      else if (axis === "y") onVerticalDragMove?.(my);
     },
-    [
-      onSwipe,
-      onVerticalSwipe,
-      onVerticalDragCancel,
-      onDoubleTap,
-      onTap,
-      onDragCancel,
-    ],
+    {
+      filterTaps: true,
+      // 탭 허용 오차와 드래그 시작 임계값을 모두 10px로 맞춘다 — 기존 로직과 동일
+      // (10px 미만은 탭, 이상은 드래그). 기본 tapsThreshold(3px)면 3~10px가 사각지대가 됨.
+      tapsThreshold: DRAG_DECISION_DISTANCE,
+      threshold: DRAG_DECISION_DISTANCE,
+      lockDirection: true,
+      transform: ([x, y]) =>
+        orientationRef.current === "landscape" ? [y, -x] : [x, y],
+    },
   );
-
-  return { onTouchStart, onTouchMove, onTouchEnd };
 };
