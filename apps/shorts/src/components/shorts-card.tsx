@@ -1,6 +1,5 @@
 import type { Score, TechniqueResult, VideoHighlight } from "@/api/video";
 import { useCreateLabel } from "@/hooks/use-highlights";
-import { useOrientationMode } from "@/hooks/use-orientation";
 import {
   SWIPE_THRESHOLD,
   useSwipe,
@@ -60,6 +59,10 @@ interface Props {
   onHorizontalDragMove: (deltaX: number) => void;
   /** 사용자가 조작을 시작함(idle 힌트 리셋용). */
   onInteract: () => void;
+  /** 화면 회전 모드(가로=CSS 90° 회전) — 스와이프 방향 재매핑에 사용. */
+  orientationMode: "landscape" | "portrait";
+  /** 가로/세로 모드 전환. */
+  toggleOrientation: () => void;
 }
 
 export const ShortsCard = ({
@@ -78,10 +81,9 @@ export const ShortsCard = ({
   hintDragX,
   onHorizontalDragMove,
   onInteract,
+  orientationMode,
+  toggleOrientation,
 }: Props) => {
-  const { mode: orientationMode, toggle: toggleOrientation } =
-    useOrientationMode();
-
   const controlsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isPaused, setIsPaused] = useState(false);
@@ -222,6 +224,7 @@ export const ShortsCard = ({
     onTap: handleTap,
     onDragMove: handleDragMove,
     onDragCancel: handleDragCancel,
+    orientation: orientationMode,
   });
 
   // 터치 시 컨트롤 타이머 리셋 후 스와이프 핸들러로 위임
@@ -238,7 +241,7 @@ export const ShortsCard = ({
   const isAlreadyLabeled = highlight.isLabeledByCurrentUser;
 
   return (
-    <div className="relative h-dvh w-full overflow-hidden">
+    <div className="relative h-full w-full overflow-hidden">
       {/* ── 터치 레이어 — 영상은 페이지의 지속(keyed) 슬롯에서 렌더된다 ── */}
       <div
         className="absolute inset-0"

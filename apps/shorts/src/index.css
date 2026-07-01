@@ -48,5 +48,25 @@
   .pb-safe {
     padding-bottom: var(--safe-bottom);
   }
+}
 
+/* 쇼츠 루트 — 가로 모드에서 전체 화면을 CSS로 90° 회전(유튜브 전체화면식).
+   콘텐츠는 가로 치수(width:100dvh)로 레이아웃한 뒤 회전해 세로 화면을 꽉 채운다.
+   터치 델타는 use-swipe에서 콘텐츠 좌표로 재매핑한다. */
+.shorts-root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
+  transform-origin: center center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shorts-root--landscape {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  width: 100dvh;
+  height: 100dvw;
+  transform: translate(-50%, -50%) rotate(90deg);
 }

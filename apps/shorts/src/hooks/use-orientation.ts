@@ -6,14 +6,15 @@ const ORIENTATION_MODE_KEY = "shorts-orientation-mode";
 
 /**
  * 사용자가 선택한 화면 모드(가로/세로) 선호도.
- * 기본값은 가로. localStorage에 저장되어 재방문 시 유지된다.
+ * 기본값은 세로(회전 없음). 가로 선택 시 화면을 CSS로 90° 회전한다.
+ * localStorage에 저장되어 재방문 시 유지된다.
  */
 export const useOrientationMode = () => {
   const [mode, setMode] = useState<OrientationMode>(() => {
-    if (typeof window === "undefined") return "landscape";
-    return localStorage.getItem(ORIENTATION_MODE_KEY) === "portrait"
-      ? "portrait"
-      : "landscape";
+    if (typeof window === "undefined") return "portrait";
+    return localStorage.getItem(ORIENTATION_MODE_KEY) === "landscape"
+      ? "landscape"
+      : "portrait";
   });
 
   const setOrientationMode = useCallback((next: OrientationMode) => {

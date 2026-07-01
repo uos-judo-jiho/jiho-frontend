@@ -17,6 +17,8 @@ interface SwipeHandlers {
   onDragMove?: (deltaX: number) => void;
   /** 스와이프 임계값을 못 넘기고 손을 뗐을 때 (원위치 복귀 신호). */
   onDragCancel?: () => void;
+  /** 화면이 CSS로 90° 회전(가로 모드)됐을 때 터치 델타를 콘텐츠 좌표로 재매핑. */
+  orientation?: "portrait" | "landscape";
 }
 
 export const SWIPE_THRESHOLD = 60;
@@ -36,12 +38,21 @@ export const useSwipe = ({
   onTap,
   onDragMove,
   onDragCancel,
+  orientation = "portrait",
 }: SwipeHandlers) => {
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
   const dragAxis = useRef<DragAxis>("none");
   const lastTapTime = useRef(0);
   const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 콜백 재생성을 피하려고 ref로 최신 방향을 유지.
+  const orientationRef = useRef(orientation);
+  orientationRef.current = orientation;
+
+  // 화면이 90°(CW) 회전됐다면 기기 좌표 델타를 콘텐츠 좌표로 변환.
+  // 콘텐츠 x = 기기 y, 콘텐츠 y = -기기 x.
+  const toContentDelta = (rawX: number, rawY: number): [number, number] =>
+    orientationRef.current === "landscape" ? [rawY, -rawX] : [rawX, rawY];
 
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -51,8 +62,10 @@ export const useSwipe = ({
 
   const onTouchMove = useCallback(
     (e: React.TouchEvent) => {
-      const deltaX = e.touches[0].clientX - touchStartX.current;
-      const deltaY = e.touches[0].clientY - touchStartY.current;
+      const [deltaX, deltaY] = toContentDelta(
+        e.touches[0].clientX - touchStartX.current,
+        e.touches[0].clientY - touchStartY.current,
+      );
 
       // 방향이 아직 안 정해졌다면 우세한 축으로 확정(수평=라벨 드래그, 수직=이동).
       if (
@@ -76,8 +89,10 @@ export const useSwipe = ({
 
   const onTouchEnd = useCallback(
     (e: React.TouchEvent) => {
-      const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-      const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+      const [deltaX, deltaY] = toContentDelta(
+        e.changedTouches[0].clientX - touchStartX.current,
+        e.changedTouches[0].clientY - touchStartY.current,
+      );
 
       // 수평 드래그였다면: 임계값 넘으면 스와이프, 아니면 원위치.
       if (dragAxis.current === "horizontal") {

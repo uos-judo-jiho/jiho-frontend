@@ -9,12 +9,15 @@ import {
   useVideoHighlights,
   useVideoJobs,
 } from "@/hooks/use-highlights";
+import { useOrientationMode } from "@/hooks/use-orientation";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 export const ShortsPage = () => {
   const { needsOnboarding, complete } = useOnboarding();
+  const { mode: orientationMode, toggle: toggleOrientation } =
+    useOrientationMode();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Capture initial URL params once — refs are stable across renders
@@ -432,7 +435,11 @@ export const ShortsPage = () => {
   }
 
   return (
-    <div className="relative h-dvh overflow-hidden bg-black">
+    <div
+      className={`shorts-root${
+        orientationMode === "landscape" ? " shorts-root--landscape" : ""
+      }`}
+    >
       {needsOnboarding && <OnboardingOverlay onDone={complete} />}
 
       {/* 세로 피드 — 드래그 중 위/아래 이웃 클립이 손가락을 따라 미리 보인다 */}
@@ -518,6 +525,8 @@ export const ShortsPage = () => {
             hintDragX={hintDragX}
             onHorizontalDragMove={setHDragX}
             onInteract={handleInteract}
+            orientationMode={orientationMode}
+            toggleOrientation={toggleOrientation}
           />
         </div>
       </div>
