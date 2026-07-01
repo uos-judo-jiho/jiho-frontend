@@ -6,7 +6,7 @@ import {
   type SwipeDirection,
 } from "@/hooks/use-swipe";
 import { cn } from "@/lib/utils";
-import { Check, Heart, Tag } from "lucide-react";
+import { Ban, Check, Heart, Tag } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -262,6 +262,25 @@ export const ShortsCard = ({
 
       {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
       <div className="absolute right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-5">
+        {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
+        <button
+          type="button"
+          disabled={mutation.isPending}
+          onClick={() => {
+            if (mutation.isPending) return;
+            if (isAlreadyLabeled) {
+              onLabeled();
+              return;
+            }
+            setFeedback("none");
+            saveLabel({ techniqueResult: "NONE", score: "NONE" });
+          }}
+          className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40"
+        >
+          <Ban className="h-7 w-7 drop-shadow-lg" strokeWidth={1.5} />
+          <span className="text-xs font-medium drop-shadow">기술없음</span>
+        </button>
+
         <button
           type="button"
           onClick={() => {
