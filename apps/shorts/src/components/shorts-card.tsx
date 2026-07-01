@@ -303,7 +303,7 @@ export const ShortsCard = ({
             </div>
 
             {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
-            <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-3">
+            <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+3rem)] z-20 flex flex-col items-center gap-3">
               {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
               <button
                 type="button"
@@ -382,7 +382,7 @@ export const ShortsCard = ({
             {/* 하단 좌: 기술명 태그 + 메타 */}
             <div
               className={cn(
-                "pointer-events-none fixed bottom-[calc(var(--safe-bottom)+3.5rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
+                "pointer-events-none fixed bottom-[calc(var(--safe-bottom)+3rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
                 showControls ? "opacity-100" : "opacity-0",
               )}
             >
@@ -394,50 +394,6 @@ export const ShortsCard = ({
                   </div>
                 )}
               </div>
-            </div>
-
-            {/* 하단 버튼 바 — 터치 시 등장, 3초 후 자동 숨김 */}
-            <div
-              className={cn(
-                "fixed inset-x-0 bottom-0 z-20 transition-all duration-500",
-                showControls
-                  ? "translate-y-0 opacity-100"
-                  : "translate-y-full opacity-0",
-              )}
-            >
-              {!isAlreadyLabeled ? (
-                <div className="grid grid-cols-2 border-t border-white/10 bg-black/70 pb-safe backdrop-blur-sm">
-                  <button
-                    type="button"
-                    disabled={mutation.isPending}
-                    onClick={() => {
-                      setFeedback("attempt");
-                      saveLabel({ techniqueResult: "ATTEMPT", score: "NONE" });
-                    }}
-                    className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-amber-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
-                  >
-                    <span className="text-lg">👈</span>
-                    기술시도
-                  </button>
-                  <button
-                    type="button"
-                    disabled={mutation.isPending}
-                    onClick={() => {
-                      setFeedback("success");
-                      saveLabel({ techniqueResult: "SUCCESS", score });
-                    }}
-                    className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-green-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
-                  >
-                    기술성공
-                    <span className="text-lg">👉</span>
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 pt-3.5 pb-[calc(0.875rem+var(--safe-bottom))] text-sm text-neutral-400 backdrop-blur-sm">
-                  <Check className="h-4 w-4 text-green-400" />
-                  라벨링 완료 · 스와이프해서 다음으로
-                </div>
-              )}
             </div>
           </>,
           controlsLayer,
