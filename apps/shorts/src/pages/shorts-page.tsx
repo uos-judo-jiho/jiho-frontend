@@ -42,8 +42,9 @@ export const ShortsPage = () => {
   );
 
   const allHighlights = highlights;
-  const activeHighlights =
-    unlabeledHighlights.length > 0 ? unlabeledHighlights : allHighlights;
+  // 라벨해도 목록에서 즉시 빼지 않는다(안정된 목록) — 인덱스가 밀리지 않아
+  // 스와이프/슬라이드가 튀지 않고, 라벨된 클립은 '완료' 뱃지로 표시된다.
+  const activeHighlights = allHighlights;
   const activeHighlight = activeHighlights[highlightIndex];
 
   // Restore jobIndex from URL once jobs load
@@ -482,6 +483,7 @@ export const ShortsPage = () => {
             total={activeHighlights.length}
             title={currentJob.originalFilename.replace(/\.[^.]+$/, "")}
             onLabeled={moveToNext}
+            onSwipeUpNext={() => handleVerticalSwipe("up")}
             onVerticalSwipe={handleVerticalSwipe}
             onVerticalDragMove={handleVerticalDragMove}
             onVerticalDragCancel={handleVerticalDragCancel}
