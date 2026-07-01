@@ -4,7 +4,7 @@ import {
 } from "@/components/onboarding-overlay";
 import { ShortsCard } from "@/components/shorts-card";
 import { VideoPreloader } from "@/components/video-preloader";
-import { useUnlabeledHighlights } from "@/hooks/use-highlights";
+import { useHighlightsFeed } from "@/hooks/use-highlights";
 import { useOrientationMode } from "@/hooks/use-orientation";
 import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -22,7 +22,7 @@ export const ShortsPage = () => {
     !initialHighlightId.current,
   );
 
-  // 잡 선택 없이, 로그인 사용자의 미라벨 하이라이트 플랫 피드(커서 페이지네이션).
+  // 잡 선택 없이, 미라벨 → (소진 시) 라벨 순으로 이어지는 플랫 피드(커서 페이지네이션).
   const {
     highlights: rawHighlights,
     isLoading,
@@ -30,7 +30,7 @@ export const ShortsPage = () => {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useUnlabeledHighlights();
+  } = useHighlightsFeed();
 
   const [highlightIndex, setHighlightIndex] = useState(0);
   // 라벨 저장에 성공한 하이라이트 id — 목록에서 빼지 않고 '완료'로만 표시(안정된 인덱스).
@@ -128,13 +128,6 @@ export const ShortsPage = () => {
   // 로드된 클립 범위 내에서만 이동을 허용(경계에서 프리로드가 다음 페이지를 채운다).
   const canNext = highlightIndex + 1 < activeHighlights.length;
   const canPrev = highlightIndex > 0;
-
-  // 로드된 모든 항목을 라벨했고 더 불러올 페이지도 없으면 '완료' 화면을 보여준다.
-  const allLabeled =
-    activeHighlights.length > 0 &&
-    !hasNextPage &&
-    !isFetchingNextPage &&
-    activeHighlights.every((h) => h.isLabeledByCurrentUser);
 
   const [dragY, setDragY] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -369,7 +362,7 @@ export const ShortsPage = () => {
     );
   }
 
-  if (allLabeled || !activeHighlight) {
+  if (!activeHighlight) {
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-black px-6 text-center text-white">
         <div className="text-5xl">🎉</div>
