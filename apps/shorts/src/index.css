@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@plugin 'tailwindcss-animate';
+
+@theme inline {
+  --color-background: #000;
+  --color-foreground: #fff;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+
+  #root {
+    height: 100%;
+  }
+}

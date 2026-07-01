@@ -3,7 +3,7 @@
     "module": "ESNext",
     "target": "ES2022",
     "lib": ["ES2022"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "outDir": "./build/server-ts",
     "rootDir": "./server",
     "noEmit": false,

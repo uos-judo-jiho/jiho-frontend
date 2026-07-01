@@ -1,0 +1,58 @@
+name: Build and Deploy (apps/shorts)
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/shorts/**"
+      - "packages/api/**"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "package.json"
+      - ".github/workflows/deploy-shorts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate API client
+        env:
+          NODE_ENV: production
+        run: pnpm orval
+
+      - name: Build shorts
+        run: pnpm build:shorts
+
+      - name: Prepare SSH key
+        run: |
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > admin_ssh_key
+          chmod 600 admin_ssh_key
+
+      - name: Deploy admin via SSH
+        env:
+          SSH_HOST: ${{ secrets.LIGHTSAIL_SSH_HOST }}
+          SSH_USER: ${{ secrets.LIGHTSAIL_SSH_USER }}
+          # SSH_PORT: ${{ secrets.LIGHTSAIL_SSH_PORT }}
+          SSH_KEY_PATH: ${{ github.workspace }}/admin_ssh_key
+          REMOTE_DIR: /opt/uos-jiho-judo/shorts
+        run: bash scripts/deploy-shorts.sh

@@ -112,11 +112,9 @@ const UserDetailContent = ({ id }: { id: number }) => {
     axios: { withCredentials: true },
     mutation: {
       onSuccess: async () => {
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
-          }),
-        ]);
+        await queryClient.invalidateQueries({
+          queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
+        });
         toast.success("역할이 성공적으로 변경되었습니다.");
         setIsEditingRole(false);
       },

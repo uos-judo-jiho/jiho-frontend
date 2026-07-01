@@ -45,8 +45,12 @@ export const LoginPage = () => {
         const destination = redirectTo
           ? decodeURIComponent(redirectTo)
           : RouterUrl.홈;
-        navigate(destination, { replace: true });
-        window.location.reload();
+        if (destination.startsWith("http")) {
+          window.location.href = destination;
+        } else {
+          navigate(destination, { replace: true });
+          window.location.reload();
+        }
       },
       onError: (error) => {
         const message =

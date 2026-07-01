@@ -12,7 +12,7 @@ const useTouchScroll = (actions: Function[]) => {
     const distanceX = tochedX - e.changedTouches[0].pageX;
     const distanceY = tochedY - e.changedTouches[0].pageY;
     // TODO:
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // oxlint-disable-next-line typescript/no-unused-vars
     const vector = Math.abs(distanceX / distanceY);
 
     if (distanceX < -20) {
