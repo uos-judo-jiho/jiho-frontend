@@ -48,4 +48,30 @@
   .pb-safe {
     padding-bottom: var(--safe-bottom);
   }
+
+  /* 방치(반복 재생) 시 "좌우로 스와이프해 라벨링" 을 유도하는 가로 바운스.
+     한 주기의 절반은 정지, 나머지에서 좌우로 살짝 흔든다. */
+  .animate-swipe-hint {
+    animation: swipe-hint 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes swipe-hint {
+  0%,
+  55%,
+  100% {
+    transform: translateX(0);
+  }
+  63% {
+    transform: translateX(-16px);
+  }
+  71% {
+    transform: translateX(16px);
+  }
+  79% {
+    transform: translateX(-10px);
+  }
+  87% {
+    transform: translateX(10px);
+  }
 }

@@ -79,7 +79,25 @@ export const ShortsCard = ({
     initialScore(highlight.currentUserLabel?.score),
   );
   const [sheetOpen, setSheetOpen] = useState(false);
+  // 방치(반복 재생) 감지: loop 재시작 횟수를 세어 3번째 재생부터 스와이프 힌트.
+  const [showSwipeHint, setShowSwipeHint] = useState(false);
+  const loopCount = useRef(0);
+  const lastTime = useRef(0);
   const mutation = useCreateLabel(jobId);
+
+  // 재생 위치가 뒤로 크게 점프하면 loop 가 재시작된 것 → 반복 횟수 집계.
+  const handleTimeUpdate = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.currentTime + 0.1 < lastTime.current) {
+      loopCount.current += 1;
+      // 2회 자동 반복 후(=3번째 재생)부터, 라벨 전 클립에 한해 힌트를 켠다.
+      if (loopCount.current >= 2 && !highlight.isLabeledByCurrentUser) {
+        setShowSwipeHint(true);
+      }
+    }
+    lastTime.current = video.currentTime;
+  }, [highlight.isLabeledByCurrentUser]);
 
   const resetControlsTimer = useCallback(() => {
     setShowControls(true);
@@ -198,6 +216,9 @@ export const ShortsCard = ({
   // 터치 시 컨트롤 타이머 리셋 후 스와이프 핸들러로 위임
   const onTouchStart = useCallback(
     (e: React.TouchEvent) => {
+      // 사용자가 조작을 시작하면 idle 스와이프 힌트를 끄고 반복 카운트를 초기화.
+      setShowSwipeHint(false);
+      loopCount.current = 0;
       resetControlsTimer();
       swipeTouchStart(e);
     },
@@ -227,7 +248,11 @@ export const ShortsCard = ({
           loop
           playsInline
           preload="auto"
-          className="h-full w-full object-contain"
+          onTimeUpdate={handleTimeUpdate}
+          className={cn(
+            "h-full w-full object-contain",
+            showSwipeHint && "animate-swipe-hint",
+          )}
         />
       </div>
 
