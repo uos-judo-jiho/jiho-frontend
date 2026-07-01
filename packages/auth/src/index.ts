@@ -1,3 +1,3 @@
-export { LoginPage } from "./login-page";
-export { Register } from "./register-page";
-export { AUTH_PATHS } from "./paths";
+export { LoginPage } from "./features/login";
+export { Register } from "./features/register";
+export { AUTH_PATHS } from "./shared/config/paths";

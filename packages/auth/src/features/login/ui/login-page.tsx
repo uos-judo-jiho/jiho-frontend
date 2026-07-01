@@ -1,26 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { v2Admin } from "@packages/api";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import * as z from "zod";
 
-import { AUTH_PATHS } from "./paths";
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "이메일을 입력해주세요.")
-    .refine(
-      (val) => val === "uosjudojiho" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-      {
-        message: "유효한 이메일을 입력해주세요.",
-      },
-    ),
-  password: z.string().min(1, "비밀번호를 입력해주세요."),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
+import { AUTH_PATHS } from "../../../shared/config/paths";
+import { loginSchema, type LoginFormValues } from "../lib/schema";
+import { useLoginMutation } from "../remote/use-login";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -39,7 +24,7 @@ export const LoginPage = () => {
     },
   });
 
-  const loginMutation = v2Admin.usePostApiV2AdminLogin({
+  const loginMutation = useLoginMutation({
     mutation: {
       onSuccess: () => {
         toast.success("로그인에 성공했습니다.");
@@ -59,9 +44,6 @@ export const LoginPage = () => {
           "로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.";
         toast.error(message);
       },
-    },
-    axios: {
-      withCredentials: true,
     },
   });
 
