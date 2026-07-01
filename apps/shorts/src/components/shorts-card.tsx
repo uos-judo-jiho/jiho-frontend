@@ -264,167 +264,169 @@ export const ShortsCard = ({
             <div
               className={cn(
                 "pointer-events-none fixed inset-x-0 bottom-0 z-10 h-36 bg-gradient-to-t from-black/80 to-transparent transition-opacity duration-500",
-          showControls ? "opacity-100" : "opacity-0",
-        )}
-      />
+                showControls ? "opacity-100" : "opacity-0",
+              )}
+            />
 
-      {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
-      <div className="fixed left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex items-center gap-2">
-        <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-          {index + 1} / {total}
-        </div>
-        {isAlreadyLabeled && (
-          <div className="flex items-center gap-1 rounded-full bg-green-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-            <Check className="h-3 w-3" />
-            완료
-          </div>
-        )}
-      </div>
+            {/* 상단 좌: 카운터 + 완료 뱃지 (항상 표시) */}
+            <div className="fixed left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1rem)] z-20 flex items-center gap-2">
+              <div className="rounded-full bg-black/50 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                {index + 1} / {total}
+              </div>
+              {isAlreadyLabeled && (
+                <div className="flex items-center gap-1 rounded-full bg-green-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                  <Check className="h-3 w-3" />
+                  완료
+                </div>
+              )}
+            </div>
 
-      {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
-      <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-5">
-        {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
-        <button
-          type="button"
-          disabled={mutation.isPending}
-          onClick={() => {
-            if (mutation.isPending) return;
-            if (isAlreadyLabeled) {
-              onLabeled();
-              return;
-            }
-            setFeedback("none");
-            saveLabel({ techniqueResult: "NONE", score: "NONE" });
-          }}
-          className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40"
-        >
-          <Ban className="h-7 w-7 drop-shadow-lg" strokeWidth={1.5} />
-          <span className="text-xs font-medium drop-shadow">기술없음</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            if (!isAlreadyLabeled && !mutation.isPending)
-              setLiked((prev) => !prev);
-          }}
-          className={cn(
-            "flex flex-col items-center gap-1 transition-transform active:scale-90",
-            liked ? "text-pink-400" : "text-white",
-          )}
-        >
-          <Heart
-            className="h-7 w-7 drop-shadow-lg"
-            fill={liked ? "currentColor" : "none"}
-            strokeWidth={1.5}
-          />
-          <span className="text-xs font-medium drop-shadow">좋아요</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setSheetOpen(true)}
-          className={cn(
-            "flex flex-col items-center gap-1 transition-transform active:scale-90",
-            technique ? "text-indigo-400" : "text-white",
-          )}
-        >
-          <Tag className="h-7 w-7 drop-shadow-lg" strokeWidth={1.5} />
-          <span className="text-xs font-medium drop-shadow">
-            {technique ? "변경" : "기술명"}
-          </span>
-        </button>
-
-        {/* 점수(유효/절반/한판) — 기술성공 시 부여할 점수를 선택. 라벨링 전에만 노출 */}
-        {!isAlreadyLabeled && (
-          <div className="flex flex-col overflow-hidden rounded-xl border border-white/20 bg-black/40 backdrop-blur-sm">
-            {SCORE_OPTIONS.map((opt) => (
+            {/* 우측: 액션 버튼 (항상 표시 — 기술명 선택은 의도적 행동) */}
+            <div className="fixed right-[calc(var(--safe-right)+0.75rem)] bottom-[calc(var(--safe-bottom)+56px+12px)] z-20 flex flex-col items-center gap-5">
+              {/* 기술없음 — 누르면 '기술아님(NONE)'으로 저장하고 다음으로 넘어간다. */}
               <button
-                key={opt.value}
                 type="button"
                 disabled={mutation.isPending}
-                onClick={() => setScore(opt.value)}
+                onClick={() => {
+                  if (mutation.isPending) return;
+                  if (isAlreadyLabeled) {
+                    onLabeled();
+                    return;
+                  }
+                  setFeedback("none");
+                  saveLabel({ techniqueResult: "NONE", score: "NONE" });
+                }}
+                className="flex flex-col items-center gap-1 text-white transition-transform active:scale-90 disabled:opacity-40"
+              >
+                <Ban className="h-4 w-4 drop-shadow-md" strokeWidth={1.5} />
+                <span className="text-xs font-medium drop-shadow">
+                  기술없음
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (!isAlreadyLabeled && !mutation.isPending)
+                    setLiked((prev) => !prev);
+                }}
                 className={cn(
-                  "px-3 py-1.5 text-xs font-bold transition-colors disabled:opacity-40",
-                  score === opt.value
-                    ? "bg-amber-400 text-black"
-                    : "text-white/80 hover:bg-white/10",
+                  "flex flex-col items-center gap-1 transition-transform active:scale-90",
+                  liked ? "text-pink-400" : "text-white",
                 )}
               >
-                {opt.label}
+                <Heart
+                  className="h-4 w-4 drop-shadow-md"
+                  fill={liked ? "currentColor" : "none"}
+                  strokeWidth={1.5}
+                />
+                <span className="text-xs font-medium drop-shadow">좋아요</span>
               </button>
-            ))}
-          </div>
-        )}
-      </div>
 
-      {/* 하단 좌: 기술명 태그 + 메타 */}
-      <div
-        className={cn(
-          "pointer-events-none fixed bottom-[calc(var(--safe-bottom)+3.5rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
-          showControls ? "opacity-100" : "opacity-0",
-        )}
-      >
-        <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-          {technique && (
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
-              <Tag className="h-3 w-3" />
-              {technique}
+              <button
+                type="button"
+                onClick={() => setSheetOpen(true)}
+                className={cn(
+                  "flex flex-col items-center gap-1 transition-transform active:scale-90",
+                  technique ? "text-indigo-400" : "text-white",
+                )}
+              >
+                <Tag className="h-4 w-4 drop-shadow-md" strokeWidth={1.5} />
+                <span className="text-xs font-medium drop-shadow">
+                  {technique ? "변경" : "기술명"}
+                </span>
+              </button>
+
+              {/* 점수(유효/절반/한판) — 기술성공 시 부여할 점수를 선택. 라벨링 전에만 노출 */}
+              {!isAlreadyLabeled && (
+                <div className="flex flex-col overflow-hidden rounded-xl border border-white/20 bg-black/40 backdrop-blur-sm">
+                  {SCORE_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      disabled={mutation.isPending}
+                      onClick={() => setScore(opt.value)}
+                      className={cn(
+                        "px-3 py-1.5 text-xs font-bold transition-colors disabled:opacity-40",
+                        score === opt.value
+                          ? "bg-amber-400 text-black"
+                          : "text-white/80 hover:bg-white/10",
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-          {/* 기술성공 시 부여될 점수 */}
-          <div className="inline-flex items-center rounded-full bg-amber-400/90 px-3 py-1 text-xs font-bold text-black backdrop-blur-sm">
-            {scoreLabel(score)}
-          </div>
-        </div>
-        <p className="text-xs text-white/60">
-          신뢰도 {confidence}% · {clipDuration}초
-        </p>
-      </div>
 
-      {/* 하단 버튼 바 — 터치 시 등장, 3초 후 자동 숨김 */}
-      <div
-        className={cn(
-          "fixed inset-x-0 bottom-0 z-20 transition-all duration-500",
-          showControls
-            ? "translate-y-0 opacity-100"
-            : "translate-y-full opacity-0",
-        )}
-      >
-        {!isAlreadyLabeled ? (
-          <div className="grid grid-cols-2 border-t border-white/10 bg-black/70 pb-safe backdrop-blur-sm">
-            <button
-              type="button"
-              disabled={mutation.isPending}
-              onClick={() => {
-                setFeedback("attempt");
-                saveLabel({ techniqueResult: "ATTEMPT", score: "NONE" });
-              }}
-              className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-amber-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
+            {/* 하단 좌: 기술명 태그 + 메타 */}
+            <div
+              className={cn(
+                "pointer-events-none fixed bottom-[calc(var(--safe-bottom)+3.5rem)] left-[calc(var(--safe-left)+1rem)] right-[calc(var(--safe-right)+4rem)] z-20 transition-opacity duration-500",
+                showControls ? "opacity-100" : "opacity-0",
+              )}
             >
-              <span className="text-lg">👈</span>
-              기술시도
-            </button>
-            <button
-              type="button"
-              disabled={mutation.isPending}
-              onClick={() => {
-                setFeedback("success");
-                saveLabel({ techniqueResult: "SUCCESS", score });
-              }}
-              className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-green-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
+              <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
+                {technique && (
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-indigo-500/80 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                    <Tag className="h-3 w-3" />
+                    {technique}
+                  </div>
+                )}
+                {/* 기술성공 시 부여될 점수 */}
+                <div className="inline-flex items-center rounded-full bg-amber-400/90 px-3 py-1 text-xs font-bold text-black backdrop-blur-sm">
+                  {scoreLabel(score)}
+                </div>
+              </div>
+              <p className="text-xs text-white/60">
+                신뢰도 {confidence}% · {clipDuration}초
+              </p>
+            </div>
+
+            {/* 하단 버튼 바 — 터치 시 등장, 3초 후 자동 숨김 */}
+            <div
+              className={cn(
+                "fixed inset-x-0 bottom-0 z-20 transition-all duration-500",
+                showControls
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-full opacity-0",
+              )}
             >
-              기술성공
-              <span className="text-lg">👉</span>
-            </button>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 pt-3.5 pb-[calc(0.875rem+var(--safe-bottom))] text-sm text-neutral-400 backdrop-blur-sm">
-            <Check className="h-4 w-4 text-green-400" />
-            라벨링 완료 · 스와이프해서 다음으로
-          </div>
-        )}
-      </div>
+              {!isAlreadyLabeled ? (
+                <div className="grid grid-cols-2 border-t border-white/10 bg-black/70 pb-safe backdrop-blur-sm">
+                  <button
+                    type="button"
+                    disabled={mutation.isPending}
+                    onClick={() => {
+                      setFeedback("attempt");
+                      saveLabel({ techniqueResult: "ATTEMPT", score: "NONE" });
+                    }}
+                    className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-amber-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
+                  >
+                    <span className="text-lg">👈</span>
+                    기술시도
+                  </button>
+                  <button
+                    type="button"
+                    disabled={mutation.isPending}
+                    onClick={() => {
+                      setFeedback("success");
+                      saveLabel({ techniqueResult: "SUCCESS", score });
+                    }}
+                    className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-green-400 transition-colors hover:bg-white/5 active:bg-white/10 disabled:opacity-40"
+                  >
+                    기술성공
+                    <span className="text-lg">👉</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-black/70 pt-3.5 pb-[calc(0.875rem+var(--safe-bottom))] text-sm text-neutral-400 backdrop-blur-sm">
+                  <Check className="h-4 w-4 text-green-400" />
+                  라벨링 완료 · 스와이프해서 다음으로
+                </div>
+              )}
+            </div>
           </>,
           controlsLayer,
         )}

@@ -1,12 +1,19 @@
-import { useVideoHighlights, useVideoJobs, useNextJobPrefetch } from "@/hooks/use-highlights";
-import { useOrientationMode } from "@/hooks/use-orientation";
-import { ChevronDown, ChevronUp, Loader2, Smartphone } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { OnboardingOverlay, useOnboarding } from "@/components/onboarding-overlay";
+import {
+  OnboardingOverlay,
+  useOnboarding,
+} from "@/components/onboarding-overlay";
 import { ShortsCard } from "@/components/shorts-card";
 import { VideoPreloader } from "@/components/video-preloader";
+import {
+  useNextJobPrefetch,
+  useVideoHighlights,
+  useVideoJobs,
+} from "@/hooks/use-highlights";
+import { useOrientationMode } from "@/hooks/use-orientation";
 import { cn } from "@/lib/utils";
+import { Loader2, Smartphone } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 /** 세로 스와이프 중 위/아래에 미리 보이는 이웃 클립(정지 프레임). */
 const PreviewClip = ({ url }: { url: string }) => (
@@ -20,7 +27,8 @@ const PreviewClip = ({ url }: { url: string }) => (
 );
 
 export const ShortsPage = () => {
-  const { mode: orientationMode, toggle: toggleOrientation } = useOrientationMode();
+  const { mode: orientationMode, toggle: toggleOrientation } =
+    useOrientationMode();
   const { needsOnboarding, complete } = useOnboarding();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -39,7 +47,9 @@ export const ShortsPage = () => {
   const [highlightIndex, setHighlightIndex] = useState(0);
 
   const currentJob = jobs[jobIndex];
-  const { highlights, isLoading, isError } = useVideoHighlights(currentJob?.id ?? 0);
+  const { highlights, isLoading, isError } = useVideoHighlights(
+    currentJob?.id ?? 0,
+  );
 
   const unlabeledHighlights = useMemo(
     () => highlights.filter((h) => !h.isLabeledByCurrentUser),
@@ -47,7 +57,8 @@ export const ShortsPage = () => {
   );
 
   const allHighlights = highlights;
-  const activeHighlights = unlabeledHighlights.length > 0 ? unlabeledHighlights : allHighlights;
+  const activeHighlights =
+    unlabeledHighlights.length > 0 ? unlabeledHighlights : allHighlights;
   const activeHighlight = activeHighlights[highlightIndex];
 
   // Restore jobIndex from URL once jobs load
@@ -61,8 +72,15 @@ export const ShortsPage = () => {
 
   // Restore highlightIndex from URL once highlights for the target job load
   useEffect(() => {
-    if (urlInitialized || !initialHighlightId.current || activeHighlights.length === 0) return;
-    const idx = activeHighlights.findIndex((h) => String(h.id) === initialHighlightId.current);
+    if (
+      urlInitialized ||
+      !initialHighlightId.current ||
+      activeHighlights.length === 0
+    )
+      return;
+    const idx = activeHighlights.findIndex(
+      (h) => String(h.id) === initialHighlightId.current,
+    );
     if (idx !== -1) setHighlightIndex(idx);
     setUrlInitialized(true);
   }, [activeHighlights, urlInitialized]);
@@ -77,13 +95,24 @@ export const ShortsPage = () => {
       { jobId: String(job.id), highlightId: String(highlight.id) },
       { replace: true },
     );
+  }, [
+    urlInitialized,
+    jobIndex,
+    highlightIndex,
     // oxlint-disable-next-line react-hooks/exhaustive-deps -- jobs/activeHighlights are derived arrays; indices drive the sync
-  }, [urlInitialized, jobIndex, highlightIndex, jobs, activeHighlights, setSearchParams]);
+    jobs,
+    activeHighlights,
+    setSearchParams,
+  ]);
 
   // 다음 2개 클립 URL — 현재 job 내 남은 것 + 다음 job 첫 번째
   const preloadUrls = useMemo(() => {
     const urls: string[] = [];
-    for (let i = highlightIndex + 1; i <= highlightIndex + 2 && i < activeHighlights.length; i++) {
+    for (
+      let i = highlightIndex + 1;
+      i <= highlightIndex + 2 && i < activeHighlights.length;
+      i++
+    ) {
       urls.push(activeHighlights[i].clipUrl);
     }
     return urls;
@@ -224,7 +253,9 @@ export const ShortsPage = () => {
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-3 bg-black px-6 text-center text-white">
         <p className="text-lg font-semibold">라벨링할 영상이 없어요</p>
-        <p className="text-sm text-neutral-400">영상이 업로드되면 알려드릴게요.</p>
+        <p className="text-sm text-neutral-400">
+          영상이 업로드되면 알려드릴게요.
+        </p>
       </div>
     );
   }
@@ -238,7 +269,8 @@ export const ShortsPage = () => {
   }
 
   if (isError || !activeHighlight) {
-    const isAllDone = !isError && allHighlights.length > 0 && unlabeledHighlights.length === 0;
+    const isAllDone =
+      !isError && allHighlights.length > 0 && unlabeledHighlights.length === 0;
     const hasNextJob = jobIndex + 1 < jobs.length;
 
     return (
@@ -262,12 +294,16 @@ export const ShortsPage = () => {
                 다음 영상으로
               </button>
             ) : (
-              <p className="mt-2 text-sm text-green-400 font-medium">모든 영상 완료! 수고하셨어요 🥋</p>
+              <p className="mt-2 text-sm text-green-400 font-medium">
+                모든 영상 완료! 수고하셨어요 🥋
+              </p>
             )}
           </>
         ) : (
           <>
-            <p className="text-lg font-semibold">하이라이트를 불러오지 못했어요.</p>
+            <p className="text-lg font-semibold">
+              하이라이트를 불러오지 못했어요.
+            </p>
             <button
               type="button"
               onClick={() => window.location.reload()}
@@ -281,9 +317,14 @@ export const ShortsPage = () => {
     );
   }
 
-  const progress = highlights.length > 0
-    ? Math.round(((highlights.length - unlabeledHighlights.length) / highlights.length) * 100)
-    : 0;
+  const progress =
+    highlights.length > 0
+      ? Math.round(
+          ((highlights.length - unlabeledHighlights.length) /
+            highlights.length) *
+            100,
+        )
+      : 0;
 
   return (
     <div className="relative h-dvh overflow-hidden bg-black">
@@ -293,11 +334,18 @@ export const ShortsPage = () => {
       <button
         type="button"
         onClick={toggleOrientation}
-        aria-label={orientationMode === "landscape" ? "세로 모드로 전환" : "가로 모드로 전환"}
+        aria-label={
+          orientationMode === "landscape"
+            ? "세로 모드로 전환"
+            : "가로 모드로 전환"
+        }
         className="absolute right-[calc(var(--safe-right)+1rem)] top-[calc(var(--safe-top)+1.5rem)] z-30 flex items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 text-xs font-medium text-white opacity-60 backdrop-blur-sm transition-opacity hover:opacity-100"
       >
         <Smartphone
-          className={cn("h-4 w-4", orientationMode === "landscape" && "rotate-90")}
+          className={cn(
+            "h-4 w-4",
+            orientationMode === "landscape" && "rotate-90",
+          )}
         />
         {orientationMode === "landscape" ? "세로" : "가로"}
       </button>
@@ -307,43 +355,6 @@ export const ShortsPage = () => {
           style={{ width: `${progress}%` }}
         />
       </div>
-
-      {jobs.length > 1 && (
-        <div className="absolute left-[calc(var(--safe-left)+1rem)] top-[calc(var(--safe-top)+1.5rem)] z-30 flex flex-col gap-1">
-          <button
-            type="button"
-            onClick={() => {
-              if (jobIndex > 0) {
-                setJobIndex((prev) => prev - 1);
-                setHighlightIndex(0);
-              }
-            }}
-            disabled={jobIndex === 0}
-            className={cn(
-              "rounded-full bg-black/50 p-1.5 text-white backdrop-blur-sm transition-opacity",
-              jobIndex === 0 ? "opacity-0 pointer-events-none" : "opacity-60 hover:opacity-100",
-            )}
-          >
-            <ChevronUp className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              if (jobIndex < jobs.length - 1) {
-                setJobIndex((prev) => prev + 1);
-                setHighlightIndex(0);
-              }
-            }}
-            disabled={jobIndex >= jobs.length - 1}
-            className={cn(
-              "rounded-full bg-black/50 p-1.5 text-white backdrop-blur-sm transition-opacity",
-              jobIndex >= jobs.length - 1 ? "opacity-0 pointer-events-none" : "opacity-60 hover:opacity-100",
-            )}
-          >
-            <ChevronDown className="h-4 w-4" />
-          </button>
-        </div>
-      )}
 
       {/* 세로 피드 — 드래그 중 위/아래 이웃 클립이 손가락을 따라 미리 보인다 */}
       <div
