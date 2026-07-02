@@ -65,17 +65,43 @@ export const ShortsPage = () => {
   // 자동재생 정책상 음소거로 시작(항상 재생 보장). 첫 조작 시 소리를 복원한다.
   const [muted, setMuted] = useState(true);
   const soundUnlocked = useRef(false);
+  // React의 muted 어트리뷰트는 WebKit(iOS)에서 DOM 속성으로 반영되지 않아
+  // 자동재생이 차단되는 문제가 있다. 항상 명령형으로 동기화하기 위해 ref로 최신값 유지.
+  const mutedRef = useRef(muted);
+  mutedRef.current = muted;
 
   // 재생 시간 갱신 — 스크러버 표시 + 방치 힌트 루프 감지로 전달.
   const handleTimeUpdate = useCallback(() => {
     const v = currentVideoRef.current;
     if (!v) return;
+    // 프레임이 진행 중이면(=timeupdate 발생) 버퍼링이 아니므로 스피너를 내린다.
+    // onPlaying/onCanPlay가 안 오는 iOS에서도 무한 로딩을 막는 안전장치.
+    setBuffering(false);
     idleHint.notifyTime(v.currentTime);
     setVideoTime({
       current: v.currentTime,
       duration: Number.isFinite(v.duration) ? v.duration : 0,
     });
   }, [idleHint]);
+
+  // 현재 영상 재생 — iOS(WebKit)는 음소거 해제 상태의 자동재생을 제스처 없이 막는다.
+  // 거부되면 음소거로 강제 후 재시도해 무한 로딩을 막고 재생을 보장한다
+  // (소리는 상태를 음소거로 되돌려, 다음 사용자 조작에서 복원되게 한다).
+  const playWithFallback = useCallback((el: HTMLVideoElement) => {
+    el.muted = mutedRef.current;
+    el.play().catch(() => {
+      el.muted = true;
+      setMuted(true);
+      soundUnlocked.current = false;
+      void el.play().catch(() => {});
+    });
+  }, []);
+
+  // 현재 영상의 muted를 명령형으로 반영(React 어트리뷰트가 iOS에서 누락되는 문제 회피).
+  useEffect(() => {
+    const v = currentVideoRef.current;
+    if (v) v.muted = muted;
+  }, [muted, activeHighlight?.id]);
 
   const handleInteract = useCallback(() => {
     idleHint.reset();
@@ -112,14 +138,14 @@ export const ShortsPage = () => {
         el.currentTime = 0;
         // 재생 가능할 만큼(HAVE_FUTURE_DATA) 못 받았으면 스피너 — canplay/playing에서 해제.
         setBuffering(el.readyState < 3);
-        void el.play().catch(() => { });
+        playWithFallback(el);
       } else {
         el.pause();
         el.currentTime = 0; // 이웃은 첫 프레임으로
       }
     });
     setVideoTime({ current: 0, duration: 0 });
-  }, [activeHighlight?.id]);
+  }, [activeHighlight?.id, playWithFallback]);
 
   // 커밋 후 인덱스를 바꾸고 위치를 즉시 0으로 되돌린다(jump=무전환) — 끊김 없음.
   const commitMove = useCallback(
@@ -307,7 +333,7 @@ export const ShortsPage = () => {
                     offset === 0
                       ? (e) => {
                         setBuffering(false);
-                        void e.currentTarget.play().catch(() => { });
+                        playWithFallback(e.currentTarget);
                       }
                       : undefined
                   }
