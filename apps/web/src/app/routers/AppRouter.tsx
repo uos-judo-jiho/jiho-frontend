@@ -4,6 +4,7 @@ import { useScrollToTop } from "@/shared/hooks/useScolltoTop";
 
 import About from "@/pages/About";
 import Home from "@/pages/Home";
+import LegalDocumentPage from "@/pages/Legal/LegalDocumentPage";
 import Login from "@/pages/Login";
 import News from "@/pages/News/News";
 import NewsDetailPage from "@/pages/News/NewsDetailPage";
@@ -31,6 +32,8 @@ const AppRouter = () => {
       <Route path="/notice" element={<Notice />} />
       <Route path="/notice/:id" element={<NoticeDetail />} />
       <Route path="/album" element={<AlbumPage />} />
+      <Route path="/terms" element={<LegalDocumentPage slug="terms" />} />
+      <Route path="/privacy" element={<LegalDocumentPage slug="privacy" />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

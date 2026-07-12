@@ -64,6 +64,14 @@ const generateSitemap = async () => {
         : undefined,
       priority: "0.5",
     })),
+    {
+      loc: "https://uosjudo.com/terms",
+      priority: "0.3",
+    },
+    {
+      loc: "https://uosjudo.com/privacy",
+      priority: "0.3",
+    },
   ];
 
   const sitemapURL = sitemapMetaDataList
