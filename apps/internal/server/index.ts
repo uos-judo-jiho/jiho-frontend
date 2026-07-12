@@ -125,7 +125,10 @@ const queue: QueueItem[] = [];
 
 const upload = multer({
   dest: path.join(os.tmpdir(), "jiho-internal-uploads"),
-});
+  // multer 2.x decodes filenames as latin1 unless told otherwise, which mangles
+  // Korean names. @types/multer still tracks v1, so the option needs a cast.
+  defParamCharset: "utf8",
+} as multer.Options);
 const app = express();
 app.use(express.json());
 
