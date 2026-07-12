@@ -49,6 +49,12 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
         "[&>table]:border-collapse [&>table]:w-full [&>table]:my-2",
         "[&>th]:border [&>th]:border-theme-light-grey [&>th]:p-2 [&>th]:text-left [&>th]:bg-[#f9f9f9] [&>th]:font-bold",
         "[&>td]:border [&>td]:border-theme-light-grey [&>td]:p-2 [&>td]:text-left",
+
+        "[&>tr:nth-child(even)]:bg-[#f9f9f9]",
+        "[&>tr:hover]:bg-[#f1f1f1]",
+        "[&>thead]:bg-[#f9f9f9]",
+
+
         // Horizontal rule
         "[&>hr]:border-0 [&>hr]:border-t [&>hr]:border-theme-light-grey [&>hr]:my-2",
         className

@@ -138,7 +138,7 @@ const Footer = () => {
         </MobileRowColLayout>
         {/* MARK: Home 훈련 일지 지호지 */}
         <Line className="h-[1px] bg-theme-light-grey" />
-        <ul className="flex flex-wrap gap-3 sm:px-0 px-4 mt-4 mb-16">
+        <ul className="flex flex-wrap gap-3 sm:px-0 px-4 mt-4">
           <DescriptionItemTitle>
             <HyperLink to={"/"}>HOME으로 바로가기</HyperLink>
           </DescriptionItemTitle>
@@ -153,6 +153,8 @@ const Footer = () => {
           <DescriptionItem>
             <HyperLink to={`/album`}>앨범으로 바로가기</HyperLink>
           </DescriptionItem>
+        </ul>
+        <ul className="flex flex-wrap gap-3 sm:px-0 px-4 mt-4 mb-16">
           {/* 관리자 페이지로 */}
           {/* TODO admin.uosjudo.com */}
           {/* <DescriptionItem>
@@ -164,6 +166,16 @@ const Footer = () => {
               {`관리자 페이지`}
             </HyperLink>
           </DescriptionItem> */}
+          {/* 이용약관 */}
+          <DescriptionItem>
+            <HyperLink to={"/terms"}>이용약관</HyperLink>
+          </DescriptionItem>
+          {/* 개인정보 처리방침 */}
+          <DescriptionItem>
+            <HyperLink to={"/privacy"} >
+              개인정보 처리방침
+            </HyperLink>
+          </DescriptionItem>
           {/* 사이트맵 */}
           <DescriptionItem>
             <HyperLink
