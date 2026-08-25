@@ -59,7 +59,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const isAuthor = !data || (myName && data.author.includes(myName));
 
   const roleCanEditType =
-    type === "training"
+    type === "training" || type === "news"
       ? GeneralAndAbove.includes(userRole)
       : StaffAndAbove.includes(userRole);
 
