@@ -1,6 +1,7 @@
 import path from "path";
 
 import tailwindcss from "@tailwindcss/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
 
 import { voyageLoggerPlugin } from "@99mini/logger-client/plugin";
@@ -15,14 +16,11 @@ export default defineConfig(({ mode }) => {
 
   const isVoyageConfigValid = VOYAGE_BASE_URL && VOYAGE_API_KEY;
 
-  // 요청 경로가 이미 /api 로 시작하므로, target 이 /api 로 끝나면 중복을 제거한다.
-  const apiProxyTarget = (
-    env.VITE_API_PROXY_TARGET || "http://localhost:4000"
-  ).replace(/\/api\/?$/, "");
-
   return {
     plugins: [
       tailwindcss(),
+      // TanStack Start: 파일 기반 라우팅 + SSR + server routes
+      tanstackStart(),
       react(),
       isVoyageConfigValid
         ? voyageLoggerPlugin({
@@ -39,27 +37,20 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 3000,
-      proxy: {
-        "/api": {
-          target: apiProxyTarget,
-          changeOrigin: true,
-          rewrite: (path) => path,
-          secure: false,
-          ws: true,
-        },
-      },
+      // /api 프록시는 vite proxy 대신 server route(src/routes/api.$.ts)가
+      // dev/prod 동일하게 처리한다.
     },
     build: {
       minify: "esbuild",
       target: "esnext",
-      rollupOptions: {
-        output: {
-          manualChunks: undefined,
-        },
-      },
     },
     esbuild: {
-      drop: mode === "production" ? ["console", "debugger"] : [],
+      drop: mode === "production" ? ["debugger"] : [],
+      // console.error/warn 은 서버 번들(프록시/SSR 오류 추적)을 위해 남긴다.
+      pure:
+        mode === "production"
+          ? ["console.log", "console.debug", "console.trace"]
+          : [],
     },
     ssr: {
       noExternal: ["@emotion/stylis", "@emotion/unitless"],

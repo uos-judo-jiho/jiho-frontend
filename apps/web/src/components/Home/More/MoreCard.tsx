@@ -1,10 +1,15 @@
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, type LinkProps } from "@tanstack/react-router";
+
+type MoreCardItem = Pick<ArticleInfoType, "author" | "description"> & {
+  id: string | number;
+  dateTime?: string;
+};
 
 type MoreCardProps = {
   title: string;
-  data: ArticleInfoType[];
+  data: MoreCardItem[];
   linkTo: string;
   isLinkToQuery?: boolean;
 };
@@ -26,7 +31,7 @@ export const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
   return (
     <div className="w-full h-[260px]">
       <div className="mb-4 border-b border-gray-300 pb-2">
-        <Link to={linkTo}>
+        <Link to={linkTo as LinkProps["to"]}>
           <div className="flex items-center justify-start">
             <h3 className="text-base font-semibold">{title}</h3>
             <p className="pl-2.5 text-theme-grey leading-theme-description hover:text-theme-black transition-colors">
@@ -46,7 +51,7 @@ export const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
                   "p-2 rounded-md transition-colors duration-200",
                 )}
               >
-                <Link to={`${linkTo}/${item.id}`}>
+                <Link to={`${linkTo}/${item.id}` as LinkProps["to"]}>
                   <div className="flex justify-between items-end gap-4">
                     <div
                       className="

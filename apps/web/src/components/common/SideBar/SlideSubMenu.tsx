@@ -1,6 +1,6 @@
 import { MenuItemInfoType } from "@/shared/lib/types/menuItemInfoType";
 import { cn } from "@/shared/lib/utils";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, type LinkProps } from "@tanstack/react-router";
 import { SelectedType } from "./MenuStyledComponents";
 
 import { useNavbar } from "../Navbar/NavBar.provider";
@@ -39,7 +39,7 @@ const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
           )}
         >
           <Link
-            to={itemInfo.href}
+            to={itemInfo.href as LinkProps["to"]}
             onClick={(e) => {
               if (open && location.pathname === itemInfo.href) {
                 e.preventDefault();

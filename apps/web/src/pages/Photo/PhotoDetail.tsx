@@ -1,15 +1,15 @@
 import ResponsiveBranch from "@/components/common/ResponsiveBranch/ResponsiveBranch";
 import Loading from "@/components/common/Skeletons/Loading";
-import { createArticleData, StructuredData } from "@/features/seo";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { v2Api } from "@packages/api";
+import { getRouteApi } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { useParams } from "react-router-dom";
 import { PhotoDetailMobile } from "./PhotoDetailMobile";
 import { PhotoDetailPc } from "./PhotoDetailPc";
 
+const routeApi = getRouteApi("/photo/$id");
+
 const PhotoPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = routeApi.useParams();
   const { data } = v2Api.useGetApiV2Trainings(undefined, {
     query: {
       select: (response) => response.data.trainingLogs,
@@ -26,50 +26,12 @@ const PhotoPage = () => {
 
   const info = trainings?.find((item) => item.id.toString() === id?.toString());
 
-  const metaDescription = [info?.title, info?.description.slice(0, 140)].join(
-    " | ",
-  );
-
-  // Create structured data for image gallery
-  const structuredData = useMemo(() => {
-    if (!info) return null;
-
-    return createArticleData({
-      headline: [info.title, info.author].join(" - ") || "",
-      description: metaDescription,
-      images: info.images.map((img) => img.originSrc) || [],
-      datePublished: info.dateTime
-        ? new Date(info.dateTime).toISOString()
-        : undefined,
-      dateModified: info?.dateTime
-        ? new Date(info.dateTime).toISOString()
-        : undefined,
-    });
-  }, [info, metaDescription]);
-
   if (!info || !trainings) {
     return <Loading />;
   }
 
-  const metaImgUrl = info.images.at(0);
-
-  // Format date for meta tags (ISO 8601 format)
-  const publishedDate = info.dateTime
-    ? new Date(info.dateTime).toISOString()
-    : undefined;
-
   return (
     <>
-      <MyHelmet
-        title={`훈련일지 - ${info.author}`}
-        description={metaDescription}
-        imgUrl={metaImgUrl?.originSrc}
-        datePublished={publishedDate}
-        dateModified={publishedDate}
-        author={info.author}
-        articleType="article"
-      />
-      {structuredData && <StructuredData data={structuredData} />}
       <ResponsiveBranch
         pcComponent={
           <PhotoDetailPc

@@ -1,5 +1,5 @@
+import { Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
@@ -64,7 +64,9 @@ export const PhotoDetailMobile = ({
             )}
           >
             <Link
-              to={current > 0 ? `/photo/${trainings[current - 1].id}` : "#"}
+              to="/photo/$id"
+              params={{ id: String(trainings[Math.max(current - 1, 0)].id) }}
+              disabled={current === 0}
               className="flex items-center gap-1"
               onClick={() => {
                 logger.info("[mobile] 이전 훈련일지로 이동", {
@@ -97,11 +99,13 @@ export const PhotoDetailMobile = ({
             )}
           >
             <Link
-              to={
-                current < trainings.length - 1
-                  ? `/photo/${trainings[current + 1].id}`
-                  : "#"
-              }
+              to="/photo/$id"
+              params={{
+                id: String(
+                  trainings[Math.min(current + 1, trainings.length - 1)].id,
+                ),
+              }}
+              disabled={current === trainings.length - 1}
               className="flex items-center gap-1"
               onClick={() => {
                 logger.info("다음 훈련일지로 이동", {

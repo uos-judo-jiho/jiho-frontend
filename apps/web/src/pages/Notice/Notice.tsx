@@ -3,7 +3,6 @@ import Line from "@/components/layouts/Line";
 import ListContainer from "@/components/layouts/ListContainer";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Title from "@/components/layouts/Title";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { Constants } from "@/shared/lib/constant";
 import { v2Api } from "@packages/api";
 
@@ -16,7 +15,6 @@ function Notice() {
 
   return (
     <>
-      <MyHelmet title="Notice" />
       <DefaultLayout>
         <SheetWrapper>
           <Title title={"공지사항"} color={Constants.BLACK_COLOR} />

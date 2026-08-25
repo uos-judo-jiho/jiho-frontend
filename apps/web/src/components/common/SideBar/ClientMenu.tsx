@@ -1,5 +1,5 @@
 import { MENU_ID, MenuIdType } from "@/shared/lib/types/MenuIdType";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "@tanstack/react-router";
 
 import { useLatestNews } from "@/features/seo/news/hooks/use-latest-news";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";

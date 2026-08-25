@@ -1,10 +1,14 @@
 import { Constants } from "@/shared/lib/constant";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
-import { Link } from "react-router-dom";
+import { Link, type LinkProps } from "@tanstack/react-router";
 import Line from "./Line";
 
+type ListItem = Pick<Partial<ArticleInfoType>, "title" | "author" | "dateTime"> & {
+  id?: string | number;
+};
+
 type ListContainerProps = {
-  datas: Partial<ArticleInfoType>[];
+  datas: ListItem[];
   targetUrl: string;
   additionalTitle?: boolean;
 };
@@ -29,7 +33,7 @@ function ListContainer({
             <li className="flex py-5 text-center">
               <div className="flex-[10%] text-center">{index + 1}</div>
               <div className="flex-[80%]">
-                <Link to={targetUrl + data.id}>
+                <Link to={(targetUrl + data.id) as LinkProps["to"]}>
                   <div className="bg-transparent text-start pr-3 hover:underline">
                     {data.title}
                     {additionalTitle ? " " + data.author : ""}

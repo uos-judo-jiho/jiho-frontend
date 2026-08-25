@@ -1,5 +1,5 @@
+import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
 
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
@@ -36,7 +36,7 @@ export const PhotoDetailPc = ({
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center ext-gray-600 hover:text-gray-900">
             <Link
-              to={`/photo`}
+              to="/photo"
               className="flex items-center gap-2"
               onClick={() =>
                 logger.info("[pc] 훈련일지 목록으로 이동", {
@@ -78,7 +78,9 @@ export const PhotoDetailPc = ({
               )}
             >
               <Link
-                to={current > 0 ? `/photo/${trainings[current - 1].id}` : "#"}
+                to="/photo/$id"
+                params={{ id: String(trainings[Math.max(current - 1, 0)].id) }}
+                disabled={current === 0}
                 className="flex items-center gap-1"
                 onClick={() =>
                   logger.info("[pc] 이전 훈련일지로 이동", {
@@ -107,11 +109,13 @@ export const PhotoDetailPc = ({
               )}
             >
               <Link
-                to={
-                  current < trainings.length - 1
-                    ? `/photo/${trainings[current + 1].id}`
-                    : "#"
-                }
+                to="/photo/$id"
+                params={{
+                  id: String(
+                    trainings[Math.min(current + 1, trainings.length - 1)].id,
+                  ),
+                }}
+                disabled={current === trainings.length - 1}
                 className="flex items-center gap-1"
                 onClick={() =>
                   logger.info("[pc] 다음 훈련일지로 이동", {

@@ -1,20 +1,17 @@
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
 
 import ModalDescriptionSection from "@/components/common/Modals/ModalDescriptionSection";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import Slider from "@/components/layouts/Slider";
 
-import { StructuredData, createArticleData } from "@/features/seo";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
-
-import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
 import { v2Api } from "@packages/api";
 
+const routeApi = getRouteApi("/news/$id/$newsId");
+
 export const NewsDetailPc = () => {
-  const { id, index } = useParams<NewsParamsType>();
+  const { id, newsId: index } = routeApi.useParams();
 
   const { data: news } = v2Api.useGetApiV2NewsYearIdSuspense(
     Number(id),
@@ -28,39 +25,17 @@ export const NewsDetailPc = () => {
 
   const { article, year } = news ?? { article: null, year: Number(id) };
 
-  // Prepare metadata (before early return to satisfy React Hook rules)
-  const metaDescription = article
-    ? [article.title, article.description?.slice(0, 140)].join(" | ")
-    : "";
-
-  const metaImgUrl = article?.images.at(0)?.originSrc;
-
-  // Format date for meta tags (ISO 8601 format)
-  const publishedDate = article?.dateTime
-    ? new Date(article.dateTime).toISOString()
-    : undefined;
-
-  // Create structured data for article (must be before early return)
-  const structuredData = useMemo(() => {
-    if (!article) return null;
-
-    return createArticleData({
-      headline: `${year}년 지호지 - ${article.title}`,
-      description: metaDescription,
-      images: article.images.map((img) => img.originSrc) || [],
-      datePublished: publishedDate,
-      dateModified: publishedDate,
-      author: article.author,
-    });
-  }, [year, article, metaDescription, publishedDate]);
-
   if (!article) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <div className="text-lg font-semibold">
           해당 지호지를 찾을 수 없습니다.
         </div>
-        <Link to={`/news/${year}`} className="text-blue-500 underline">
+        <Link
+          to="/news/$id"
+          params={{ id: String(year) }}
+          className="text-blue-500 underline"
+        >
           {year}년 지호지 목록으로 돌아가기
         </Link>
       </div>
@@ -69,23 +44,16 @@ export const NewsDetailPc = () => {
 
   return (
     <div>
-      <MyHelmet
-        title={`${year}년 지호지 - ${article.title}`}
-        description={metaDescription}
-        imgUrl={metaImgUrl}
-        datePublished={publishedDate}
-        dateModified={publishedDate}
-        author={article.author ?? ""}
-        articleType="article"
-      />
-      {structuredData && <StructuredData data={structuredData} />}
-
       <DefaultLayout>
         <SheetWrapper>
           {/* Header with Back Button */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center ext-gray-600 hover:text-gray-900">
-              <Link to={`/news/${year}`} className="flex items-center gap-2">
+              <Link
+                to="/news/$id"
+                params={{ id: String(year) }}
+                className="flex items-center gap-2"
+              >
                 <ArrowLeft className="h-4 w-4" />
                 {year}년 지호지로 돌아가기
               </Link>

@@ -73,12 +73,18 @@ const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
         msOverflowStyle: "none",
       }}
     >
-      <style>{`
+      {/* style 텍스트 자식은 SSR 시 따옴표가 이스케이프되어 hydration mismatch 를
+          일으키므로 dangerouslySetInnerHTML 로 주입한다. */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         div[class*="scroll-smooth"]::-webkit-scrollbar {
           width: 0;
           background: transparent;
         }
-      `}</style>
+      `,
+        }}
+      />
       {children}
     </div>
   );

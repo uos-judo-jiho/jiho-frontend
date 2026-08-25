@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 import Line from "@/components/layouts/Line";
 import { cn } from "@/shared/lib/utils";

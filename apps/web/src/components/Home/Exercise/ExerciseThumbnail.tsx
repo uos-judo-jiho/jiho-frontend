@@ -3,7 +3,7 @@ import Col from "@/components/layouts/Col";
 import { Card } from "@/components/ui/card";
 import { v2Api } from "@packages/api";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 const ExerciseThumbnail = () => {
   const { data } = v2Api.useGetApiV2Trainings(undefined, {
@@ -25,7 +25,11 @@ const ExerciseThumbnail = () => {
 
   return (
     <Card className="max-w-[640px] w-full sm:w-full mx-auto relative p-0 rounded-xl border-none group overflow-hidden">
-      <Link to={`/photo/${lastTraningData.id}`} className="rounded-xl">
+      <Link
+        to="/photo/$id"
+        params={{ id: String(lastTraningData.id) }}
+        className="rounded-xl"
+      >
         <div className="w-full rounded-inherit relative">
           <LazyImage
             src={lastTraningData.images[0].originSrc}

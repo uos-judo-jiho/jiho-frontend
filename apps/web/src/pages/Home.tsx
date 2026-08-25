@@ -1,6 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-
-import BGImageWebp from "@/shared/lib/assets/images/background-img-group.webp";
+import { useEffect, useState } from "react";
 
 import Footer from "@/components/common/Footer/footer";
 import Navbar from "@/components/common/Navbar/Navbar";
@@ -11,75 +9,10 @@ import HomeSectionMore from "@/components/Home/More/HomeSectionMore";
 import HomeSectionNews from "@/components/Home/News/HomeSectionNews";
 import ScrollSnap from "@/components/layouts/ScrollSnap";
 
-import { footerData } from "@/shared/lib/assets/data/footer";
-
-import { StructuredData, createOrganizationData } from "@/features/seo";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { logger } from "@99mini/logger-client";
-import { v2Api } from "@packages/api";
 
 const Home = () => {
   const [isDark, setIsDark] = useState(false);
-  const { data: awards = [] } = v2Api.useGetApiV2AwardsSuspense({
-    query: {
-      select: (response) => response.data.awards ?? [],
-    },
-  });
-
-  // Create structured data for organization with LocalBusiness
-  const structuredData = useMemo(() => {
-    const currentUrl =
-      typeof window !== "undefined"
-        ? window.location.origin
-        : "https://uosjudo.com";
-
-    const awardTitles = awards.map((award) => award.title);
-    const description =
-      awardTitles.length > 0
-        ? awardTitles.join(", ")
-        : "서울시립대학교 유도부 지호";
-
-    return createOrganizationData({
-      name: "서울시립대학교 유도부 지호",
-      description,
-      address: {
-        addressCountry: "KR",
-        addressLocality: "서울특별시",
-        addressRegion: "동대문구",
-        postalCode: "02504",
-        streetAddress: footerData.exercise.address,
-        extendedAddress: footerData.exercise.place,
-      },
-      openingHours: [
-        {
-          dayOfWeek: ["Monday", "Wednesday", "Friday"],
-          opens: "18:00",
-          closes: "20:00",
-        },
-      ],
-      url: currentUrl,
-      logo: `${currentUrl}/favicon-96x96.png`,
-      foundingDate: "1985",
-      email: "uosjudojiho@gmail.com",
-      sameAs: ["https://www.instagram.com/uos_judo"],
-      sport: "유도 (Judo)",
-      memberOf: {
-        name: "서울시립대학교 (University of Seoul)",
-      },
-      award: awardTitles,
-      geo: {
-        latitude: 37.5837,
-        longitude: 127.0594,
-      },
-      includeLocalBusiness: true,
-    });
-  }, [awards]);
-
-  // Create helmet metadata
-  const metaDescription =
-    awards.length > 0
-      ? awards.map((award) => award.title).join(", ")
-      : "서울시립대학교 유도부 지호";
 
   useEffect(() => {
     logger.info("홈", { path: window.location.pathname });
@@ -87,13 +20,6 @@ const Home = () => {
 
   return (
     <>
-      <MyHelmet
-        title="서울시립대학교 유도부 지호 | Home"
-        description={metaDescription}
-        imgUrl={BGImageWebp}
-      />
-      <StructuredData data={structuredData} />
-
       <Navbar isDark={isDark} />
 
       <ScrollSnap setIsDark={setIsDark}>

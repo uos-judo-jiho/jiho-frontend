@@ -4,8 +4,8 @@ import SheetWrapper from "@/components/layouts/SheetWrapper";
 import { useLatestNews } from "@/features/seo/news/hooks/use-latest-news";
 import { footerData } from "@/shared/lib/assets/data/footer";
 import { cn } from "@/shared/lib/utils";
+import { Link, type LinkProps } from "@tanstack/react-router";
 import { HTMLProps, ReactNode } from "react";
-import { Link } from "react-router-dom";
 
 const DescriptionList = ({
   className,
@@ -79,7 +79,11 @@ const HyperLink = ({
   }
 
   return (
-    <Link to={to} target={target} className={cn("hover:opacity-60", className)}>
+    <Link
+      to={to as LinkProps["to"]}
+      target={target}
+      className={cn("hover:opacity-60", className)}
+    >
       {children}
     </Link>
   );

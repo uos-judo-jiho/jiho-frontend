@@ -56,9 +56,9 @@ COPY apps/web/package.json apps/web/package.json
 COPY packages/api/package.json packages/api/package.json
 RUN pnpm install --frozen-lockfile --prod --filter @apps/web...
 
-# Copy built application and server files
-COPY --from=builder /repo/apps/web/build ./apps/web/build
-# COPY --from=builder /app/index.html ./
+# Copy built application and the production server runner
+COPY --from=builder /repo/apps/web/dist ./apps/web/dist
+COPY --from=builder /repo/apps/web/server.mjs ./apps/web/server.mjs
 
 # Change ownership to non-root user
 RUN chown -R nodejs:nodejs /repo
