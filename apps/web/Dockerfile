@@ -1,5 +1,5 @@
 # Build stage - install monorepo dependencies with pnpm
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /repo
 RUN corepack enable
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
@@ -8,7 +8,7 @@ COPY packages/api/package.json packages/api/package.json
 RUN pnpm install --frozen-lockfile
 
 # Build stage - 애플리케이션 빌드
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /repo
 RUN corepack enable
 
@@ -35,7 +35,7 @@ RUN pnpm -C packages/api gen
 RUN pnpm -C apps/web build
 
 # Production stage - 런타임 dependencies만 설치
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /repo
 RUN corepack enable
 
