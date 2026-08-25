@@ -52,13 +52,7 @@
   "devDependencies": {
     "@types/node": "^25.5.0",
     "oxlint": "^1.72.0",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:"
   },
-  "pnpm": {
-    "overrides": {
-      "react": "^18.2.0",
-      "react-dom": "^18.2.0"
-    }
-  },
-  "packageManager": "pnpm@9.15.2"
+  "packageManager": "pnpm@11.24.0"
 }
