@@ -13,6 +13,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # pnpm --filter "...[<ref>]" 가 base 브랜치와 diff를 계산하려면 전체 히스토리가 필요하다.
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch --no-tags origin "${{ github.base_ref }}"
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -40,3 +46,23 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+      # 변경된 워크스페이스 프로젝트(및 그에 의존하는 프로젝트)만 빌드한다.
+      # 루트 설정(lockfile, workspace, root package.json, 이 워크플로우)이 바뀐 경우에는
+      # 영향 범위를 특정할 수 없으므로 전체를 빌드한다.
+      - name: Build changed projects
+        env:
+          NODE_ENV: production
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          BASE="origin/${BASE_REF}"
+
+          if git diff --name-only "${BASE}...HEAD" \
+            | grep -qE '^(pnpm-lock\.yaml|pnpm-workspace\.yaml|package\.json|\.github/workflows/ci\.yml)$'; then
+            echo "::notice::루트 설정이 변경되어 전체 프로젝트를 빌드합니다."
+            pnpm -r --no-fail-if-no-match run --if-present build
+          else
+            echo "::notice::${BASE} 대비 변경된 프로젝트만 빌드합니다."
+            pnpm --filter "...[${BASE}]" --no-fail-if-no-match run --if-present build
+          fi
