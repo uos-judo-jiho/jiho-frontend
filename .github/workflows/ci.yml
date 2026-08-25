@@ -7,7 +7,44 @@ on:
       - reopened
       - synchronize
 
+# 같은 PR에 연속 push가 들어오면 이전 실행을 취소한다.
+# (web 도커 빌드가 무거우므로 중복 실행을 막는 효과가 크다)
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
+  # apps/web 도커 이미지에 영향을 주는 변경인지 판단한다.
+  # 경로 목록은 deploy-web.yml 의 `on.push.paths` 와 동일하게 유지한다.
+  # (= "배포가 트리거될 변경이면 PR에서 미리 도커 빌드를 검증한다")
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      web: ${{ steps.detect.outputs.web }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Fetch base branch
+        run: git fetch --no-tags origin "${{ github.base_ref }}"
+
+      - name: Detect apps/web changes
+        id: detect
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          if git diff --name-only "origin/${BASE_REF}...HEAD" \
+            | grep -qE '^(apps/web/|packages/api/|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|package\.json$|\.github/workflows/(deploy-web|ci)\.yml$)'; then
+            echo "web=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::apps/web 도커 빌드를 검증합니다."
+          else
+            echo "web=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::apps/web 관련 변경이 없어 도커 빌드를 건너뜁니다."
+          fi
+
   lint-and-typecheck:
     runs-on: ubuntu-latest
     steps:
@@ -50,6 +87,9 @@ jobs:
       # 변경된 워크스페이스 프로젝트(및 그에 의존하는 프로젝트)만 빌드한다.
       # 루트 설정(lockfile, workspace, root package.json, 이 워크플로우)이 바뀐 경우에는
       # 영향 범위를 특정할 수 없으므로 전체를 빌드한다.
+      #
+      # @apps/web 은 제외한다. 실제 배포 산출물이 도커 이미지이므로
+      # docker-build-web 잡에서 Dockerfile 그대로 빌드해 검증한다. (중복 빌드 방지)
       - name: Build changed projects
         env:
           NODE_ENV: production
@@ -60,9 +100,42 @@ jobs:
 
           if git diff --name-only "${BASE}...HEAD" \
             | grep -qE '^(pnpm-lock\.yaml|pnpm-workspace\.yaml|package\.json|\.github/workflows/ci\.yml)$'; then
-            echo "::notice::루트 설정이 변경되어 전체 프로젝트를 빌드합니다."
-            pnpm -r --no-fail-if-no-match run --if-present build
+            echo "::notice::루트 설정이 변경되어 (web 제외) 전체 프로젝트를 빌드합니다."
+            pnpm -r --filter "!@apps/web" --no-fail-if-no-match run --if-present build
           else
-            echo "::notice::${BASE} 대비 변경된 프로젝트만 빌드합니다."
-            pnpm --filter "...[${BASE}]" --no-fail-if-no-match run --if-present build
+            echo "::notice::${BASE} 대비 변경된 프로젝트만 빌드합니다. (web 제외)"
+            pnpm --filter "...[${BASE}]" --filter "!@apps/web" --no-fail-if-no-match run --if-present build
           fi
+
+  # apps/web 은 러너에서 pnpm build 를 돌리는 대신 Dockerfile 을 그대로 빌드한다.
+  # 배포되는 산출물과 동일한 경로를 검증해야 베이스 이미지/런타임 차이를 CI에서 잡을 수 있다.
+  docker-build-web:
+    runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ needs.changes.outputs.web == 'true' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+        with:
+          # deploy-web.yml 과 동일하게 내장 docker 드라이버를 사용한다.
+          # (moby/buildkit 을 Docker Hub 에서 익명 pull 하다 rate limit 에 걸리는 것을 피한다)
+          driver: docker
+
+      - name: Build web image (no push)
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./apps/web/Dockerfile
+          push: false
+          platforms: linux/amd64
+          # CI는 "이미지가 빌드되는가"만 검증하므로 시크릿 대신 기본값을 넘긴다.
+          # 프리렌더는 uosjudo.com 을 직접 호출하고 실패 시 빈 배열로 폴백하므로
+          # (script/shared/siteData.js) 시크릿 없이도 빌드가 완료된다.
+          build-args: |
+            BACKEND_URL=https://api.uosjudo.com/api
+            VITE_VOYAGE_BASE_URL=https://api.zerovoyage.com
+            VITE_VOYAGE_APP=uos-jiho-judo-client
+          tags: uos-judo-web:ci
