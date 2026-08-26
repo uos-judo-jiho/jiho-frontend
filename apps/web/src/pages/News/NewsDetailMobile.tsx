@@ -1,6 +1,5 @@
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo } from "react";
-import { Link, useParams } from "react-router-dom";
 
 import Footer from "@/components/common/Footer/footer";
 import MobileHeader from "@/components/common/MobileHeader/MobileHeader";
@@ -9,15 +8,13 @@ import Loading from "@/components/common/Skeletons/Loading";
 import Slider from "@/components/layouts/Slider";
 import { Button } from "@/components/ui/button";
 
-import { StructuredData, createArticleData } from "@/features/seo";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
-
-import { NewsParamsType } from "@/shared/lib/types/NewsParamsType";
 import { cn } from "@/shared/lib/utils";
 import { v2Api } from "@packages/api";
 
+const routeApi = getRouteApi("/news/$id/$newsId");
+
 export const NewsDetailMobile = () => {
-  const { id: year, index: newsId } = useParams<NewsParamsType>();
+  const { id: year, newsId } = routeApi.useParams();
 
   const { data } = v2Api.useGetApiV2NewsYearSuspense(Number(year));
 
@@ -30,51 +27,12 @@ export const NewsDetailMobile = () => {
 
   const currentArticle = articles[currentIndex];
 
-  // Prepare metadata (before early return to satisfy React Hook rules)
-  const metaDescription = currentArticle
-    ? [currentArticle.title, currentArticle.description.slice(0, 140)].join(
-        " | ",
-      )
-    : "";
-
-  const metaImgUrl = currentArticle?.images.at(0);
-
-  // Format date for meta tags (ISO 8601 format)
-  const publishedDate = currentArticle?.dateTime
-    ? new Date(currentArticle.dateTime).toISOString()
-    : undefined;
-
-  // Create structured data for article (must be before early return)
-  const structuredData = useMemo(() => {
-    if (!currentArticle) return null;
-
-    return createArticleData({
-      headline: `${year}년 지호지 - ${currentArticle.title}`,
-      description: metaDescription,
-      images: currentArticle.images.map((img) => img.originSrc) || [],
-      datePublished: publishedDate,
-      dateModified: publishedDate,
-      author: currentArticle.author,
-    });
-  }, [year, currentArticle, metaDescription, publishedDate]);
-
   if (!currentArticle) {
     return <Loading />;
   }
 
   return (
     <div className="min-h-screen flex flex-col px-2">
-      <MyHelmet
-        title={`${year}년 지호지 - ${currentArticle.title}`}
-        description={metaDescription}
-        imgUrl={metaImgUrl?.originSrc}
-        datePublished={publishedDate}
-        dateModified={publishedDate}
-        author={currentArticle.author}
-        articleType="article"
-      />
-      {structuredData && <StructuredData data={structuredData} />}
-
       <MobileHeader
         backUrl={`/news/${year}`}
         subTitle={`${year} 지호지`}
@@ -108,11 +66,12 @@ export const NewsDetailMobile = () => {
             )}
           >
             <Link
-              to={
-                currentIndex > 0
-                  ? `/news/${year}/${articles[currentIndex - 1].id}`
-                  : "#"
-              }
+              to="/news/$id/$newsId"
+              params={{
+                id: String(year),
+                newsId: String(articles[Math.max(currentIndex - 1, 0)].id),
+              }}
+              disabled={currentIndex === 0}
               className="flex items-center gap-1"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -136,11 +95,14 @@ export const NewsDetailMobile = () => {
             )}
           >
             <Link
-              to={
-                currentIndex < articles.length - 1
-                  ? `/news/${year}/${articles[currentIndex + 1].id}`
-                  : "#"
-              }
+              to="/news/$id/$newsId"
+              params={{
+                id: String(year),
+                newsId: String(
+                  articles[Math.min(currentIndex + 1, articles.length - 1)].id,
+                ),
+              }}
+              disabled={currentIndex === articles.length - 1}
               className="flex items-center gap-1"
             >
               다음

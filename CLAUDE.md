@@ -4,417 +4,85 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the frontend for the University of Seoul (UOS) Judo club website "Jiho" (지호), built with React 18, TypeScript, and Vite. The application serves as a comprehensive platform for the judo club with features including news articles ("지호지"), training logs, photo galleries, notices, and administrative functions.
+Frontend monorepo for the University of Seoul (UOS) Judo club website "Jiho" (지호). The main public site (`apps/web`) serves news articles ("지호지"), training logs, photo galleries, and notices with SSR. A separate admin app (`apps/admin`) manages content.
 
-**Key Technologies:** React 18, TypeScript, Vite, Server-Side Rendering (SSR), Node.js/Express BFF server, Recoil, TanStack Query, TailwindCSS v4, Radix UI.
+**Key Technologies:** React 18, TypeScript, Vite, TanStack Start (SSR framework), TanStack Router, TanStack Query v5, TailwindCSS v4, pnpm workspaces.
 
-**Backend Integration:** Java Spring backend API at `https://uosjudo.com/api` (documented at `/api/docs`).
+**Backend Integration:** Java/Node backend API at `https://api.uosjudo.com/api` (docs at `/api/docs`). API clients are generated with orval from the OpenAPI spec.
 
-## Development Commands
-
-### Core Development
-
-- `npm run dev` - Start Vite dev server on port 3000 (client-side only, with HMR)
-- `npm run dev:server` - Start SSR development server with hot-reload (recommended for full-stack development)
-- `npm run type-check` - Run TypeScript type checking across all configs
-
-### Building
-
-- `npm run build` - Full production build (runs sitemap generation, client build, server build, server TypeScript compilation)
-- `npm run build:client` - Build client bundle only to `build/client/`
-- `npm run build:server` - Build SSR entry only to `build/server/`
-- `npm run build:server-ts` - Compile TypeScript server code to `build/server-ts/`
-- `npm run clean` - Remove build directory
-
-### Production & Preview
-
-- `npm run preview` - Preview production build locally (uses tsx)
-- `npm run start:prod` - Run compiled production server (for Docker)
-- `npm run start` - Alias for preview
-
-### Utilities
-
-- `npm run prebuild` - Generate sitemap (runs automatically before build)
-
-## Architecture
-
-### Tech Stack
-
-- **Frontend**: React 18, TypeScript, Vite 6
-- **State Management**: Recoil (client state), TanStack Query v5 (server state)
-- **Styling**: TailwindCSS v4
-- **Routing**: React Router v6
-- **UI Components**: Radix UI primitives + custom components
-- **Server**: Node.js + Express with TypeScript (BFF pattern)
-- **SSR**: Vite SSR with React hydration
-- **Icons**: Lucide React
-
-### Project Structure
+## Monorepo Layout
 
 ```
 jiho-frontend/
-├── src/
-│   ├── api/                  # API layer (client.ts + query.ts pattern)
-│   │   ├── config/           # Axios instance configuration
-│   │   ├── _internal/        # Internal BFF API calls
-│   │   ├── news/             # News API (client.ts, query.ts)
-│   │   ├── trainings/        # Training logs API
-│   │   ├── notices/          # Notices API
-│   │   └── admin/            # Admin-specific APIs
-│   ├── components/           # React components
-│   │   ├── ui/               # Radix UI-based components (button, dialog, input, etc.)
-│   │   ├── common/           # Shared components (Navbar, Footer, Modals, etc.)
-│   │   ├── layouts/          # Layout components (Row, Col, Carousel, Slider)
-│   │   ├── Home/             # Homepage components
-│   │   ├── News/             # News/article components
-│   │   ├── Photo/            # Photo gallery components
-│   │   ├── Notice/           # Notice components
-│   │   ├── admin/            # Admin interface components
-│   │   └── icons/            # Icon components
-│   ├── pages/                # Page-level components
-│   │   ├── News/             # News pages
-│   │   ├── Photo/            # Photo gallery pages
-│   │   ├── Notice/           # Notice pages
-│   │   └── admin/            # Admin pages
-│   ├── routers/              # Routing configuration
-│   │   ├── AppRouter.tsx     # Main app routes
-│   │   └── AdminRouter.tsx   # Admin routes (lazy-loaded)
-│   ├── lib/                  # Utilities and configuration
-│   │   ├── types/            # TypeScript type definitions
-│   │   ├── utils/            # Utility functions
-│   │   ├── constant/         # Constants (colors, fonts, URLs)
-│   │   └── assets/           # Static assets (images, fonts, data)
-│   ├── hooks/                # Custom React hooks
-│   │   └── upload/           # File upload hooks with SSE
-│   ├── recoils/              # Recoil state atoms
-│   │   ├── news.ts           # News state
-│   │   └── session.ts        # Session state
-│   ├── context/              # React contexts
-│   ├── helmet/               # SEO meta tags management
-│   ├── seo/                  # Structured data for SEO (JSON-LD)
-│   ├── App.tsx               # Root App component
-│   ├── main.tsx              # Client entry point
-│   ├── entry-server.tsx      # SSR entry point with route-based prefetching
-│   └── index.css             # Global CSS (Tailwind + CSS variables)
-├── server/                   # TypeScript BFF server
-│   ├── index.ts              # Server entry point
-│   ├── config.ts             # Server configuration
-│   ├── middleware/           # Express middleware
-│   ├── routes/               # Route handlers (BFF, upload, SSE)
-│   ├── services/             # Business logic (S3, proxy)
-│   └── utils/                # Server utilities
-├── public/                   # Static files served directly
-├── script/                   # Build and utility scripts
-│   ├── build.sh              # Production build script
-│   ├── sitemap.js            # Sitemap generation
-│   └── docker-*.sh           # Docker utilities
-└── build/                    # Build output
-    ├── client/               # Client-side bundle
-    ├── server/               # SSR bundle
-    └── server-ts/            # Compiled server code
+├── apps/
+│   ├── web/        # Public site — TanStack Start SSR (this doc focuses here)
+│   ├── admin/      # Admin SPA
+│   ├── internal/   # Internal tools
+│   └── shorts/     # Shorts video app
+├── packages/
+│   ├── api/        # orval-generated API clients (@packages/api)
+│   │   └── src/_generated/  # GITIGNORED — regenerate with `pnpm orval`
+│   ├── auth/
+│   └── jds/        # Design system
+└── pnpm-workspace.yaml  # includes the react/typescript version catalog
 ```
 
-### Key Architectural Patterns
+## Development Commands (root)
 
-#### 1. API Layer Pattern
+- `pnpm dev` / `pnpm dev:web` - TanStack Start dev server (port 3000, SSR + HMR)
+- `pnpm orval` - Regenerate API clients from the backend OpenAPI spec (requires network; `NODE_ENV=production` for the prod spec). **Required before type-check/build on a fresh clone** since `_generated` is gitignored.
+- `pnpm build:web` - Production build (`script/build.sh`: sitemap → clean → orval → `vite build`)
+- `pnpm type-check:web` - `tsc -p apps/web/tsconfig.app.json --noEmit`
+- `pnpm lint:web` - oxlint
+- `pnpm -C apps/web start:prod` - Run the production server (`node .output/server/index.mjs`)
 
-**Consistent structure across all features:**
+## apps/web Architecture (TanStack Start)
 
-```
-api/[feature]/
-├── client.ts    # Raw API calls using axios
-├── query.ts     # TanStack Query hooks
-└── index.ts     # Exports
-```
+### Entry points
 
-**Example:**
+- `src/router.tsx` - `getRouter()`: creates the router + QueryClient per request, wires `setupRouterSsrQueryIntegration` (automatic query dehydration/hydration). Also installs global axios interceptors (SSR: strip unserializable `request` from responses; client: rewrite absolute API hosts to relative paths so requests go through the `/api` proxy).
+- `src/routes/` - File-based routes. `src/routeTree.gen.ts` is generated by the Start vite plugin (committed; do not edit by hand).
+- Production server: the official Nitro adapter (`@tanstack/nitro-v2-vite-plugin` in `vite.config.ts`) emits a self-contained server into `.output/` at build time — run with `node .output/server/index.mjs` (serves static assets, respects `PORT`).
 
-```typescript
-// client.ts - Raw API function
-export const getNews = async (year: string): Promise<NewsType | null>
+### Routes
 
-// query.ts - React Query hook
-export const useNewsQuery = (year: string) => useQuery({...})
-```
+- `src/routes/__root.tsx` - Document shell (`shellComponent`), default meta/links/GA scripts, global CSS via `?url`, `notFoundComponent`.
+- Page routes (`index.tsx`, `news/index.tsx`, `news/$id/index.tsx`, `news/$id/$newsId.tsx`, `photo/index.tsx`, `photo/$id.tsx`, `notice/index.tsx`, `notice/$id.tsx`, `album.tsx`, `about.tsx`, `login.tsx`, `terms.tsx`, `privacy.tsx`) follow one pattern:
+  - `loader` prefetches via `context.queryClient.ensureQueryData(v2Api.get...QueryOptions(...))` and returns SEO meta computed from the data
+  - `head` calls `seoHead()` (`src/features/seo/head.ts`) which emits title/description/og tags/canonical/JSON-LD
+  - `component` renders the page from `src/pages/`
+- Server routes (API handlers, no UI):
+  - `src/routes/api/$.ts` - proxies `/api/*` to the backend (`BACKEND_URL`), forwards cookies/auth, converts auth redirects to 401
+  - `src/routes/[_]internal/$.ts` - `/_internal/*` BFF endpoints with token/origin/UA validation (`INTERNAL_API_TOKEN`)
+  - Shared server config/logging in `src/server/config.ts` (uses `node:console` so logs survive the esbuild `console.log` pruning)
 
-**API Configuration:**
+### Data layer
 
-- Central axios instance in `src/api/config/index.ts`
-- Smart base URL detection (SSR vs client, dev vs prod)
-- Automatic 401 redirect to admin login
-- Vite proxy: `/api` → `https://uosjudo.com/api`
-- Internal API with special authentication token (`VITE_INTERNAL_API_TOKEN`) for BFF routes
+- `@packages/api` exports `v2Api` / `v2Admin` orval clients (axios + TanStack Query hooks, `AxiosResponse` cached as query data).
+- Loaders and components share the same query options, so SSR-prefetched data hydrates without refetching (staleTime 24h, `refetchOnMount: false`).
+- **Important:** any query used by a component during SSR should be prefetched in that route's loader — a non-suspense `useQuery` that renders `null` on the server but has hydrated data on the client causes hydration mismatches (see the home route loader).
 
-#### 2. Server-Side Rendering (SSR)
+### SEO
 
-**Complete SSR flow:**
+- Per-route `head()` with `seoHead()` replaces the old MyHelmet/StructuredData components.
+- Sitemap generated at build time by `script/sitemap.js` into `public/`.
 
-1. Express server receives request (`server/index.ts`)
-2. Server determines route and prefetches data via TanStack Query (`entry-server.tsx`)
-3. React app renders to string on server
-4. Query cache is dehydrated and injected into HTML
-5. Client hydrates with same data (prevents flash of content)
+### Conventions
 
-**Key SSR Files:**
-
-- `src/entry-server.tsx` - SSR render function with route-based prefetching (e.g., `/news/:year`, `/photo`)
-- `server/index.ts` - Express server with SSR middleware
-- Route-specific data prefetching prevents SSR mismatches
-
-**SEO Features:**
-
-- Dynamic meta tags via custom Helmet context (`src/helmet/`)
-- Structured data (JSON-LD) injection (`src/seo/`)
-- Sitemap generation script (`script/sitemap.js`)
-
-#### 3. BFF (Backend for Frontend) Pattern
-
-**Internal Routes (`/_internal/*`):**
-
-- S3 file upload handling with multer
-- Upload progress tracking via Server-Sent Events (SSE)
-- Security middleware with token validation (`INTERNAL_API_TOKEN`)
-- Proxy to backend API with request transformation
-
-**Benefits:**
-
-- Encapsulates S3 credentials on server (security)
-- Real-time progress tracking for large uploads
-- Authentication layer before backend
-- CORS handling
-
-**Files:**
-
-- `server/routes/upload.ts` - Upload endpoint
-- `server/services/s3-upload.ts` - S3 integration
-- `server/routes/sse-progress.ts` - SSE progress streaming
-- `src/hooks/upload/` - Client-side upload hooks
-
-#### 4. File Upload System Architecture
-
-**Upload Flow:**
-
-1. Client requests SSE token
-2. Client initiates upload with token
-3. Server receives file via multer
-4. Server uploads to S3 with progress tracking
-5. Progress broadcast via SSE endpoint
-6. Client receives real-time progress updates
-
-#### 5. State Management Strategy
-
-**Three-tier approach:**
-
-1. **Server State (TanStack Query)**
-   - All API data fetching and caching
-   - 24-hour stale time for most queries
-   - Automatic background refetching
-   - SSR-compatible with hydration
-
-2. **Global Client State (Recoil)**
-   - News selection state (`recoils/news.ts`)
-   - Session/authentication state (`recoils/session.ts`)
-   - UI state persisting across routes
-
-3. **Component State (React hooks)**
-   - Local UI state (modals, forms)
-   - Custom hooks for common patterns
-
-#### 6. Styling Architecture
-
-**Hybrid Approach:**
-
-**CSS Variables System (`index.css`):**
-
-- Shadcn/UI design tokens (--background, --foreground, etc.)
-- Custom UOS Judo theme variables (--theme-primary, --theme-bg, etc.)
-- Dark mode support via `.dark` class
-- Typography scales and line heights
-
-**TailwindCSS v4:**
-
-- Utility classes for spacing, layout, responsiveness
-- Custom breakpoints: `xs: 340px, sm: 560px, md: 860px, lg: 1200px`
-- Extended with custom theme colors and font sizes
-- `@tailwindcss/vite` plugin integration
-
-#### 7. Routing Architecture
-
-**Main Routes (`routers/AppRouter.tsx`):**
-
-- Public pages (Home, News, Photo, Notice, About)
-- Admin routes lazy-loaded via `WithSuspense` wrapper
-- 404 fallback
-
-**Admin Routes (`routers/AdminRouter.tsx`):**
-
-- Completely separate router for admin functionality
-- Lazy-loaded components for code splitting
-- Nested routes for different content types (news, training, notice)
-- Write/edit pages with markdown editor support
-
-#### 8. Component Organization
-
-**UI Components (`components/ui/`):**
-
-- Radix UI-based primitives (button, dialog, input, textarea, calendar, card)
-- Consistent with Shadcn/UI patterns
-- Fully typed with TypeScript
-- Using `class-variance-authority` for variants
-
-**Layout Components (`components/layouts/`):**
-
-- `Row`, `Col` - Grid system components
-- `Carousel`, `Slider` - Image/content carousels
-- `ScrollSnap` - Touch-friendly scrolling
-- `ListContainer` - Reusable list wrapper
-- `Title` - Styled heading component
-
-**Common Components (`components/common/`):**
-
-- `Navbar`, `Footer` - Site-wide navigation
-- `MobileHeader` - Mobile-specific header
-- `Modals` - Various modal dialogs
-- `Markdown` - Markdown rendering with preview
-- `Buttons` - Custom button components
-- `Skeletons` - Loading states
-
-### Admin System
-
-- Separate admin routing (`AdminRouter.tsx`)
-- Lazy-loaded components for code splitting
-- Markdown editor with preview for content creation
-- Image upload functionality with S3 integration
-- Authentication required (cookies managed by backend)
-- Form components for managing articles, news, training logs, notices
-
-### SEO & Performance
-
-- **SSR** - Server-Side Rendering for initial page load
-- **Sitemap** - Auto-generated via `script/sitemap.js`
-- **Meta tags** - Dynamic meta tags via custom Helmet context
-- **Structured data** - JSON-LD for news articles and organization info
-- **Code splitting** - Route-level and component-level (admin routes)
-- **Image optimization** - Lazy loading and responsive images
-
-## Configuration
-
-### TypeScript Configuration
-
-**Multi-config setup:**
-
-- `tsconfig.json` - Base config with path aliases (`@/*` → `./src/*`)
-- `tsconfig.app.json` - Frontend app config (strict mode, React JSX)
-- `tsconfig.node.json` - Node.js config for Vite
-- `tsconfig.server.json` - Server-side code compilation
-
-**Key Settings:**
-
-- Strict mode enabled
-- ES2020 target with ESNext modules
-- Bundler module resolution
-
-### Vite Configuration
-
-**Plugins:**
-
-- `@vitejs/plugin-react` - React Fast Refresh
-- `@tailwindcss/vite` - TailwindCSS v4 integration
-
-**Dev Server:**
-
-- Port 3000
-- API proxy: `/api` → `https://uosjudo.com/api`
-- WebSocket support for HMR
-
-**Build:**
-
-- ESBuild minification
-- Console/debugger removal in production
-
-### Environment Variables
-
-**Build-time (required for build):**
-
-- `VITE_INTERNAL_API_TOKEN` - Internal API token for BFF authentication
-
-**Runtime (server):**
-
-- `NODE_ENV` - development/production
-- `PORT` - Server port (default: 3000)
-- `INTERNAL_API_TOKEN` - Server-side API token (must match VITE_INTERNAL_API_TOKEN)
-- `BACKEND_URL` - Backend API base URL
-- AWS S3 credentials (for file uploads)
-
-## Development Workflows
-
-### API Integration
-
-- Backend API documented at `https://uosjudo.com/api/docs`
-- All API calls go through the proxy configured in `vite.config.ts` (dev) or direct to backend (production)
-- Use existing API client patterns when adding new endpoints (always create `client.ts` + `query.ts` pair)
-
-### Adding New API Endpoints
-
-1. Create `src/api/[feature]/client.ts` with raw API functions
-2. Create `src/api/[feature]/query.ts` with TanStack Query hooks
-3. Export from `src/api/[feature]/index.ts`
-4. Add type definitions to `src/lib/types/`
-
-### Component Development
-
-- Follow existing patterns in `components/` directories
-- Use TypeScript interfaces for all props
-- Leverage existing layout components (`Row`, `Col`, `Carousel`) for consistency
-- Custom hooks available for common functionality (click outside, key handling)
-- Prefer composition over inheritance
-
-### Styling Guidelines
-
-- TailwindCSS for spacing, colors, and responsive utilities
-- Follow existing theme structure for colors and typography (`src/lib/theme/`)
-- Maintain responsive design patterns using `MediaLayout` helper
-- Respect existing CSS variables in `index.css`
-
-### Code Conventions
-
-- TypeScript strict mode enabled
-- Component files use `.tsx` extension
-- Type definitions in dedicated files under `lib/types/`
-- Custom hooks prefixed with `use`
-- API-related files organized by feature with consistent naming (`client.ts`, `query.ts`)
-- Consistent file naming: PascalCase for components, kebab-case for utilities
+- Path alias `@/*` → `apps/web/src/*`
+- API pattern: use `v2Api.get...QueryOptions` in loaders, `use...Suspense` hooks in components
+- Dynamic links: `<Link to="/photo/$id" params={{ id }}>`; generic components that accept arbitrary path strings cast with `as LinkProps["to"]`
+- TypeScript strict mode; `pnpm type-check:web` must pass (requires `pnpm orval` first)
 
 ## Deployment
 
-### Docker Build
+Multi-stage Dockerfile (`apps/web/Dockerfile`): install → `pnpm -C apps/web build` → runtime image copies the self-contained `.output/` and runs `node apps/web/.output/server/index.mjs` (no runtime `pnpm install` needed).
 
-**Multi-stage Dockerfile:**
-
-1. **deps** - Install all dependencies
-2. **builder** - Build client and server bundles
-3. **runner** - Production runtime with minimal dependencies
-
-**Production:**
-
-- Compiled TypeScript server (no tsx in production)
-- Non-root user for security
-- dumb-init for proper signal handling
-- Compressed assets with sirv
-
-### Build Process
-
-1. `script/sitemap.js` generates sitemap
-2. `npm run clean` removes old build
-3. Vite builds client bundle
-4. Vite builds SSR entry
-5. TypeScript compiles server code
-6. Docker packages everything
+**Runtime env:** `NODE_ENV`, `PORT` (default 3000), `BACKEND_URL` (backend origin, `/api` suffix tolerated), `INTERNAL_API_TOKEN`, `ALLOWED_HOSTS`, `CANONICAL_DOMAIN`.
 
 ## Important Notes
 
-- **Responsive Design**: Mobile-first approach with custom breakpoints
-- **Error Boundaries**: Use `WithSuspense` wrapper for lazy-loaded components
-- **Type Safety**: Comprehensive TypeScript coverage throughout
-- **Security**: S3 credentials on server only, token-based internal API authentication
-- **Performance**: Code splitting, image optimization, TanStack Query caching with 24-hour stale time
+- `packages/api/src/_generated` is gitignored; builds and type-checks need `pnpm orval` (network access to the backend spec) first.
+- `src/routeTree.gen.ts` is auto-generated on dev/build by the Start plugin.
+- Query cache holds `AxiosResponse` objects; dehydration sanitizes them via `serializeData: JSON.parse(JSON.stringify(...))` in `src/router.tsx` — keep this when touching router setup, or SSR payload serialization breaks silently.
+- Mobile-first responsive design with custom breakpoints (`xs: 340px, sm: 560px, md: 860px, lg: 1200px`).

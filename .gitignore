@@ -32,3 +32,8 @@ pnpm-debug.log*
 
 _generated
 
+
+# TanStack Start
+.tanstack
+.output
+.nitro

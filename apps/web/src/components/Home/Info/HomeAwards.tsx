@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { AwardType } from "@/shared/lib/types/AwardType";
 import { formatAwardsType } from "@/shared/lib/utils/Utils";
 import { v2Api } from "@packages/api";
@@ -22,18 +21,8 @@ export const HomeAwards = () => {
     },
   });
 
-  const metaDescription =
-    awards.length > 0
-      ? awards.map((award) => award.title).join(", ")
-      : "서울시립대학교 유도부 지호";
-
   return (
     <div className="flex-1">
-      <MyHelmet
-        title="Home"
-        description={metaDescription}
-        imgUrl="/favicon-96x96.png"
-      />
       <div className="flex flex-col ">
         <Card className="bg-white/50 shadow-md backdrop-blur-sm border-none gap-4">
           <CardHeader>

@@ -1,6 +1,6 @@
 import { MenuItemInfoType } from "@/shared/lib/types/menuItemInfoType";
 import { cn } from "@/shared/lib/utils";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useRouter } from "@tanstack/react-router";
 import { SelectedType } from "./MenuStyledComponents";
 
 import { useNavbar } from "../Navbar/NavBar.provider";
@@ -13,6 +13,7 @@ type SlideSubMenuProps = {
 
 const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
   const location = useLocation();
+  const router = useRouter();
   const { open, setOpen } = useNavbar();
 
   return (
@@ -30,27 +31,32 @@ const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
         } as React.CSSProperties
       }
     >
-      {itemsInfo.map((itemInfo) => (
-        <li
-          key={itemInfo.title}
-          className={cn(
-            "mx-1 leading-[200%] hover:text-gray-500",
-            location.pathname === itemInfo.href && "underline font-bold"
-          )}
-        >
-          <Link
-            to={itemInfo.href}
-            onClick={(e) => {
-              if (open && location.pathname === itemInfo.href) {
-                e.preventDefault();
-              }
-              setOpen(false);
-            }}
+      {itemsInfo.map((itemInfo) => {
+        const itemPathname = router.buildLocation(itemInfo.link).pathname;
+        const isCurrent = location.pathname === itemPathname;
+
+        return (
+          <li
+            key={itemInfo.title}
+            className={cn(
+              "mx-1 leading-[200%] hover:text-gray-500",
+              isCurrent && "underline font-bold"
+            )}
           >
-            {itemInfo.title}
-          </Link>
-        </li>
-      ))}
+            <Link
+              {...itemInfo.link}
+              onClick={(e) => {
+                if (open && isCurrent) {
+                  e.preventDefault();
+                }
+                setOpen(false);
+              }}
+            >
+              {itemInfo.title}
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 };

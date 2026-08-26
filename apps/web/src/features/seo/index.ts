@@ -1,3 +1,3 @@
-export { default as StructuredData } from "./StructuredData";
+export * from "./head";
 export * from "./types";
 export * from "./utils";

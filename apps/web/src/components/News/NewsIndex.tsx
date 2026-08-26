@@ -2,14 +2,13 @@ import NewsCard from "./NewsCard";
 import NewsCardContainer from "./NewsCardContainer";
 
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
+import { Link } from "@tanstack/react-router";
 import { Suspense } from "react";
-import { Link } from "react-router-dom";
 import SkeletonThumbnail from "../common/Skeletons/SkeletonThumbnail";
 
 type NewsIndexProps = {
   articles: ArticleInfoType[];
   selectedIndex?: number;
-  index: string;
   year: string;
 };
 

@@ -6,14 +6,14 @@ import HomeSectionBG from "../HomeSectionBG";
 
 import SheetWrapper from "@/components/layouts/SheetWrapper";
 import { useLatestNews } from "@/features/seo/news/hooks/use-latest-news";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 const HomeSectionNews = () => {
   const { lastestNewsYear } = useLatestNews();
 
   return (
     <section className="w-full h-full">
-      <Link to={`/news/${lastestNewsYear}`}>
+      <Link to="/news/$id" params={{ id: String(lastestNewsYear) }}>
         <HomeSectionBG
           bgImageSrc={BGImage}
           bgImageSrcWebp={BGImageWebp}

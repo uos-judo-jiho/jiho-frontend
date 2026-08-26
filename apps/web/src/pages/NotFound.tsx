@@ -1,12 +1,10 @@
 import Col from "@/components/layouts/Col";
 import DefaultLayout from "@/components/layouts/DefaultLayout";
-import { Link } from "react-router-dom";
-import MyHelmet from "../features/seo/helmet/MyHelmet";
+import { Link } from "@tanstack/react-router";
 
 const NotFound = () => {
   return (
     <>
-      <MyHelmet title="NotFound" />
       <DefaultLayout>
         <div className="flex justify-center items-center w-full h-[80vh]">
           <Col alignItems="center">

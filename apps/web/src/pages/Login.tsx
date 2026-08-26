@@ -1,17 +1,16 @@
+import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Navbar from "@/components/common/Navbar/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import MyHelmet from "@/features/seo/helmet/MyHelmet";
 import { logger } from "@99mini/logger-client";
 import { v2Admin } from "@packages/api";
 
+const routeApi = getRouteApi("/login");
+
 const Login = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo");
+  const { redirectTo } = routeApi.useSearch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +20,8 @@ const Login = () => {
     mutation: {
       onSuccess: () => {
         const destination = redirectTo ? decodeURIComponent(redirectTo) : "/";
-        navigate(destination, { replace: true });
-        window.location.reload();
+        // 로그인 후 세션 쿠키 반영을 위해 전체 새로고침으로 이동
+        window.location.href = destination;
       },
       onError: (err: any) => {
         const message =
@@ -59,7 +58,6 @@ const Login = () => {
 
   return (
     <>
-      <MyHelmet title="로그인 | 서울시립대학교 유도부 지호" />
       <Navbar isDark={true} />
       <div className="min-h-screen bg-background flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md space-y-8">

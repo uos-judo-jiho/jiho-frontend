@@ -24,10 +24,6 @@
     "build": "pnpm build:web && pnpm build:admin",
     "build:web": "pnpm -C apps/web build",
     "build:admin": "pnpm -C apps/admin build",
-    "build:client": "pnpm -C apps/web build:client",
-    "build:server": "pnpm -C apps/web build:server",
-    "build:server-ts": "pnpm -C apps/web build:server-ts",
-    "build:prerender": "pnpm -C apps/web build:prerender",
     "build:docker": "pnpm -C apps/web build:docker",
     "preview": "pnpm -C apps/web preview",
     "preview:admin": "pnpm -C apps/admin preview",
@@ -44,7 +40,6 @@
     "lint:shorts": "oxlint apps/shorts/src --max-warnings=0",
     "type-check": "pnpm type-check:web && pnpm type-check:admin",
     "type-check:web": "pnpm -C apps/web type-check",
-    "type-check:server": "pnpm -C apps/web type-check:server",
     "type-check:admin": "pnpm -C apps/admin type-check",
     "test": "pnpm test:admin",
     "test:admin": "pnpm -C apps/admin test -- --run"

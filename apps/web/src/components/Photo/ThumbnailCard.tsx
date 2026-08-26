@@ -27,7 +27,7 @@ const ThumbnailCard = ({
       <a href={`/photo/${id}`}>
         <LazyImage
           src={imgSrc.originSrc}
-          srcSet={imgSrc.smallSrc}
+          lowResSrc={imgSrc.smallSrc ?? undefined}
           alt={"훈련 일지: " + dateTime}
         />
         <div
