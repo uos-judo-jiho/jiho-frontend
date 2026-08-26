@@ -3,6 +3,7 @@ import Title from "@/components/layouts/Title";
 import { useLatestNews } from "@/features/seo/news/hooks/use-latest-news";
 import { Constants } from "@/shared/lib/constant";
 import { v2Api } from "@packages/api";
+import { linkOptions } from "@tanstack/react-router";
 import { MoreCard } from "./MoreCard";
 
 const HomeSectionMore = () => {
@@ -28,17 +29,41 @@ const HomeSectionMore = () => {
           heading={2}
         />
         <div className="flex flex-col gap-2 w-full pt-5 md:gap-6">
-          <MoreCard title="훈련일지" linkTo="/photo" data={trainings} />
+          <MoreCard
+            title="훈련일지"
+            moreLink={linkOptions({ to: "/photo" })}
+            getItemLink={(item) =>
+              linkOptions({ to: "/photo/$id", params: { id: String(item.id) } })
+            }
+            data={trainings}
+          />
           <MoreCard
             title="지호지"
-            linkTo={`/news`}
-            data={news.map((n) => {
-              const year = new Date(n.dateTime).getFullYear();
-              const { id, ...rest } = n;
-              return { id: `${year}/${id}`, ...rest };
-            })}
+            moreLink={linkOptions({ to: "/news" })}
+            getItemLink={(item) =>
+              linkOptions({
+                to: "/news/$id/$newsId",
+                params: {
+                  id: String(
+                    new Date(item.dateTime ?? Date.now()).getFullYear(),
+                  ),
+                  newsId: String(item.id),
+                },
+              })
+            }
+            data={news}
           />
-          <MoreCard title="공지사항" linkTo="/notice" data={notices} />
+          <MoreCard
+            title="공지사항"
+            moreLink={linkOptions({ to: "/notice" })}
+            getItemLink={(item) =>
+              linkOptions({
+                to: "/notice/$id",
+                params: { id: String(item.id) },
+              })
+            }
+            data={notices}
+          />
         </div>
       </div>
     </SheetWrapper>

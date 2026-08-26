@@ -1,6 +1,6 @@
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
-import { Link, type LinkProps } from "@tanstack/react-router";
+import { Link, type LinkOptions } from "@tanstack/react-router";
 
 type MoreCardItem = Pick<ArticleInfoType, "author" | "description"> & {
   id: string | number;
@@ -10,8 +10,10 @@ type MoreCardItem = Pick<ArticleInfoType, "author" | "description"> & {
 type MoreCardProps = {
   title: string;
   data: MoreCardItem[];
-  linkTo: string;
-  isLinkToQuery?: boolean;
+  /** "+ 더보기" 헤더 링크 — linkOptions() 로 생성해 컴파일 타임에 검증된다 */
+  moreLink: LinkOptions;
+  /** 목록 아이템별 상세 링크 생성기 */
+  getItemLink: (item: MoreCardItem) => LinkOptions;
 };
 
 const DATA_LEN = 5;
@@ -25,13 +27,13 @@ const formatOnlyWord = (text: string, maxLength: number) => {
   return `${text.replace(pattern, "").slice(0, maxLength)}...`;
 };
 
-export const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
+export const MoreCard = ({ title, moreLink, getItemLink, data }: MoreCardProps) => {
   const boardData = data.slice(0, DATA_LEN);
 
   return (
     <div className="w-full h-[260px]">
       <div className="mb-4 border-b border-gray-300 pb-2">
-        <Link to={linkTo as LinkProps["to"]}>
+        <Link {...moreLink}>
           <div className="flex items-center justify-start">
             <h3 className="text-base font-semibold">{title}</h3>
             <p className="pl-2.5 text-theme-grey leading-theme-description hover:text-theme-black transition-colors">
@@ -51,7 +53,7 @@ export const MoreCard = ({ title, linkTo, data }: MoreCardProps) => {
                   "p-2 rounded-md transition-colors duration-200",
                 )}
               >
-                <Link to={`${linkTo}/${item.id}` as LinkProps["to"]}>
+                <Link {...getItemLink(item)}>
                   <div className="flex justify-between items-end gap-4">
                     <div
                       className="

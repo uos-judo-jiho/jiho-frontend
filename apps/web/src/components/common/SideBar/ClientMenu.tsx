@@ -1,5 +1,5 @@
 import { MENU_ID, MenuIdType } from "@/shared/lib/types/MenuIdType";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, linkOptions, useLocation } from "@tanstack/react-router";
 
 import { useLatestNews } from "@/features/seo/news/hooks/use-latest-news";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
@@ -63,7 +63,7 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
           subMenuItemList={vaildNewsYearList(lastestNewsYear)
             .reverse()
             .map((year) => ({
-              href: `/news/${year}`,
+              link: linkOptions({ to: "/news/$id", params: { id: year } }),
               title: `${year} 지호지`,
             }))}
         />
@@ -74,7 +74,9 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
           selected={selected[1]}
           parentTitle={"지호운동"}
           targetMenu={MENU_ID.trainingToggleMenu}
-          subMenuItemList={[{ href: "/photo", title: "훈련일지" }]}
+          subMenuItemList={[
+            { link: linkOptions({ to: "/photo" }), title: "훈련일지" },
+          ]}
         />
       </MenuItem>
       <MenuItem>

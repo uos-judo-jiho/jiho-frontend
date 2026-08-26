@@ -1,6 +1,6 @@
 import { Constants } from "@/shared/lib/constant";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
-import { Link, type LinkProps } from "@tanstack/react-router";
+import { Link, type LinkOptions } from "@tanstack/react-router";
 import Line from "./Line";
 
 type ListItem = Pick<Partial<ArticleInfoType>, "title" | "author" | "dateTime"> & {
@@ -9,13 +9,14 @@ type ListItem = Pick<Partial<ArticleInfoType>, "title" | "author" | "dateTime"> 
 
 type ListContainerProps = {
   datas: ListItem[];
-  targetUrl: string;
+  /** 아이템별 상세 링크 생성기 — linkOptions() 로 생성해 컴파일 타임에 검증된다 */
+  buildItemLink: (id: string | number) => LinkOptions;
   additionalTitle?: boolean;
 };
 
 function ListContainer({
   datas: data,
-  targetUrl,
+  buildItemLink,
   additionalTitle = false,
 }: ListContainerProps) {
   return (
@@ -33,7 +34,7 @@ function ListContainer({
             <li className="flex py-5 text-center">
               <div className="flex-[10%] text-center">{index + 1}</div>
               <div className="flex-[80%]">
-                <Link to={(targetUrl + data.id) as LinkProps["to"]}>
+                <Link {...buildItemLink(data.id ?? "")}>
                   <div className="bg-transparent text-start pr-3 hover:underline">
                     {data.title}
                     {additionalTitle ? " " + data.author : ""}
