@@ -24,7 +24,19 @@ export default defineConfig(({ mode }) => {
       tanstackStart(),
       // 공식 Nitro 어댑터: 정적 자산 서빙까지 포함한 자체 완결 프로덕션 서버를
       // .output/ 에 생성한다 (node .output/server/index.mjs 로 구동)
-      nitroV2Plugin({ preset: "node-server" }),
+      nitroV2Plugin({
+        preset: "node-server",
+        routeRules: {
+          // 해시 파일명 자산은 내용이 바뀌면 URL 도 바뀌므로 영구 캐시 가능.
+          // (배포로 해시가 바뀌어도 옛 HTML 이 캐시되지 않는 한 안전 — HTML 은
+          // __root.tsx 의 headers 에서 no-cache 로 내려간다)
+          "/assets/**": {
+            headers: {
+              "cache-control": "public, max-age=31536000, immutable",
+            },
+          },
+        },
+      }),
       react(),
       isVoyageConfigValid
         ? voyageLoggerPlugin({
