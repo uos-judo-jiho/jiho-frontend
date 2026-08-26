@@ -1,6 +1,7 @@
 import path from "path";
 
 import tailwindcss from "@tailwindcss/vite";
+import { nitroV2Plugin } from "@tanstack/nitro-v2-vite-plugin";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
 
@@ -21,6 +22,9 @@ export default defineConfig(({ mode }) => {
       tailwindcss(),
       // TanStack Start: 파일 기반 라우팅 + SSR + server routes
       tanstackStart(),
+      // 공식 Nitro 어댑터: 정적 자산 서빙까지 포함한 자체 완결 프로덕션 서버를
+      // .output/ 에 생성한다 (node .output/server/index.mjs 로 구동)
+      nitroV2Plugin({ preset: "node-server" }),
       react(),
       isVoyageConfigValid
         ? voyageLoggerPlugin({

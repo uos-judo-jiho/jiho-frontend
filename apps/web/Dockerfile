@@ -34,10 +34,10 @@ COPY . .
 RUN pnpm -C packages/api gen
 RUN pnpm -C apps/web build
 
-# Production stage - 런타임 dependencies만 설치
+# Production stage - Nitro 산출물(.output)은 의존성까지 포함한 자체 완결
+# 서버이므로 런타임 이미지에 pnpm 설치가 필요 없다
 FROM node:22-alpine AS runner
 WORKDIR /repo
-RUN corepack enable
 
 # Runtime environment variables (server-side only)
 ARG INTERNAL_API_TOKEN
@@ -50,15 +50,8 @@ RUN apk add --no-cache dumb-init
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
-# Copy package files and install production dependencies
-COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
-COPY apps/web/package.json apps/web/package.json
-COPY packages/api/package.json packages/api/package.json
-RUN pnpm install --frozen-lockfile --prod --filter @apps/web...
-
-# Copy built application and the production server runner
-COPY --from=builder /repo/apps/web/dist ./apps/web/dist
-COPY --from=builder /repo/apps/web/server.mjs ./apps/web/server.mjs
+# Copy the self-contained Nitro server build
+COPY --from=builder /repo/apps/web/.output ./apps/web/.output
 
 # Change ownership to non-root user
 RUN chown -R nodejs:nodejs /repo
@@ -74,4 +67,4 @@ EXPOSE 3000
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["pnpm", "-C", "apps/web", "start:prod"]
+CMD ["node", "apps/web/.output/server/index.mjs"]

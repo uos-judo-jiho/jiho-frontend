@@ -35,3 +35,4 @@ _generated
 
 # TanStack Start
 .tanstack
+.output
