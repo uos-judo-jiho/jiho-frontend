@@ -14,6 +14,10 @@ export interface RouterContext {
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  // SSR HTML 은 해시된 자산 URL 을 참조하므로 절대 stale 하게 재사용되면
+  // 안 된다 (옛 HTML 이 캐시되면 배포 후 사라진 옛 해시 자산을 요청해 404).
+  // no-cache = 캐시하되 매 사용 전 서버 재검증.
+  headers: () => ({ "cache-control": "no-cache" }),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
