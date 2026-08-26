@@ -47,13 +47,13 @@ jiho-frontend/
 ### Routes
 
 - `src/routes/__root.tsx` - Document shell (`shellComponent`), default meta/links/GA scripts, global CSS via `?url`, `notFoundComponent`.
-- Page routes (`index.tsx`, `news.index.tsx`, `news.$id.index.tsx`, `news.$id.$newsId.tsx`, `photo.index.tsx`, `photo.$id.tsx`, `notice.index.tsx`, `notice.$id.tsx`, `album.tsx`, `about.tsx`, `login.tsx`, `terms.tsx`, `privacy.tsx`) follow one pattern:
+- Page routes (`index.tsx`, `news/index.tsx`, `news/$id/index.tsx`, `news/$id/$newsId.tsx`, `photo/index.tsx`, `photo/$id.tsx`, `notice/index.tsx`, `notice/$id.tsx`, `album.tsx`, `about.tsx`, `login.tsx`, `terms.tsx`, `privacy.tsx`) follow one pattern:
   - `loader` prefetches via `context.queryClient.ensureQueryData(v2Api.get...QueryOptions(...))` and returns SEO meta computed from the data
   - `head` calls `seoHead()` (`src/features/seo/head.ts`) which emits title/description/og tags/canonical/JSON-LD
   - `component` renders the page from `src/pages/`
 - Server routes (API handlers, no UI):
-  - `src/routes/api.$.ts` - proxies `/api/*` to the backend (`BACKEND_URL`), forwards cookies/auth, converts auth redirects to 401
-  - `src/routes/[_]internal.$.ts` - `/_internal/*` BFF endpoints with token/origin/UA validation (`INTERNAL_API_TOKEN`)
+  - `src/routes/api/$.ts` - proxies `/api/*` to the backend (`BACKEND_URL`), forwards cookies/auth, converts auth redirects to 401
+  - `src/routes/[_]internal/$.ts` - `/_internal/*` BFF endpoints with token/origin/UA validation (`INTERNAL_API_TOKEN`)
   - Shared server config/logging in `src/server/config.ts` (uses `node:console` so logs survive the esbuild `console.log` pruning)
 
 ### Data layer
