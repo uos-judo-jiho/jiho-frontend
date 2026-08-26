@@ -9,7 +9,7 @@
     "url": "https://github.com/uos-judo-jiho"
   },
   "scripts": {
-    "clean": "rm -rf dist build .output .tanstack",
+    "clean": "rm -rf dist build .output .tanstack .nitro",
     "clean:dev": "npm run clean",
     "build": "sh script/build.sh",
     "build:vite": "vite build",
