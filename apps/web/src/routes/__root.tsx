@@ -7,7 +7,9 @@ import {
 
 import NotFound from "@/pages/NotFound";
 
-import appCss from "@/app/index.css?url";
+// side-effect import: Start 가 client 매니페스트 기준으로 <link> 를 주입하므로
+// SSR 번들이 자체 계산한 (client 와 어긋날 수 있는) asset URL 을 참조하지 않는다
+import "@/app/index.css";
 
 export interface RouterContext {
   queryClient: QueryClient;
@@ -98,7 +100,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         href: "/favicon-16x16.png",
       },
       { rel: "manifest", href: "/manifest.json" },
-      { rel: "stylesheet", href: appCss },
     ],
     scripts: [
       {
