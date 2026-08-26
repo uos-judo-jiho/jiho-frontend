@@ -5,6 +5,22 @@ import NoticeDetail from "@/pages/Notice/NoticeDetail";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
 import { v2Api } from "@packages/api";
 
+/** 공지 이미지가 문자열 URL 또는 {originSrc} 객체 어느 쪽이어도 URL 을 뽑아낸다 */
+const extractImageUrl = (image: unknown): string | undefined => {
+  if (typeof image === "string") {
+    return image;
+  }
+  if (
+    image &&
+    typeof image === "object" &&
+    "originSrc" in image &&
+    typeof (image as { originSrc?: unknown }).originSrc === "string"
+  ) {
+    return (image as { originSrc: string }).originSrc;
+  }
+  return undefined;
+};
+
 export const Route = createFileRoute("/notice/$id")({
   loader: async ({
     context,
@@ -25,7 +41,7 @@ export const Route = createFileRoute("/notice/$id")({
 
       return {
         description: [data.title, data.description.slice(0, 140)].join(" | "),
-        imgUrl: data.images[0],
+        imgUrl: extractImageUrl(data.images[0]),
       };
     } catch (error) {
       console.error("[SSR] Notice detail prefetch error:", error);
