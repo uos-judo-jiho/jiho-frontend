@@ -42,7 +42,8 @@
     "type-check:web": "pnpm -C apps/web type-check",
     "type-check:admin": "pnpm -C apps/admin type-check",
     "test": "pnpm test:admin",
-    "test:admin": "pnpm -C apps/admin test -- --run"
+    "test:admin": "pnpm -C apps/admin test -- --run",
+    "release-note": "node scripts/release-note.mjs"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
