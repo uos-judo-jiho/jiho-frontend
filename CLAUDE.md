@@ -80,6 +80,15 @@ Multi-stage Dockerfile (`apps/web/Dockerfile`): install → `pnpm -C apps/web bu
 
 **Runtime env:** `NODE_ENV`, `PORT` (default 3000), `BACKEND_URL` (backend origin, `/api` suffix tolerated), `INTERNAL_API_TOKEN`, `ALLOWED_HOSTS`, `CANONICAL_DOMAIN`.
 
+## Releases
+
+Release notes are published per app, automatically:
+
+- **Deploy tags** (`@uos-judo-jiho/<app>-<YYMMDD>-<HHMMSS>-<sha6>`) — `tag-release.yml` creates one after each successful deploy, for rollback.
+- **Release tags** (`<app>@<version>`, e.g. `web@1.14.0`) — `release-note.yml` fires when a push to `main` bumps `version` in `apps/*/package.json`. It diffs the app's previous release tag against the merged commit, groups the squash commits by Conventional Commits type, and publishes a GitHub Release. `web` falls back to the legacy `v<version>` tags when no `web@*` tag exists yet.
+- Generator: `scripts/release-note.mjs` (`detect` / `notes` subcommands, no dependencies). Preview locally with `pnpm release-note -- notes --app web`.
+- Notes split into "app changes" (`apps/<app>/**`) and "shared/infra changes" (`packages/**`, root config); commits touching only other apps are excluded.
+
 ## Important Notes
 
 - `packages/api/src/_generated` is gitignored; builds and type-checks need `pnpm orval` (network access to the backend spec) first.

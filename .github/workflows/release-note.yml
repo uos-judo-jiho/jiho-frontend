@@ -1,0 +1,152 @@
+name: Release Note
+
+# apps/<app>/package.json 의 version 이 올라가면 해당 앱의 릴리즈를 발행한다.
+#   릴리즈 태그: <app>@<version>   (예: web@1.13.4, admin@0.1.2)
+#   릴리즈 노트: 이전 릴리즈 태그 ~ 이번 커밋 사이의 squash 머지 커밋 기반
+#                (scripts/release-note.mjs)
+#
+# 배포 태그(@uos-judo-jiho/<app>-...)는 tag-release.yml 이 따로 만든다.
+# 이 워크플로우는 그 배포 태그들을 "이 릴리즈에 포함된 배포" 목록으로 함께 보여준다.
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/*/package.json"
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "릴리즈할 앱 이름 (apps/ 하위 디렉토리명, 예: web)"
+        required: true
+        type: string
+      version:
+        description: "릴리즈 버전. 비우면 apps/<app>/package.json 의 version 을 사용"
+        required: false
+        type: string
+      from:
+        description: "비교 시작 태그. 비우면 직전 릴리즈 태그를 자동으로 찾음"
+        required: false
+        type: string
+
+# 릴리즈 태그 생성이 겹치지 않도록 직렬화한다.
+concurrency:
+  group: release-note
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      releases: ${{ steps.detect.outputs.releases }}
+      has_releases: ${{ steps.detect.outputs.has_releases }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # 이전 릴리즈 태그를 찾아야 하므로 전체 히스토리 + 태그가 필요하다.
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Detect version bumps
+        id: detect
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_APP: ${{ inputs.app }}
+          INPUT_VERSION: ${{ inputs.version }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            if [ ! -f "apps/${INPUT_APP}/package.json" ]; then
+              echo "apps/${INPUT_APP}/package.json 이 없습니다." >&2
+              exit 1
+            fi
+            VERSION="${INPUT_VERSION:-$(node -p "require('./apps/${INPUT_APP}/package.json').version")}"
+            RELEASES="$(APP="$INPUT_APP" VERSION="$VERSION" node -e '
+              const { APP, VERSION } = process.env;
+              process.stdout.write(JSON.stringify([
+                { app: APP, version: VERSION, tag: `${APP}@${VERSION}` },
+              ]));
+            ')"
+            {
+              echo "releases=${RELEASES}"
+              echo "has_releases=true"
+            } >> "$GITHUB_OUTPUT"
+            echo "::notice::수동 릴리즈: ${INPUT_APP} v${VERSION}"
+          else
+            # 스크립트가 releases / has_releases 를 GITHUB_OUTPUT 에 직접 기록한다.
+            node scripts/release-note.mjs detect --base "$BEFORE"
+          fi
+
+      - name: Summarize
+        if: ${{ steps.detect.outputs.has_releases != 'true' }}
+        run: echo "::notice::버전이 올라간 앱이 없어 릴리즈를 건너뜁니다."
+
+  release:
+    needs: detect
+    if: ${{ needs.detect.outputs.has_releases == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      # 태그를 순차적으로 만들기 위해 한 번에 하나씩 처리한다.
+      max-parallel: 1
+      matrix:
+        release: ${{ fromJson(needs.detect.outputs.releases) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Generate release note
+        env:
+          APP: ${{ matrix.release.app }}
+          VERSION: ${{ matrix.release.version }}
+          FROM: ${{ inputs.from }}
+        run: |
+          set -euo pipefail
+
+          ARGS=(notes --app "$APP" --version "$VERSION" --to "$GITHUB_SHA")
+          if [ -n "${FROM:-}" ]; then
+            ARGS+=(--from "$FROM")
+          fi
+
+          node scripts/release-note.mjs "${ARGS[@]}" > release-note.md
+          cat release-note.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APP: ${{ matrix.release.app }}
+          VERSION: ${{ matrix.release.version }}
+          TAG: ${{ matrix.release.tag }}
+        run: |
+          set -euo pipefail
+
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::notice::${TAG} 릴리즈가 이미 있어 건너뜁니다."
+            exit 0
+          fi
+
+          # 저장소의 "Latest" 배지는 공개 사이트(web)에 붙여 둔다.
+          if [ "$APP" = "web" ]; then LATEST=true; else LATEST=false; fi
+
+          gh release create "$TAG" \
+            --target "$GITHUB_SHA" \
+            --title "${APP} v${VERSION}" \
+            --notes-file release-note.md \
+            --latest="$LATEST"
+
+          echo "::notice::릴리즈 발행 완료: ${TAG}"
