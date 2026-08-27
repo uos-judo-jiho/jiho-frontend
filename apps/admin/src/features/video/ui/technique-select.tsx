@@ -51,10 +51,14 @@ export const TechniqueSelect = ({ value, onChange, invalid }: Props) => {
   );
 
   useEffect(() => {
+    // 목록을 닫으면 입력값을 선택된 항목의 라벨로 되돌린다.
+    // oxlint-disable-next-line react/set-state-in-effect
     if (!isOpen) setQuery(selectedOption?.label ?? "");
   }, [isOpen, selectedOption?.label]);
 
   useEffect(() => {
+    // 검색어가 바뀌면 활성 항목을 첫 번째로 되돌린다.
+    // oxlint-disable-next-line react/set-state-in-effect
     setActiveIndex(0);
   }, [query]);
 

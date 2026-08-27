@@ -46,6 +46,8 @@ function Slider({ datas }: SliderProps) {
   }, [currentSlide]);
 
   useEffect(() => {
+    // datas 가 바뀌면 첫 슬라이드로 되돌린다.
+    // oxlint-disable-next-line react/set-state-in-effect
     setCurrentSlide(0);
     setLength(datas.length);
   }, [datas]);

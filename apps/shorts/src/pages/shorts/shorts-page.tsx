@@ -68,6 +68,7 @@ export const ShortsPage = () => {
   // React의 muted 어트리뷰트는 WebKit(iOS)에서 DOM 속성으로 반영되지 않아
   // 자동재생이 차단되는 문제가 있다. 항상 명령형으로 동기화하기 위해 ref로 최신값 유지.
   const mutedRef = useRef(muted);
+  // oxlint-disable-next-line react/refs
   mutedRef.current = muted;
 
   // 재생 시간 갱신 — 스크러버 표시 + 방치 힌트 루프 감지로 전달.
@@ -144,6 +145,8 @@ export const ShortsPage = () => {
         el.currentTime = 0; // 이웃은 첫 프레임으로
       }
     });
+    // 클립이 바뀌었으므로 재생 시간 표시도 초기화한다.
+    // oxlint-disable-next-line react/set-state-in-effect
     setVideoTime({ current: 0, duration: 0 });
   }, [activeHighlight?.id, playWithFallback]);
 

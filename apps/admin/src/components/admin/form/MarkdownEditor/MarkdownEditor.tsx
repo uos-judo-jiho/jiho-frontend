@@ -31,6 +31,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
   // value prop이 변경될 때 내부 상태 동기화
   useEffect(() => {
+    // oxlint-disable-next-line react/set-state-in-effect
     setInternalValue(value);
   }, [value]);
 

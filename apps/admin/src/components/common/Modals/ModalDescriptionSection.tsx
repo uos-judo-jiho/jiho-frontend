@@ -2,7 +2,6 @@ import MarkdownRenderer from "@/components/common/Markdown/MarkdownRenderer";
 import Line from "@/components/layouts/Line";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { cn } from "@/shared/lib/utils";
-import { useEffect, useState } from "react";
 
 type ModalDescriptionSectionProps = {
   article: ArticleInfoType;
@@ -13,13 +12,9 @@ function ModalDescriptionSection({
   article,
   titles,
 }: ModalDescriptionSectionProps) {
-  const [isDisplay, setIsDisplay] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (titles[1] === "태그") {
-      setIsDisplay(false);
-    }
-  }, [titles]);
+  // titles[1] 이 "태그" 이면 날짜 행을 숨긴다. props 로부터 곧바로 계산되는 값이라
+  // 별도 state 로 들고 있을 필요가 없다.
+  const isDisplay = titles[1] !== "태그";
 
   return (
     <section className="h-full w-full relative flex flex-col p-5">

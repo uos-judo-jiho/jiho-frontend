@@ -146,6 +146,8 @@ export const HighlightLabelCard = ({
     },
   });
 
+  // react-hook-form 의 watch 는 함수를 반환해 메모이제이션 대상이 될 수 없다.
+  // oxlint-disable-next-line react/incompatible-library
   const memoLength = watch("memo", "").length;
   const correctedEventSecInput = watch("correctedEventSec", "");
   const correctedEventSecNumber = Number(correctedEventSecInput);

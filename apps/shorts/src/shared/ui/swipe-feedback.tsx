@@ -120,6 +120,8 @@ export const SwipeFeedback = ({ feedback, onDone }: Props) => {
 
   useEffect(() => {
     if (!feedback) return;
+    // feedback 이 들어오면 표시하고 아래 타이머로 다시 숨긴다.
+    // oxlint-disable-next-line react/set-state-in-effect
     setVisible(true);
     const t = setTimeout(() => {
       setVisible(false);
