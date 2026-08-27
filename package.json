@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
-    "oxlint": "^1.72.0",
+    "oxlint": "^1.80.0",
     "typescript": "catalog:"
   },
   "packageManager": "pnpm@11.24.0"

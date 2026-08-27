@@ -6,8 +6,20 @@ allowBuilds:
   esbuild: true
 
 catalog:
-  "react": "^18.2.0"
-  "react-dom": "^18.2.0"
+  # @types
   "@types/react": "^18.0.29"
   "@types/react-dom": "^18.0.11"
+  "@types/node": "^25.5.0"
+
   "typescript": "^5.9.3"
+
+  # react
+  "react": "^18.2.0"
+  "react-dom": "^18.2.0"
+
+  # build tools
+  "vite": "^8.1.2"
+
+  # styling
+  "tailwind-merge": "^3.0.2"
+  "tailwindcss": "^4.3.2"

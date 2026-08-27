@@ -7,8 +7,6 @@ on:
       - "apps/shorts/**"
       - "packages/api/**"
       - "packages/auth/**"
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
       - "package.json"
       - ".github/workflows/deploy-shorts.yml"
   workflow_dispatch:
