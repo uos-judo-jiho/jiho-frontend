@@ -25,6 +25,7 @@ export const LazyImage = ({
   useEffect(() => {
     // Check if IntersectionObserver is available (for SSR/old browsers)
     if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      // oxlint-disable-next-line react/set-state-in-effect
       setIsInView(true);
       return;
     }

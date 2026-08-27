@@ -103,6 +103,8 @@ export const TechniqueSheet = ({
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 50);
     } else {
+      // 시트를 닫으면 검색어를 비운다.
+      // oxlint-disable-next-line react/set-state-in-effect
       setQuery("");
     }
   }, [open]);

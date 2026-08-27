@@ -53,6 +53,7 @@ export const useSwipe = ({
 }: SwipeHandlers) => {
   // 콜백 재생성을 피하려고 최신 방향을 ref로 유지.
   const orientationRef = useRef(orientation);
+  // oxlint-disable-next-line react/refs
   orientationRef.current = orientation;
   const lastTapTime = useRef(0);
   const tapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);

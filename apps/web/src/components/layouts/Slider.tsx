@@ -29,6 +29,8 @@ function Slider({ datas }: SliderProps) {
   const { onTouchStart, onTouchEnd } = useTouchScroll([nextSlide, prevSlide]);
 
   useEffect(() => {
+    // datas 가 바뀌면 첫 슬라이드로 되돌리고 화살표를 잠시 노출한다.
+    // oxlint-disable-next-line react/set-state-in-effect
     setCurrentSlide(0);
     setShowArrowsInitially(true);
     const timer = setTimeout(() => {

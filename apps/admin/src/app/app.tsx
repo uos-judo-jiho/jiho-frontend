@@ -25,6 +25,8 @@ export const App = () => {
   useEffect(() => {
     if (isLoading || refreshTried) return;
     if (error?.status === 401) {
+      // 401 을 받은 뒤 refresh 를 한 번만 시도하도록 막는 가드.
+      // oxlint-disable-next-line react/set-state-in-effect
       setRefreshTried(true);
       refreshMutation.mutateAsync(undefined, {
         onError: (error) => {

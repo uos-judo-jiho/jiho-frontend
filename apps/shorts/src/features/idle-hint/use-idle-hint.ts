@@ -45,12 +45,14 @@ export const useIdleHint = ({ activeHighlightId, isLabeled }: Params) => {
   const lastTime = useRef(0);
   // 콜백 재생성을 피하려고 최신 라벨 여부를 ref로 유지.
   const isLabeledRef = useRef(isLabeled);
+  // oxlint-disable-next-line react/refs
   isLabeledRef.current = isLabeled;
 
   // 클립이 바뀌면 카운터·힌트를 초기화.
   useEffect(() => {
     loopCount.current = 0;
     lastTime.current = 0;
+    // oxlint-disable-next-line react/set-state-in-effect
     setShowHint(false);
   }, [activeHighlightId]);
 
@@ -74,6 +76,8 @@ export const useIdleHint = ({ activeHighlightId, isLabeled }: Params) => {
   // 힌트가 켜진 동안 rAF 스트림으로 좌우 번갈이 가상 드래그를 생성.
   useEffect(() => {
     if (!showHint) {
+      // 힌트가 꺼지면 가상 드래그 위치를 초기화한다.
+      // oxlint-disable-next-line react/set-state-in-effect
       setHintDragX(0);
       return;
     }
