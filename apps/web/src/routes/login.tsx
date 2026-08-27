@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import Login from "@/pages/Login";
+import { LoginPage } from "@/pages/login-page";
 
 import { seoHead } from "@/features/seo/head";
 
@@ -18,5 +18,5 @@ export const Route = createFileRoute("/login")({
       title: "로그인",
       pathname: "/login",
     }),
-  component: Login,
+  component: LoginPage,
 });

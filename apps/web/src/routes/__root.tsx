@@ -5,7 +5,8 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 
-import NotFound from "@/pages/NotFound";
+import { NotFoundPage } from "@/pages/not-found-page";
+import { v2Api } from "@packages/api";
 
 // side-effect import: Start 가 client 매니페스트 기준으로 <link> 를 주입하므로
 // SSR 번들이 자체 계산한 (client 와 어긋날 수 있는) asset URL 을 참조하지 않는다
@@ -20,6 +21,17 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   // 안 된다 (옛 HTML 이 캐시되면 배포 후 사라진 옛 해시 자산을 요청해 404).
   // no-cache = 캐시하되 매 사용 전 서버 재검증.
   headers: () => ({ "cache-control": "no-cache" }),
+  // 헤더(메뉴의 연도 목록)와 푸터가 모든 페이지에서 최신 지호지를 참조한다.
+  // 여기서 한 번 채워 두지 않으면 페이지마다 SSR 중에 서스펜스 워터폴이 생긴다.
+  loader: async ({ context }) => {
+    try {
+      await context.queryClient.ensureQueryData(
+        v2Api.getGetApiV2NewsLatestQueryOptions({ limit: 5 }),
+      );
+    } catch (error) {
+      console.error("[SSR] Latest news prefetch error:", error);
+    }
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -34,7 +46,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { property: "og:image", content: "/favicon-96x96.png" },
       { name: "msapplication-TileColor", content: "#ffffff" },
       { name: "msapplication-TileImage", content: "/ms-icon-144x144.png" },
-      { name: "theme-color", content: "#000000" },
+      { name: "theme-color", content: "#fcfcfb" },
       {
         name: "google-site-verification",
         content: "yneFuEywicpsOuZx6g_znGWaJqeBxHf267BC1odklrw",
@@ -45,6 +57,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
     ],
     links: [
+      // Pretendard Variable — 동적 서브셋이라 실제 쓰인 글리프만 내려받는다
+      { rel: "preconnect", href: "https://cdn.jsdelivr.net", crossOrigin: "" },
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css",
+      },
       { hrefLang: "ko-KR", rel: "alternate", href: "http://uosjudo.com" },
       { rel: "apple-touch-icon", sizes: "57x57", href: "/apple-icon-57x57.png" },
       { rel: "apple-touch-icon", sizes: "60x60", href: "/apple-icon-60x60.png" },
@@ -116,7 +134,7 @@ gtag("config", "G-TLK4ZTXFH0");`,
       },
     ],
   }),
-  notFoundComponent: NotFound,
+  notFoundComponent: NotFoundPage,
   shellComponent: RootDocument,
 });
 

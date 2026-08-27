@@ -1,0 +1,138 @@
+/** 토큰만으로는 표현이 안 되는, 반복해서 쓰이는 조합들. */
+
+@layer components {
+  /* 페이지 본문 폭 + 좌우 여백. 모든 페이지가 이걸 쓴다. */
+  .jd-container {
+    width: 100%;
+    max-width: calc(75rem + var(--jd-gutter) * 2);
+    margin-inline: auto;
+    padding-inline: var(--jd-gutter);
+  }
+
+  /* 긴 글의 가독 폭 (한글 기준 약 40자) */
+  .jd-prose-width {
+    max-width: 42rem;
+  }
+
+  /* 섹션 제목 위에 붙는 작은 라벨 */
+  .jd-eyebrow {
+    font-size: var(--jd-text-micro);
+    font-weight: 600;
+    letter-spacing: var(--jd-tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--jd-ink-subtle);
+  }
+
+  /* 사진 위에 흰 글씨를 얹을 때 항상 읽히도록 하는 그라데이션 스크림.
+     통짜 반투명 검정보다 사진을 덜 죽인다. */
+  .jd-scrim {
+    background: linear-gradient(
+      to top,
+      oklch(0.16 0.008 54 / 0.88) 0%,
+      oklch(0.16 0.008 54 / 0.62) 28%,
+      oklch(0.16 0.008 54 / 0.18) 62%,
+      oklch(0.16 0.008 54 / 0.04) 100%
+    );
+  }
+
+  /* 히어로용 — 사진이 어떤 밝기로 들어오든 흰 글씨가 읽히도록 세 겹을 쌓는다.
+     (1) 아래에서 위로: 본문 텍스트 영역
+     (2) 위에서 아래로: 투명 헤더의 메뉴 영역
+     (3) 왼쪽에서 오른쪽으로: 좌측 정렬된 제목 뒤 */
+  .jd-scrim-full {
+    background:
+      linear-gradient(
+        to top,
+        oklch(0.16 0.008 54 / 0.9) 0%,
+        oklch(0.16 0.008 54 / 0.72) 30%,
+        oklch(0.16 0.008 54 / 0.42) 62%,
+        oklch(0.16 0.008 54 / 0.28) 100%
+      ),
+      linear-gradient(
+        to bottom,
+        oklch(0.16 0.008 54 / 0.55) 0%,
+        oklch(0.16 0.008 54 / 0.15) 22%,
+        oklch(0.16 0.008 54 / 0) 40%
+      ),
+      linear-gradient(
+        to right,
+        oklch(0.16 0.008 54 / 0.5) 0%,
+        oklch(0.16 0.008 54 / 0.2) 45%,
+        oklch(0.16 0.008 54 / 0) 75%
+      );
+  }
+
+  /* 카드 전체를 링크 히트영역으로 만드는 패턴 —
+     <a> 로 감싸지 않아도 되므로 카드 안에 다른 링크를 둘 수 있다. */
+  .jd-stretch-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* 한글 이름·제목이 음절 단위로 잘리지 않게 */
+  .jd-keep-all {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  /* 텍스트 줄 수 제한 */
+  .jd-clamp-1,
+  .jd-clamp-2,
+  .jd-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .jd-clamp-1 {
+    -webkit-line-clamp: 1;
+  }
+  .jd-clamp-2 {
+    -webkit-line-clamp: 2;
+  }
+  .jd-clamp-3 {
+    -webkit-line-clamp: 3;
+  }
+}
+
+@layer utilities {
+  @keyframes jd-shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes jd-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .animate-shimmer {
+    animation: jd-shimmer 1.6s var(--jd-ease-in-out) infinite;
+  }
+
+  .animate-fade-up {
+    animation: jd-fade-up var(--jd-duration-slow) var(--jd-ease) both;
+  }
+
+  /* 스크롤바를 숨기되 스크롤은 유지 */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+}

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import Notice from "@/pages/Notice/Notice";
+import { NoticeIndexPage } from "@/pages/notice/notice-index-page";
 
 import { seoHead } from "@/features/seo/head";
 import { v2Api } from "@packages/api";
@@ -20,5 +20,5 @@ export const Route = createFileRoute("/notice/")({
       title: "Notice",
       pathname: "/notice",
     }),
-  component: Notice,
+  component: NoticeIndexPage,
 });

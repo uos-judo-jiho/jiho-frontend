@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import PhotoDetail from "@/pages/Photo/PhotoDetail";
+import { TrainingDetailPage } from "@/pages/training/training-detail-page";
 
 import { createArticleData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
@@ -61,5 +61,5 @@ export const Route = createFileRoute("/photo/$id")({
       pathname: `/photo/${params.id}`,
       ...loaderData,
     }),
-  component: PhotoDetail,
+  component: TrainingDetailPage,
 });
