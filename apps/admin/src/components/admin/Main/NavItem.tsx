@@ -1,6 +1,6 @@
 import { ArrowForwardIosIcon } from "@/components/icons";
 import { ExternalIcon } from "@/components/icons/external-icon";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 type NavItemProps = {
   linkTo: string;

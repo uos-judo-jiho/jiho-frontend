@@ -5,7 +5,7 @@ import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
 import { v2Api } from "@packages/api";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 export const TrainingLogPage = () => {
   const {

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pencil } from "lucide-react";
 import { Suspense } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { RouterUrl } from "@/app/routers/router-url";
 import { AdditionalMyInfo } from "./additional-my-info";
 import { CommonMyInfo } from "./common-my-info";

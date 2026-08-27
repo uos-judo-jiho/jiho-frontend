@@ -4,10 +4,10 @@ import SkeletonItem from "@/components/common/Skeletons/SkeletonItem";
 import Col from "@/components/layouts/Col";
 import { v2Api } from "@packages/api";
 import { Suspense, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "@tanstack/react-router";
 
 const Gallery = () => {
-  const { year } = useParams<{ year: string }>();
+  const { year } = useParams({ strict: false });
 
   return (
     <FormContainer title={`지호지 갤러리 관리 (${year}년)`}>
@@ -19,7 +19,7 @@ const Gallery = () => {
 };
 
 const Inner = () => {
-  const { year } = useParams<{ year: string }>();
+  const { year } = useParams({ strict: false });
   const { data: images } = v2Api.useGetApiV2NewsYearImagesSuspense(
     Number(year),
     {
@@ -31,7 +31,8 @@ const Inner = () => {
   return (
     <Col gap={20}>
       <Link
-        to={`/news/${year}/gallery/write`}
+        to="/news/$year/gallery/write"
+        params={{ year: String(year) }}
         className="inline-block px-6 py-3 bg-blue-500 text-white rounded no-underline text-sm transition-all mb-5 hover:opacity-90 active:opacity-80 active:scale-[0.98]"
       >
         갤러리 이미지 수정하기

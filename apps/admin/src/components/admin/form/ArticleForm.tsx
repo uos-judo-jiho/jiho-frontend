@@ -7,7 +7,7 @@ import { v2Admin, v2Api } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bell, BookOpen, Newspaper } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import ImageUploader from "./ImageUploader/ImageUploader";
 import {
   ButtonContainer,
@@ -114,6 +114,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
   const naviagate = useNavigate();
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   const queryKeyByType = {
@@ -133,7 +134,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           queryKey: queryKeyByType[type],
         });
         toast.success("게시물이 성공적으로 등록되었습니다.");
-        naviagate(`/${type}/${gallery ? "gallery" : ""}`);
+        naviagate({ href: `/${type}/${gallery ? "gallery" : ""}` });
       },
     },
     axios: {
@@ -149,7 +150,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
         });
 
         toast.success("업데이트에 성공하였습니다.");
-        naviagate(`/${type}/${gallery ? "gallery" : ""}`);
+        naviagate({ href: `/${type}/${gallery ? "gallery" : ""}` });
       },
     },
     axios: {
@@ -164,7 +165,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           queryKey: queryKeyByType[type],
         });
         toast.success("게시물이 성공적으로 삭제되었습니다.");
-        naviagate(`/${type}`);
+        naviagate({ href: `/${type}` });
       },
     },
     axios: {
@@ -182,7 +183,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
           queryKey: queryKeyByType["news"],
         });
         toast.success("이미지가 성공적으로 업로드되었습니다.");
-        naviagate(`/news/${values.dateTime.slice(0, 4)}/gallery`);
+        naviagate({ href: `/news/${values.dateTime.slice(0, 4)}/gallery` });
       },
     },
   });
@@ -336,7 +337,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
 
   const handleCancelSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    naviagate(-1);
+    router.history.back();
   };
 
   const handleDeleteSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {

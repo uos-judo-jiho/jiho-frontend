@@ -6,7 +6,7 @@ import { v2Admin } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { GetApiV2AdminPending200AdminsItem } from "node_modules/@packages/api/src/_generated/v2/admin/model/getApiV2AdminPending200AdminsItem";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { getApprovalStatus } from "../utils/get-approval-status";
 

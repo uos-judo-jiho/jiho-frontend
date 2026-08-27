@@ -14,7 +14,7 @@ import { v2AdminModel } from "@packages/api/model";
 import { useQueryClient } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -90,7 +90,7 @@ const EditMyInfoFormInner = ({
         queryClient.invalidateQueries({
           queryKey: v2Admin.getGetApiV2AdminMeQueryKey(),
         });
-        navigate(RouterUrl.마이페이지.루트);
+        navigate({ to: RouterUrl.마이페이지.루트 });
       },
       onError: () => {
         toast.error("정보 수정에 실패했습니다.");
@@ -219,7 +219,7 @@ const EditMyInfoFormInner = ({
         <Button
           type="button"
           variant="outline"
-          onClick={() => navigate(RouterUrl.마이페이지.루트)}
+          onClick={() => navigate({ to: RouterUrl.마이페이지.루트 })}
         >
           취소
         </Button>

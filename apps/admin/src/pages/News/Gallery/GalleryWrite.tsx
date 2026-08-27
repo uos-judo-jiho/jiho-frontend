@@ -1,9 +1,9 @@
 import FormContainer from "@/components/admin/form/FormContainer";
 import NewsGalleryFrom from "@/components/admin/form/NewsGalleryFrom";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 
 const GalleryWrite = () => {
-  const { year } = useParams<{ year: string }>();
+  const { year } = useParams({ strict: false });
 
   if (!year) {
     return (

@@ -1,6 +1,6 @@
 import { Constants } from "@/shared/lib/constant";
 import { v2ApiModel } from "@packages/api/model";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import Line from "./Line";
 
 type ListContainerProps = {

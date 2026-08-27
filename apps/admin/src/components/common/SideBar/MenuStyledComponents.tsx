@@ -1,6 +1,6 @@
 import { cn } from "@/shared/lib/utils";
 import { HTMLProps } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 const MenuList = ({ className, ...props }: HTMLProps<HTMLUListElement>) => (
   <ul className={cn("text-sm", "space-y-2", className)} {...props} />

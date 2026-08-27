@@ -10,8 +10,8 @@ import {
   Link,
   useNavigate,
   useParams,
-  useSearchParams,
-} from "react-router-dom";
+  useSearch,
+} from "@tanstack/react-router";
 
 import { RouterUrl } from "@/app/routers/router-url";
 import { Button } from "@/components/ui/button";
@@ -24,12 +24,12 @@ import { FullpageNavigationPanel } from "@/features/video/ui/fullpage-navigation
 import { HighlightLabelCard } from "@/features/video/ui/highlight-label-card";
 
 export const VideoLabelingFullpage = () => {
-  const { jobId: jobIdParam } = useParams<{ jobId: string }>();
+  const { jobId: jobIdParam } = useParams({ strict: false });
   const jobId = Number(jobIdParam);
   const navigate = useNavigate();
   const [isListOpen, setIsListOpen] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const requestedHighlightId = Number(searchParams.get("highlightId"));
+  const search = useSearch({ strict: false });
+  const requestedHighlightId = search.highlightId ?? 0;
 
   const jobQuery = useVideoJobDetail(jobId);
   const eventsQuery = useVideoEvents(jobId);
@@ -88,20 +88,29 @@ export const VideoLabelingFullpage = () => {
 
   useEffect(() => {
     if (activeHighlight && requestedIndex < 0) {
-      setSearchParams(
-        { highlightId: String(activeHighlight.id) },
-        { replace: true },
-      );
+      navigate({
+        to: "/videos/fullpage/$jobId",
+        params: { jobId: String(jobId) },
+        search: { highlightId: activeHighlight.id },
+        replace: true,
+      });
     }
-  }, [activeHighlight, requestedIndex, setSearchParams]);
+  }, [activeHighlight, jobId, navigate, requestedIndex]);
 
   const openHighlight = (highlightId: number, replace = false) => {
-    setSearchParams({ highlightId: String(highlightId) }, { replace });
+    navigate({
+      to: "/videos/fullpage/$jobId",
+      params: { jobId: String(jobId) },
+      search: { highlightId },
+      replace,
+    });
   };
 
   const openNextJob = () => {
     if (!nextJob) return;
-    navigate(RouterUrl.영상.풀페이지.상세({ jobId: nextJob.id }), {
+    navigate({
+      to: "/videos/fullpage/$jobId",
+      params: { jobId: String(nextJob.id) },
       replace: true,
     });
   };
@@ -109,7 +118,10 @@ export const VideoLabelingFullpage = () => {
   const openJob = (targetJobId: number) => {
     setIsListOpen(false);
     if (targetJobId === jobId) return;
-    navigate(RouterUrl.영상.풀페이지.상세({ jobId: targetJobId }));
+    navigate({
+      to: "/videos/fullpage/$jobId",
+      params: { jobId: String(targetJobId) },
+    });
   };
 
   const openJobHighlight = (
@@ -117,10 +129,12 @@ export const VideoLabelingFullpage = () => {
     highlightId: number,
     replace = false,
   ) => {
-    navigate(
-      `${RouterUrl.영상.풀페이지.상세({ jobId: targetJobId })}?highlightId=${highlightId}`,
-      { replace },
-    );
+    navigate({
+      to: "/videos/fullpage/$jobId",
+      params: { jobId: String(targetJobId) },
+      search: { highlightId },
+      replace,
+    });
   };
 
   const previousJobLastHighlight = previousJobEventsQuery.data?.at(-1);

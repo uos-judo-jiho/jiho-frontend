@@ -1,6 +1,6 @@
 import { MenuItemInfoType } from "@/shared/lib/types/menuItemInfoType";
 import { cn } from "@/shared/lib/utils";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "@tanstack/react-router";
 import { SelectedType } from "./MenuStyledComponents";
 
 import { useNavbar } from "../Navbar/NavBar.provider";

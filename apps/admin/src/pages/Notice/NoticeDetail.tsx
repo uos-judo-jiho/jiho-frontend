@@ -1,9 +1,9 @@
 import NoticeForm from "@/components/admin/form/NoticeForm";
 import { v2Api } from "@packages/api";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 
 const NoticeDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams({ strict: false });
   const { data: notices = [] } = v2Api.useGetApiV2Notices(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],

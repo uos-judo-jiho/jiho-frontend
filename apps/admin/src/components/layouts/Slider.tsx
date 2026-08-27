@@ -8,7 +8,10 @@ import { StyledBackArrow, StyledForwardArrow } from "./Arrow";
 // TODO 페이지 넘길 때 사진이 흘러가는 에니메이션 막기
 
 type SliderProps = {
-  datas: string[];
+  datas: {
+    originSrc: string;
+    smallSrc: string | null;
+  }[];
 };
 
 function Slider({ datas }: SliderProps) {
@@ -82,12 +85,12 @@ function Slider({ datas }: SliderProps) {
         >
           {datas.map((img, i) => (
             <img
-              src={img ? img : Constants.LOGO_BLACK}
+              src={img.originSrc ? img.originSrc : Constants.LOGO_BLACK}
               key={"thumbnail" + i}
               alt={`슬라이드 이미지 ${i + 1}`}
               className={cn(
                 "sm:max-w-[30vw] sm:max-h-[30vw] max-w-[60vw] max-h-[60vw] min-w-full object-contain",
-                img ? "bg-black" : "bg-background"
+                img.originSrc ? "bg-black" : "bg-background"
               )}
             />
           ))}

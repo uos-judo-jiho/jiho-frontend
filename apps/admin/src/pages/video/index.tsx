@@ -9,7 +9,7 @@ import {
   useVideoJobs,
 } from "@/features/video/hooks";
 import { ArrowUpRightFromSquareIcon, ChevronRight, Film } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 const formatDate = (value: string) =>
