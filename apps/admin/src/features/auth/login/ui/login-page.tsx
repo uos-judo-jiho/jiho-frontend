@@ -1,3 +1,16 @@
+/**
+ * NOTE: @packages/auth 의 같은 파일을 admin 으로 복제한 것.
+ *
+ * admin 은 TanStack Router 로 옮겼지만 shorts 는 아직 react-router-dom 을
+ * 쓰고 있다. 공유 패키지를 한쪽 라우터에 묶을 수 없어 갈라 두었다.
+ * shorts 도 TanStack Router 로 옮기면 이 트리를 지우고 다시
+ * @packages/auth 로 합칠 것.
+ *
+ * 원본과 달라진 곳은 라우터를 쓰는 부분뿐이다:
+ * - redirectTo 를 useSearchParams 대신 prop 으로 받는다
+ * - useNavigate / Link 를 @tanstack/react-router 것으로 바꿨다
+ * - 임의 경로로 이동해야 해서 navigate({ href }) 를 쓴다
+ */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "@tanstack/react-router";
