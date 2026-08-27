@@ -10,12 +10,6 @@ type CarouselProps = {
 const Carousel = ({ datas }: CarouselProps) => {
   const [page, setPage] = useState<number>(0);
 
-  const [scrollContainer, setScrollContainer] = useState<
-    HTMLElement | undefined
-  >();
-  const [carouselEl, setCarouselEl] = useState<HTMLElement | undefined>();
-  const [leftArrow, setLeftArrow] = useState<HTMLElement | undefined>();
-  const [rightArrow, setRightArrow] = useState<HTMLElement | undefined>();
   const [detailIsOpen, setDetailIsOpen] = useState(false);
   const [selectedDetailImage, setSelectedDetailImage] = useState("");
 
@@ -29,62 +23,58 @@ const Carousel = ({ datas }: CarouselProps) => {
     setDetailIsOpen(false);
   };
 
-  const targetContanier = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
   const isLeft = page === 0;
   const isRight = page === datas.length;
 
+  // 화살표 클릭 — 보이는 폭만큼 좌/우로 스크롤한다.
+  const scrollByPage = (direction: -1 | 1) => {
+    const scroll = scrollRef.current;
+    if (!scroll) return;
+    scroll.scrollBy({
+      top: 0,
+      left: direction * scroll.clientWidth,
+      behavior: "smooth",
+    });
+  };
+
   useEffect(() => {
-    setLeftArrow(document.getElementById("leftArrow") as HTMLElement);
-    setRightArrow(document.getElementById("rightArrow") as HTMLElement);
-    setScrollContainer(document.getElementById("scroll") as HTMLElement);
-    setCarouselEl(document.getElementById("carousel") as HTMLElement);
+    const scroll = scrollRef.current;
+    const carousel = carouselRef.current;
+    if (!scroll || !carousel) return;
 
-    if (!leftArrow || !rightArrow || !scrollContainer || !carouselEl) {
-      return;
-    }
-    const carouselElWidth = carouselEl.clientWidth;
-    const scrollDistance = scrollContainer.clientWidth;
+    // 폭은 스크롤할 때마다 다시 읽는다(리사이즈 후에도 페이지 계산이 맞도록).
+    const handleScroll = () => {
+      const carouselWidth = carousel.clientWidth;
+      const scrollDistance = scroll.clientWidth;
 
-    scrollContainer.addEventListener("scroll", () => {
-      if (scrollContainer.scrollLeft === 0) {
+      if (scroll.scrollLeft === 0) {
         setPage(0);
         return;
       }
       if (
-        scrollContainer.scrollLeft > 0 &&
-        scrollDistance < carouselElWidth - scrollContainer.scrollLeft - 1
+        scroll.scrollLeft > 0 &&
+        scrollDistance < carouselWidth - scroll.scrollLeft - 1
       ) {
         setPage(1);
         return;
       }
-      if (scrollDistance >= carouselElWidth - scrollContainer.scrollLeft - 1) {
+      if (scrollDistance >= carouselWidth - scroll.scrollLeft - 1) {
         setPage(datas.length);
-        return;
       }
-    });
+    };
 
-    leftArrow.onclick = () => {
-      scrollContainer.scrollBy({
-        top: 0,
-        left: -scrollDistance,
-        behavior: "smooth",
-      });
-    };
-    rightArrow.onclick = () => {
-      scrollContainer.scrollBy({
-        top: 0,
-        left: +scrollDistance,
-        behavior: "smooth",
-      });
-    };
-  }, [carouselEl, datas.length, leftArrow, rightArrow, scrollContainer]);
+    scroll.addEventListener("scroll", handleScroll);
+    return () => scroll.removeEventListener("scroll", handleScroll);
+  }, [datas.length]);
 
   if (datas.length === 0) return null;
 
   return (
     <div className="h-60 box-border mb-6 overflow-hidden relative">
       <StyledBackArrow
-        id="leftArrow"
+        onClick={() => scrollByPage(-1)}
         current={page}
         length={datas.length}
         size={"3rem"}
@@ -92,7 +82,7 @@ const Carousel = ({ datas }: CarouselProps) => {
         $isMobileVisible={false}
       />
       <StyledForwardArrow
-        id="rightArrow"
+        onClick={() => scrollByPage(1)}
         current={page}
         length={datas.length}
         size={"3rem"}
@@ -101,7 +91,7 @@ const Carousel = ({ datas }: CarouselProps) => {
       />
       <div
         id="scroll"
-        ref={targetContanier}
+        ref={scrollRef}
         className="relative h-full overflow-x-scroll whitespace-nowrap scroll-smooth"
         style={{
           overscrollBehaviorX: "contain",
@@ -115,7 +105,7 @@ const Carousel = ({ datas }: CarouselProps) => {
             display: none;
           }
         `}</style>
-        <div id="carousel" className="inline-flex h-full py-3">
+        <div ref={carouselRef} className="inline-flex h-full py-3">
           {datas.map((img, index) => (
             <div
               key={img}

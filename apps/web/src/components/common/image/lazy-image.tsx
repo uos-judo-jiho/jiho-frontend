@@ -13,9 +13,14 @@ export const LazyImage = ({
   alt: string;
   className?: string;
 }) => {
-  const [isHighResLoaded, setIsHighResLoaded] = useState(true);
+  // 고해상도 로딩 완료 여부는 "어떤 src 가 로드됐는지"로 들고 있는다.
+  const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
   const [isInView, setIsInView] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
+
+  // 뷰포트에 들어오기 전에는 로딩을 시작하지 않으므로 폴백을 띄우지 않고,
+  // 들어온 뒤에는 현재 src 가 실제로 로드됐는지로 판단한다.
+  const isHighResLoaded = !isInView || loadedSrc === src;
 
   useEffect(() => {
     // Check if IntersectionObserver is available (for SSR/old browsers)
@@ -44,12 +49,10 @@ export const LazyImage = ({
   useEffect(() => {
     if (!isInView) return;
 
-    setIsHighResLoaded(false);
-
     const img = new Image();
     img.src = src;
     img.onload = () => {
-      setIsHighResLoaded(true);
+      setLoadedSrc(src);
     };
   }, [src, isInView]);
 
