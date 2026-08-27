@@ -11,7 +11,12 @@ import { Logo } from "@/shared/ui/logo";
  * 각각 렌더해서, 이 블록 전체가 DOM 에 두 벌 존재했다. 수상 이력 쿼리도 두 번
  * 실행되고 크롤러에는 같은 내용이 중복 노출됐다. 이제 한 벌만 그린다.
  */
-export const HomeIdentity = () => {
+type HomeIdentityProps = {
+  /** 상위에서 이미 같은 라벨을 달았으면 false 로 끈다 (예: /about 의 PageHeader) */
+  showEyebrow?: boolean;
+};
+
+export const HomeIdentity = ({ showEyebrow = true }: HomeIdentityProps) => {
   const { data: awards = [] } = v2Api.useGetApiV2AwardsSuspense({
     query: { select: (response) => response.data.awards ?? [] },
   });
@@ -21,7 +26,7 @@ export const HomeIdentity = () => {
       <div className="flex flex-col gap-6">
         <Logo className="size-16" />
         <div className="flex flex-col gap-3">
-          <p className="jd-eyebrow">About</p>
+          {showEyebrow ? <p className="jd-eyebrow">About</p> : null}
           <h2 className="text-heading text-ink-strong">{SITE.nameKo}</h2>
           <p className="text-lead text-ink-muted">{SITE.nameEn}</p>
         </div>

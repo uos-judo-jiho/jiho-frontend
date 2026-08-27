@@ -63,11 +63,6 @@
     cursor: pointer;
   }
 
-  :where(ul, ol):not([class]) {
-    list-style: revert;
-    padding-left: 1.5em;
-  }
-
   /* 숫자는 표·목록에서 자릿수가 흔들리지 않게 고정폭으로 */
   time,
   [data-numeric] {

@@ -12,7 +12,7 @@ type NoticeListProps = {
  * 공지사항 목록.
  *
  * 이전 ListContainer 는 flex 로 만든 가짜 표에 "번호/제목/작성일" 헤더를 두고
- * 행마다 <hr> 을 끼워 넣었다. 게시판 티가 나는 데다 <ul> 안에 <div> 가 들어가
+ * 행마다 <hr> 을 끼워 넣었다. 게시판 티가 나는 데다 <ul className="flex flex-col"> 안에 <div> 가 들어가
  * 마크업도 어긋나 있었다. 여기서는 괘선으로 구분되는 목록으로 바꾸고,
  * 좁은 화면에서는 메타가 제목 아래로 내려간다.
  */
@@ -22,7 +22,7 @@ export const NoticeList = ({ notices }: NoticeListProps) => {
   }
 
   return (
-    <ul className="border-t border-line-strong">
+    <ul className="flex flex-col">
       {notices.map((notice) => (
         <li key={notice.id} className="border-b border-line">
           <Link

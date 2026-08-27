@@ -1,7 +1,6 @@
-export { ClientOnly } from "./client-only";
 export { Container } from "./container";
 export { EmptyState } from "./empty-state";
-export { Image, type ImageAspect } from "./image";
+export { Image } from "./image";
 export { Lightbox } from "./lightbox";
 export { Logo } from "./logo";
 export { Markdown } from "./markdown";
@@ -12,5 +11,4 @@ export { PageHeader } from "./page-header";
 export { ScrollToTop } from "./scroll-to-top";
 export { SectionHeading } from "./section-heading";
 export { Skeleton } from "./skeleton";
-export { Spinner } from "./spinner";
 export { Tag } from "./tag";

@@ -11,7 +11,7 @@ export const AboutPage = () => (
         title="지호를 소개합니다"
         description={`${SITE.foundingYear}년부터 이어져 온 ${SITE.name}입니다.`}
       />
-      <HomeIdentity />
+      <HomeIdentity showEyebrow={false} />
     </div>
   </PageShell>
 );

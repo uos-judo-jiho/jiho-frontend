@@ -25,7 +25,7 @@ export const HomeNotices = () => {
         }
       />
 
-      <ul className="border-t border-line">
+      <ul className="flex flex-col">
         {notices.slice(0, PREVIEW_COUNT).map((notice) => (
           <li key={notice.id} className="border-b border-line">
             <Link

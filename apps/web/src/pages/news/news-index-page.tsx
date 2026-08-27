@@ -2,7 +2,7 @@ import { v2Api } from "@packages/api";
 import { linkOptions } from "@tanstack/react-router";
 import { useQueries } from "@tanstack/react-query";
 
-import { ContentGrid } from "@/features/content";
+import { ArticleCardSkeleton, ContentGrid } from "@/features/content";
 import {
   NEWS_PREVIEW_PER_YEAR,
   NewsCard,
@@ -28,12 +28,15 @@ export const NewsIndexPage = () => {
     ),
   });
 
+  // 로딩 중인 연도는 걸러내지 않고 스켈레톤으로 자리를 잡아 둔다.
+  // (걸러내면 클라이언트 내비게이션 중 섹션이 사라졌다가 튀어나온다)
   const sections = results
     .map((result, index) => ({
       year: years[index],
       articles: result.data?.data.articles ?? [],
+      pending: result.isPending,
     }))
-    .filter((section) => section.articles.length > 0);
+    .filter((section) => section.pending || section.articles.length > 0);
 
   return (
     <PageShell>
@@ -47,7 +50,7 @@ export const NewsIndexPage = () => {
         {sections.length === 0 ? (
           <EmptyState title="아직 발행된 지호지가 없습니다" />
         ) : (
-          sections.map(({ year, articles }) => (
+          sections.map(({ year, articles, pending }) => (
             <section key={year} className="flex flex-col gap-6">
               <SectionHeading
                 title={`${year}년`}
@@ -60,9 +63,13 @@ export const NewsIndexPage = () => {
                 }
               />
               <ContentGrid>
-                {articles.map((article) => (
-                  <NewsCard key={article.id} article={article} year={year} />
-                ))}
+                {pending
+                  ? Array.from({ length: NEWS_PREVIEW_PER_YEAR }, (_, i) => (
+                      <ArticleCardSkeleton key={i} />
+                    ))
+                  : articles.map((article) => (
+                      <NewsCard key={article.id} article={article} year={year} />
+                    ))}
               </ContentGrid>
             </section>
           ))

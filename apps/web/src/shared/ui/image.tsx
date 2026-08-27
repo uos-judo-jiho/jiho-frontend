@@ -15,7 +15,7 @@ const ASPECT = {
   auto: "",
 } as const;
 
-export type ImageAspect = keyof typeof ASPECT;
+type ImageAspect = keyof typeof ASPECT;
 
 type ImageProps = {
   src: string;
