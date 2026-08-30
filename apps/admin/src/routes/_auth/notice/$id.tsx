@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import NoticeDetail from "@/pages/Notice/NoticeDetail";
+import { NoticeDetail } from "@/pages/Notice/NoticeDetail";
 import { requireRole, StaffAndAbove } from "@/shared/auth/roles";
 
 export const Route = createFileRoute("/_auth/notice/$id")({

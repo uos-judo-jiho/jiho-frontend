@@ -3,7 +3,7 @@ import { v2AdminModel } from "@packages/api/model";
 import type { QueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 
-export type Me = v2AdminModel.GetApiV2AdminMe200;
+export type Me = v2AdminModel.GetApiV2AdminMeResponse;
 
 const meQueryOptions = () =>
   v2Admin.getGetApiV2AdminMeQueryOptions({
@@ -11,8 +11,24 @@ const meQueryOptions = () =>
     query: { retry: false },
   });
 
-const isUnauthorized = (error: unknown) =>
-  isAxiosError(error) && error.response?.status === 401;
+const isUnauthorized = (error: unknown) => isAxiosError(error) && error.response?.status === 401;
+
+/**
+ * orval 설정이 `shouldExportHttpClient: false` 라 refresh 요청 함수가 직접
+ * 노출되지 않는다. mutation options 안에 들어 있는 mutationFn 을 꺼내 쓴다.
+ */
+const refreshToken = async (queryClient: QueryClient) => {
+  const { mutationFn, mutationKey } = v2Admin.getPostApiV2AdminRefreshMutationOptions({
+    axios: { withCredentials: true },
+  });
+
+  if (!mutationFn) {
+    throw new Error("refresh mutationFn 을 찾을 수 없습니다.");
+  }
+
+  // 훅 밖에서 직접 호출하므로 mutation 컨텍스트를 직접 만들어 넘긴다.
+  await mutationFn(undefined, { client: queryClient, meta: undefined, mutationKey });
+};
 
 /**
  * 라우트 beforeLoad 에서 쓰는 인증 확인.
@@ -33,7 +49,7 @@ export const ensureMe = async (queryClient: QueryClient): Promise<Me | null> => 
   }
 
   try {
-    await v2Admin.postApiV2AdminRefresh();
+    await refreshToken(queryClient);
   } catch {
     return null;
   }
