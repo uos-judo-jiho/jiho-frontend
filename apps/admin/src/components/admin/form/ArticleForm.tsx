@@ -57,7 +57,7 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   });
 
   const readOnly = !canEdit;
-  // 지호지에서 임원 미만 등급은 작성자가 본인으로 고정된다.
+  // 임원 미만 등급은 게시판 종류와 무관하게 작성자가 본인으로 고정된다.
   const isAuthorFixed = !canEditAuthor;
 
   const getHeaderInfo = () => {

@@ -29,8 +29,9 @@ export type ArticlePermission = {
  *
  * - 지호지·훈련일지는 회원 이상, 공지사항은 운영 부원 이상이 쓸 수 있다.
  * - 관리자/회장은 모든 글을, 그 외에는 본인 명의의 글만 수정할 수 있다.
- * - 지호지의 작성자는 임원(운영진) 이상만 직접 고를 수 있고,
- *   그 아래 등급은 본인 명의로 고정된다. 훈련일지·공지사항은 기존 정책을 유지한다.
+ *   이름 정보가 없으면 본인 글인지 가릴 수 없으므로 남의 글은 수정할 수 없다.
+ * - 작성자 필드는 게시판 종류와 무관하게 임원(운영진) 이상만 직접 고를 수 있고,
+ *   그 아래 등급은 본인 명의로 고정된다.
  */
 export const getArticlePermission = ({
   type,
@@ -52,8 +53,7 @@ export const getArticlePermission = ({
 
   const canEdit = roleCanEditType && (isRootOrPresident || isAuthor);
 
-  const canEditAuthor =
-    canEdit && (type !== "news" || ManagerAndAbove.includes(role));
+  const canEditAuthor = canEdit && ManagerAndAbove.includes(role);
 
   return { canEdit, canEditAuthor };
 };
