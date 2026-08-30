@@ -12,7 +12,7 @@ type ArticlePermissionParams = {
   /** 로그인한 사용자의 등급 */
   role?: string;
   /** 로그인한 사용자의 이름(추가 정보). 없으면 본인 글 여부를 가릴 수 없다. */
-  myName?: string;
+  myName?: string | null;
   /** 수정 중인 글의 작성자. 새 글이면 undefined. */
   articleAuthor?: string;
 };
@@ -43,7 +43,7 @@ export const getArticlePermission = ({
   // 새 글이거나, 글의 작성자에 본인 이름이 들어 있으면 본인 글로 본다.
   const isAuthor =
     articleAuthor === undefined ||
-    Boolean(myName && articleAuthor.includes(myName));
+    myName != null && articleAuthor.includes(myName);
 
   const roleCanEditType =
     type === "notice"
