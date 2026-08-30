@@ -4,7 +4,7 @@ import LOGO_BLACK from "@/shared/lib/assets/images/logo/logo-removebg.webp";
 export const Constants = {
   // 클라이언트에서는 상대 경로 사용 (CORS 방지)
   BASE_URL:
-    process.env.NODE_ENV === "development"
+    import.meta.env.DEV
       ? "http://localhost:3000"
       : typeof window !== "undefined"
         ? window.location.origin

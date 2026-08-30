@@ -10,7 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { User as UserIcon } from "lucide-react";
 import { Suspense, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { match } from "ts-pattern";
 
@@ -41,7 +41,7 @@ const ROLE_PRIORITY: Record<
 };
 
 export const UserDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ strict: false });
 
   const navigation = useNavigate();
   const queryClient = useQueryClient();
@@ -80,7 +80,7 @@ export const UserDetailPage = () => {
                 { adminId: Number(id) },
                 {
                   onSuccess: () => {
-                    navigation("/users", { replace: true });
+                    navigation({ to: "/users", replace: true });
                   },
                 },
               );

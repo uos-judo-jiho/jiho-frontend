@@ -6,7 +6,7 @@ import { WaitedRole } from "@/features/user/ui/waited-role-card";
 import { v2Admin } from "@packages/api";
 import { Users } from "lucide-react";
 import { Suspense } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate } from "@tanstack/react-router";
 
 export const UserPage = () => {
   const { data: meData, isLoading } = v2Admin.useGetApiV2AdminMe({

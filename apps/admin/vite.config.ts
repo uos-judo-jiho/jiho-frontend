@@ -1,6 +1,7 @@
 import path from "path";
 
 import tailwindcss from "@tailwindcss/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 
 import { defineConfig } from "vite";
@@ -10,7 +11,18 @@ const srcDir = path.resolve(__dirname, "src");
 
 export default defineConfig({
   base: "/",
-  plugins: [tailwindcss(), react()],
+  plugins: [
+    // routes/ 트리를 읽어 routeTree.gen.ts 를 생성한다.
+    // react() 보다 먼저 와야 생성된 트리가 그대로 변환 대상이 된다.
+    tanstackRouter({
+      target: "react",
+      routesDirectory: "./src/routes",
+      generatedRouteTree: "./src/routeTree.gen.ts",
+      autoCodeSplitting: true,
+    }),
+    tailwindcss(),
+    react(),
+  ],
   test: {
     globals: true,
     environment: "happy-dom",

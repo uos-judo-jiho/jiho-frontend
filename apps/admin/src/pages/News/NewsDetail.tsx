@@ -2,10 +2,10 @@ import NewsForm from "@/components/admin/form/NewsForm";
 import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { v2Api } from "@packages/api";
 import { useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 
 const NewsDetail = () => {
-  const { year, id } = useParams<{ year: string; id: string }>();
+  const { year, id } = useParams({ strict: false });
 
   const { data: response } = v2Api.useGetApiV2NewsYear(
     Number(year),

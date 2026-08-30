@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { v2Admin } from "@packages/api";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { getUserRole } from "../utils/get-user-role";
 
 export const UserTable = () => {

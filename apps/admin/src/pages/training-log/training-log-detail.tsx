@@ -1,10 +1,10 @@
 import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
 import { v2Api } from "@packages/api";
 import { assert } from "es-toolkit";
-import { useParams } from "react-router-dom";
+import { useParams } from "@tanstack/react-router";
 
 export const TrainingLogDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ strict: false });
 
   assert(id !== undefined, "훈련일지 ID가 없습니다.");
 

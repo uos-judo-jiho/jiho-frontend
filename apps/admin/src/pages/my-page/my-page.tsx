@@ -2,7 +2,7 @@ import { RouterUrl } from "@/app/routers/router-url";
 import { PageHeader } from "@/components/layouts/PageHeader";
 import { MyInfo } from "@/features/user/ui/my-info";
 import { User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 export const MyPage = () => {
   return (

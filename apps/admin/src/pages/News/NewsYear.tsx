@@ -5,7 +5,7 @@ import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
 import { v2Api } from "@packages/api";
 import { startTransition, Suspense } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "@tanstack/react-router";
 
 type NewsYearContentProps = {
   year: string;
@@ -28,10 +28,10 @@ const NewsYearContent = ({ year }: NewsYearContentProps) => {
     <>
       <Row justifyContent="space-between">
         <Row gap={12} style={{ width: "auto" }}>
-          <Link to={`/news/${year}/write`}>
+          <Link to="/news/$year/write" params={{ year: String(year) }}>
             <NewArticleButton>새 글쓰기</NewArticleButton>
           </Link>
-          <Link to={`/news/${year}/gallery`}>
+          <Link to="/news/$year/gallery" params={{ year: String(year) }}>
             <NewArticleButton>{year}년 갤러리 보기</NewArticleButton>
           </Link>
         </Row>
@@ -56,7 +56,7 @@ const NewsYearContent = ({ year }: NewsYearContentProps) => {
 };
 
 const NewsYear = () => {
-  const { year } = useParams<{ year: string }>();
+  const { year } = useParams({ strict: false });
 
   return (
     <FormContainer title={`지호지 관리 (${year}년)`}>

@@ -1,5 +1,5 @@
 import { ArrowLeft, ChevronRight, Film } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 import { RouterUrl } from "@/app/routers/router-url";
 import { useVideoJobs } from "@/features/video/hooks";

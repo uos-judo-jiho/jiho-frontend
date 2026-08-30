@@ -9,7 +9,7 @@ import {
   GetApiV2AdminUsers200UsersItemAdditionalInfo,
   GetApiV2AdminUsersUpgradeRequests200RequestsItem,
 } from "node_modules/@packages/api/src/_generated/v2/admin/model";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { getUserRole } from "../utils/get-user-role";
 

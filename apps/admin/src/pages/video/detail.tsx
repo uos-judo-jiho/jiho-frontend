@@ -11,11 +11,11 @@ import {
 import { HighlightLabelCard } from "@/features/video/ui/highlight-label-card";
 import { ArrowUpRightFromSquareIcon, Film } from "lucide-react";
 
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 export const VideoLabelingDetailPage = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams({ strict: false });
   const jobId = Number(id);
   const navigate = useNavigate();
   const isRoot = useIsRoot();
@@ -35,7 +35,7 @@ export const VideoLabelingDetailPage = () => {
       {
         onSuccess: () => {
           toast.success("영상을 삭제했어요.");
-          navigate(RouterUrl.영상.목록);
+          navigate({ to: RouterUrl.영상.목록 });
         },
         onError: () => toast.error("영상 삭제에 실패했어요."),
       },

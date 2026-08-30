@@ -14,7 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { Suspense, useCallback, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "@tanstack/react-router";
 import { match, P } from "ts-pattern";
 
 const StaffAndAbove = ["root", "president", "manager", "staff"];

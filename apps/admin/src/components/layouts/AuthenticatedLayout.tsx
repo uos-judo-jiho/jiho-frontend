@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "@tanstack/react-router";
 
 import { RouterUrl } from "@/app/routers/router-url";
 import DefaultLayout from "./DefaultLayout";

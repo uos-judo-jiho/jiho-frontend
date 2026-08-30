@@ -3,7 +3,7 @@ import Col from "@/components/layouts/Col";
 import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
 import { v2Api } from "@packages/api";
 import { useQueries } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link } from "@tanstack/react-router";
 
 export const GalleryList = () => {
   const galleriesData = useQueries({
@@ -27,7 +27,8 @@ export const GalleryList = () => {
             if (!gallery) return null;
             return (
               <Link
-                to={`/news/${gallery.year}/gallery`}
+                to="/news/$year/gallery"
+                params={{ year: String(gallery.year) }}
                 key={gallery.year}
                 style={{ textDecoration: "none" }}
               >
