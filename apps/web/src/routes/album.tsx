@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AlbumPage } from "@/pages/album";
+import { AlbumPage } from "@/pages/album-page";
 
 import { seoHead } from "@/features/seo/head";
 import { v2Api } from "@packages/api";

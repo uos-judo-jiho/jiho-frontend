@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import NewsPage from "@/pages/News/News";
+import { NewsIndexPage } from "@/pages/news/news-index-page";
 
 import { createImageGalleryData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
-import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
+import { NEWS_PREVIEW_PER_YEAR, newsYearList } from "@/features/news";
 import { v2Api } from "@packages/api";
 
 const FALLBACK_DESCRIPTION = "서울시립대학교 유도부 지호지 - 뉴스 및 소식";
@@ -13,11 +13,11 @@ export const Route = createFileRoute("/news/")({
   loader: async ({ context }): Promise<Omit<SeoHeadOptions, "title">> => {
     try {
       const allNews = await Promise.all(
-        vaildNewsYearList()
+        newsYearList()
           .reverse()
           .map((year) =>
             context.queryClient.ensureQueryData(
-              v2Api.getGetApiV2NewsYearQueryOptions(Number(year), { limit: 2 }),
+              v2Api.getGetApiV2NewsYearQueryOptions(Number(year), { limit: NEWS_PREVIEW_PER_YEAR }),
             ),
           ),
       );
@@ -67,5 +67,5 @@ export const Route = createFileRoute("/news/")({
       pathname: "/news",
       ...loaderData,
     }),
-  component: NewsPage,
+  component: NewsIndexPage,
 });

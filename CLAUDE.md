@@ -67,12 +67,68 @@ jiho-frontend/
 - Per-route `head()` with `seoHead()` replaces the old MyHelmet/StructuredData components.
 - Sitemap generated at build time by `script/sitemap.js` into `public/`.
 
+### Source layout (layered)
+
+`src/` is layered; **imports may only point downward**. Nothing imports from a
+layer above it, and nothing imports sideways within `features/` except through a
+feature's `index.ts` barrel.
+
+```
+routes/     TanStack file routes — loader (prefetch + SEO) + head() + component
+pages/      one composition per route; owns nothing but arrangement
+widgets/    cross-page composite blocks (site-header, site-nav, site-footer,
+            page-shell, home/*)
+features/   domain slices — news, training, notice, award, content, seo, legal
+            each: model/ (hooks, pure logic) + ui/ (domain components) + index.ts
+shared/     ui/ (design-system primitives + primitives/ = shadcn), lib/ (cn,
+            format, types), hooks/, config/, assets/
+app/        styles only (tokens, base, utilities, index.css)
+```
+
+`features/content` holds what 지호지 기사 / 훈련일지 / 공지 have in common
+(`ContentItem`), so cards, meta lines, and the detail view are shared. Split a
+domain out of it only when its shape genuinely diverges.
+
+### Design system
+
+**All** colors, type sizes, spacing, radii, shadows, and easings live in
+`src/app/styles/tokens.css` as `--jd-*` raw tokens. `src/app/index.css` maps them
+through `@theme` into Tailwind utilities (`text-ink`, `bg-surface`,
+`border-line`, `text-heading`, `px-gutter`, `ease-brand`, …).
+
+- Components use **only** those utilities — no hex values, no inline `style`
+  colors, no px font sizes. Need a new value? Add a token.
+- Type sizes are `clamp()`-based, so there is no mobile/desktop size branching.
+- A shadcn compatibility block maps `--color-background`/`--color-primary`/etc.
+  onto the same tokens, so `shared/ui/primitives/*` follow the palette for free.
+- Dark tokens exist under `.dark` but nothing toggles it — the structure is there
+  if a toggle is ever added.
+- Repeated compositions that tokens can't express are `.jd-*` classes in
+  `styles/utilities.css` (`jd-container`, `jd-scrim`, `jd-stretch-link`,
+  `jd-clamp-2`, `jd-eyebrow`, `jd-keep-all`).
+
+Fonts: Pretendard Variable (dynamic subset) is loaded via `<link>` in
+`__root.tsx`, not a CSS `@import` — an `@import` chains requests serially.
+
 ### Conventions
 
 - Path alias `@/*` → `apps/web/src/*`
-- API pattern: use `v2Api.get...QueryOptions` in loaders, `use...Suspense` hooks in components
-- Dynamic links: `<Link to="/photo/$id" params={{ id }}>`; generic components that accept arbitrary path strings cast with `as LinkProps["to"]`
-- TypeScript strict mode; `pnpm type-check:web` must pass (requires `pnpm orval` first)
+- API pattern: use `v2Api.get...QueryOptions` in loaders, `use...Suspense` hooks
+  in components. A route's loader must prefetch **every** query its page renders,
+  with identical arguments — a mismatched `limit` silently reintroduces an SSR
+  waterfall. `__root.tsx` prefetches latest-news because the header and footer
+  need it on every page.
+- Internal navigation always uses `<Link>` (never `<a href>`, which bypasses the
+  router and forces a full reload). Build links with `linkOptions()` so routes and
+  params are checked at compile time.
+- Overlays (drawer, lightbox) go through `shared/ui/overlay.tsx`, which handles
+  portal + focus trap + Esc + outside-click + body scroll lock, and unmounts when
+  closed so its links leave the tab order.
+- Responsive differences are expressed in CSS, not by branching on
+  `window.innerWidth` — JS branching causes hydration shift and ships both trees.
+- React 18 here: `fetchPriority` must be passed as lowercase `fetchpriority`.
+- TypeScript strict mode; `pnpm type-check:web` and `pnpm lint:web` must pass
+  (both require `pnpm orval` first)
 
 ## Deployment
 
@@ -94,4 +150,5 @@ Release notes are published per app, automatically:
 - `packages/api/src/_generated` is gitignored; builds and type-checks need `pnpm orval` (network access to the backend spec) first.
 - `src/routeTree.gen.ts` is auto-generated on dev/build by the Start plugin.
 - Query cache holds `AxiosResponse` objects; dehydration sanitizes them via `serializeData: JSON.parse(JSON.stringify(...))` in `src/router.tsx` — keep this when touching router setup, or SSR payload serialization breaks silently.
-- Mobile-first responsive design with custom breakpoints (`xs: 340px, sm: 560px, md: 860px, lg: 1200px`).
+- Mobile-first responsive design with custom breakpoints (`xs: 340px, sm: 560px, md: 860px, lg: 1200px`), declared in the `@theme` block of `src/app/index.css`.
+- `pnpm orval` needs network access to `https://api.uosjudo.com`. Without it `_generated` is missing and both type-check and build fail — there is no committed fallback.
