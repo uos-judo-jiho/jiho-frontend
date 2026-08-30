@@ -1,4 +1,5 @@
 import NewsForm from "@/components/admin/form/NewsForm";
+import { ReactionStatus } from "@/features/reaction";
 import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { v2Api } from "@packages/api";
 import { useMemo } from "react";
@@ -27,7 +28,12 @@ const NewsDetail = () => {
 
   if (!article) return null;
 
-  return <NewsForm data={article} />;
+  return (
+    <div className="flex flex-col gap-4">
+      <ReactionStatus boardId={Number(article.id)} />
+      <NewsForm data={article} />
+    </div>
+  );
 };
 
 export default NewsDetail;

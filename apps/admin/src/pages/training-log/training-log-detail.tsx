@@ -1,4 +1,5 @@
 import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
+import { ReactionStatus } from "@/features/reaction";
 import { v2Api } from "@packages/api";
 import { assert } from "es-toolkit";
 import { useParams } from "@tanstack/react-router";
@@ -17,5 +18,10 @@ export const TrainingLogDetail = () => {
     },
   );
 
-  return <TrainingLogForm data={trainingLog} />;
+  return (
+    <div className="flex flex-col gap-4">
+      <ReactionStatus boardId={Number(id)} />
+      <TrainingLogForm data={trainingLog} />
+    </div>
+  );
 };

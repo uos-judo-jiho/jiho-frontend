@@ -33,15 +33,16 @@ const baseQueryOptions = {
 //   - `useMutation: true` on an all-GET spec forces every GET into a mutation
 //     → no `*QueryOptions`/suspense hooks ("(void 0) is not a function").
 //
-// v2Api is entirely read-only GET endpoints, so we force queries only.
+// v2Api used to be entirely read-only, so it forced `useQuery: true`. The
+// 게시글 반응(좋아요) API added PUT/DELETE to this spec, and that flag would drag
+// them into query hooks too — so both flags are now left unset here as well and
+// orval decides per HTTP method.
+//
+// v2Admin is mixed (GET + write endpoints) and has always relied on that.
 const apiQueryOptions: QueryOptions = {
   ...baseQueryOptions,
-  useQuery: true,
-  useMutation: false,
 };
 
-// v2Admin is mixed (GET + write endpoints). Leave useQuery/useMutation unset so
-// orval decides per HTTP method: GET → query/suspense, POST/PUT/DELETE → mutation.
 const adminQueryOptions: QueryOptions = {
   ...baseQueryOptions,
 };

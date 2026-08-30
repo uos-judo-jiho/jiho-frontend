@@ -2,6 +2,7 @@ import { v2Api } from "@packages/api";
 import { Link, Navigate, getRouteApi, linkOptions } from "@tanstack/react-router";
 
 import { ContentMeta } from "@/features/content";
+import { LikeButton } from "@/features/reaction";
 import { Markdown } from "@/shared/ui/markdown";
 import { Tag } from "@/shared/ui/tag";
 import { PageShell } from "@/widgets/page-shell";
@@ -39,6 +40,10 @@ export const NoticeDetailPage = () => {
         </header>
 
         <Markdown content={notice.description} />
+
+        <div className="flex justify-center">
+          <LikeButton boardId={Number(notice.id)} />
+        </div>
 
         <footer className="border-t border-line pt-6">
           <Link

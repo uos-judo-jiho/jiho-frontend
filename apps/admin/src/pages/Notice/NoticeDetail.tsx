@@ -1,4 +1,5 @@
 import NoticeForm from "@/components/admin/form/NoticeForm";
+import { ReactionStatus } from "@/features/reaction";
 import { v2Api } from "@packages/api";
 import { useParams } from "@tanstack/react-router";
 
@@ -18,5 +19,10 @@ export const NoticeDetail = () => {
 
   const noticeData = { ...rest, imgSrcs: images.map((v) => v) ?? [] };
 
-  return <NoticeForm data={noticeData} />;
+  return (
+    <div className="flex flex-col gap-4">
+      <ReactionStatus boardId={data.id} />
+      <NoticeForm data={noticeData} />
+    </div>
+  );
 };

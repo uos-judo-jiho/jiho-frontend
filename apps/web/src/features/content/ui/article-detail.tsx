@@ -1,5 +1,7 @@
 import { Link, type LinkOptions } from "@tanstack/react-router";
 
+import { LikeButton } from "@/features/reaction";
+
 import type { ContentItem } from "@/shared/lib/types/content";
 import { formatDate } from "@/shared/lib/format";
 import { cn } from "@/shared/lib/utils";
@@ -79,6 +81,11 @@ export const ArticleDetail = ({
 
     <div>
       <Markdown content={item.description} />
+    </div>
+
+    {/* 본문을 다 읽은 자리에 둔다 — 게시글의 board.id 가 곧 반응의 대상이다 */}
+    <div className="flex justify-center pt-2">
+      <LikeButton boardId={Number(item.id)} />
     </div>
 
     {(prev || next || position) && (
