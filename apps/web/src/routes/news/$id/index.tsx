@@ -1,10 +1,10 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
-import NewsYear from "@/pages/News/NewsYear";
+import { NewsYearPage } from "@/pages/news/news-year-page";
 
 import { createImageGalleryData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
-import { vaildNewsYearList } from "@/shared/lib/utils/Utils";
+import { newsYearList } from "@/features/news";
 import { v2Api } from "@packages/api";
 
 export const Route = createFileRoute("/news/$id/")({
@@ -14,7 +14,7 @@ export const Route = createFileRoute("/news/$id/")({
   }): Promise<Omit<SeoHeadOptions, "title">> => {
     const { id } = params;
 
-    if (!vaildNewsYearList().includes(id)) {
+    if (!newsYearList().includes(id)) {
       throw notFound();
     }
 
@@ -68,5 +68,5 @@ export const Route = createFileRoute("/news/$id/")({
       pathname: `/news/${params.id}`,
       ...loaderData,
     }),
-  component: NewsYear,
+  component: NewsYearPage,
 });

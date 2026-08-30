@@ -39,4 +39,12 @@
     <loc>https://uosjudo.com/notice</loc>
 <priority>0.6</priority>
   </url>
+ <url>
+    <loc>https://uosjudo.com/terms</loc>
+<priority>0.3</priority>
+  </url>
+ <url>
+    <loc>https://uosjudo.com/privacy</loc>
+<priority>0.3</priority>
+  </url>
 </urlset>

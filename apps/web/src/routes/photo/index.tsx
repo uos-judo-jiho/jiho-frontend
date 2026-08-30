@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import Photo from "@/pages/Photo/Photo";
+import { TrainingIndexPage } from "@/pages/training/training-index-page";
 
 import { createImageGalleryData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
@@ -57,5 +57,5 @@ export const Route = createFileRoute("/photo/")({
       pathname: "/photo",
       ...loaderData,
     }),
-  component: Photo,
+  component: TrainingIndexPage,
 });

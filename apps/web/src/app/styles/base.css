@@ -1,0 +1,108 @@
+/**
+ * 기본 요소 스타일. 토큰(tokens.css)에만 의존한다.
+ * Tailwind Preflight 가 이미 마진/박스사이징을 정리하므로 옛 reset 은 걷어냈고,
+ * 여기에는 "이 사이트의 기본값"에 해당하는 것만 남긴다.
+ */
+
+@layer base {
+  html {
+    /* 앵커 이동 시 고정 헤더에 가려지지 않도록 */
+    scroll-padding-top: calc(var(--jd-header-h) + 1rem);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--jd-paper);
+    color: var(--jd-ink);
+    font-family: var(--jd-font-sans);
+    font-size: var(--jd-text-body);
+    line-height: var(--jd-leading-body);
+    letter-spacing: var(--jd-tracking-body);
+    font-feature-settings: "ss01", "tnum" 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* 한글은 어절 단위로 줄바꿈해야 읽힌다 */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  li,
+  dt,
+  dd,
+  figcaption,
+  blockquote {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+    line-height: var(--jd-leading-heading);
+    letter-spacing: var(--jd-tracking-heading);
+    text-wrap: balance;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /* 숫자는 표·목록에서 자릿수가 흔들리지 않게 고정폭으로 */
+  time,
+  [data-numeric] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* 마우스 클릭에는 링이 뜨지 않고 키보드 탐색에만 뜬다 */
+  :focus-visible {
+    outline: 2px solid var(--jd-focus);
+    outline-offset: 2px;
+    border-radius: var(--jd-radius-xs);
+  }
+
+  ::selection {
+    background-color: var(--jd-accent-soft);
+    color: var(--jd-ink-strong);
+  }
+
+  /* 드로어·모달이 열렸을 때 배경 스크롤 잠금 */
+  body[data-scroll-locked="true"] {
+    overflow: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

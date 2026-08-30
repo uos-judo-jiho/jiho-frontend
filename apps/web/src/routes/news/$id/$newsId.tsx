@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import NewsDetailPage from "@/pages/News/NewsDetailPage";
+import { NewsDetailPage } from "@/pages/news/news-detail-page";
 
 import { createArticleData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";

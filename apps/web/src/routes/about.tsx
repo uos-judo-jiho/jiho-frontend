@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import About from "@/pages/About";
+import { AboutPage } from "@/pages/about-page";
 
 import { seoHead } from "@/features/seo/head";
 import { v2Api } from "@packages/api";
@@ -20,5 +20,5 @@ export const Route = createFileRoute("/about")({
       title: "About",
       pathname: "/about",
     }),
-  component: About,
+  component: AboutPage,
 });

@@ -15,6 +15,7 @@
     "build:vite": "vite build",
     "build:docker": "npm run clean && sh script/docker-build-local.sh",
     "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",
+    "lint:fix": "oxlint src -c ../../.oxlintrc.json --fix",
     "orval": "pnpm --filter @packages/api gen",
     "preview": "vite preview",
     "start": "node .output/server/index.mjs",

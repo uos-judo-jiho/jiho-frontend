@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import Home from "@/pages/Home";
+import { HomePage } from "@/pages/home-page";
 
 import { createOrganizationData } from "@/features/seo";
 import { seoHead } from "@/features/seo/head";
 import BGImageWebp from "@/shared/lib/assets/images/background-img-group.webp";
-import { footerData } from "@/shared/lib/assets/data/footer";
+import { SITE } from "@/shared/config/site";
 import { v2Api } from "@packages/api";
 
 const CANONICAL_DOMAIN =
@@ -51,8 +51,8 @@ export const Route = createFileRoute("/")({
         addressLocality: "서울특별시",
         addressRegion: "동대문구",
         postalCode: "02504",
-        streetAddress: footerData.exercise.address,
-        extendedAddress: footerData.exercise.place,
+        streetAddress: SITE.practice.address,
+        extendedAddress: SITE.practice.place,
       },
       openingHours: [
         {
@@ -86,5 +86,5 @@ export const Route = createFileRoute("/")({
       structuredData,
     });
   },
-  component: Home,
+  component: HomePage,
 });
