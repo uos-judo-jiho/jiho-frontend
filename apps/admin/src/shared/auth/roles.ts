@@ -2,7 +2,9 @@ import { redirect } from "@tanstack/react-router";
 
 import type { Me } from "./ensure-me";
 
-export const StaffAndAbove = ["root", "president", "manager", "staff"];
+/** 임원 이상: 관리자, 회장, 운영진 */
+export const ManagerAndAbove = ["root", "president", "manager"];
+export const StaffAndAbove = [...ManagerAndAbove, "staff"];
 export const GeneralAndAbove = [...StaffAndAbove, "general"];
 export const VideoLabelingRoles = [...GeneralAndAbove, "graduate"];
 

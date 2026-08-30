@@ -1,6 +1,6 @@
 {
   "name": "@apps/admin",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "homepage": "https://admin.uosjudo.com",
   "type": "module",
@@ -12,6 +12,7 @@
     "clean": "rm -rf dist",
     "type-check": "tsc -p tsconfig.app.json --noEmit",
     "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",
+    "lint:fix": "oxlint src -c ../../.oxlintrc.json --fix",
     "test": "vitest",
     "test:ui": "vitest --ui"
   },
