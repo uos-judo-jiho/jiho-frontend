@@ -35,7 +35,7 @@ export const NavDrawer = ({ open, onClose, items }: NavDrawerProps) => (
       "motion-safe:animate-in motion-safe:slide-in-from-left motion-safe:duration-300",
     )}
   >
-    <div className="flex items-center justify-between border-b border-line px-5 py-4">
+    <div className="flex w-full items-center justify-between border-b border-line px-5 py-4">
       <Link to="/" onClick={onClose} className="flex items-center gap-2.5">
         <Logo className="size-9" />
         <span className="text-subheading text-ink-strong">지호</span>
@@ -58,7 +58,7 @@ export const NavDrawer = ({ open, onClose, items }: NavDrawerProps) => (
       </ul>
     </nav>
 
-    <div className="border-t border-line px-5 py-4">
+    <div className="w-full border-t border-line px-5 py-4">
       <Link
         to="/login"
         onClick={onClose}
@@ -120,7 +120,7 @@ const DrawerItem = ({
           <span
             aria-hidden
             className={cn(
-              "text-caption transition-transform duration-200 ease-brand",
+              "text-caption transition-transform duration-200 ease-brand text-lg",
               expanded && "rotate-45",
             )}
           >

@@ -23,7 +23,7 @@ export const TrainingIndexPage = () => {
         <PageHeader
           eyebrow="Training"
           title="훈련일지"
-          description="정규 운동과 합숙, 대회 준비 과정을 사진으로 남깁니다."
+          description="정규 운동과 교류전 등 훈련기록을 남깁니다."
           action={
             <span data-numeric className="text-caption text-ink-subtle tabular-nums">
               총 {sorted.length}건

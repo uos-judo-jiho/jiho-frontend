@@ -30,7 +30,7 @@ export const NewsYearPage = () => {
           title={`${id}년`}
           description={`${id}년에 발행된 지호지 ${news.articles.length}편`}
           action={
-            <MoreLink link={linkOptions({ to: "/news" })}>
+            <MoreLink link={linkOptions({ to: "/news" })} tone="inverse">
               연도 전체 보기
             </MoreLink>
           }

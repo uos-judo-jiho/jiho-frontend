@@ -31,7 +31,6 @@ export const AlbumPage = () => {
         <PageHeader
           eyebrow="Album"
           title="지호 앨범"
-          description="지호지에 실린 사진을 연도별로 모아 봅니다."
           action={
             <span
               data-numeric

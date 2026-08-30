@@ -39,8 +39,8 @@ export const ArticleDetail = ({
   position,
   className,
 }: ArticleDetailProps) => (
-  <article className={cn("flex flex-col gap-10", className)}>
-    <header className="flex flex-col gap-5 border-b border-line-strong pb-8">
+  <article className={cn("flex flex-col gap-4", className)}>
+    <header className="flex flex-col gap-5 border-b border-line-strong pb-4">
       <h1 className="text-title text-ink-strong">{item.title}</h1>
 
       <dl className="flex flex-wrap items-center gap-x-6 gap-y-2 text-caption">
@@ -57,7 +57,7 @@ export const ArticleDetail = ({
           </div>
         )}
         {item.tags.length > 0 && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-start gap-2">
             <dt className="text-ink-faint">{tagsLabel}</dt>
             <dd>
               <ul className="flex flex-wrap gap-1.5">
@@ -77,7 +77,7 @@ export const ArticleDetail = ({
       <MediaCarousel items={item.images} label={item.title} />
     )}
 
-    <div className="jd-prose-width">
+    <div>
       <Markdown content={item.description} />
     </div>
 

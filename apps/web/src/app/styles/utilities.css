@@ -9,11 +9,6 @@
     padding-inline: var(--jd-gutter);
   }
 
-  /* 긴 글의 가독 폭 (한글 기준 약 40자) */
-  .jd-prose-width {
-    max-width: 42rem;
-  }
-
   /* 섹션 제목 위에 붙는 작은 라벨 */
   .jd-eyebrow {
     font-size: var(--jd-text-micro);
