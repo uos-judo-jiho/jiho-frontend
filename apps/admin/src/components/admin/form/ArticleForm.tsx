@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { toBase64 } from "@/shared/lib/utils/Utils";
 import { toast } from "sonner";
 import MarkdownEditorField from "./MarkdownEditor/MarkdownEditorField";
+import { getArticlePermission } from "./lib/article-permission";
 
 type ArticleFormProps = {
   data?: ArticleInfoType;
@@ -48,25 +49,16 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
     },
   });
 
-  const userRole = meData.user.role;
-  const StaffAndAbove = ["root", "president", "manager", "staff"];
-  const GeneralAndAbove = [...StaffAndAbove, "general"];
-
-  const isRootOrPresident = ["root", "president"].includes(userRole);
-  const myName = meData.user.additionalInfo?.name;
-
-  // Root/President는 모든 글 수정 가능, 그 외에는 본인이 작성한 글(이름 포함)만 수정 가능
-  const isAuthor = !data || (myName && data.author.includes(myName));
-
-  const roleCanEditType =
-    type === "training" || type === "news"
-      ? GeneralAndAbove.includes(userRole)
-      : StaffAndAbove.includes(userRole);
-
-  // Permission logic
-  const canEdit = roleCanEditType && (isRootOrPresident || isAuthor);
+  const { canEdit, canEditAuthor } = getArticlePermission({
+    type,
+    role: meData.user.role,
+    myName: meData.user.additionalInfo?.name,
+    articleAuthor: data?.author,
+  });
 
   const readOnly = !canEdit;
+  // 지호지에서 임원 미만 등급은 작성자가 본인으로 고정된다.
+  const isAuthorFixed = !canEditAuthor;
 
   const getHeaderInfo = () => {
     const isEdit = !!data;
@@ -266,6 +258,10 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
   };
 
   const handleAuthorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (isAuthorFixed) {
+      return;
+    }
+
     setValues((prev) => {
       return { ...prev, author: event.target.value };
     });
@@ -386,6 +382,13 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                 </StyledLabel>
                 <Input
                   disabled={readOnly || gallery}
+                  readOnly={isAuthorFixed}
+                  aria-readonly={isAuthorFixed}
+                  className={
+                    isAuthorFixed && !readOnly
+                      ? "bg-gray-100 cursor-not-allowed focus-visible:ring-0"
+                      : undefined
+                  }
                   id="author"
                   type="text"
                   name="author"
@@ -394,6 +397,12 @@ function ArticleForm({ data, type, gallery }: ArticleFormProps) {
                   required
                   value={values.author}
                 />
+                {isAuthorFixed && !readOnly && (
+                  <small className="text-gray-500">
+                    회원 등급은 본인 명의의 지호지만 작성할 수 있어요. 작성자
+                    변경이 필요하면 운영진에게 문의해주세요.
+                  </small>
+                )}
               </InputContainer>
               <InputContainer>
                 <StyledLabel htmlFor="title" aria-required="true">
