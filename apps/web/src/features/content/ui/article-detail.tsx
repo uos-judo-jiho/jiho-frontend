@@ -46,12 +46,12 @@ export const ArticleDetail = ({
       <h1 className="text-title text-ink-strong">{item.title}</h1>
 
       <dl className="flex flex-wrap items-center gap-x-6 gap-y-2 text-caption">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-start gap-2">
           <dt className="text-ink-faint">작성자</dt>
           <dd className="font-medium text-ink">{item.author}</dd>
         </div>
         {item.dateTime && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-start gap-2">
             <dt className="text-ink-faint">작성일</dt>
             <dd className="font-medium text-ink">
               <time dateTime={item.dateTime}>{formatDate(item.dateTime)}</time>
