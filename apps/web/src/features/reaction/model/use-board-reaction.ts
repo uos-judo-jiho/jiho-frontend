@@ -3,6 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { useCallback, useMemo } from "react";
 
+import { openConfirmDialog } from "@/shared/ui/confirm-dialog";
+
 import type { ReactionSummary, ReactionType } from "./types";
 
 const EMPTY_SUMMARY: ReactionSummary = { count: 0, reacted: false };
@@ -66,8 +68,11 @@ export const useBoardReaction = (
   );
 
   /**
-   * 로그인이 필요한 요청에서 401 이 오면 로그인 화면으로 보낸다.
-   * 웹에는 별도의 인증 상태 저장소가 없어서, 누르기 전에 로그인 여부를 알 수 없다.
+   * 로그인이 필요한 요청에서 401 이 오면 안내 모달을 띄운다.
+   * 웹에는 별도의 인증 상태 저장소가 없어서 누르기 전에 로그인 여부를 알 수 없고,
+   * 그래서 401 은 "잘못된 요청"이 아니라 "비회원이 눌렀다"는 신호다. 곧바로
+   * 로그인 화면으로 튕기면 읽던 글에서 예고 없이 밀려나므로, 먼저 이유를 알리고
+   * 사용자가 고르게 한다. 닫으면 보던 글에 그대로 남는다.
    */
   const handleError = useCallback(
     (error: unknown) => {
@@ -77,12 +82,23 @@ export const useBoardReaction = (
       const status = (error as { response?: { status?: number } })?.response
         ?.status;
 
-      if (status === 401) {
+      if (status !== 401) return;
+
+      void openConfirmDialog({
+        title: "로그인이 필요해요",
+        description:
+          "로그인 후 게시글에 좋아요를 눌러주세요.",
+        confirmLabel: "로그인하기",
+        cancelLabel: "닫기",
+      }).then((confirmed) => {
+        if (!confirmed) return;
+
         navigate({
           to: "/login",
+          // 로그인 뒤 누르던 글로 돌아온다
           search: { redirectTo: encodeURIComponent(currentHref) },
         });
-      }
+      });
     },
     [navigate, currentHref, queryClient, queryKey],
   );

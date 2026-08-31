@@ -13,7 +13,7 @@ type LikeButtonProps = {
  * 게시글 좋아요 버튼.
  *
  * 로그인하지 않은 사용자에게도 그대로 보여 주고, 누르는 순간 401 을 받으면
- * 로그인 화면으로 보낸다 (`useBoardReaction`). 웹에는 인증 상태 저장소가 없어
+ * 로그인 안내 모달을 띄운다 (`useBoardReaction`). 웹에는 인증 상태 저장소가 없어
  * 미리 숨기거나 비활성화할 방법이 없고, 숨기면 좋아요 수까지 사라진다.
  */
 export const LikeButton = ({ boardId, className }: LikeButtonProps) => {

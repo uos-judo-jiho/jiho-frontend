@@ -1,3 +1,4 @@
+export { ConfirmDialog, openConfirmDialog } from "./confirm-dialog";
 export { Container } from "./container";
 export { EmptyState } from "./empty-state";
 export { Image } from "./image";

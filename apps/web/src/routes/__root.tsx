@@ -2,8 +2,10 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
   HeadContent,
+  Outlet,
   Scripts,
 } from "@tanstack/react-router";
+import { OverlayProvider } from "overlay-kit";
 
 import { NotFoundPage } from "@/pages/not-found-page";
 import { v2Api } from "@packages/api";
@@ -135,8 +137,22 @@ gtag("config", "G-TLK4ZTXFH0");`,
     ],
   }),
   notFoundComponent: NotFoundPage,
+  component: RootComponent,
   shellComponent: RootDocument,
 });
+
+/**
+ * overlay-kit 프로바이더를 라우터 트리 안쪽에 둔다 — 여기서 열린 모달도
+ * `<Link>` 나 `useNavigate` 같은 라우터 훅을 그대로 쓸 수 있다.
+ * 서버 렌더에서는 열린 오버레이가 없으므로 children 만 그대로 통과한다.
+ */
+function RootComponent() {
+  return (
+    <OverlayProvider>
+      <Outlet />
+    </OverlayProvider>
+  );
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
