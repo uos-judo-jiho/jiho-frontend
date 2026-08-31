@@ -1,5 +1,7 @@
 import { Link, type LinkOptions } from "@tanstack/react-router";
 
+import { LikeButton } from "@/features/reaction";
+
 import type { ContentItem } from "@/shared/lib/types/content";
 import { formatDate } from "@/shared/lib/format";
 import { cn } from "@/shared/lib/utils";
@@ -44,12 +46,12 @@ export const ArticleDetail = ({
       <h1 className="text-title text-ink-strong">{item.title}</h1>
 
       <dl className="flex flex-wrap items-center gap-x-6 gap-y-2 text-caption">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-col items-start gap-2">
           <dt className="text-ink-faint">작성자</dt>
           <dd className="font-medium text-ink">{item.author}</dd>
         </div>
         {item.dateTime && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col items-start gap-2">
             <dt className="text-ink-faint">작성일</dt>
             <dd className="font-medium text-ink">
               <time dateTime={item.dateTime}>{formatDate(item.dateTime)}</time>
@@ -79,6 +81,11 @@ export const ArticleDetail = ({
 
     <div>
       <Markdown content={item.description} />
+    </div>
+
+    {/* 본문을 다 읽은 자리에 둔다 — 게시글의 board.id 가 곧 반응의 대상이다 */}
+    <div className="flex justify-center pt-2">
+      <LikeButton boardId={Number(item.id)} />
     </div>
 
     {(prev || next || position) && (

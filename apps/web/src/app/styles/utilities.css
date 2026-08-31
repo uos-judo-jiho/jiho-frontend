@@ -112,12 +112,48 @@
     }
   }
 
+  /* 좋아요를 누르는 순간 하트가 한 번 눌렸다 튀어오른다 */
+  @keyframes jd-heart-pop {
+    0% {
+      transform: scale(1);
+    }
+    30% {
+      transform: scale(0.82);
+    }
+    60% {
+      transform: scale(1.22);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* 하트에서 퍼져 나가는 링 */
+  @keyframes jd-heart-burst {
+    from {
+      opacity: 0.6;
+      transform: scale(0.7);
+    }
+    to {
+      opacity: 0;
+      transform: scale(2);
+    }
+  }
+
   .animate-shimmer {
     animation: jd-shimmer 1.6s var(--jd-ease-in-out) infinite;
   }
 
   .animate-fade-up {
     animation: jd-fade-up var(--jd-duration-slow) var(--jd-ease) both;
+  }
+
+  .animate-heart-pop {
+    animation: jd-heart-pop var(--jd-duration-slow) var(--jd-ease);
+  }
+
+  .animate-heart-burst {
+    animation: jd-heart-burst var(--jd-duration-slow) var(--jd-ease) forwards;
   }
 
   /* 스크롤바를 숨기되 스크롤은 유지 */

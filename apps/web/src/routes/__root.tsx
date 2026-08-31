@@ -2,8 +2,10 @@ import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
   HeadContent,
+  Outlet,
   Scripts,
 } from "@tanstack/react-router";
+import { OverlayProvider } from "overlay-kit";
 
 import { NotFoundPage } from "@/pages/not-found-page";
 import { v2Api } from "@packages/api";
@@ -64,10 +66,26 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css",
       },
       { hrefLang: "ko-KR", rel: "alternate", href: "http://uosjudo.com" },
-      { rel: "apple-touch-icon", sizes: "57x57", href: "/apple-icon-57x57.png" },
-      { rel: "apple-touch-icon", sizes: "60x60", href: "/apple-icon-60x60.png" },
-      { rel: "apple-touch-icon", sizes: "72x72", href: "/apple-icon-72x72.png" },
-      { rel: "apple-touch-icon", sizes: "76x76", href: "/apple-icon-76x76.png" },
+      {
+        rel: "apple-touch-icon",
+        sizes: "57x57",
+        href: "/apple-icon-57x57.png",
+      },
+      {
+        rel: "apple-touch-icon",
+        sizes: "60x60",
+        href: "/apple-icon-60x60.png",
+      },
+      {
+        rel: "apple-touch-icon",
+        sizes: "72x72",
+        href: "/apple-icon-72x72.png",
+      },
+      {
+        rel: "apple-touch-icon",
+        sizes: "76x76",
+        href: "/apple-icon-76x76.png",
+      },
       {
         rel: "apple-touch-icon",
         sizes: "114x114",
@@ -135,8 +153,22 @@ gtag("config", "G-TLK4ZTXFH0");`,
     ],
   }),
   notFoundComponent: NotFoundPage,
+  component: RootComponent,
   shellComponent: RootDocument,
 });
+
+/**
+ * overlay-kit 프로바이더를 라우터 트리 안쪽에 둔다 — 여기서 열린 모달도
+ * `<Link>` 나 `useNavigate` 같은 라우터 훅을 그대로 쓸 수 있다.
+ * 서버 렌더에서는 열린 오버레이가 없으므로 children 만 그대로 통과한다.
+ */
+function RootComponent() {
+  return (
+    <OverlayProvider>
+      <Outlet />
+    </OverlayProvider>
+  );
+}
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (

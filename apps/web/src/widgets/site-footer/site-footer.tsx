@@ -1,6 +1,7 @@
 import { Link, linkOptions, type LinkOptions } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
+import { AuthLink } from "@/features/auth";
 import { useLatestNews } from "@/features/news";
 import { SITE } from "@/shared/config/site";
 import { InstagramIcon } from "@/shared/ui/icons";
@@ -95,9 +96,7 @@ export const SiteFooter = () => {
           >
             사이트맵
           </a>
-          <FooterLink link={linkOptions({ to: "/login" })} muted>
-            로그인
-          </FooterLink>
+          <AuthLink className="transition-colors hover:text-ink-muted" />
           <span className="ml-auto">
             © {new Date().getFullYear()} {SITE.name}
           </span>

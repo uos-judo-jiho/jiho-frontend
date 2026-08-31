@@ -13,6 +13,12 @@ export const SITE = {
   since: "Since 1985",
   foundingYear: "1985",
   url: "https://uosjudo.com",
+  /**
+   * 회원 가입·글 작성은 관리자 사이트가 맡는다. 웹에는 가입 화면이 없어서
+   * 로그인 화면에서 이쪽으로 넘겨준다.
+   */
+  adminUrl: "https://admin.uosjudo.com",
+  registerUrl: "https://admin.uosjudo.com/register",
   instagram: {
     handle: "@uos_judo",
     url: "https://www.instagram.com/uos_judo/",

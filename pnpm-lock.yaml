@@ -425,6 +425,9 @@ importers:
       lucide-react:
         specifier: ^0.477.0
         version: 0.477.0(react@18.3.1)
+      overlay-kit:
+        specifier: ^1.9.0
+        version: 1.9.0(react@18.3.1)
       postcss:
         specifier: ^8.5.1
         version: 8.5.16

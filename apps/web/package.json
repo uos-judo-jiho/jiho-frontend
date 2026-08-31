@@ -1,6 +1,6 @@
 {
   "name": "@apps/web",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "type": "module",
   "homepage": "https://uosjudo.com",
@@ -44,6 +44,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.477.0",
+    "overlay-kit": "^1.9.0",
     "postcss": "^8.5.1",
     "react": "catalog:",
     "react-dom": "catalog:",
