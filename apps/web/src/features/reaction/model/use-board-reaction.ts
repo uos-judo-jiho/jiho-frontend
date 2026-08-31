@@ -31,7 +31,9 @@ export const useBoardReaction = (
 ) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const currentHref = useRouterState({ select: (state) => state.location.href });
+  const currentHref = useRouterState({
+    select: (state) => state.location.href,
+  });
 
   // 매 렌더마다 새 배열이 나오므로 아래 콜백들의 의존성이 흔들리지 않게 고정한다
   const queryKey = useMemo(
@@ -86,8 +88,7 @@ export const useBoardReaction = (
 
       void openConfirmDialog({
         title: "로그인이 필요해요",
-        description:
-          "로그인 후 게시글에 좋아요를 눌러주세요.",
+        description: "로그인 후 게시글에 좋아요를 눌러주세요.",
         confirmLabel: "로그인하기",
         cancelLabel: "닫기",
       }).then((confirmed) => {
@@ -95,8 +96,9 @@ export const useBoardReaction = (
 
         navigate({
           to: "/login",
-          // 로그인 뒤 누르던 글로 돌아온다
-          search: { redirectTo: encodeURIComponent(currentHref) },
+          // 로그인 뒤 누르던 글로 돌아온다.
+          // 라우터가 검색 파라미터를 알아서 인코딩하므로 여기서 또 감싸지 않는다.
+          search: { redirectTo: currentHref },
         });
       });
     },

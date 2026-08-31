@@ -1,6 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 
+import { AuthLink } from "@/features/auth";
 import { SITE } from "@/shared/config/site";
 import { cn } from "@/shared/lib/utils";
 import { CloseIcon } from "@/shared/ui/icons";
@@ -59,13 +60,10 @@ export const NavDrawer = ({ open, onClose, items }: NavDrawerProps) => (
     </nav>
 
     <div className="w-full border-t border-line px-5 py-4">
-      <Link
-        to="/login"
-        onClick={onClose}
-        className="text-caption text-ink-subtle transition-colors hover:text-ink"
-      >
-        로그인
-      </Link>
+      <AuthLink
+        className="text-caption text-ink-subtle transition-colors hover:text-ink disabled:opacity-60"
+        onNavigate={onClose}
+      />
       <p className="mt-2 text-micro text-ink-faint">{SITE.since}</p>
     </div>
   </Overlay>
