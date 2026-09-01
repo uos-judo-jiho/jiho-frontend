@@ -1,3 +1,4 @@
+import { openConfirmDialog } from "@/components/common/Modals";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { toBase64 } from "@/shared/lib/utils/Utils";
 import { v2Admin, v2Api } from "@packages/api";
@@ -61,8 +62,6 @@ export const useArticleForm = ({
   const [values, setValues] = useState<ArticleFormValues>(
     data ?? { ...EMPTY_VALUES, author: myAuthorString },
   );
-  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
@@ -181,6 +180,15 @@ export const useArticleForm = ({
   });
 
   const submit = async () => {
+    const confirmed = await openConfirmDialog({
+      title: isNew ? "작성한 글 저장" : "변경사항 저장",
+      description: `${isNew ? "작성한 글" : "변경사항"}을 저장하시겠습니까?`,
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -216,14 +224,21 @@ export const useArticleForm = ({
   };
 
   const remove = async () => {
+    const confirmed = await openConfirmDialog({
+      title: "게시물 삭제",
+      description: "게시물을 삭제할까요? 삭제한 뒤에는 되돌릴 수 없습니다.",
+      confirmText: "삭제",
+      destructive: true,
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
     try {
       const boardId = Number(data?.id);
       if (Number.isNaN(boardId)) {
         throw new Error("유효하지 않은 게시글 ID입니다.");
-      }
-
-      if (!window.confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
-        return;
       }
 
       await deleteBoardMutation.mutateAsync({ boardId });
@@ -243,10 +258,6 @@ export const useArticleForm = ({
     readOnly,
     isAuthorFixed,
     isSubmitting,
-    isSubmitOpen,
-    setIsSubmitOpen,
-    isDeleteOpen,
-    setIsDeleteOpen,
     setField,
     setAuthor,
     setTags,

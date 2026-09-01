@@ -6,7 +6,7 @@ import {
   FormContainer as SectionContainer,
   StyledInput,
 } from "@/components/admin/form/StyledComponent/FormContainer";
-import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
+import { openConfirmDialog } from "@/components/common/Modals";
 import Row from "@/components/layouts/Row";
 import {
   DndContext,
@@ -104,9 +104,6 @@ export const Awards = () => {
   const [isReorderMode, setIsReorderMode] = useState(false);
   const [orderedAwards, setOrderedAwards] = useState<AwardItem[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
 
   const {
     data: awards = [],
@@ -225,12 +222,19 @@ export const Awards = () => {
   const handleUpdate = async () => {
     if (editingAwardId === null) return;
 
+    const confirmed = await openConfirmDialog({
+      title: "수상이력 수정",
+      description: "수상이력을 수정할까요?",
+      confirmText: "수정",
+    });
+
+    if (!confirmed) return;
+
     try {
       await updateAwardMutation.mutateAsync({
         awardId: editingAwardId,
         data: editValues,
       });
-      setIsUpdateOpen(false);
       cancelEdit();
     } catch (error) {
       console.error(error);
@@ -238,21 +242,22 @@ export const Awards = () => {
     }
   };
 
-  const handleDelete = async () => {
-    if (pendingDeleteId === null) return;
+  const handleDelete = async (awardId: number) => {
+    const confirmed = await openConfirmDialog({
+      title: "수상이력 삭제",
+      description: "수상이력을 삭제할까요? 삭제한 뒤에는 되돌릴 수 없습니다.",
+      confirmText: "삭제",
+      destructive: true,
+    });
+
+    if (!confirmed) return;
 
     try {
-      await deleteAwardMutation.mutateAsync({ awardId: pendingDeleteId });
-      setPendingDeleteId(null);
+      await deleteAwardMutation.mutateAsync({ awardId });
     } catch (error) {
       console.error(error);
       toast.error("수상이력 삭제에 실패했습니다.");
     }
-  };
-
-  const openDeleteModal = (awardId: number) => {
-    setPendingDeleteId(awardId);
-    setIsDeleteOpen(true);
   };
 
   useEffect(() => {
@@ -301,9 +306,6 @@ export const Awards = () => {
                     setCreateValues(emptyForm);
                     setIsCreateOpen(false);
                     cancelEdit();
-                    setIsUpdateOpen(false);
-                    setIsDeleteOpen(false);
-                    setPendingDeleteId(null);
                     setOrderedAwards(awards);
                     setIsReorderMode(true);
                   }}
@@ -705,7 +707,7 @@ export const Awards = () => {
                                 <>
                                   <button
                                     className="text-blue-600 hover:underline"
-                                    onClick={() => setIsUpdateOpen(true)}
+                                    onClick={() => handleUpdate()}
                                   >
                                     저장
                                   </button>
@@ -726,7 +728,7 @@ export const Awards = () => {
                                   </button>
                                   <button
                                     className="text-rose-500 hover:underline"
-                                    onClick={() => openDeleteModal(award.id)}
+                                    onClick={() => handleDelete(award.id)}
                                   >
                                     삭제
                                   </button>
@@ -744,23 +746,6 @@ export const Awards = () => {
           )}
         </SectionContainer>
       </div>
-
-      <SubmitModal
-        confirmText="수정"
-        cancelText="취소"
-        description="수상이력을 수정할까요?"
-        open={isUpdateOpen}
-        setOpen={setIsUpdateOpen}
-        onSubmit={handleUpdate}
-      />
-      <SubmitModal
-        confirmText="삭제"
-        cancelText="취소"
-        description="수상이력을 삭제할까요?"
-        open={isDeleteOpen}
-        setOpen={setIsDeleteOpen}
-        onSubmit={handleDelete}
-      />
     </FormContainer>
   );
 };

@@ -1,4 +1,3 @@
-import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
 import Loading from "@/components/common/Skeletons/Loading";
 import { Badge } from "@/components/common/badge";
 import { PageHeader } from "@/components/layouts/PageHeader";
@@ -19,9 +18,10 @@ type ArticleFormLayoutProps = {
 };
 
 /**
- * 게시판별 폼이 공유하는 껍데기 — 헤더 / 액션 버튼 / 확인 모달 / 저장 오버레이.
+ * 게시판별 폼이 공유하는 껍데기 — 헤더 / 액션 버튼 / 저장 중 오버레이.
  *
  * 입력 필드 구성은 게시판마다 달라지므로 children 으로 통째로 받는다.
+ * 저장·삭제 확인은 useArticleForm 이 overlay-kit 으로 직접 띄우므로 여기에는 없다.
  */
 export const ArticleFormLayout = ({
   form,
@@ -47,7 +47,7 @@ export const ArticleFormLayout = ({
           className="mr-2"
           onClick={(event) => {
             event.preventDefault();
-            form.setIsDeleteOpen(true);
+            form.remove();
           }}
         >
           삭제
@@ -68,32 +68,13 @@ export const ArticleFormLayout = ({
           <Button
             variant="default"
             className="text-primary bg-blue-500 hover:bg-blue-600"
-            onClick={() => form.setIsSubmitOpen(true)}
+            onClick={() => form.submit()}
           >
             제출
           </Button>
         )}
       </div>
     </ButtonContainer>
-
-    <SubmitModal
-      confirmText="확인"
-      cancelText="취소"
-      description={`${!form.isNew ? "변경사항" : "작성한 글"}을 저장하시겠습니까?`}
-      open={form.isSubmitOpen}
-      setOpen={form.setIsSubmitOpen}
-      onSubmit={form.submit}
-    />
-    {!form.isNew && (
-      <SubmitModal
-        confirmText="삭제"
-        cancelText="취소"
-        description="게시물을 삭제할까요?"
-        open={form.isDeleteOpen}
-        setOpen={form.setIsDeleteOpen}
-        onSubmit={form.remove}
-      />
-    )}
 
     {form.isSubmitting && (
       <div className="fixed top-0 right-0 bottom-0 left-0 z-10 bg-black/60">
