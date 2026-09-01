@@ -1,0 +1,41 @@
+name: Lint PR Title
+
+# 이 저장소는 PR 을 squash 머지하므로 PR 제목이 곧 main 의 커밋 제목이고,
+# 릴리즈 노트(release-note.yml)는 그 제목의 스코프로 앱별 변경을 나눈다.
+#   type(scope[,scope...])[!]: subject
+# 허용 스코프는 apps/* · packages/* 디렉토리에서 자동으로 만들어진다.
+# (scripts/lib/commit-convention.mjs)
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+      # 새 커밋마다 체크가 생기도록(필수 체크는 head SHA 기준) 함께 돌린다.
+      - synchronize
+
+concurrency:
+  group: lint-pr-title-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # job 이름이 곧 브랜치 보호(필수 체크)의 context 다. 바꾸면 보호 규칙도 같이 고쳐야 한다.
+  lint-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Lint PR title
+        # 제목은 임의의 사용자 입력이므로 반드시 env 로 넘긴다. (셸 주입 방지)
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: node scripts/lint-pr-title.mjs

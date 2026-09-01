@@ -136,6 +136,19 @@ Multi-stage Dockerfile (`apps/web/Dockerfile`): install → `pnpm -C apps/web bu
 
 **Runtime env:** `NODE_ENV`, `PORT` (default 3000), `BACKEND_URL` (backend origin, `/api` suffix tolerated), `INTERNAL_API_TOKEN`, `ALLOWED_HOSTS`, `CANONICAL_DOMAIN`.
 
+## Commit / PR titles
+
+PRs are squash-merged, so the PR title becomes the commit on `main` and feeds the
+release notes. Titles must be `type(scope[,scope...])[!]: subject` with a
+**required** scope: an `apps/*` or `packages/*` directory name (`web`, `admin`,
+`internal`, `shorts`, `api`, `auth`, `jds`; full paths like `apps/web` also work,
+comma-separate multiple targets) or `*` for repo-wide changes.
+
+- Types and allowed scopes live in `scripts/lib/commit-convention.mjs` — scopes
+  are derived from the directory listing, so adding an app needs no rule change.
+- `.github/workflows/lint-pr-title.yml` enforces it on every PR
+  (`pnpm lint:pr-title -- --title "..."` locally).
+
 ## Releases
 
 Release notes are published per app, automatically:

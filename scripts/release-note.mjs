@@ -17,11 +17,15 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, appendFileSync } from "node:fs";
 import { join } from "node:path";
 
-/* ------------------------------------------------------------------ util */
+import {
+  COMMIT_TYPES,
+  HEADER_RE,
+  KNOWN_TYPES,
+  REPO_ROOT,
+  splitPullRequest,
+} from "./lib/commit-convention.mjs";
 
-const REPO_ROOT = execFileSync("git", ["rev-parse", "--show-toplevel"], {
-  encoding: "utf8",
-}).trim();
+/* ------------------------------------------------------------------ util */
 
 /** git 실행. allowFail 이면 실패 시 null 을 돌려준다. */
 function git(args, { allowFail = false } = {}) {
@@ -224,8 +228,6 @@ function classify(files, app) {
 
 /* ---------------------------------------------------- conventional parse */
 
-/** `type(scope)!: subject` */
-const HEADER_RE = /^(\w+)(?:\(([^)]*)\))?(!)?:\s*(.+)$/;
 /**
  * 본문 푸터의 `BREAKING CHANGE: ...`
  * 다음 푸터 키워드 / 빈 줄 / 본문 끝까지를 하나의 노트로 잡는다.
@@ -234,21 +236,8 @@ const HEADER_RE = /^(\w+)(?:\(([^)]*)\))?(!)?:\s*(.+)$/;
 const BREAKING_NOTE_RE =
   /^BREAKING[ -]CHANGES?:\s*([\s\S]*?)(?=\n[A-Z][\w-]*(?:[ -][\w-]+)*:\s|\n{2,}|(?![\s\S]))/gm;
 
-const TYPE_SECTIONS = [
-  ["feat", "🚀 새로운 기능"],
-  ["fix", "🐛 버그 수정"],
-  ["perf", "⚡ 성능 개선"],
-  ["refactor", "♻️ 리팩토링"],
-  ["style", "💄 스타일"],
-  ["docs", "📝 문서"],
-  ["test", "✅ 테스트"],
-  ["build", "📦 빌드 · 의존성"],
-  ["ci", "🔧 CI/CD"],
-  ["chore", "🧹 기타 작업"],
-  ["__uncategorized", "📌 그 외 변경"],
-];
-
-const KNOWN_TYPES = new Set(TYPE_SECTIONS.map(([type]) => type));
+/** 릴리즈 노트 섹션 = 컨벤션 타입 + 컨벤션을 안 지킨 커밋용 폴백. */
+const TYPE_SECTIONS = [...COMMIT_TYPES, ["__uncategorized", "📌 그 외 변경"]];
 
 function parseCommit(commit) {
   const header = HEADER_RE.exec(commit.subject.trim());
@@ -275,13 +264,6 @@ function resolveRepo(explicit) {
   const remote = git(["remote", "get-url", "origin"], { allowFail: true });
   const matched = remote && /github\.com[:/](.+?)(?:\.git)?$/.exec(remote);
   return matched ? matched[1] : null;
-}
-
-/** 제목 끝의 `(#123)` 를 떼어내 PR 번호로 분리한다. */
-function splitPullRequest(subject) {
-  const matched = /^(.*?)\s*\(#(\d+)\)\s*$/.exec(subject);
-  if (!matched) return { text: subject.trim(), pr: null };
-  return { text: matched[1].trim(), pr: matched[2] };
 }
 
 function renderCommitLine(commit, { repo, app, showScope }) {

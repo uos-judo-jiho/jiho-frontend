@@ -45,6 +45,39 @@ pnpm preview:admin
 
 `pnpm build` runs both apps so you get `apps/web/build` for the SSR bundle and `apps/admin/dist` for the static dashboard artifacts (useful for CDN/S3 uploads).
 
+## Commit / PR title convention
+
+PR 은 squash 머지하므로 **PR 제목이 곧 `main` 의 커밋 제목**이고, 릴리즈 노트는 그 제목을
+타입별로 묶는다. 그래서 PR 제목은 아래 형식을 강제한다.
+
+```
+type(scope[,scope...])[!]: subject
+```
+
+- **타입**: `feat` `fix` `perf` `refactor` `style` `docs` `test` `build` `ci` `chore`
+- **스코프(필수)**: `apps/*` · `packages/*` 디렉토리명 — `web` `admin` `internal` `shorts` /
+  `api` `auth` `jds`. 풀 경로(`apps/web`)도 되고, 여러 대상은 쉼표로 나열한다.
+  저장소 전체 공통 변경은 `*` 를 쓴다.
+- `!` 는 breaking change 표시. 상세 내용은 본문에 `BREAKING CHANGE:` 로 적는다.
+
+```
+feat(admin): 훈련일지 참여 인원 드롭다운
+feat(web,admin): 게시글 좋아요 UI
+refactor(api): orval 클라이언트 재생성
+ci(*): 릴리즈 노트 워크플로우 추가
+feat(web)!: 레거시 라우트 제거
+```
+
+허용 스코프 목록은 고정 값이 아니라 `apps/*` · `packages/*` 디렉토리에서 만들어지므로
+(`scripts/lib/commit-convention.mjs`), 앱이나 패키지를 추가해도 룰을 고칠 필요가 없다.
+
+[`lint-pr-title.yml`](.github/workflows/lint-pr-title.yml) 이 PR 열림/제목 수정/push 마다
+검사하고, 실패하면 Job Summary 에 무엇이 틀렸는지와 예시를 남긴다. 로컬에서도 확인할 수 있다.
+
+```bash
+pnpm lint:pr-title -- --title "feat(web): 제목"
+```
+
 ## Release notes
 
 릴리즈 노트는 앱별로 자동 발행된다. `apps/<app>/package.json` 의 `version` 을 올린 PR 이
