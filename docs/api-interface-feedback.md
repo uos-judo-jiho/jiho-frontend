@@ -13,16 +13,16 @@
 
 ## 우선순위 요약
 
-| #  | 내용                                       | 성격        | 영향                             |
-| :- | :----------------------------------------- | :---------- | :------------------------------- |
-| 1  | `operationId` 부재 (66개 엔드포인트 전부)  | 스펙만 수정 | 생성 코드 이름 전반              |
-| 2  | 공통 스키마 미분리 (`components.schemas`)  | 스펙만 수정 | 같은 개념이 타입 3개로 갈라짐    |
-| 3  | 쓰기 응답이 만든 리소스를 안 돌려줌        | 파괴적      | 작성 후 상세 이동 불가           |
-| 4  | 목록 응답 봉투가 엔드포인트마다 다름       | 파괴적      | 훅마다 `select` 를 따로 씀       |
-| 5  | 읽기/쓰기 필드 비대칭 (`images`/`imgSrcs`) | 파괴적      | 폼에서 매번 모양 변환            |
-| 6  | 훈련일지 참여 인원이 자유 문자열           | 추가 가능   | 동명이인·개명·역참조 불가        |
-| 7  | `boardType`·`dateTime` 제약 없음           | 추가 가능   | 잘못된 값이 그대로 저장됨        |
-| 8  | 에러에 기계가 읽을 코드가 없음             | 추가 가능   | 안내 문구를 뭉뚱그리게 됨        |
+| #   | 내용                                       | 성격        | 영향                          |
+| :-- | :----------------------------------------- | :---------- | :---------------------------- |
+| 1   | `operationId` 부재 (66개 엔드포인트 전부)  | 스펙만 수정 | 생성 코드 이름 전반           |
+| 2   | 공통 스키마 미분리 (`components.schemas`)  | 스펙만 수정 | 같은 개념이 타입 3개로 갈라짐 |
+| 3   | 쓰기 응답이 만든 리소스를 안 돌려줌        | 파괴적      | 작성 후 상세 이동 불가        |
+| 4   | 목록 응답 봉투가 엔드포인트마다 다름       | 파괴적      | 훅마다 `select` 를 따로 씀    |
+| 5   | 읽기/쓰기 필드 비대칭 (`images`/`imgSrcs`) | 파괴적      | 폼에서 매번 모양 변환         |
+| 6   | 훈련일지 참여 인원이 자유 문자열           | 추가 가능   | 동명이인·개명·역참조 불가     |
+| 7   | `boardType`·`dateTime` 제약 없음           | 추가 가능   | 잘못된 값이 그대로 저장됨     |
+| 8   | 에러에 기계가 읽을 코드가 없음             | 추가 가능   | 안내 문구를 뭉뚱그리게 됨     |
 
 1·2번은 **동작을 바꾸지 않고 스펙 주석만 손대면 되는데 효과가 가장 큽니다.**
 여기부터 하시길 권합니다.
@@ -65,13 +65,13 @@ typedApp.get("/users", {
 });
 ```
 
-| 현재 생성 이름                     | `operationId` 지정 시           |
-| :--------------------------------- | :------------------------------ |
-| `useGetApiV2Users`                 | `useListPublicUsers`            |
-| `useGetApiV2UsersBulk`             | `useGetPublicUsersByIds`        |
-| `useGetApiV2UsersUserId`           | `useGetPublicUser`              |
-| `usePutApiV2AdminBoardBoardId`     | `useUpdateBoard`                |
-| `usePostApiV2AdminPicturesYear`    | `useUploadGalleryPictures`      |
+| 현재 생성 이름                  | `operationId` 지정 시      |
+| :------------------------------ | :------------------------- |
+| `useGetApiV2Users`              | `useListPublicUsers`       |
+| `useGetApiV2UsersBulk`          | `useGetPublicUsersByIds`   |
+| `useGetApiV2UsersUserId`        | `useGetPublicUser`         |
+| `usePutApiV2AdminBoardBoardId`  | `useUpdateBoard`           |
+| `usePostApiV2AdminPicturesYear` | `useUploadGalleryPictures` |
 
 명명 규칙은 `list*` / `get*` / `create*` / `update*` / `delete*` 정도로만
 맞춰주시면 충분합니다. **한 번에 다 하지 않아도 되고**, 새로 추가하는
@@ -173,20 +173,20 @@ onSuccess: () => navigate({ href: `/${type}` }),
 
 목록을 감싸는 키가 **12가지**입니다.
 
-| 엔드포인트                        | 200 응답                              |
-| :-------------------------------- | :------------------------------------ |
-| `GET /users`                      | `{ total, limit, offset, items }`     |
-| `GET /users/bulk`                 | `{ items }`                           |
-| `GET /notices`                    | `{ notices }`                         |
-| `GET /trainings`                  | `{ trainingLogs }`                    |
-| `GET /news/latest`                | `{ articles }`                        |
-| `GET /news/{year}`                | `{ year, images, articles }`          |
-| `GET /news/images/all`            | (봉투 없는 배열)                      |
-| `GET /awards`                     | `{ awards }`                          |
-| `GET /boards/reactions`           | `{ summaries }`                       |
-| `GET /admin/users`                | `{ users }`                           |
-| `GET /admin/pending`              | `{ admins }`                          |
-| `GET /admin/highlights/unlabeled` | `{ items, nextCursor, hasMore }`      |
+| 엔드포인트                        | 200 응답                          |
+| :-------------------------------- | :-------------------------------- |
+| `GET /users`                      | `{ total, limit, offset, items }` |
+| `GET /users/bulk`                 | `{ items }`                       |
+| `GET /notices`                    | `{ notices }`                     |
+| `GET /trainings`                  | `{ trainingLogs }`                |
+| `GET /news/latest`                | `{ articles }`                    |
+| `GET /news/{year}`                | `{ year, images, articles }`      |
+| `GET /news/images/all`            | (봉투 없는 배열)                  |
+| `GET /awards`                     | `{ awards }`                      |
+| `GET /boards/reactions`           | `{ summaries }`                   |
+| `GET /admin/users`                | `{ users }`                       |
+| `GET /admin/pending`              | `{ admins }`                      |
+| `GET /admin/highlights/unlabeled` | `{ items, nextCursor, hasMore }`  |
 
 페이지네이션 방식도 세 가지가 섞여 있습니다 — offset(`users`, `labels`),
 cursor(`highlights`), 없음(나머지 전부).
@@ -194,10 +194,10 @@ cursor(`highlights`), 없음(나머지 전부).
 프론트에서는 훅마다 `select` 를 다르게 써야 해서 이런 코드가 흩어집니다.
 
 ```ts
-select: (r) => r.data.notices        // 공지
-select: (r) => r.data.training       // 훈련일지 상세
-select: (r) => r.data.items          // 유저
-select: (r) => r.data.awards ?? []   // 수상이력
+select: (r) => r.data.notices; // 공지
+select: (r) => r.data.training; // 훈련일지 상세
+select: (r) => r.data.items; // 유저
+select: (r) => r.data.awards ?? []; // 수상이력
 ```
 
 ### 제안
@@ -218,10 +218,10 @@ select: (r) => r.data.awards ?? []   // 수상이력
 
 같은 "게시글 사진"인데 읽기와 쓰기가 다릅니다.
 
-| | 필드명 | 타입 |
-| :- | :- | :- |
-| 읽기 (`GET /training/{id}` 등) | `images` | `{ originSrc: string, smallSrc: string \| null }[]` |
-| 쓰기 (`POST /admin/board`) | `imgSrcs` | `string[]` |
+|                                | 필드명    | 타입                                                |
+| :----------------------------- | :-------- | :-------------------------------------------------- |
+| 읽기 (`GET /training/{id}` 등) | `images`  | `{ originSrc: string, smallSrc: string \| null }[]` |
+| 쓰기 (`POST /admin/board`)     | `imgSrcs` | `string[]`                                          |
 
 그래서 폼 한 번 채우는 데 변환이 두 번 들어갑니다.
 
@@ -267,11 +267,12 @@ imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc)
 ```jsonc
 // POST/PUT /api/v2/admin/board
 {
-  "tags": ["김영민", "이지호"],          // 지금 그대로 (표시용, 미가입자 포함)
-  "participants": [                      // 신규, optional
+  "tags": ["김영민", "이지호"], // 지금 그대로 (표시용, 미가입자 포함)
+  "participants": [
+    // 신규, optional
     { "userId": 12, "name": "김영민" },
-    { "userId": null, "name": "이지호" } // 아직 가입 안 한 사람
-  ]
+    { "userId": null, "name": "이지호" }, // 아직 가입 안 한 사람
+  ],
 }
 ```
 
@@ -350,7 +351,7 @@ onError: (error) => {
 {
   "code": "VALIDATION_FAILED",
   "message": "입력값을 확인해주세요.",
-  "fields": { "title": "제목을 입력해주세요." }
+  "fields": { "title": "제목을 입력해주세요." },
 }
 ```
 
@@ -375,7 +376,7 @@ onError: (error) => {
 // me 기준
 `${user.additionalInfo.generation}기 ${user.additionalInfo.name}`
 // 공개 유저 기준
-`${user.generation}기 ${user.name}`
+`${user.generation}기 ${user.name}`;
 ```
 
 ### 제안
