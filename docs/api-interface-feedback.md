@@ -9,6 +9,12 @@
 (`packages/api`). 그래서 "스펙이 어떻게 생겼는가"가 곧 프론트 코드의 모양이
 됩니다.
 
+문서는 두 부분입니다.
+
+- **1부 (1~9번)** — 인터페이스 자체의 문제. 대부분 v2 에서도 고칠 수 있습니다.
+- **2부 (W1~W6)** — `apps/web` 의 실제 호출을 훑어 찾은 **비효율**. v3
+  엔드포인트를 새로 설계한다면 여기부터 보시면 됩니다.
+
 ---
 
 ## 우선순위 요약
@@ -398,3 +404,385 @@ onError: (error) => {
   정확히 표기해서, 생성 타입이 `string | null` 로 나왔습니다. 덕분에 이름 없는
   계정을 프론트에서 걸러야 한다는 걸 타입이 알려줬습니다.
 - N+1 방지용 `bulk` 조회를 처음부터 같이 낸 것.
+
+---
+
+# 2부 — `apps/web` 호출 구조와 비효율 (v3 설계용)
+
+공개 사이트(`apps/web`)의 라우트 loader·페이지·위젯이 실제로 무엇을 호출하는지
+전부 훑고, 스펙상 파라미터와 대조했습니다. 아래는 그중 **v3 를 새로 낼 때
+구조로 풀 수 있는 것**만 추렸습니다.
+
+`apps/web` 은 TanStack Start SSR 이라 라우트 loader 에서 프리페치한 뒤 페이지가
+같은 쿼리를 재사용합니다. 즉 **여기 적힌 요청은 전부 SSR 중 서버가 기다리는
+요청**이고, 그대로 TTFB 에 들어갑니다.
+
+## 요약
+
+| #   | 내용                                       | 지금                                 | v3 제안                          |
+| :-- | :----------------------------------------- | :----------------------------------- | :------------------------------- |
+| W1  | 상세 페이지가 목록 전체를 받음             | 공지·훈련일지 상세 = 아카이브 전량   | 단건 조회 + 응답에 `prev`/`next` |
+| W2  | 목록에 페이지네이션이 없음                 | `year` 필터만, `limit`/`offset` 없음 | `limit`/`offset` 전 목록에 적용  |
+| W3  | 목록 아이템이 본문 전체·전체 이미지를 담음 | 카드 한 장에 마크다운 본문이 통째로  | 목록 전용 축약 필드              |
+| W4  | 지호지 아카이브가 연도 수만큼 요청         | 현재 5회, 해마다 +1                  | 한 번에 받는 아카이브 엔드포인트 |
+| W5  | 정렬을 클라이언트가 함                     | 3곳에서 `dateTime` 재정렬            | 서버 정렬 + `sort` 파라미터      |
+| W6  | 같은 모양인데 읽기 엔드포인트가 3벌        | `articles`/`trainingLogs`/`notices`  | `/v3/boards?type=` 하나로        |
+
+---
+
+## W1. 상세 페이지가 목록 전체를 받습니다
+
+가장 크고, 가장 쉽게 눈에 띄는 문제입니다.
+
+### 공지사항 상세 — 단건 엔드포인트가 아예 없음
+
+```ts
+// apps/web/src/routes/notice/$id.tsx (loader)
+// apps/web/src/pages/notice/notice-detail-page.tsx
+const { data: notices } = v2Api.useGetApiV2NoticesSuspense(...);
+const notice = notices.find((item) => String(item.id) === String(id));
+```
+
+공지 하나를 보려고 **전체 공지를 받아 프론트에서 `find`** 합니다. `GET
+/api/v2/notices/{id}` 가 스펙에 없어서 선택지가 없습니다.
+
+### 훈련일지 상세 — 단건 엔드포인트가 있는데 못 씁니다
+
+`GET /api/v2/training/{id}` 는 존재합니다. 그런데 웹은 안 씁니다.
+
+```ts
+// apps/web/src/pages/training/training-detail-page.tsx
+const { data: trainings } = v2Api.useGetApiV2TrainingsSuspense(...);
+const sorted = [...trainings].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+const index = sorted.findIndex((item) => String(item.id) === String(id));
+const training = index >= 0 ? sorted[index] : undefined;
+// ↓ 이 index 로 이전/다음 글 링크를 만든다
+```
+
+**이유는 "이전 글 / 다음 글" 링크입니다.** 단건 응답에는 앞뒤 글 정보가 없으니
+순서를 알려면 목록이 통째로 필요합니다. 그래서 단건 API 가 있어도 쓸 수가
+없습니다.
+
+### 지호지 상세 — 단건을 받아놓고 안 씁니다
+
+```ts
+// apps/web/src/routes/news/$id/$newsId.tsx (loader)
+const [articleResponse] = await Promise.all([
+  ensureQueryData(getGetApiV2NewsYearIdQueryOptions(year, articleId)), // 단건
+  ensureQueryData(getGetApiV2NewsYearQueryOptions(year)), // 연도 전체
+]);
+```
+
+둘 다 프리페치하는데, 페이지 컴포넌트는 **연도 전체만** 씁니다(역시 이전/다음
+때문). 단건 요청은 loader 의 SEO 메타를 만드는 데만 쓰이고 화면에는 쓰이지
+않습니다 — 사실상 **상세 페이지마다 요청 하나가 낭비**되고 있습니다.
+
+게다가 `GET /news/{year}` 응답에는 그 해 **갤러리 이미지 전체**(`images`)까지
+들어 있어, 기사 한 편을 보려고 연도 전체 기사 + 연도 전체 사진을 받습니다.
+
+### 제안
+
+**단건 조회 응답에 앞뒤 글을 함께 넣어주세요.** 이거 하나로 위 세 개가 전부
+풀립니다.
+
+```jsonc
+// GET /api/v3/boards/{id}
+{
+  "id": 123,
+  "type": "training",
+  "title": "동계 훈련 3일차",
+  "dateTime": "2026-01-05",
+  "author": "34기 김영민",
+  "tags": ["김영민", "이지호"],
+  "description": "...",
+  "images": [{ "originSrc": "...", "smallSrc": "..." }],
+
+  // 같은 type(+같은 year) 안에서 dateTime 기준 앞뒤
+  "prev": { "id": 122, "title": "동계 훈련 2일차" },
+  "next": { "id": 124, "title": "동계 훈련 4일차" },
+}
+```
+
+`prev`/`next` 는 `id`·`title` 정도면 충분합니다(링크에 그 이상 안 씁니다).
+없으면 `null`.
+
+이러면 훈련일지 상세가 **아카이브 전량 → 게시글 1건**이 됩니다. 공지도
+마찬가지고, 지호지는 낭비되던 요청이 유일한 요청이 됩니다.
+
+---
+
+## W2. 목록에 페이지네이션이 없습니다
+
+| 엔드포인트             | 지원하는 파라미터 |
+| :--------------------- | :---------------- |
+| `GET /trainings`       | `year` 만         |
+| `GET /notices`         | `year` 만         |
+| `GET /news/{year}`     | `limit` 만        |
+| `GET /news/latest`     | `limit` 만        |
+| `GET /news/images/all` | **없음**          |
+| `GET /awards`          | **없음**          |
+
+`offset` 이 없어서 `limit` 이 있어도 "더 보기"를 만들 수 없습니다. `/trainings`
+와 `/notices` 는 `limit` 조차 없어서, **훈련일지 목록 페이지는 구조적으로 전량
+로딩 말고는 방법이 없습니다.**
+
+`/news/images/all` 은 파라미터가 하나도 없는데 앨범 페이지가 이걸 씁니다.
+사진이 쌓일수록 이 페이지 하나가 계속 무거워지고, 줄일 방법이 없습니다.
+
+### 제안
+
+목록 전부에 `limit` / `offset` 을 붙이고, 1부 4번의 `{ items, total, limit,
+offset }` 봉투로 통일합니다. `/api/v2/users` 가 이미 그 모양이라 그대로 따르면
+됩니다.
+
+`limit` 은 기본값과 상한을 스펙에 실어주세요. `/users` 처럼 되어 있으면
+클라이언트가 방어 코드를 안 씁니다.
+
+---
+
+## W3. 목록 아이템이 본문 전체를 담습니다
+
+세 목록의 아이템 필드가 모두 이렇습니다.
+
+```
+['id', 'images', 'author', 'dateTime', 'title', 'tags', 'description']
+```
+
+`description` 은 마크다운 **본문 전체**, `images` 는 그 글의 **사진 전부**입니다.
+그런데 목록 카드가 쓰는 건 제목·날짜·작성자·태그·썸네일 한 장뿐입니다.
+
+홈 화면이 특히 아깝습니다.
+
+```ts
+// apps/web/src/widgets/home/home-latest-trainings.tsx
+const PREVIEW_COUNT = 8;
+const { data: trainings } = v2Api.useGetApiV2TrainingsSuspense(...);  // 전량
+const recent = [...trainings].sort(...).slice(0, PREVIEW_COUNT);      // 8개만 쓴다
+```
+
+```ts
+// apps/web/src/widgets/home/home-notices.tsx
+const PREVIEW_COUNT = 5; // 마찬가지로 전량 받아 5개만
+```
+
+**8개를 보여주려고 전 아카이브의 본문과 사진을 SSR 중에 받아 옵니다.**
+
+### 제안
+
+목록과 단건의 스키마를 나눕니다.
+
+```jsonc
+// 목록 아이템 — BoardSummary
+{
+  "id": 123,
+  "type": "training",
+  "title": "동계 훈련 3일차",
+  "dateTime": "2026-01-05",
+  "author": "34기 김영민",
+  "tags": ["김영민", "이지호"],
+  "thumbnail": { "originSrc": "...", "smallSrc": "..." }, // 대표 1장
+  "imageCount": 12,
+  "excerpt": "오늘은 낙법을 했다. 기본기부터...", // 본문 앞 140자 정도
+}
+```
+
+카드는 실제로 본문을 아예 안 그립니다(제목·날짜·태그·썸네일만). 그러니 목록
+응답에서 `description` 을 빼는 것만으로도 페이로드가 크게 줄어듭니다.
+
+`excerpt` 를 서버가 만들어주면 좋은 이유가 하나 더 있습니다. SEO 메타를 만드는
+6개 라우트 loader 가 전부 `description.slice(0, 140)` 으로 **마크다운 원문을
+그대로 잘라 쓰고** 있어서, `og:description` 에 `##`, `**`, `![](...)` 같은 게
+섞여 나갑니다.
+
+```ts
+// apps/web/src/routes/photo/$id.tsx — 나머지 5곳도 같은 모양
+const description = [info.title, info.description.slice(0, 140)].join(" | ");
+```
+
+(프론트에 마크다운을 걷어내는 `toPlainExcerpt` 헬퍼가 있긴 한데 어디에도
+연결돼 있지 않습니다. 프론트에서 고칠 수도 있지만, 서버가 평문 `excerpt` 를
+주면 6곳이 한 번에 정리되고 소셜 카드도 같이 좋아집니다.)
+
+---
+
+## W4. 지호지 아카이브가 연도 수만큼 요청합니다
+
+```ts
+// apps/web/src/routes/news/index.tsx (loader)
+const allNews = await Promise.all(
+  newsYearList()
+    .reverse()
+    .map((year) =>
+      ensureQueryData(
+        getGetApiV2NewsYearQueryOptions(Number(year), { limit: 3 }),
+      ),
+    ),
+);
+```
+
+`newsYearList()` 는 `NEWS_START_YEAR`(2022) 부터 최신 연도까지입니다. 지금은
+**5회**(2022~2026), 그리고 **해마다 한 번씩 늘어납니다.** 병렬이라 체감은 덜해도
+SSR 이 다섯 응답을 다 기다립니다.
+
+연도 목록이 서버가 아니라 프론트 상수에서 나온다는 것도 문제입니다. 실제로
+글이 없는 연도까지 요청하고, 새 연도가 열려도 프론트를 고쳐 배포해야 합니다.
+
+### 제안
+
+연도별 묶음을 한 번에 주는 엔드포인트를 냅니다.
+
+```jsonc
+// GET /api/v3/news/archive?perYear=3
+{
+  "years": [
+    { "year": 2026, "total": 12, "articles": [ /* BoardSummary × 3 */ ] },
+    { "year": 2025, "total": 31, "articles": [ ... ] }
+  ]
+}
+```
+
+`years` 는 **실제 글이 있는 연도만** 내려주면 프론트의 `NEWS_START_YEAR` /
+`FALLBACK_LATEST_NEWS_YEAR` 상수가 통째로 없어집니다. 연도 네비게이션도 이
+응답으로 그립니다.
+
+일반화한다면 `GET /v3/boards?type=news&groupBy=year&perGroup=3` 형태도 됩니다.
+
+---
+
+## W5. 정렬을 클라이언트가 합니다
+
+세 곳에서 같은 정렬을 반복합니다.
+
+```ts
+[...trainings].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
+```
+
+- `pages/training/training-index-page.tsx`
+- `pages/training/training-detail-page.tsx` (이전/다음 계산용)
+- `widgets/home/home-latest-trainings.tsx`
+
+스펙에 정렬 순서가 명시돼 있지 않아 서버 순서를 믿을 수 없기 때문입니다.
+
+이건 W2 와 묶여 있습니다. **정렬 순서가 정해지지 않으면 페이지네이션을 넣을 수
+없습니다** — 2페이지가 1페이지와 같은 기준으로 이어진다는 보장이 없으니까요.
+
+### 제안
+
+- 기본 정렬을 스펙 `description` 에 명시합니다 (예: `dateTime DESC, id DESC`).
+  `/api/v2/users` 가 "기수 오름차순 → 이름 → ID" 를 문서화해 둔 게 좋은 예입니다.
+- 동점 처리를 위해 `id` 를 마지막 키로 넣어주세요. 같은 날짜 글이 여럿이면
+  페이지 경계에서 글이 중복되거나 빠집니다.
+- 필요하면 `sort=dateTime:desc` 같은 파라미터를 열되, 기본값만 확실해도 위
+  세 군데는 사라집니다.
+
+---
+
+## W6. 같은 모양인데 읽기 엔드포인트가 3벌입니다
+
+지호지·훈련일지·공지의 아이템 필드는 **완전히 같습니다.**
+
+```
+['id', 'images', 'author', 'dateTime', 'title', 'tags', 'description']
+```
+
+그런데 읽기는 셋으로 갈라져 있고, 갈라진 채로 서로 다릅니다.
+
+|          | 목록           | 단건                | 필터    | 봉투 키        |
+| :------- | :------------- | :------------------ | :------ | :------------- |
+| 지호지   | `/news/{year}` | `/news/{year}/{id}` | `limit` | `articles`     |
+| 훈련일지 | `/trainings`   | `/training/{id}`    | `year`  | `trainingLogs` |
+| 공지     | `/notices`     | **없음**            | `year`  | `notices`      |
+
+단건 유무도, 필터도, 봉투 키도, 심지어 단수/복수 경로(`/training/{id}` vs
+`/trainings`)까지 제각각입니다.
+
+**반면 쓰기는 이미 하나입니다.**
+
+```
+POST /api/v2/admin/board  { boardType: "news" | "training" | "notice", ... }
+```
+
+쓰기는 한 엔드포인트가 `boardType` 으로 갈라지는데 읽기만 3벌인 건 비대칭입니다.
+프론트에서도 이 비대칭이 그대로 드러나서, 어드민 폼은 게시판별 쿼리 키를 손으로
+매핑하고 있습니다.
+
+```ts
+const queryKeyByType = {
+  news: v2Api.getGetApiV2NewsLatestQueryKey().filter((key) => key !== "latest"),
+  training: v2Api.getGetApiV2TrainingsQueryKey(),
+  notice: v2Api.getGetApiV2NoticesQueryKey(),
+};
+```
+
+(`news` 줄의 `.filter()` 는 "latest" 세그먼트를 떼어 상위 키를 만들려는
+꼼수입니다. 읽기가 하나였으면 필요 없습니다.)
+
+### 제안
+
+읽기도 쓰기처럼 하나로 모읍니다.
+
+```
+GET /api/v3/boards?type=training&year=2026&limit=20&offset=0&sort=dateTime:desc
+GET /api/v3/boards/{id}
+```
+
+- `type` 은 생략 가능하게 두면 "전체 최신글" 도 공짜로 얻습니다.
+- 게시판이 하나 늘어도 엔드포인트가 안 늘어납니다.
+- 프론트에서는 쿼리 키가 `["boards", { type }]` 하나로 정리돼, 위 매핑 코드가
+  사라집니다.
+
+지호지의 연도별 갤러리(`/news/{year}` 의 `images`)만 성격이 다르니
+`GET /api/v3/galleries/{year}` 로 분리하는 게 맞습니다. 지금은 기사 목록과
+한 응답에 섞여 있어서, 기사만 필요한 곳도 사진을 다 받습니다.
+
+---
+
+## v3 엔드포인트 초안
+
+위 제안을 합치면 이 정도입니다.
+
+```
+GET /api/v3/boards            ?type=&year=&limit=&offset=&sort=   → { items: BoardSummary[], total, limit, offset }
+GET /api/v3/boards/{id}                                            → Board (+ prev/next)
+GET /api/v3/news/archive      ?perYear=3                           → { years: [{ year, total, articles: BoardSummary[] }] }
+GET /api/v3/galleries         ?limit=&offset=                      → { items: [{ year, images, imageCount }], total, ... }
+GET /api/v3/galleries/{year}                                       → { year, images }
+GET /api/v3/awards            ?limit=&offset=                      → { items, total, limit, offset }
+```
+
+페이지별로 어떻게 바뀌는지:
+
+| 페이지              | 지금                                                      | v3                              |
+| :------------------ | :-------------------------------------------------------- | :------------------------------ |
+| `/` (홈)            | awards 전량 + trainings 전량 + notices 전량 + news/latest | 같은 4회, 전부 `limit` 적용     |
+| `/news`             | 연도 수만큼 (현재 5회, 매년 +1)                           | `news/archive` 1회              |
+| `/news/{year}/{id}` | 단건 + 연도 전체 (단건은 미사용)                          | `boards/{id}` 1회               |
+| `/photo` (훈련일지) | 전량                                                      | `boards?type=training&limit=20` |
+| `/photo/{id}`       | **전량**                                                  | `boards/{id}` 1회               |
+| `/notice/{id}`      | **전량**                                                  | `boards/{id}` 1회               |
+| `/album`            | 이미지 아카이브 전량                                      | `galleries?limit=`              |
+
+---
+
+## 마이그레이션 순서 제안
+
+v3 를 한 번에 다 낼 필요는 없습니다. 효과 대비 비용 순으로는 이렇습니다.
+
+1. **단건 조회 + `prev`/`next`** — W1. 상세 3종이 전부 "아카이브 전량 → 1건"이
+   됩니다. 공지 단건은 새로 만들어야 하고, 훈련일지·지호지는 기존 단건에
+   `prev`/`next` 만 얹으면 되니 v2 에서도 가능합니다.
+2. **목록에 `limit`/`offset`** — W2. 정렬 기준 문서화(W5)와 같이 가야 합니다.
+3. **목록 전용 축약 스키마** — W3. SSR 페이로드가 가장 크게 줄어듭니다.
+4. **`/v3/boards` 통합** — W6. 파괴적이라 v3 를 새로 낼 때가 적기입니다.
+5. **`news/archive`** — W4. 연도가 늘수록 이득이 커집니다.
+
+1·2·3 은 v2 에 얹어도 깨지지 않는 추가 변경이라, v3 를 기다리지 않고 먼저
+가셔도 됩니다.
+
+### 곁들여: 목록에 좋아요 수
+
+지금 웹은 상세 페이지에서만 좋아요를 그려서 문제가 없습니다. 다만 목록 카드에
+좋아요 수를 노출하게 되면 카드마다 `/boards/{id}/reactions` 를 부르게 됩니다.
+`/boards/reactions?boardIds=` 로 묶을 수는 있지만(어드민이 그렇게 씁니다),
+`BoardSummary` 에 `reactionCount` 를 넣어두면 그 왕복 자체가 없어집니다. v3
+스키마를 새로 그리는 김에 자리만 잡아두시면 좋겠습니다.
