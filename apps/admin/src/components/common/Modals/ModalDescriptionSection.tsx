@@ -6,16 +6,18 @@ import { cn } from "@/shared/lib/utils";
 type ModalDescriptionSectionProps = {
   article: ArticleInfoType;
   titles: string[];
+  /**
+   * 날짜 행 표시 여부. 예전에는 `titles[1] === "태그"` 인지로 추측했는데,
+   * 공지사항처럼 태그를 쓰면서 날짜도 보여야 하는 화면이 생겨 명시적으로 받는다.
+   */
+  showDate?: boolean;
 };
 
 function ModalDescriptionSection({
   article,
   titles,
+  showDate = true,
 }: ModalDescriptionSectionProps) {
-  // titles[1] 이 "태그" 이면 날짜 행을 숨긴다. props 로부터 곧바로 계산되는 값이라
-  // 별도 state 로 들고 있을 필요가 없다.
-  const isDisplay = titles[1] !== "태그";
-
   return (
     <section className="h-full w-full relative flex flex-col p-5">
       <div className="w-full flex-[0_0_auto]">
@@ -32,7 +34,7 @@ function ModalDescriptionSection({
                 {article.tags.join(" ")}
               </td>
             </tr>
-            <tr className={cn(!isDisplay && "hidden")}>
+            <tr className={cn(!showDate && "hidden")}>
               <td className="w-[100px] align-top py-1">{titles[2]}</td>
               <td className="break-keep-all py-1">{article.dateTime}</td>
             </tr>
