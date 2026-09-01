@@ -6,7 +6,7 @@ import {
   FormContainer as SectionContainer,
   StyledInput,
 } from "@/components/admin/form/StyledComponent/FormContainer";
-import SubmitModal from "@/components/common/Modals/AlertModals/SubmitModal";
+import { openConfirmDialog } from "@/components/common/Modals";
 import Row from "@/components/layouts/Row";
 import {
   DndContext,
@@ -104,9 +104,6 @@ export const Awards = () => {
   const [isReorderMode, setIsReorderMode] = useState(false);
   const [orderedAwards, setOrderedAwards] = useState<AwardItem[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
 
   const {
     data: awards = [],
@@ -126,7 +123,15 @@ export const Awards = () => {
 
   const createAwardMutation = v2Admin.usePostApiV2AdminAwards({
     mutation: {
-      onSuccess: invalidateAwards,
+      onSuccess: () => {
+        invalidateAwards();
+        setCreateValues(emptyForm);
+        setIsCreateOpen(false);
+      },
+      onError: (error) => {
+        console.error("award create failed:", error);
+        toast.error("수상이력 등록에 실패했습니다.");
+      },
     },
     axios: {
       withCredentials: true,
@@ -135,7 +140,14 @@ export const Awards = () => {
 
   const updateAwardMutation = v2Admin.usePutApiV2AdminAwardsAwardId({
     mutation: {
-      onSuccess: invalidateAwards,
+      onSuccess: () => {
+        invalidateAwards();
+        cancelEdit();
+      },
+      onError: (error) => {
+        console.error("award update failed:", error);
+        toast.error("수상이력 수정에 실패했습니다.");
+      },
     },
     axios: {
       withCredentials: true,
@@ -145,6 +157,10 @@ export const Awards = () => {
   const deleteAwardMutation = v2Admin.useDeleteApiV2AdminAwardsAwardId({
     mutation: {
       onSuccess: invalidateAwards,
+      onError: (error) => {
+        console.error("award delete failed:", error);
+        toast.error("수상이력 삭제에 실패했습니다.");
+      },
     },
     axios: {
       withCredentials: true,
@@ -172,15 +188,8 @@ export const Awards = () => {
     }));
   };
 
-  const handleCreate = async () => {
-    try {
-      await createAwardMutation.mutateAsync({ data: createValues });
-      setCreateValues(emptyForm);
-      setIsCreateOpen(false);
-    } catch (error) {
-      console.error(error);
-      toast.error("수상이력 등록에 실패했습니다.");
-    }
+  const handleCreate = () => {
+    createAwardMutation.mutate({ data: createValues });
   };
 
   const startEdit = (award: AwardItem) => {
@@ -225,34 +234,28 @@ export const Awards = () => {
   const handleUpdate = async () => {
     if (editingAwardId === null) return;
 
-    try {
-      await updateAwardMutation.mutateAsync({
-        awardId: editingAwardId,
-        data: editValues,
-      });
-      setIsUpdateOpen(false);
-      cancelEdit();
-    } catch (error) {
-      console.error(error);
-      toast.error("수상이력 수정에 실패했습니다.");
-    }
+    const confirmed = await openConfirmDialog({
+      title: "수상이력 수정",
+      description: "수상이력을 수정할까요?",
+      confirmText: "수정",
+    });
+
+    if (!confirmed) return;
+
+    updateAwardMutation.mutate({ awardId: editingAwardId, data: editValues });
   };
 
-  const handleDelete = async () => {
-    if (pendingDeleteId === null) return;
+  const handleDelete = async (awardId: number) => {
+    const confirmed = await openConfirmDialog({
+      title: "수상이력 삭제",
+      description: "수상이력을 삭제할까요? 삭제한 뒤에는 되돌릴 수 없습니다.",
+      confirmText: "삭제",
+      destructive: true,
+    });
 
-    try {
-      await deleteAwardMutation.mutateAsync({ awardId: pendingDeleteId });
-      setPendingDeleteId(null);
-    } catch (error) {
-      console.error(error);
-      toast.error("수상이력 삭제에 실패했습니다.");
-    }
-  };
+    if (!confirmed) return;
 
-  const openDeleteModal = (awardId: number) => {
-    setPendingDeleteId(awardId);
-    setIsDeleteOpen(true);
+    deleteAwardMutation.mutate({ awardId });
   };
 
   useEffect(() => {
@@ -301,9 +304,6 @@ export const Awards = () => {
                     setCreateValues(emptyForm);
                     setIsCreateOpen(false);
                     cancelEdit();
-                    setIsUpdateOpen(false);
-                    setIsDeleteOpen(false);
-                    setPendingDeleteId(null);
                     setOrderedAwards(awards);
                     setIsReorderMode(true);
                   }}
@@ -705,7 +705,7 @@ export const Awards = () => {
                                 <>
                                   <button
                                     className="text-blue-600 hover:underline"
-                                    onClick={() => setIsUpdateOpen(true)}
+                                    onClick={() => handleUpdate()}
                                   >
                                     저장
                                   </button>
@@ -726,7 +726,7 @@ export const Awards = () => {
                                   </button>
                                   <button
                                     className="text-rose-500 hover:underline"
-                                    onClick={() => openDeleteModal(award.id)}
+                                    onClick={() => handleDelete(award.id)}
                                   >
                                     삭제
                                   </button>
@@ -744,23 +744,6 @@ export const Awards = () => {
           )}
         </SectionContainer>
       </div>
-
-      <SubmitModal
-        confirmText="수정"
-        cancelText="취소"
-        description="수상이력을 수정할까요?"
-        open={isUpdateOpen}
-        setOpen={setIsUpdateOpen}
-        onSubmit={handleUpdate}
-      />
-      <SubmitModal
-        confirmText="삭제"
-        cancelText="취소"
-        description="수상이력을 삭제할까요?"
-        open={isDeleteOpen}
-        setOpen={setIsDeleteOpen}
-        onSubmit={handleDelete}
-      />
     </FormContainer>
   );
 };
