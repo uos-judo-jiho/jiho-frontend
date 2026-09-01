@@ -52,7 +52,7 @@ const emptyForm = {
 
 type AwardFormState = typeof emptyForm;
 
-type AwardItem = v2ApiModel.GetApiV2Awards200AwardsItem;
+type AwardItem = v2ApiModel.Award;
 
 type SortableRowProps = {
   id: number;

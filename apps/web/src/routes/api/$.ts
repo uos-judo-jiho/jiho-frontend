@@ -40,12 +40,13 @@ const proxyApiRequest = async (request: Request, splat: string) => {
       body: hasBody ? bodyText : undefined,
     });
 
-    const data = await response.text();
+    const location = response.headers.get("location");
 
     // Convert 302 redirects to 401 for CORS compatibility
     if (response.status === 302 || response.status === 301) {
-      const location = response.headers.get("location");
       if (location?.includes("/admin") || location?.includes("/login")) {
+        // 본문을 쓰지 않고 빠져나가므로 스트림을 닫아 커넥션을 돌려준다
+        void response.body?.cancel();
         return Response.json(
           {
             error: "Unauthorized",
@@ -64,6 +65,17 @@ const proxyApiRequest = async (request: Request, splat: string) => {
       headers.set("Content-Type", contentType);
     }
 
+    // 파일 다운로드는 이 헤더가 있어야 원래 파일명으로 저장된다
+    const contentDisposition = response.headers.get("content-disposition");
+    if (contentDisposition) {
+      headers.set("Content-Disposition", contentDisposition);
+    }
+
+    // 401 로 바꾸지 않은 리다이렉트는 Location 이 없으면 의미가 없다
+    if (location) {
+      headers.set("Location", location);
+    }
+
     // Set-Cookie 전달 (인증에 필수)
     const setCookies =
       typeof response.headers.getSetCookie === "function"
@@ -75,7 +87,13 @@ const proxyApiRequest = async (request: Request, splat: string) => {
       headers.append("Set-Cookie", value);
     }
 
-    return new Response(data, { status: response.status, headers });
+    // 본문은 읽지 않고 그대로 흘려보낸다.
+    // 이전에는 `await response.text()` 로 받아 문자열로 다시 내보냈는데,
+    // 그 과정에서 바이너리(이미지·첨부파일)가 UTF-8 로 디코딩됐다 재인코딩되며
+    // 깨졌다. 게다가 응답 전체가 메모리에 올라가고 스트리밍도 사라졌다.
+    // 204/304 처럼 본문이 없는 상태 코드에서는 fetch 가 body 를 null 로 주므로
+    // Response 생성자도 그대로 받아들인다.
+    return new Response(response.body, { status: response.status, headers });
   } catch (error) {
     serverConsole.error("Proxy error:", error);
     return Response.json({ error: "Proxy error" }, { status: 500 });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
@@ -51,6 +51,23 @@ export const Image = ({
   imageClassName,
 }: ImageProps) => {
   const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // SSR 로 내려간 <img> 는 하이드레이션 전에 로드가 끝날 수 있다. 그러면 React 가
+  // 리스너를 붙이기 전에 load 이벤트가 지나가 버려서 onLoad 가 영영 오지 않고,
+  // 사진이 opacity-0 인 채로 굳는다 (캐시된 재방문·JS 가 느린 회선에서 재현).
+  // 마운트 시점에 실제 로드 여부를 직접 확인해 그 구멍을 메운다.
+  //
+  // src 가 바뀔 때는 일부러 다시 감추지 않는다 — 브라우저는 새 이미지가 도착할
+  // 때까지 이전 프레임을 그대로 보여주므로, 여기서 false 로 되돌리면 없어도 될
+  // 깜빡임만 생긴다.
+  useEffect(() => {
+    // complete 는 로드 실패로 끝난 경우에도 true 다. onError 에서도 드러내 주는
+    // 기존 동작과 같은 판단이다 — 깨진 이미지라도 자리는 보여야 한다.
+    if (imgRef.current?.complete) {
+      setLoaded(true);
+    }
+  }, []);
 
   return (
     <div
@@ -71,6 +88,7 @@ export const Image = ({
       }
     >
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
