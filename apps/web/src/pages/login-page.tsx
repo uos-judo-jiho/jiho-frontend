@@ -36,7 +36,7 @@ export const LoginPage = () => {
     navigate({ href: resolveRedirectPath(redirectTo), replace: true });
   }, [isAuthenticated, redirectTo, navigate]);
 
-  const loginMutation = v2Admin.usePostApiV2AdminLogin({
+  const loginMutation = v2Admin.useAdminLogin({
     mutation: {
       onSuccess: () => {
         // 세션 쿠키를 반영하기 위해 전체 새로고침으로 이동한다

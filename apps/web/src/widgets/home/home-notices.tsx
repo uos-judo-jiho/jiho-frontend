@@ -9,7 +9,7 @@ const PREVIEW_COUNT = 5;
 
 /** 공지사항 미리보기. */
 export const HomeNotices = () => {
-  const { data: notices = [] } = v2Api.useGetApiV2NoticesSuspense(undefined, {
+  const { data: notices = [] } = v2Api.useListNoticesSuspense(undefined, {
     query: { select: (response) => response.data.notices ?? [] },
   });
 

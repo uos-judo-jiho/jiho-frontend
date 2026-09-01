@@ -45,7 +45,7 @@ export const usePublicUsers = ({
   // 서버가 1자 미만/20자 초과 검색어를 400 으로 막으므로 여기서 미리 잘라 보낸다.
   const keyword = name?.trim().slice(0, MAX_PUBLIC_USER_NAME_QUERY_LENGTH);
 
-  return v2Api.useGetApiV2Users(
+  return v2Api.useListUsers(
     {
       ...(keyword ? { name: keyword } : {}),
       limit: Math.min(limit, MAX_PUBLIC_USER_PAGE_SIZE),

@@ -2,19 +2,19 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const useGetApiV2Users = vi.fn();
+const useListUsers = vi.fn();
 
 vi.mock("@packages/api", () => ({
   v2Api: {
-    get useGetApiV2Users() {
-      return useGetApiV2Users;
+    get useListUsers() {
+      return useListUsers;
     },
   },
 }));
 
 const { ParticipantSelect } = await import("./participant-select");
 
-type QueryArgs = Parameters<typeof useGetApiV2Users>;
+type QueryArgs = Parameters<typeof useListUsers>;
 
 const USERS = [
   {
@@ -29,7 +29,7 @@ const USERS = [
 
 /** orval 훅은 AxiosResponse 를 캐시하고 select 로 걸러낸다. 그 계약만 흉내 낸다. */
 const mockUsers = (items: typeof USERS) => {
-  useGetApiV2Users.mockImplementation(
+  useListUsers.mockImplementation(
     (
       _params: QueryArgs[0],
       options: { query?: { select?: (r: unknown) => unknown } },
@@ -45,7 +45,7 @@ const mockUsers = (items: typeof USERS) => {
 
 describe("ParticipantSelect", () => {
   beforeEach(() => {
-    useGetApiV2Users.mockReset();
+    useListUsers.mockReset();
     mockUsers(USERS);
   });
 

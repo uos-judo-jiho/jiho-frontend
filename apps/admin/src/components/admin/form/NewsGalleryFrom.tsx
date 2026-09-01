@@ -20,7 +20,7 @@ type NewsGalleryFromProps = {
 const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
   // 폼 기본값을 첫 렌더에 채워야 해서 suspense 로 받는다. 값이 늦게 도착하면
   // 이미 만들어진 폼에는 반영되지 않아 기존 사진이 통째로 비어 보인다.
-  const { data: response } = v2Api.useGetApiV2NewsYearSuspense(
+  const { data: response } = v2Api.useListNewsByYearSuspense(
     Number(year),
     undefined,
     {

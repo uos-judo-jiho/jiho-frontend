@@ -9,7 +9,7 @@ export const Route = createFileRoute("/notice/")({
   loader: async ({ context }) => {
     try {
       await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2NoticesQueryOptions(),
+        v2Api.getListNoticesQueryOptions(),
       );
     } catch (error) {
       console.error("[SSR] Notices prefetch error:", error);

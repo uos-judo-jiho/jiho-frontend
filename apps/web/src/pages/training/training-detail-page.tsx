@@ -16,7 +16,7 @@ const routeApi = getRouteApi("/photo/$id");
 export const TrainingDetailPage = () => {
   const { id } = routeApi.useParams();
 
-  const { data: trainings = [] } = v2Api.useGetApiV2TrainingsSuspense(
+  const { data: trainings = [] } = v2Api.useListTrainingLogsSuspense(
     undefined,
     { query: { select: (response) => response.data.trainingLogs ?? [] } },
   );
@@ -32,7 +32,9 @@ export const TrainingDetailPage = () => {
   useEffect(() => {
     if (!training) return;
     logger.info("훈련일지", {
-      res: training,
+      // logger 의 res 는 Record<string, unknown> 인데 Board 는 interface 라
+      // 암묵적 인덱스 시그니처가 없어 그대로는 대입되지 않는다. 펼쳐서 넘긴다.
+      res: { ...training },
       path: window.location.pathname,
     });
   }, [training]);

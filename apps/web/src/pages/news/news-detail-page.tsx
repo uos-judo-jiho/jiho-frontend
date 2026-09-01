@@ -17,7 +17,7 @@ const routeApi = getRouteApi("/news/$id/$newsId");
 export const NewsDetailPage = () => {
   const { id: year, newsId } = routeApi.useParams();
 
-  const { data: news } = v2Api.useGetApiV2NewsYearSuspense(
+  const { data: news } = v2Api.useListNewsByYearSuspense(
     Number(year),
     undefined,
     { query: { select: (response) => response.data } },

@@ -12,7 +12,7 @@ export const Route = createFileRoute("/photo/")({
   loader: async ({ context }): Promise<Omit<SeoHeadOptions, "title">> => {
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2TrainingsQueryOptions(),
+        v2Api.getListTrainingLogsQueryOptions(),
       );
       const trainings = [...(response.data.trainingLogs ?? [])].sort((a, b) =>
         b.dateTime.localeCompare(a.dateTime),

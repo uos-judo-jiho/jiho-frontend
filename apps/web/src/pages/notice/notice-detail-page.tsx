@@ -12,7 +12,7 @@ const routeApi = getRouteApi("/notice/$id");
 export const NoticeDetailPage = () => {
   const { id } = routeApi.useParams();
 
-  const { data: notices = [] } = v2Api.useGetApiV2NoticesSuspense(undefined, {
+  const { data: notices = [] } = v2Api.useListNoticesSuspense(undefined, {
     query: { select: (response) => response.data.notices ?? [] },
   });
 

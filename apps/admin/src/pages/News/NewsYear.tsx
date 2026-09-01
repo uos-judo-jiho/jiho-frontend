@@ -12,7 +12,7 @@ type NewsYearContentProps = {
 };
 
 const NewsYearContent = ({ year }: NewsYearContentProps) => {
-  const { data: newsData, refetch } = v2Api.useGetApiV2NewsYearSuspense(
+  const { data: newsData, refetch } = v2Api.useListNewsByYearSuspense(
     Number(year),
     undefined,
     {

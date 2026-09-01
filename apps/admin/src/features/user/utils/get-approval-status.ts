@@ -1,7 +1,7 @@
-import { GetApiV2AdminPending200AdminsItemStatus } from "node_modules/@packages/api/src/_generated/v2/admin/model";
+import { ListPendingAdmins200AdminsItemStatus } from "node_modules/@packages/api/src/_generated/v2/admin/model";
 
 export const getApprovalStatus = (
-  status: GetApiV2AdminPending200AdminsItemStatus,
+  status: ListPendingAdmins200AdminsItemStatus,
 ) => {
   switch (status) {
     case "pending":

@@ -18,10 +18,10 @@ export const Route = createFileRoute("/news/$id/$newsId")({
       // PC(단건)와 모바일(연도 전체)이 서로 다른 쿼리를 사용하므로 둘 다 프리페치
       const [articleResponse] = await Promise.all([
         context.queryClient.ensureQueryData(
-          v2Api.getGetApiV2NewsYearIdQueryOptions(year, articleId),
+          v2Api.getGetNewsArticleQueryOptions(year, articleId),
         ),
         context.queryClient.ensureQueryData(
-          v2Api.getGetApiV2NewsYearQueryOptions(year),
+          v2Api.getListNewsByYearQueryOptions(year),
         ),
       ]);
 

@@ -44,7 +44,7 @@ export const PasswordChangePage = () => {
     },
   });
 
-  const changePasswordMutation = v2Admin.usePatchApiV2AdminMePassword({
+  const changePasswordMutation = v2Admin.useChangeMyPassword({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: () => {

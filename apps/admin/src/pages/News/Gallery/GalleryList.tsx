@@ -10,7 +10,7 @@ export const GalleryList = () => {
     queries: vaildNewsYearList()
       .reverse()
       .map((year) =>
-        v2Api.getGetApiV2NewsYearImagesQueryOptions(Number(year), {}),
+        v2Api.getGetNewsGalleryByYearQueryOptions(Number(year), {}),
       ),
   });
 

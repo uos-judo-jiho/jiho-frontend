@@ -13,7 +13,7 @@ export const Route = createFileRoute("/photo/$id")({
   }): Promise<Omit<SeoHeadOptions, "title"> & { title?: string }> => {
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2TrainingsQueryOptions(),
+        v2Api.getListTrainingLogsQueryOptions(),
       );
       const trainings = response.data.trainingLogs ?? [];
       const info = trainings.find(

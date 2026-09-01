@@ -20,7 +20,7 @@ const Gallery = () => {
 
 const Inner = () => {
   const { year } = useParams({ strict: false });
-  const { data: images } = v2Api.useGetApiV2NewsYearImagesSuspense(
+  const { data: images } = v2Api.useGetNewsGalleryByYearSuspense(
     Number(year),
     {
       query: {

@@ -23,7 +23,7 @@ The project follows the **Feature-Sliced Design (FSD)** architecture (referred t
 - **Styling**: TailwindCSS (v4) with `clsx` and `tailwind-merge` for class management. Always use the `cn` utility from `src/shared/lib/utils.ts`.
 - **API**: Use `@packages/api` (v2Admin hooks) for all server interactions.
   - import @packages/api like this: `import { v2Admin } from "@packages/api";`
-    - use hooks like this: `const { data } = v2Admin.useGetApiV2AdminUsersSuspense();`
+    - use hooks like this: `const { data } = v2Admin.useListAdminUsersSuspense();`
   - import @packages/api/models like this: `import { v2AdminModel } from "@packages/api/models";`
     - use models like this: `type User = v2AdminModel.User;`
 - **Icons**: Use components from `lucide-react` or the internal SVG components in `src/components/icons`.

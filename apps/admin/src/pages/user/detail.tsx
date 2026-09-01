@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import { match } from "ts-pattern";
 
 const ROLES: {
-  value: v2AdminModel.GetApiV2AdminUsers200UsersItemRole;
+  value: v2AdminModel.ListAdminUsers200UsersItemRole;
   label: string;
 }[] = [
   { value: "root", label: "관리자" },
@@ -28,7 +28,7 @@ const ROLES: {
 ];
 
 const ROLE_PRIORITY: Record<
-  v2AdminModel.GetApiV2AdminUsers200UsersItemRole,
+  v2AdminModel.ListAdminUsers200UsersItemRole,
   number
 > = {
   root: 0,
@@ -46,12 +46,12 @@ export const UserDetailPage = () => {
   const navigation = useNavigate();
   const queryClient = useQueryClient();
 
-  const deleteMemberMutation = v2Admin.useDeleteApiV2AdminUsersAdminId({
+  const deleteMemberMutation = v2Admin.useDeleteAdminUser({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
+          queryKey: v2Admin.getListAdminUsersQueryKey(),
         });
         toast.success("회원을 성공적으로 삭제했습니다.");
       },
@@ -98,22 +98,22 @@ const UserDetailContent = ({ id }: { id: number }) => {
   const queryClient = useQueryClient();
   const [isEditingRole, setIsEditingRole] = useState(false);
 
-  const { data: me } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: me } = v2Admin.useGetMyProfileSuspense({
     axios: { withCredentials: true },
     query: { select: (data) => data.data.user },
   });
 
-  const { data: user } = v2Admin.useGetApiV2AdminUsersAdminId(id, {
+  const { data: user } = v2Admin.useGetAdminUser(id, {
     axios: { withCredentials: true },
     query: { select: (data) => data.data.user },
   });
 
-  const updateRoleMutation = v2Admin.usePatchApiV2AdminUsersAdminIdRole({
+  const updateRoleMutation = v2Admin.useChangeAdminUserRole({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({
-          queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
+          queryKey: v2Admin.getListAdminUsersQueryKey(),
         });
         toast.success("역할이 성공적으로 변경되었습니다.");
         setIsEditingRole(false);
@@ -138,7 +138,7 @@ const UserDetailContent = ({ id }: { id: number }) => {
   const canManageRole = isStaffOrAbove && myPriority < userPriority;
 
   const handleRoleChange = (
-    newRole: v2AdminModel.GetApiV2AdminUsers200UsersItemRole,
+    newRole: v2AdminModel.ListAdminUsers200UsersItemRole,
   ) => {
     updateRoleMutation.mutate({
       adminId: id,
@@ -175,7 +175,7 @@ const UserDetailContent = ({ id }: { id: number }) => {
                       onChange={(e) =>
                         handleRoleChange(
                           e.target
-                            .value as v2AdminModel.GetApiV2AdminUsers200UsersItemRole,
+                            .value as v2AdminModel.ListAdminUsers200UsersItemRole,
                         )
                       }
                       disabled={updateRoleMutation.isPending}

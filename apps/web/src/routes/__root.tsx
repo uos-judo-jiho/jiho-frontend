@@ -28,7 +28,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   loader: async ({ context }) => {
     try {
       await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2NewsLatestQueryOptions({ limit: 5 }),
+        v2Api.getListLatestNewsQueryOptions({ limit: 5 }),
       );
     } catch (error) {
       console.error("[SSR] Latest news prefetch error:", error);

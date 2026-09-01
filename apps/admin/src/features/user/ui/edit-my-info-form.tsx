@@ -56,7 +56,7 @@ export const EditMyInfoForm = () => {
 const EditMyInfoFormInner = ({
   user,
 }: {
-  user: v2AdminModel.GetApiV2AdminMe200User;
+  user: v2AdminModel.GetMyProfile200User;
 }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -82,13 +82,13 @@ const EditMyInfoFormInner = ({
     },
   });
 
-  const updateMe = v2Admin.usePutApiV2AdminMe({
+  const updateMe = v2Admin.useUpdateMyProfile({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: () => {
         toast.success("내 정보가 수정되었습니다.");
         queryClient.invalidateQueries({
-          queryKey: v2Admin.getGetApiV2AdminMeQueryKey(),
+          queryKey: v2Admin.getGetMyProfileQueryKey(),
         });
         navigate({ to: RouterUrl.마이페이지.루트 });
       },
@@ -233,7 +233,7 @@ const EditMyInfoFormInner = ({
 
 // 2. 데이터를 가져오는 래퍼 컴포넌트
 const EditMyInfoFormWrapper = () => {
-  const { data: user } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: user } = v2Admin.useGetMyProfileSuspense({
     axios: { withCredentials: true },
     query: {
       select: (data) => data.data.user,

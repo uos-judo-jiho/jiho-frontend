@@ -28,7 +28,7 @@ export const Route = createFileRoute("/notice/$id")({
   }): Promise<Omit<SeoHeadOptions, "title">> => {
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2NoticesQueryOptions(),
+        v2Api.getListNoticesQueryOptions(),
       );
       const notices = response.data.notices ?? [];
       const data = notices.find(
