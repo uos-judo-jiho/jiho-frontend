@@ -2,55 +2,32 @@ import { v2Api } from "@packages/api";
 import { Link, getRouteApi, linkOptions } from "@tanstack/react-router";
 
 import { ArticleDetail } from "@/features/content";
-import { EmptyState } from "@/shared/ui/empty-state";
-import { MoreLink } from "@/shared/ui/more-link";
+import { toNeighbour } from "@/features/content/model/neighbours";
 import { PageShell } from "@/widgets/page-shell";
 
 const routeApi = getRouteApi("/news/$id/$newsId");
 
 /**
  * 지호지 상세.
- * 이전에는 NewsDetailPc / NewsDetailMobile 두 벌을 ResponsiveBranch 로 갈랐고
- * 두 쪽이 서로 다른 쿼리(단건 / 연도 전체)를 써서 이전·다음 이동도 PC 에서는
- * 아예 주석 처리돼 있었다. 연도 전체 목록 하나로 통일해 양쪽 모두 동작한다.
+ *
+ * 이전에는 연도 전체 목록을 받아 그 안에서 현재 글과 앞뒤를 찾았다. 이제 서버가
+ * 단건 응답에 prev/next 를 함께 준다 (api#38) — 그 해 기사를 전부 내려받던 것이
+ * 1건으로 줄었다. 앞뒤 글은 서버도 같은 연도 안에서 찾으므로 동작은 그대로다.
+ * 없는 id 는 라우트 loader 가 notFound 로 걸러낸다.
  */
 export const NewsDetailPage = () => {
   const { id: year, newsId } = routeApi.useParams();
 
-  const { data: news } = v2Api.useListNewsByYearSuspense(
+  const { data: article } = v2Api.useGetNewsArticleSuspense(
     Number(year),
-    undefined,
-    { query: { select: (response) => response.data } },
+    Number(newsId),
+    { query: { select: (response) => response.data.article } },
   );
 
-  const articles = news.articles;
-  const index = articles.findIndex(
-    (article) => String(article.id) === String(newsId),
-  );
-  const article = index >= 0 ? articles[index] : undefined;
-
-  if (!article) {
-    return (
-      <PageShell>
-        <EmptyState
-          title="해당 지호지를 찾을 수 없습니다"
-          description="삭제되었거나 주소가 바뀐 글일 수 있습니다."
-          action={
-            <MoreLink
-              link={linkOptions({ to: "/news/$id", params: { id: year } })}
-            >
-              {year}년 목록으로
-            </MoreLink>
-          }
-        />
-      </PageShell>
-    );
-  }
-
-  const linkTo = (target: (typeof articles)[number]) =>
+  const linkTo = (id: number) =>
     linkOptions({
       to: "/news/$id/$newsId",
-      params: { id: year, newsId: String(target.id) },
+      params: { id: year, newsId: String(id) },
     });
 
   return (
@@ -72,23 +49,8 @@ export const NewsDetailPage = () => {
         <ArticleDetail
           item={article}
           tagsLabel="카테고리"
-          position={{ current: index + 1, total: articles.length }}
-          prev={
-            index > 0
-              ? {
-                  label: articles[index - 1].title,
-                  link: linkTo(articles[index - 1]),
-                }
-              : null
-          }
-          next={
-            index < articles.length - 1
-              ? {
-                  label: articles[index + 1].title,
-                  link: linkTo(articles[index + 1]),
-                }
-              : null
-          }
+          newer={toNeighbour(article.next, linkTo, "다음 기사")}
+          older={toNeighbour(article.prev, linkTo, "이전 기사")}
         />
       </div>
     </PageShell>

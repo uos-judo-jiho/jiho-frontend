@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, linkOptions, notFound } from "@tanstack/react-router";
+import { isAxiosError } from "axios";
 
 import { NewsDetailPage } from "@/pages/news/news-detail-page";
+import { EmptyState } from "@/shared/ui/empty-state";
+import { MoreLink } from "@/shared/ui/more-link";
+import { PageShell } from "@/widgets/page-shell";
 
 import { createArticleData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
@@ -14,55 +18,68 @@ export const Route = createFileRoute("/news/$id/$newsId")({
     const year = Number(params.id);
     const articleId = Number(params.newsId);
 
+    // 상세 화면이 쓰는 바로 그 쿼리 하나만 프리페치한다. 예전에는 연도 전체
+    // 목록도 함께 받았지만, 앞뒤 글이 단건 응답에 담겨 오면서 필요가 없어졌다.
+    let article;
     try {
-      // PC(단건)와 모바일(연도 전체)이 서로 다른 쿼리를 사용하므로 둘 다 프리페치
-      const [articleResponse] = await Promise.all([
-        context.queryClient.ensureQueryData(
-          v2Api.getGetNewsArticleQueryOptions(year, articleId),
-        ),
-        context.queryClient.ensureQueryData(
-          v2Api.getListNewsByYearQueryOptions(year),
-        ),
-      ]);
-
-      const article = articleResponse.data.article;
-
-      if (!article) {
-        return {};
-      }
-
-      const description = [
-        article.title,
-        article.description?.slice(0, 140),
-      ].join(" | ");
-
-      const publishedDate = article.dateTime
-        ? new Date(article.dateTime).toISOString()
-        : undefined;
-
-      const structuredData = createArticleData({
-        headline: `${year}년 지호지 - ${article.title}`,
-        description,
-        images: article.images.map((img) => img.originSrc),
-        datePublished: publishedDate,
-        dateModified: publishedDate,
-        author: article.author,
-      });
-
-      return {
-        title: `${year}년 지호지 - ${article.title}`,
-        description,
-        imgUrl: article.images.at(0)?.originSrc,
-        articleType: "article",
-        datePublished: publishedDate,
-        dateModified: publishedDate,
-        author: article.author ?? "",
-        structuredData,
-      };
+      const response = await context.queryClient.ensureQueryData(
+        v2Api.getGetNewsArticleQueryOptions(year, articleId),
+      );
+      article = response.data.article;
     } catch (error) {
+      // 없는 글은 오류가 아니라 404 다.
+      if (isAxiosError(error) && error.response?.status === 404) {
+        throw notFound();
+      }
       console.error("[SSR] News article prefetch error:", error);
       return {};
     }
+
+    const description = [article.title, article.description?.slice(0, 140)].join(
+      " | ",
+    );
+
+    const publishedDate = article.dateTime
+      ? new Date(article.dateTime).toISOString()
+      : undefined;
+
+    const structuredData = createArticleData({
+      headline: `${year}년 지호지 - ${article.title}`,
+      description,
+      images: article.images.map((img) => img.originSrc),
+      datePublished: publishedDate,
+      dateModified: publishedDate,
+      author: article.author,
+    });
+
+    return {
+      title: `${year}년 지호지 - ${article.title}`,
+      description,
+      imgUrl: article.images.at(0)?.originSrc,
+      articleType: "article",
+      datePublished: publishedDate,
+      dateModified: publishedDate,
+      author: article.author ?? "",
+      structuredData,
+    };
+  },
+  notFoundComponent: () => {
+    const { id: year } = Route.useParams();
+    return (
+      <PageShell>
+        <EmptyState
+          title="해당 지호지를 찾을 수 없습니다"
+          description="삭제되었거나 주소가 바뀐 글일 수 있습니다."
+          action={
+            <MoreLink
+              link={linkOptions({ to: "/news/$id", params: { id: year } })}
+            >
+              {year}년 목록으로
+            </MoreLink>
+          }
+        />
+      </PageShell>
+    );
   },
   head: ({ loaderData, params }) =>
     seoHead({

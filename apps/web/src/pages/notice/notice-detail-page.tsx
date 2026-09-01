@@ -1,7 +1,8 @@
 import { v2Api } from "@packages/api";
-import { Link, Navigate, getRouteApi, linkOptions } from "@tanstack/react-router";
+import { Link, getRouteApi, linkOptions } from "@tanstack/react-router";
 
-import { ContentMeta } from "@/features/content";
+import { ArticleNeighbours, ContentMeta } from "@/features/content";
+import { toNeighbour } from "@/features/content/model/neighbours";
 import { LikeButton } from "@/features/reaction";
 import { Markdown } from "@/shared/ui/markdown";
 import { Tag } from "@/shared/ui/tag";
@@ -9,17 +10,23 @@ import { PageShell } from "@/widgets/page-shell";
 
 const routeApi = getRouteApi("/notice/$id");
 
+const linkTo = (id: number) =>
+  linkOptions({ to: "/notice/$id", params: { id: String(id) } });
+
+/**
+ * 공지 상세.
+ *
+ * 이전에는 공지 목록 전체를 받아 그 안에서 현재 글을 찾았다. 이제 서버가 단건
+ * 응답에 prev/next 까지 함께 준다 (api#38). 공지 응답만 봉투 없이 게시글 자체가
+ * 내려오므로 `response.data` 가 곧 글이다.
+ * 없는 id 는 라우트 loader 가 notFound 로 걸러낸다.
+ */
 export const NoticeDetailPage = () => {
   const { id } = routeApi.useParams();
 
-  const { data: notices = [] } = v2Api.useListNoticesSuspense(undefined, {
-    query: { select: (response) => response.data.notices ?? [] },
+  const { data: notice } = v2Api.useGetNoticeSuspense(Number(id), {
+    query: { select: (response) => response.data },
   });
-
-  const notice = notices.find((item) => String(item.id) === String(id));
-
-  // Suspense 쿼리라 이 시점에는 이미 로드가 끝나 있다 — 없으면 목록으로.
-  if (!notice) return <Navigate to="/notice" replace />;
 
   return (
     <PageShell width="prose">
@@ -44,6 +51,11 @@ export const NoticeDetailPage = () => {
         <div className="flex justify-center">
           <LikeButton boardId={Number(notice.id)} />
         </div>
+
+        <ArticleNeighbours
+          newer={toNeighbour(notice.next, linkTo, "다음 공지")}
+          older={toNeighbour(notice.prev, linkTo, "이전 공지")}
+        />
 
         <footer className="border-t border-line pt-6">
           <Link
