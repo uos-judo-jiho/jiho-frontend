@@ -5,10 +5,7 @@ import { cn } from "@/shared/lib/utils";
 import { v2Admin } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import {
-  GetApiV2AdminUsers200UsersItemAdditionalInfo,
-  GetApiV2AdminUsersUpgradeRequests200RequestsItem,
-} from "node_modules/@packages/api/src/_generated/v2/admin/model";
+import type { v2AdminModel } from "@packages/api/model";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { getUserRole } from "../utils/get-user-role";
@@ -78,8 +75,8 @@ const ApprovalItem = ({
   request,
   additionalInfo,
 }: {
-  request: GetApiV2AdminUsersUpgradeRequests200RequestsItem;
-  additionalInfo: GetApiV2AdminUsers200UsersItemAdditionalInfo;
+  request: v2AdminModel.GetApiV2AdminUsersUpgradeRequests200RequestsItem;
+  additionalInfo: v2AdminModel.GetApiV2AdminUsers200UsersItemAdditionalInfo;
 }) => {
   const queryClient = useQueryClient();
 
@@ -175,7 +172,7 @@ const ApprovalItem = ({
 const UpgradeProfile = ({
   additionalInfo,
 }: {
-  additionalInfo: GetApiV2AdminUsers200UsersItemAdditionalInfo;
+  additionalInfo: v2AdminModel.GetApiV2AdminUsers200UsersItemAdditionalInfo;
 }) => {
   if (!additionalInfo) return null;
 

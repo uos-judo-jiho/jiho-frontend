@@ -8,6 +8,10 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "Bundler",
+    // packages/* 는 tsdown 으로 dist 를 만들지만, exports 의 "development"
+    // 조건이 소스(src/*.ts)를 가리킨다. tsc 도 같은 조건을 타게 해서
+    // 빌드 없이 type-check 가 돌도록 한다 (dev 는 소스, 빌드는 dist).
+    "customConditions": ["development"],
     "isolatedModules": true,
     "noEmit": true
   }

@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { v2Admin } from "@packages/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { GetApiV2AdminPending200AdminsItem } from "node_modules/@packages/api/src/_generated/v2/admin/model/getApiV2AdminPending200AdminsItem";
+import type { v2AdminModel } from "@packages/api/model";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { getApprovalStatus } from "../utils/get-approval-status";
@@ -54,7 +54,7 @@ export const WaitedApproval = ({ showAll = false }: WaitedApprovalProps) => {
 const ApprovalItem = ({
   admin,
 }: {
-  admin: GetApiV2AdminPending200AdminsItem;
+  admin: v2AdminModel.GetApiV2AdminPending200AdminsItem;
 }) => {
   const queryClient = useQueryClient();
 
@@ -128,7 +128,7 @@ const ApprovalItem = ({
 const ApprovalProfile = ({
   admin,
 }: {
-  admin: GetApiV2AdminPending200AdminsItem;
+  admin: v2AdminModel.GetApiV2AdminPending200AdminsItem;
 }) => {
   const items: { label: string; value: string }[] = [];
   if (admin.name) items.push({ label: "이름", value: admin.name });

@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "jsx": "react-jsx",
     // dist 는 tsdown(rolldown)이 만든다. tsc 는 타입 검사 용도로만 쓴다.
     "noEmit": true
   },

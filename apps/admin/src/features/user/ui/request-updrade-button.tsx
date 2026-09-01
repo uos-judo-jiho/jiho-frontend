@@ -1,7 +1,7 @@
 import { CommonModal } from "@/components/common/Modals";
 import { Button } from "@/components/ui/button";
 import { v2Admin } from "@packages/api";
-import { PostApiV2AdminMeUpgradeRequestBodyRequestedRole } from "node_modules/@packages/api/src/_generated/v2/admin/model";
+import type { v2AdminModel } from "@packages/api/model";
 import { useQueryClient } from "@tanstack/react-query";
 import { overlay } from "overlay-kit";
 import { useState } from "react";
@@ -69,15 +69,17 @@ const RequestUpgradeModal = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (role: PostApiV2AdminMeUpgradeRequestBodyRequestedRole) => void;
+  onConfirm: (
+    role: v2AdminModel.PostApiV2AdminMeUpgradeRequestBodyRequestedRole,
+  ) => void;
   isPending: boolean;
 }) => {
   const [selectedRole, setSelectedRole] = useState<
-    PostApiV2AdminMeUpgradeRequestBodyRequestedRole | ""
+    v2AdminModel.PostApiV2AdminMeUpgradeRequestBodyRequestedRole | ""
   >("");
 
   const roles: {
-    value: PostApiV2AdminMeUpgradeRequestBodyRequestedRole;
+    value: v2AdminModel.PostApiV2AdminMeUpgradeRequestBodyRequestedRole;
     label: string;
   }[] = [
     { value: "general", label: "회원" },
