@@ -62,7 +62,6 @@ export const useArticleForm = ({
   const [values, setValues] = useState<ArticleFormValues>(
     data ?? { ...EMPTY_VALUES, author: myAuthorString },
   );
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
   const router = useRouter();
@@ -93,6 +92,10 @@ export const useArticleForm = ({
         toast.success("게시물이 성공적으로 등록되었습니다.");
         navigate({ href: listHref });
       },
+      onError: (error) => {
+        console.error("board create failed:", error);
+        toast.error("업로드에 실패하였습니다.");
+      },
     },
     axios: { withCredentials: true },
   });
@@ -104,6 +107,10 @@ export const useArticleForm = ({
         toast.success("업데이트에 성공하였습니다.");
         navigate({ href: listHref });
       },
+      onError: (error) => {
+        console.error("board update failed:", error);
+        toast.error("업데이트에 실패하였습니다.");
+      },
     },
     axios: { withCredentials: true },
   });
@@ -114,6 +121,10 @@ export const useArticleForm = ({
         await invalidateList();
         toast.success("게시물이 성공적으로 삭제되었습니다.");
         navigate({ href: `/${type}` });
+      },
+      onError: (error) => {
+        console.error("board delete failed:", error);
+        toast.error("게시물 삭제에 실패하였습니다.");
       },
     },
     axios: { withCredentials: true },
@@ -127,8 +138,19 @@ export const useArticleForm = ({
         toast.success("이미지가 성공적으로 업로드되었습니다.");
         navigate({ href: `/news/${values.dateTime.slice(0, 4)}/gallery` });
       },
+      onError: (error) => {
+        console.error("gallery upload failed:", error);
+        toast.error("이미지 업로드에 실패했습니다.");
+      },
     },
   });
+
+  /** 저장·삭제가 도는 동안 화면을 덮는다. 어느 뮤테이션이든 진행 중이면 true. */
+  const isSubmitting =
+    createBoardMutation.isPending ||
+    updateBoardMutation.isPending ||
+    deleteBoardMutation.isPending ||
+    uploadPicturesMutation.isPending;
 
   const setField = <Key extends keyof ArticleFormValues>(
     key: Key,
@@ -189,38 +211,36 @@ export const useArticleForm = ({
       return;
     }
 
-    setIsSubmitting(true);
+    // 성공·실패 처리는 각 뮤테이션의 onSuccess/onError 에 있다.
+    // 여기서는 어느 요청을 보낼지와, 보내기 전 값 검증만 한다.
+    if (gallery) {
+      const year = Number(values.dateTime.slice(0, 4));
 
-    try {
-      if (gallery) {
-        const yearNumber = Number(values.dateTime.slice(0, 4));
-        if (Number.isNaN(yearNumber)) {
-          throw new Error("유효하지 않은 연도입니다.");
-        }
-
-        await uploadPicturesMutation.mutateAsync({
-          year: yearNumber,
-          data: { imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc) },
-        });
-      } else if (isNew) {
-        await createBoardMutation.mutateAsync({ data: toBoardPayload() });
-      } else {
-        const boardId = Number(data.id);
-        if (Number.isNaN(boardId)) {
-          throw new Error("유효하지 않은 게시글 ID입니다.");
-        }
-
-        await updateBoardMutation.mutateAsync({
-          boardId,
-          data: toBoardPayload(),
-        });
+      if (Number.isNaN(year)) {
+        toast.error("유효하지 않은 연도입니다.");
+        return;
       }
-    } catch (error) {
-      console.error("upload error:", error);
-      toast.error("업로드에 실패하였습니다.");
-    } finally {
-      setIsSubmitting(false);
+
+      uploadPicturesMutation.mutate({
+        year,
+        data: { imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc) },
+      });
+      return;
     }
+
+    if (isNew) {
+      createBoardMutation.mutate({ data: toBoardPayload() });
+      return;
+    }
+
+    const boardId = Number(data.id);
+
+    if (Number.isNaN(boardId)) {
+      toast.error("유효하지 않은 게시글 ID입니다.");
+      return;
+    }
+
+    updateBoardMutation.mutate({ boardId, data: toBoardPayload() });
   };
 
   const remove = async () => {
@@ -235,17 +255,14 @@ export const useArticleForm = ({
       return;
     }
 
-    try {
-      const boardId = Number(data?.id);
-      if (Number.isNaN(boardId)) {
-        throw new Error("유효하지 않은 게시글 ID입니다.");
-      }
+    const boardId = Number(data?.id);
 
-      await deleteBoardMutation.mutateAsync({ boardId });
-    } catch (error) {
-      console.error(error);
-      toast.error("게시물을 삭제에 실패하였습니다!");
+    if (Number.isNaN(boardId)) {
+      toast.error("유효하지 않은 게시글 ID입니다.");
+      return;
     }
+
+    deleteBoardMutation.mutate({ boardId });
   };
 
   const cancel = () => router.history.back();

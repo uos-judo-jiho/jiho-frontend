@@ -123,7 +123,15 @@ export const Awards = () => {
 
   const createAwardMutation = v2Admin.usePostApiV2AdminAwards({
     mutation: {
-      onSuccess: invalidateAwards,
+      onSuccess: () => {
+        invalidateAwards();
+        setCreateValues(emptyForm);
+        setIsCreateOpen(false);
+      },
+      onError: (error) => {
+        console.error("award create failed:", error);
+        toast.error("수상이력 등록에 실패했습니다.");
+      },
     },
     axios: {
       withCredentials: true,
@@ -132,7 +140,14 @@ export const Awards = () => {
 
   const updateAwardMutation = v2Admin.usePutApiV2AdminAwardsAwardId({
     mutation: {
-      onSuccess: invalidateAwards,
+      onSuccess: () => {
+        invalidateAwards();
+        cancelEdit();
+      },
+      onError: (error) => {
+        console.error("award update failed:", error);
+        toast.error("수상이력 수정에 실패했습니다.");
+      },
     },
     axios: {
       withCredentials: true,
@@ -142,6 +157,10 @@ export const Awards = () => {
   const deleteAwardMutation = v2Admin.useDeleteApiV2AdminAwardsAwardId({
     mutation: {
       onSuccess: invalidateAwards,
+      onError: (error) => {
+        console.error("award delete failed:", error);
+        toast.error("수상이력 삭제에 실패했습니다.");
+      },
     },
     axios: {
       withCredentials: true,
@@ -169,15 +188,8 @@ export const Awards = () => {
     }));
   };
 
-  const handleCreate = async () => {
-    try {
-      await createAwardMutation.mutateAsync({ data: createValues });
-      setCreateValues(emptyForm);
-      setIsCreateOpen(false);
-    } catch (error) {
-      console.error(error);
-      toast.error("수상이력 등록에 실패했습니다.");
-    }
+  const handleCreate = () => {
+    createAwardMutation.mutate({ data: createValues });
   };
 
   const startEdit = (award: AwardItem) => {
@@ -230,16 +242,7 @@ export const Awards = () => {
 
     if (!confirmed) return;
 
-    try {
-      await updateAwardMutation.mutateAsync({
-        awardId: editingAwardId,
-        data: editValues,
-      });
-      cancelEdit();
-    } catch (error) {
-      console.error(error);
-      toast.error("수상이력 수정에 실패했습니다.");
-    }
+    updateAwardMutation.mutate({ awardId: editingAwardId, data: editValues });
   };
 
   const handleDelete = async (awardId: number) => {
@@ -252,12 +255,7 @@ export const Awards = () => {
 
     if (!confirmed) return;
 
-    try {
-      await deleteAwardMutation.mutateAsync({ awardId });
-    } catch (error) {
-      console.error(error);
-      toast.error("수상이력 삭제에 실패했습니다.");
-    }
+    deleteAwardMutation.mutate({ awardId });
   };
 
   useEffect(() => {
