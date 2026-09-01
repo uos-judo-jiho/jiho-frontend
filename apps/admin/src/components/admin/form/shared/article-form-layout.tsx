@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/layouts/PageHeader";
 import { Button } from "@/components/ui/button";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { FormProvider } from "react-hook-form";
 import { ButtonContainer } from "../StyledComponent/FormContainer";
 import type { ArticleFormController } from "./use-article-form";
 
@@ -20,7 +21,8 @@ type ArticleFormLayoutProps = {
 /**
  * 게시판별 폼이 공유하는 껍데기 — 헤더 / 액션 버튼 / 저장 중 오버레이.
  *
- * 입력 필드 구성은 게시판마다 달라지므로 children 으로 통째로 받는다.
+ * 입력 필드 구성은 게시판마다 달라지므로 children 으로 통째로 받는다. 필드
+ * 컴포넌트가 useFormContext 로 폼에 붙을 수 있도록 FormProvider 도 여기서 건다.
  * 저장·삭제 확인은 useArticleForm 이 overlay-kit 으로 직접 띄우므로 여기에는 없다.
  */
 export const ArticleFormLayout = ({
@@ -30,7 +32,7 @@ export const ArticleFormLayout = ({
   children,
   footer,
 }: ArticleFormLayoutProps) => (
-  <>
+  <FormProvider {...form.methods}>
     <PageHeader
       title={title}
       icon={icon}
@@ -85,5 +87,5 @@ export const ArticleFormLayout = ({
     )}
 
     {footer}
-  </>
+  </FormProvider>
 );

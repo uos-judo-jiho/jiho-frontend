@@ -1,16 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { useController } from "react-hook-form";
+import type { ArticleFormValues } from "../../lib/article-schema";
 import {
   InputContainer,
   StyledLabel,
   TagDeleteButton,
   TagsContainer,
 } from "../../StyledComponent/FormContainer";
+import { FieldErrorMessage } from "./field-error";
 
 type TagFieldProps = {
-  value: string[];
-  onChange: (next: string[]) => void;
   disabled?: boolean;
   placeholder?: string;
 };
@@ -21,11 +22,13 @@ type TagFieldProps = {
  * 훈련일지의 참여 인원은 부원 명부에서 고르는 별도 필드(ParticipantField)를 쓴다.
  */
 export const TagField = ({
-  value,
-  onChange,
   disabled = false,
   placeholder = "태그를 입력하세요 (예: 대회, 행사, 공지)",
 }: TagFieldProps) => {
+  const { field, fieldState } = useController<ArticleFormValues, "tags">({
+    name: "tags",
+  });
+  // 아직 태그가 되지 않은 입력값. 폼에 저장되는 값이 아니라 이 입력창만의 상태다.
   const [draft, setDraft] = useState("");
 
   const addTags = () => {
@@ -34,13 +37,11 @@ export const TagField = ({
       .map((tag) => tag.trim())
       .filter((tag) => tag.length > 0);
 
-    if (newTags.length === 0) {
-      setDraft("");
-      return;
-    }
-
-    onChange([...value, ...newTags]);
     setDraft("");
+
+    if (newTags.length > 0) {
+      field.onChange([...field.value, ...newTags]);
+    }
   };
 
   return (
@@ -78,18 +79,16 @@ export const TagField = ({
           태그 추가
         </Button>
       </div>
-      {value.map((tag, index) => (
+      {field.value.map((tag, index) => (
         <TagsContainer key={"tag" + index}>
           {index + 1}
           <Input
             id={"tag" + index}
-            name={"tag" + index}
-            required
             disabled={disabled}
             value={tag}
             onChange={(event) =>
-              onChange(
-                value.map((prev, current) =>
+              field.onChange(
+                field.value.map((prev, current) =>
                   current === index ? event.target.value : prev,
                 ),
               )
@@ -99,13 +98,16 @@ export const TagField = ({
             disabled={disabled}
             onClick={(event) => {
               event.preventDefault();
-              onChange(value.filter((_, current) => current !== index));
+              field.onChange(
+                field.value.filter((_, current) => current !== index),
+              );
             }}
           >
             ❌
           </TagDeleteButton>
         </TagsContainer>
       ))}
+      <FieldErrorMessage error={fieldState.error} />
     </InputContainer>
   );
 };

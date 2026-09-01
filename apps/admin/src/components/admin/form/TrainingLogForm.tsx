@@ -1,14 +1,14 @@
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { v2ApiModel } from "@packages/api/model";
 import { BookOpen } from "lucide-react";
-import ImageUploader from "./ImageUploader/ImageUploader";
-import MarkdownEditorField from "./MarkdownEditor/MarkdownEditorField";
 import { FormContainer } from "./StyledComponent/FormContainer";
 import { ArticleFormLayout } from "./shared/article-form-layout";
 import { ArticlePreview } from "./shared/article-preview";
 import {
   AuthorField,
   DateField,
+  DescriptionField,
+  ImageField,
   ParticipantField,
   TitleField,
 } from "./shared/fields";
@@ -36,53 +36,19 @@ function TrainingLogForm({ data }: TrainingLogFormProps) {
       form={form}
       title={article ? "훈련일지 수정" : "훈련일지 글쓰기"}
       icon={BookOpen}
-      footer={
-        <ArticlePreview
-          values={form.values}
-          titles={["작성자", "참여 인원", "훈련 날짜"]}
-        />
-      }
+      footer={<ArticlePreview titles={["작성자", "참여 인원", "훈련 날짜"]} />}
     >
       <FormContainer>
         <div>
-          <AuthorField
-            value={form.values.author}
-            onChange={form.setAuthor}
-            disabled={form.readOnly}
-            fixed={form.isAuthorFixed}
-          />
-          <TitleField
-            value={form.values.title}
-            onChange={(title) => form.setField("title", title)}
-            disabled={form.readOnly}
-          />
-          <ParticipantField
-            value={form.values.tags}
-            onChange={form.setTags}
-            disabled={form.readOnly}
-          />
-          <DateField
-            label="훈련 날짜"
-            value={form.values.dateTime}
-            onChange={(dateTime) => form.setField("dateTime", dateTime)}
-            disabled={form.readOnly}
-          />
-          <ImageUploader
-            setValues={form.setImages}
-            data={article?.imgSrcs.map(({ originSrc }) => originSrc)}
-            imageLimit={10}
-            disabled={form.readOnly}
-          />
+          <AuthorField disabled={form.readOnly} fixed={form.isAuthorFixed} />
+          <TitleField disabled={form.readOnly} />
+          <ParticipantField disabled={form.readOnly} />
+          <DateField label="훈련 날짜" disabled={form.readOnly} />
+          <ImageField disabled={form.readOnly} />
         </div>
       </FormContainer>
 
-      <MarkdownEditorField
-        value={form.values.description}
-        onChange={(description) => form.setField("description", description)}
-        onImageUpload={form.uploadInlineImage}
-        type="training"
-        disabled={form.readOnly}
-      />
+      <DescriptionField type="training" disabled={form.readOnly} />
     </ArticleFormLayout>
   );
 }

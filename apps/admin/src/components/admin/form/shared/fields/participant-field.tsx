@@ -1,12 +1,13 @@
 import { ParticipantSelect } from "@/features/user/ui/participant-select";
+import { useController } from "react-hook-form";
+import type { ArticleFormValues } from "../../lib/article-schema";
 import {
   InputContainer,
   StyledLabel,
 } from "../../StyledComponent/FormContainer";
+import { FieldErrorMessage } from "./field-error";
 
 type ParticipantFieldProps = {
-  value: string[];
-  onChange: (next: string[]) => void;
   disabled?: boolean;
 };
 
@@ -17,19 +18,28 @@ type ParticipantFieldProps = {
  * 예전에 쓴 훈련일지와 섞이지 않는다.
  */
 export const ParticipantField = ({
-  value,
-  onChange,
   disabled = false,
-}: ParticipantFieldProps) => (
-  <InputContainer>
-    <StyledLabel htmlFor="participant-search">참여 인원</StyledLabel>
-    <hr className="my-2" />
-    <div className="mb-2">
-      <small className="text-gray-500">
-        부원 이름을 검색해 선택하세요. 아직 가입하지 않은 사람은 이름을 입력하고
-        Enter 를 누르면 그대로 추가됩니다.
-      </small>
-    </div>
-    <ParticipantSelect value={value} onChange={onChange} disabled={disabled} />
-  </InputContainer>
-);
+}: ParticipantFieldProps) => {
+  const { field, fieldState } = useController<ArticleFormValues, "tags">({
+    name: "tags",
+  });
+
+  return (
+    <InputContainer>
+      <StyledLabel htmlFor="participant-search">참여 인원</StyledLabel>
+      <hr className="my-2" />
+      <div className="mb-2">
+        <small className="text-gray-500">
+          부원 이름을 검색해 선택하세요. 아직 가입하지 않은 사람은 이름을
+          입력하고 Enter 를 누르면 그대로 추가됩니다.
+        </small>
+      </div>
+      <ParticipantSelect
+        value={field.value}
+        onChange={field.onChange}
+        disabled={disabled}
+      />
+      <FieldErrorMessage error={fieldState.error} />
+    </InputContainer>
+  );
+};

@@ -1,11 +1,10 @@
 import { normalizeNewsResponse } from "@/shared/lib/api/news";
-import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
 import { v2Api } from "@packages/api";
 import { Newspaper } from "lucide-react";
 import { useMemo } from "react";
-import ImageUploader from "./ImageUploader/ImageUploader";
 import { FormContainer } from "./StyledComponent/FormContainer";
 import { ArticleFormLayout } from "./shared/article-form-layout";
+import { ImageField } from "./shared/fields";
 import { useArticleForm } from "./shared/use-article-form";
 
 type NewsGalleryFromProps = {
@@ -19,12 +18,13 @@ type NewsGalleryFromProps = {
  * 지호지 폼과 화면이 거의 겹치지 않아 별도 컴포넌트로 둔다.
  */
 const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
-  const { data: response } = v2Api.useGetApiV2NewsYear(
+  // 폼 기본값을 첫 렌더에 채워야 해서 suspense 로 받는다. 값이 늦게 도착하면
+  // 이미 만들어진 폼에는 반영되지 않아 기존 사진이 통째로 비어 보인다.
+  const { data: response } = v2Api.useGetApiV2NewsYearSuspense(
     Number(year),
     undefined,
     {
       query: {
-        enabled: Boolean(year),
         select: (result) => result.data,
       },
     },
@@ -35,41 +35,32 @@ const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
     [response, year],
   );
 
-  const galleryData: ArticleInfoType | undefined = newsData
-    ? {
-        id: `${newsData.year}-gallery`,
-        imgSrcs: newsData.images.map((src) => ({
-          originSrc: src,
-          smallSrc: null,
-        })),
-        title: "",
-        author: "",
-        dateTime: year,
-        tags: [],
-        description: "",
-      }
-    : undefined;
-
   const form = useArticleForm({
     type: "news",
-    data: galleryData,
     gallery: true,
+    data: {
+      id: `${year}-gallery`,
+      imgSrcs: (newsData?.images ?? []).map((src) => ({
+        originSrc: src,
+        smallSrc: null,
+      })),
+      title: "",
+      author: "",
+      dateTime: year,
+      tags: [],
+      description: "",
+    },
   });
 
   return (
     <ArticleFormLayout
       form={form}
-      title={`${form.values.dateTime.slice(0, 4)}년 갤러리 작성`}
+      title={`${year.slice(0, 4)}년 갤러리 작성`}
       icon={Newspaper}
     >
       <FormContainer>
         <div>
-          <ImageUploader
-            setValues={form.setImages}
-            data={galleryData?.imgSrcs.map(({ originSrc }) => originSrc)}
-            imageLimit={50}
-            disabled={form.readOnly}
-          />
+          <ImageField imageLimit={50} disabled={form.readOnly} />
         </div>
       </FormContainer>
     </ArticleFormLayout>

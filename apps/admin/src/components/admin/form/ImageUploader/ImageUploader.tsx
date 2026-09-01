@@ -29,10 +29,10 @@ import {
 } from "../StyledComponent/FormContainer";
 
 type ImageUploaderProps = {
-  setValues: (images: (prev: string[]) => string[]) => void;
-  data?: string[];
+  /** 업로드된 이미지 URL 목록. 폼이 들고 있는 값을 그대로 받는다. */
+  value: string[];
+  onChange: (next: string[]) => void;
   imageLimit?: number;
-  onUpload?: (urls: string[]) => void;
   disabled?: boolean;
 };
 
@@ -112,16 +112,15 @@ const SortableImage = ({
 };
 
 const ImageUploader = ({
-  setValues,
-  data,
+  value,
+  onChange,
   imageLimit = 10,
-  onUpload,
   disabled = false,
 }: ImageUploaderProps) => {
-  const [previewImg, setPreviewImg] = useState<string[]>(data || []);
-  const [isFull, setIsFull] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isFull = value.length >= imageLimit;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -144,10 +143,9 @@ const ImageUploader = ({
   });
 
   const handleFiles = async (files: FileList | File[]) => {
-    const currentCount = previewImg.length;
-    if (currentCount >= imageLimit) {
+    const currentCount = value.length;
+    if (isFull) {
       toast.warning(`사진은 최대 ${imageLimit}장까지 추가할 수 있습니다.`);
-      setIsFull(true);
       return;
     }
 
@@ -173,13 +171,7 @@ const ImageUploader = ({
       const newUrls = responses.map((res) => res.data.url);
 
       if (newUrls.length > 0) {
-        setPreviewImg((prev) => [...prev, ...newUrls]);
-        setValues((prev) => [...prev, ...newUrls]);
-        onUpload?.(newUrls);
-      }
-
-      if (currentCount + newUrls.length >= imageLimit) {
-        setIsFull(true);
+        onChange([...value, ...newUrls]);
       }
     } catch (error) {
       console.error("Image upload failed:", error);
@@ -217,23 +209,17 @@ const ImageUploader = ({
   ) => {
     event.preventDefault();
     event.stopPropagation();
-    const deletedUrl = previewImg[index];
-    setPreviewImg((prev) => prev.filter((_el, idx) => idx !== index));
-    setValues((prev) => prev.filter((url) => url !== deletedUrl));
-    setIsFull(false);
+    onChange(value.filter((_url, current) => current !== index));
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      setPreviewImg((items) => {
-        const oldIndex = items.indexOf(active.id as string);
-        const newIndex = items.indexOf(over.id as string);
-        const newOrder = arrayMove(items, oldIndex, newIndex);
-        setValues(() => [...newOrder]);
-        return newOrder;
-      });
+      const oldIndex = value.indexOf(active.id as string);
+      const newIndex = value.indexOf(over.id as string);
+
+      onChange(arrayMove(value, oldIndex, newIndex));
     }
   };
 
@@ -288,9 +274,9 @@ const ImageUploader = ({
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <SortableContext items={previewImg} strategy={rectSortingStrategy}>
+        <SortableContext items={value} strategy={rectSortingStrategy}>
           <PreviewContainer className="mt-4">
-            {previewImg.map((url, index) => (
+            {value.map((url, index) => (
               <SortableImage
                 key={url}
                 id={url}

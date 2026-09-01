@@ -1,26 +1,23 @@
 import { openConfirmDialog } from "@/components/common/Modals";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
-import { toBase64 } from "@/shared/lib/utils/Utils";
 import { v2Admin, v2Api } from "@packages/api";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import {
+  EMPTY_ARTICLE_VALUES,
+  articleFormSchema,
+  galleryFormSchema,
+  type ArticleFormValues,
+} from "../lib/article-schema";
 import {
   getArticlePermission,
   type ArticleBoardType,
 } from "../lib/article-permission";
 
-export type ArticleFormValues = Omit<ArticleInfoType, "id">;
-
-const EMPTY_VALUES: ArticleFormValues = {
-  author: "",
-  title: "",
-  tags: [],
-  description: "",
-  dateTime: "",
-  imgSrcs: [],
-};
+export type { ArticleFormValues };
 
 export type UseArticleFormOptions = {
   type: ArticleBoardType;
@@ -30,11 +27,14 @@ export type UseArticleFormOptions = {
 };
 
 /**
- * 지호지·훈련일지·공지사항 폼이 공유하는 상태와 저장 로직.
+ * 지호지·훈련일지·공지사항 폼이 공유하는 값·권한·저장 로직.
+ *
+ * 값은 react-hook-form 이 들고, 검증은 zod 스키마가 한다. 필드 컴포넌트는
+ * FormProvider 를 통해 직접 register/useController 로 붙으므로 value·onChange 를
+ * 폼마다 내려줄 필요가 없다.
  *
  * 세 게시판은 화면이 갈라지더라도 저장·삭제 경로(`/api/v2/admin/board`)와 권한
- * 규칙이 같다. 그래서 화면은 각 폼이 직접 그리고, 여기서는 값·권한·뮤테이션만
- * 관리한다.
+ * 규칙이 같아서, 그 부분만 여기에 모은다.
  */
 export const useArticleForm = ({
   type,
@@ -59,9 +59,13 @@ export const useArticleForm = ({
     ? `${meData.user.additionalInfo.generation ? meData.user.additionalInfo.generation + "기 " : ""}${meData.user.additionalInfo.name}`
     : meData.user.email;
 
-  const [values, setValues] = useState<ArticleFormValues>(
-    data ?? { ...EMPTY_VALUES, author: myAuthorString },
-  );
+  const methods = useForm<ArticleFormValues>({
+    resolver: zodResolver(gallery ? galleryFormSchema : articleFormSchema),
+    defaultValues: data ?? {
+      ...EMPTY_ARTICLE_VALUES,
+      author: myAuthorString,
+    },
+  });
 
   const navigate = useNavigate();
   const router = useRouter();
@@ -133,10 +137,10 @@ export const useArticleForm = ({
   const uploadPicturesMutation = v2Admin.usePostApiV2AdminPicturesYear({
     axios: { withCredentials: true },
     mutation: {
-      onSuccess: async () => {
+      onSuccess: async (_response, { year }) => {
         await queryClient.invalidateQueries({ queryKey: queryKeyByType.news });
         toast.success("이미지가 성공적으로 업로드되었습니다.");
-        navigate({ href: `/news/${values.dateTime.slice(0, 4)}/gallery` });
+        navigate({ href: `/news/${year}/gallery` });
       },
       onError: (error) => {
         console.error("gallery upload failed:", error);
@@ -152,46 +156,7 @@ export const useArticleForm = ({
     deleteBoardMutation.isPending ||
     uploadPicturesMutation.isPending;
 
-  const setField = <Key extends keyof ArticleFormValues>(
-    key: Key,
-    value: ArticleFormValues[Key],
-  ) => {
-    setValues((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const setAuthor = (author: string) => {
-    if (isAuthorFixed) {
-      return;
-    }
-    setField("author", author);
-  };
-
-  const setTags = (next: string[]) => setField("tags", next);
-
-  /** ImageUploader 는 문자열 URL 배열만 다루므로 그 형태로 주고받는다. */
-  const setImages = (update: (prev: string[]) => string[]) => {
-    setValues((prev) => ({
-      ...prev,
-      imgSrcs: update(prev.imgSrcs.map(({ originSrc }) => originSrc)).map(
-        (src) => ({ originSrc: src, smallSrc: null }),
-      ),
-    }));
-  };
-
-  /**
-   * 본문 에디터의 레거시 업로드 경로. 드래그 앤 드롭은 MarkdownEditor 내부에서
-   * S3 로 직접 올리고, 여기로 들어오는 파일은 base64 로만 인라인된다.
-   */
-  const uploadInlineImage = async (file: File): Promise<string> => {
-    try {
-      return await toBase64(file);
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      throw new Error("이미지 업로드에 실패했습니다.");
-    }
-  };
-
-  const toBoardPayload = () => ({
+  const toBoardPayload = (values: ArticleFormValues) => ({
     title: values.title,
     author: values.author,
     boardType: type,
@@ -201,7 +166,9 @@ export const useArticleForm = ({
     imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc),
   });
 
-  const submit = async () => {
+  // 검증을 통과했을 때만 확인 모달이 뜬다. 성공·실패 처리는 각 뮤테이션의
+  // onSuccess/onError 에 있으므로 여기서는 어느 요청을 보낼지만 정한다.
+  const submit = methods.handleSubmit(async (values) => {
     const confirmed = await openConfirmDialog({
       title: isNew ? "작성한 글 저장" : "변경사항 저장",
       description: `${isNew ? "작성한 글" : "변경사항"}을 저장하시겠습니까?`,
@@ -211,8 +178,6 @@ export const useArticleForm = ({
       return;
     }
 
-    // 성공·실패 처리는 각 뮤테이션의 onSuccess/onError 에 있다.
-    // 여기서는 어느 요청을 보낼지와, 보내기 전 값 검증만 한다.
     if (gallery) {
       const year = Number(values.dateTime.slice(0, 4));
 
@@ -229,7 +194,7 @@ export const useArticleForm = ({
     }
 
     if (isNew) {
-      createBoardMutation.mutate({ data: toBoardPayload() });
+      createBoardMutation.mutate({ data: toBoardPayload(values) });
       return;
     }
 
@@ -240,8 +205,8 @@ export const useArticleForm = ({
       return;
     }
 
-    updateBoardMutation.mutate({ boardId, data: toBoardPayload() });
-  };
+    updateBoardMutation.mutate({ boardId, data: toBoardPayload(values) });
+  });
 
   const remove = async () => {
     const confirmed = await openConfirmDialog({
@@ -268,18 +233,13 @@ export const useArticleForm = ({
   const cancel = () => router.history.back();
 
   return {
-    values,
+    methods,
     isNew,
     gallery,
     canEdit,
     readOnly,
     isAuthorFixed,
     isSubmitting,
-    setField,
-    setAuthor,
-    setTags,
-    setImages,
-    uploadInlineImage,
     submit,
     remove,
     cancel,
