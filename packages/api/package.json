@@ -3,15 +3,37 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./model": "./src/model.ts",
-    "./_generated/v2/admin": "./src/_generated/v2/admin/index.ts",
-    "./_generated/v2/api": "./src/_generated/v2/api/index.ts"
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./model": {
+      "development": "./src/model.ts",
+      "types": "./dist/model.d.ts",
+      "default": "./dist/model.js"
+    },
+    "./_generated/v2/admin": {
+      "development": "./src/_generated/v2/admin/index.ts",
+      "types": "./dist/_generated/v2/admin/index.d.ts",
+      "default": "./dist/_generated/v2/admin/index.js"
+    },
+    "./_generated/v2/api": {
+      "development": "./src/_generated/v2/api/index.ts",
+      "types": "./dist/_generated/v2/api/index.d.ts",
+      "default": "./dist/_generated/v2/api/index.js"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "clean": "rm -rf dist",
     "gen": "orval",
     "gen:watch": "orval --watch",
     "gen:prod": "NODE_ENV=production orval"
@@ -26,6 +48,7 @@
   },
   "devDependencies": {
     "@orval/core": "^8.2.0",
-    "orval": "^8.2.0"
+    "orval": "^8.2.0",
+    "tsdown": "catalog:"
   }
 }

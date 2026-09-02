@@ -3,16 +3,36 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./login": "./src/features/login/index.ts",
-    "./register": "./src/features/register/index.ts"
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./login": {
+      "development": "./src/features/login/index.ts",
+      "types": "./dist/login.d.ts",
+      "default": "./dist/login.js"
+    },
+    "./register": {
+      "development": "./src/features/register/index.ts",
+      "types": "./dist/register.d.ts",
+      "default": "./dist/register.js"
+    }
   },
   "imports": {
     "#shared/*": "./src/shared/*",
     "#features/*": "./src/features/*"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -31,6 +51,7 @@
   },
   "devDependencies": {
     "@types/react": "catalog:",
-    "@types/react-dom": "catalog:"
+    "@types/react-dom": "catalog:",
+    "tsdown": "catalog:"
   }
 }

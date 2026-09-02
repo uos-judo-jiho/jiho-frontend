@@ -12,6 +12,7 @@
     "clean": "rm -rf dist build .output .tanstack .nitro",
     "clean:dev": "npm run clean",
     "build": "sh script/build.sh",
+    "build:deps": "pnpm --filter \"@apps/web^...\" --no-fail-if-no-match run --if-present build",
     "build:vite": "vite build",
     "build:docker": "npm run clean && sh script/docker-build-local.sh",
     "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",

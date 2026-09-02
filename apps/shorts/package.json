@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run type-check && vite build",
+    "build": "pnpm run build:deps && npm run type-check && vite build",
+    "build:deps": "pnpm --filter \"@apps/shorts^...\" --no-fail-if-no-match run --if-present build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit",

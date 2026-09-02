@@ -19,19 +19,21 @@ jiho-frontend/
 │   ├── admin/      # Admin SPA
 │   ├── internal/   # Internal tools
 │   └── shorts/     # Shorts video app
-├── packages/
+├── packages/       # all built with tsdown (rolldown) → dist/ (ESM + .d.ts)
 │   ├── api/        # orval-generated API clients (@packages/api)
 │   │   └── src/_generated/  # GITIGNORED — regenerate with `pnpm orval`
 │   ├── auth/
-│   └── jds/        # Design system
-└── pnpm-workspace.yaml  # includes the react/typescript version catalog
+│   └── jds/        # Design system (barrels are still empty scaffolding)
+└── pnpm-workspace.yaml  # includes the react/typescript/tsdown version catalog
 ```
 
 ## Development Commands (root)
 
 - `pnpm dev` / `pnpm dev:web` - TanStack Start dev server (port 3000, SSR + HMR)
 - `pnpm orval` - Regenerate API clients from the backend OpenAPI spec (requires network; `NODE_ENV=production` for the prod spec). **Required before type-check/build on a fresh clone** since `_generated` is gitignored.
-- `pnpm build:web` - Production build (`script/build.sh`: sitemap → clean → orval → `vite build`)
+- `pnpm build:packages` - tsdown build for every `packages/*` (apps run this for their own deps automatically via each app's `build:deps`)
+- `pnpm dev:packages` - `tsdown --watch` for every `packages/*`; only needed if you want to watch the built output, since dev/type-check read the source directly
+- `pnpm build:web` - Production build (`script/build.sh`: sitemap → clean → orval → packages → `vite build`)
 - `pnpm type-check:web` - `tsc -p apps/web/tsconfig.app.json --noEmit`
 - `pnpm lint:web` - oxlint
 - `pnpm -C apps/web start:prod` - Run the production server (`node .output/server/index.mjs`)
@@ -130,6 +132,37 @@ Fonts: Pretendard Variable (dynamic subset) is loaded via `<link>` in
 - TypeScript strict mode; `pnpm type-check:web` and `pnpm lint:web` must pass
   (both require `pnpm orval` first)
 
+## packages/* build (tsdown)
+
+Every workspace package is bundled by **tsdown** (rolldown) into `dist/` — ESM
+plus `.d.ts`, code-split across entries, with `dependencies`/`peerDependencies`
+left external. Each package has a `tsdown.config.ts` whose entry keys map 1:1
+onto its `exports`.
+
+Resolution is split by condition, so **the source stays the source of truth in
+development**:
+
+```jsonc
+"exports": {
+  ".": {
+    "development": "./src/index.ts",  // vite dev, vitest, tsc
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"      // vite build (NODE_ENV=production)
+  }
+}
+```
+
+- `pnpm dev` / `pnpm test` / `pnpm type-check` need **no** package build — Vite's
+  default `development|production` condition and `customConditions:
+  ["development"]` in `tsconfig.base.json` both land on `src`.
+- `vite build` sets `NODE_ENV=production`, so production bundles consume `dist`.
+  Each app therefore runs `build:deps` (`pnpm --filter "<app>^..." run
+  --if-present build`) before `vite build`; `apps/web` does it inside
+  `script/build.sh`.
+- Never deep-import a package's internals (the old
+  `node_modules/@packages/api/src/...` paths). Go through the `exports` subpaths
+  — `@packages/api`, `@packages/api/model` — or the built output won't be used.
+
 ## Deployment
 
 Multi-stage Dockerfile (`apps/web/Dockerfile`): install → `pnpm -C apps/web build` → runtime image copies the self-contained `.output/` and runs `node apps/web/.output/server/index.mjs` (no runtime `pnpm install` needed).
@@ -160,7 +193,8 @@ Release notes are published per app, automatically:
 
 ## Important Notes
 
-- `packages/api/src/_generated` is gitignored; builds and type-checks need `pnpm orval` (network access to the backend spec) first.
+- `packages/api/src/_generated` is gitignored; builds and type-checks need `pnpm orval` (network access to the backend spec) first. `pnpm build:packages` needs it too — the generated files are tsdown entries.
+- `packages/*/dist` is gitignored build output. Dev never reads it (see the tsdown section), so a stale `dist` can only bite a production build — and every app build regenerates it.
 - `src/routeTree.gen.ts` is auto-generated on dev/build by the Start plugin.
 - Query cache holds `AxiosResponse` objects; dehydration sanitizes them via `serializeData: JSON.parse(JSON.stringify(...))` in `src/router.tsx` — keep this when touching router setup, or SSR payload serialization breaks silently.
 - Mobile-first responsive design with custom breakpoints (`xs: 340px, sm: 560px, md: 860px, lg: 1200px`), declared in the `@theme` block of `src/app/index.css`.
