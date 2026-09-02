@@ -7,7 +7,7 @@ import { PageShell } from "@/widgets/page-shell";
 
 /** 훈련일지 목록. */
 export const TrainingIndexPage = () => {
-  const { data: trainings = [] } = v2Api.useGetApiV2TrainingsSuspense(
+  const { data: trainings = [] } = v2Api.useListTrainingLogsSuspense(
     undefined,
     { query: { select: (response) => response.data.trainingLogs ?? [] } },
   );

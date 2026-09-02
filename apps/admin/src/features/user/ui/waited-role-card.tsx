@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/shared/lib/utils";
 import { v2Admin } from "@packages/api";
+import { v2AdminModel } from "@packages/api/model";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import type { v2AdminModel } from "@packages/api/model";
 import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { getUserRole } from "../utils/get-user-role";
@@ -16,7 +16,7 @@ type WaitedApprovalProps = {
 
 export const WaitedRole = ({ showAll = false }: WaitedApprovalProps) => {
   const { data: waitedUpgradeRequests } =
-    v2Admin.useGetApiV2AdminUsersUpgradeRequestsSuspense({
+    v2Admin.useListRoleUpgradeRequestsSuspense({
       query: {
         select: (data) => data.data.requests,
       },
@@ -26,7 +26,7 @@ export const WaitedRole = ({ showAll = false }: WaitedApprovalProps) => {
   // 업그레이드 요청 응답에는 추가정보가 없어, users 목록을 adminId 로 조인해 표시한다.
   // /users 는 manager 이상만 접근 가능하므로(staff 는 403) Suspense 대신 비차단 쿼리로
   // 조회하고, 실패 시 추가정보 없이 그대로 노출한다(graceful degradation).
-  const { data: infoByAdminId } = v2Admin.useGetApiV2AdminUsers(undefined, {
+  const { data: infoByAdminId } = v2Admin.useListAdminUsers(undefined, {
     query: {
       retry: false,
       select: (data) =>
@@ -75,24 +75,24 @@ const ApprovalItem = ({
   request,
   additionalInfo,
 }: {
-  request: v2AdminModel.GetApiV2AdminUsersUpgradeRequests200RequestsItem;
-  additionalInfo: v2AdminModel.GetApiV2AdminUsers200UsersItemAdditionalInfo;
+  request: v2AdminModel.ListRoleUpgradeRequests200RequestsItem;
+  additionalInfo: v2AdminModel.ListAdminUsers200UsersItemAdditionalInfo;
 }) => {
   const queryClient = useQueryClient();
 
   const invalidateQueries = () => {
     return Promise.all([
       queryClient.invalidateQueries({
-        queryKey: v2Admin.getGetApiV2AdminUsersUpgradeRequestsQueryKey(),
+        queryKey: v2Admin.getListRoleUpgradeRequestsQueryKey(),
       }),
       queryClient.invalidateQueries({
-        queryKey: v2Admin.getGetApiV2AdminUsersQueryKey(),
+        queryKey: v2Admin.getListAdminUsersQueryKey(),
       }),
     ]);
   };
 
   const approvMutation =
-    v2Admin.usePostApiV2AdminUsersUpgradeRequestsRequestIdApprove({
+    v2Admin.useApproveRoleUpgradeRequest({
       axios: { withCredentials: true },
       mutation: {
         onSuccess: async () => {
@@ -106,7 +106,7 @@ const ApprovalItem = ({
     });
 
   const rejectMutation =
-    v2Admin.usePostApiV2AdminUsersUpgradeRequestsRequestIdReject({
+    v2Admin.useRejectRoleUpgradeRequest({
       axios: { withCredentials: true },
       mutation: {
         onSuccess: async () => {
@@ -172,7 +172,7 @@ const ApprovalItem = ({
 const UpgradeProfile = ({
   additionalInfo,
 }: {
-  additionalInfo: v2AdminModel.GetApiV2AdminUsers200UsersItemAdditionalInfo;
+  additionalInfo: v2AdminModel.ListAdminUsers200UsersItemAdditionalInfo;
 }) => {
   if (!additionalInfo) return null;
 

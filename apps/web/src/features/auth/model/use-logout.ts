@@ -20,7 +20,7 @@ export const useLogout = ({ onFinish }: UseLogoutOptions = {}) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate, isPending } = v2Admin.usePostApiV2AdminLogout({
+  const { mutate, isPending } = v2Admin.useAdminLogout({
     mutation: {
       // 요청이 실패하더라도(세션이 이미 만료된 경우 등) 클라이언트에 남은
       // 로그인 흔적은 지운다 — 그대로 두면 화면만 로그인 상태로 남는다

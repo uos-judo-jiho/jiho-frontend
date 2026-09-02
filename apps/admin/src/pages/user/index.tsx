@@ -9,7 +9,7 @@ import { Suspense } from "react";
 import { Navigate } from "@tanstack/react-router";
 
 export const UserPage = () => {
-  const { data: meData, isLoading } = v2Admin.useGetApiV2AdminMe({
+  const { data: meData, isLoading } = v2Admin.useGetMyProfile({
     axios: { withCredentials: true },
     query: {
       select: (data) => data.data,

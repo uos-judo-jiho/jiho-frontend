@@ -1,5 +1,3 @@
-import { Link, type LinkOptions } from "@tanstack/react-router";
-
 import { LikeButton } from "@/features/reaction";
 
 import type { ContentItem } from "@/shared/lib/types/content";
@@ -9,19 +7,19 @@ import { Markdown } from "@/shared/ui/markdown";
 import { MediaCarousel } from "@/shared/ui/media-carousel";
 import { Tag } from "@/shared/ui/tag";
 
-type Neighbour = {
-  label: string;
-  link: LinkOptions;
-} | null;
+import type { Neighbour } from "../model/neighbours";
+import { ArticleNeighbours } from "./article-neighbours";
 
 type ArticleDetailProps = {
   item: ContentItem;
   /** 태그 줄에 붙는 라벨 (지호지는 "카테고리", 훈련일지는 "참여 인원") */
   tagsLabel?: string;
-  /** 이전/다음 글 이동 */
-  prev?: Neighbour;
-  next?: Neighbour;
-  position?: { current: number; total: number };
+  /**
+   * 앞뒤 글 이동. 서버가 주는 이름 그대로 넘긴다 (`next` 가 더 최신, `prev` 가
+   * 더 과거) — 좌우 배치는 ArticleNeighbours 가 정한다.
+   */
+  newer?: Neighbour;
+  older?: Neighbour;
   className?: string;
 };
 
@@ -36,9 +34,8 @@ type ArticleDetailProps = {
 export const ArticleDetail = ({
   item,
   tagsLabel = "카테고리",
-  prev,
-  next,
-  position,
+  newer,
+  older,
   className,
 }: ArticleDetailProps) => (
   <article className={cn("flex flex-col gap-4", className)}>
@@ -88,63 +85,7 @@ export const ArticleDetail = ({
       <LikeButton boardId={Number(item.id)} />
     </div>
 
-    {(prev || next || position) && (
-      <nav
-        aria-label="글 이동"
-        className="flex items-center justify-between gap-4 border-t border-line pt-6"
-      >
-        <NeighbourLink neighbour={prev} direction="prev" />
-        {position && (
-          <span
-            data-numeric
-            className="shrink-0 text-caption text-ink-subtle tabular-nums"
-          >
-            {position.current} / {position.total}
-          </span>
-        )}
-        <NeighbourLink neighbour={next} direction="next" />
-      </nav>
-    )}
+    <ArticleNeighbours newer={newer} older={older} />
+
   </article>
 );
-
-const NeighbourLink = ({
-  neighbour,
-  direction,
-}: {
-  neighbour: Neighbour | undefined;
-  direction: "prev" | "next";
-}) => {
-  const arrow = direction === "prev" ? "←" : "→";
-
-  // 끝에 도달했을 때는 비활성 링크를 남기지 않고 자리만 유지한다
-  if (!neighbour) return <span className="min-w-0 flex-1" aria-hidden />;
-
-  return (
-    <Link
-      {...neighbour.link}
-      className={cn(
-        "group flex min-w-0 flex-1 items-center gap-2 text-caption text-ink-muted transition-colors hover:text-ink-strong",
-        direction === "next" && "justify-end text-right",
-      )}
-    >
-      {direction === "prev" && (
-        <span
-          aria-hidden
-          className="transition-transform duration-200 ease-brand group-hover:-translate-x-1"
-        >
-          {arrow}
-        </span>
-      )}
-      <span className="jd-clamp-1">{neighbour.label}</span>
-      {direction === "next" && (
-        <span
-          aria-hidden
-          className="transition-transform duration-200 ease-brand group-hover:translate-x-1"
-        >
-          {arrow}
-        </span>
-      )}
-    </Link>
-  );
-};

@@ -1,7 +1,7 @@
 import { v2Admin } from "@packages/api";
 
 type SignupProfileParams = Parameters<
-  typeof v2Admin.usePutApiV2AdminSignupProfile
+  typeof v2Admin.useUpdateSignupProfile
 >;
 
 /**
@@ -13,7 +13,7 @@ export const useSignupProfileMutation = (
   options?: SignupProfileParams[0],
   queryClient?: SignupProfileParams[1],
 ) =>
-  v2Admin.usePutApiV2AdminSignupProfile(
+  v2Admin.useUpdateSignupProfile(
     {
       ...options,
       axios: { headers: { Authorization: `Bearer ${pendingToken}` } },

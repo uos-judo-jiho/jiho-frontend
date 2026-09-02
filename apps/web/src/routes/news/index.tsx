@@ -17,7 +17,7 @@ export const Route = createFileRoute("/news/")({
           .reverse()
           .map((year) =>
             context.queryClient.ensureQueryData(
-              v2Api.getGetApiV2NewsYearQueryOptions(Number(year), { limit: NEWS_PREVIEW_PER_YEAR }),
+              v2Api.getListNewsByYearQueryOptions(Number(year), { limit: NEWS_PREVIEW_PER_YEAR }),
             ),
           ),
       );

@@ -22,7 +22,7 @@ export const Route = createFileRoute("/news/$id/")({
 
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2NewsYearQueryOptions(Number(id)),
+        v2Api.getListNewsByYearQueryOptions(Number(id)),
       );
       const news = response.data;
 

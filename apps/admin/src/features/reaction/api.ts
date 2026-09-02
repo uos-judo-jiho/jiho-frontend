@@ -11,7 +11,7 @@ const withCredentials = { axios: { withCredentials: true } } as const;
 
 /** 게시글 1건의 반응 요약. */
 export const useBoardReactions = (boardId: number | undefined) =>
-  v2Api.useGetApiV2BoardsBoardIdReactions(Number(boardId), {
+  v2Api.useGetBoardReactions(Number(boardId), {
     ...withCredentials,
     query: {
       enabled: Number.isFinite(Number(boardId)),
@@ -27,7 +27,7 @@ export const MAX_BULK_BOARD_IDS = 100;
 export const useBulkBoardReactions = (boardIds: number[]) => {
   const ids = boardIds.filter(Number.isFinite).slice(0, MAX_BULK_BOARD_IDS);
 
-  return v2Api.useGetApiV2BoardsReactions(
+  return v2Api.useListBoardReactionsByIds(
     { boardIds: ids.join(",") },
     {
       ...withCredentials,

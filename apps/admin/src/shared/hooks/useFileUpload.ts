@@ -34,9 +34,9 @@ const generateUploadId = () => {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 };
 
-// orval의 usePostApiV2AdminImage 쿼리 훅을 활용한 업로드
+// orval의 useUploadImage 쿼리 훅을 활용한 업로드
 const useImageUploadMutation = () =>
-  v2Admin.usePostApiV2AdminImage({
+  v2Admin.useUploadImage({
     axios: {
       withCredentials: true,
       headers: {

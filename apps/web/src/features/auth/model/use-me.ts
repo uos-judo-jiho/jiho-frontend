@@ -3,7 +3,7 @@ import { v2Admin } from "@packages/api";
 /** me 응답을 재조회 없이 재사용하는 시간 */
 const ME_STALE_TIME = 5 * 60 * 1000;
 
-export const meQueryKey = v2Admin.getGetApiV2AdminMeQueryKey();
+export const meQueryKey = v2Admin.getGetMyProfileQueryKey();
 
 /**
  * 현재 로그인 상태.
@@ -20,7 +20,7 @@ export const meQueryKey = v2Admin.getGetApiV2AdminMeQueryKey();
  * 응답이 도착한 뒤에 로그인/로그아웃 UI 로 바뀐다.
  */
 export const useMe = () => {
-  const { data, isPending } = v2Admin.useGetApiV2AdminMe({
+  const { data, isPending } = v2Admin.useGetMyProfile({
     query: {
       // 사용자마다 다른 값이라 전역 캐시 정책(24시간)에서 빼낸다
       staleTime: ME_STALE_TIME,

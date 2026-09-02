@@ -9,7 +9,7 @@ export const Route = createFileRoute("/album")({
   loader: async ({ context }) => {
     try {
       await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2NewsImagesAllQueryOptions(),
+        v2Api.getListNewsGalleriesQueryOptions(),
       );
     } catch (error) {
       console.error("[SSR] Album prefetch error:", error);

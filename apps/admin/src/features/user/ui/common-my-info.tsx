@@ -6,7 +6,7 @@ import { getUserRole } from "../utils/get-user-role";
 import { RequestUpdradeButton } from "./request-updrade-button";
 
 export const CommonMyInfo = () => {
-  const { data: user } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: user } = v2Admin.useGetMyProfileSuspense({
     axios: { withCredentials: true },
     query: {
       select: (data) => data.data.user,

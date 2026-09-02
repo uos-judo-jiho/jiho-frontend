@@ -17,16 +17,16 @@ export const Route = createFileRoute("/")({
       // 홈에서 사용하는 쿼리를 모두 프리페치해 SSR/CSR 렌더 결과를 일치시킨다
       const [response] = await Promise.all([
         context.queryClient.ensureQueryData(
-          v2Api.getGetApiV2AwardsQueryOptions(),
+          v2Api.getListAwardsQueryOptions(),
         ),
         context.queryClient.ensureQueryData(
-          v2Api.getGetApiV2TrainingsQueryOptions(),
+          v2Api.getListTrainingLogsQueryOptions(),
         ),
         context.queryClient.ensureQueryData(
-          v2Api.getGetApiV2NoticesQueryOptions(),
+          v2Api.getListNoticesQueryOptions(),
         ),
         context.queryClient.ensureQueryData(
-          v2Api.getGetApiV2NewsLatestQueryOptions({ limit: 5 }),
+          v2Api.getListLatestNewsQueryOptions({ limit: 5 }),
         ),
       ]);
       return { awards: response.data.awards ?? [] };

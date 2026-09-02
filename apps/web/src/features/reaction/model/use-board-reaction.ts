@@ -37,11 +37,11 @@ export const useBoardReaction = (
 
   // 매 렌더마다 새 배열이 나오므로 아래 콜백들의 의존성이 흔들리지 않게 고정한다
   const queryKey = useMemo(
-    () => v2Api.getGetApiV2BoardsBoardIdReactionsQueryKey(boardId),
+    () => v2Api.getGetBoardReactionsQueryKey(boardId),
     [boardId],
   );
 
-  const { data, isPending } = v2Api.useGetApiV2BoardsBoardIdReactions(boardId, {
+  const { data, isPending } = v2Api.useGetBoardReactions(boardId, {
     query: {
       // 사용자마다 다르고 자주 바뀌는 값이라 전역 캐시 정책(24시간)에서 빼낸다
       staleTime: 0,
@@ -112,9 +112,9 @@ export const useBoardReaction = (
     },
   };
 
-  const add = v2Api.usePutApiV2BoardsBoardIdReactionsType(mutationOptions);
+  const add = v2Api.useAddBoardReaction(mutationOptions);
   const remove =
-    v2Api.useDeleteApiV2BoardsBoardIdReactionsType(mutationOptions);
+    v2Api.useRemoveBoardReaction(mutationOptions);
 
   const toggle = useCallback(() => {
     if (add.isPending || remove.isPending) return;

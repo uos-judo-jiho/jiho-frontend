@@ -133,7 +133,7 @@ const ImageUploader = ({
     }),
   );
 
-  const imageUploadMutation = v2Admin.usePostApiV2AdminImage({
+  const imageUploadMutation = v2Admin.useUploadImage({
     axios: {
       withCredentials: true,
       headers: {

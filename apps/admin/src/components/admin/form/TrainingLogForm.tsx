@@ -15,7 +15,7 @@ import {
 import { useArticleForm } from "./shared/use-article-form";
 
 type TrainingLogFormProps = {
-  data?: v2ApiModel.GetApiV2TrainingId200Training;
+  data?: v2ApiModel.BoardDetail;
 };
 
 /**

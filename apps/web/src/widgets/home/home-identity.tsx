@@ -17,7 +17,10 @@ type HomeIdentityProps = {
 };
 
 export const HomeIdentity = ({ showEyebrow = true }: HomeIdentityProps) => {
-  const { data: awards = [] } = v2Api.useGetApiV2AwardsSuspense({
+  // 첫 인자는 limit/offset 쿼리 파라미터 자리다. 전체를 받으므로 undefined 를
+  // 넘긴다 — 라우트 loader 의 getListAwardsQueryOptions() 와 쿼리 키가 같아야
+  // SSR 프리페치가 그대로 하이드레이션된다 (키는 params 가 없으면 생략된다).
+  const { data: awards = [] } = v2Api.useListAwardsSuspense(undefined, {
     query: { select: (response) => response.data.awards ?? [] },
   });
 
