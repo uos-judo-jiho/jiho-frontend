@@ -83,8 +83,7 @@ export const HelpMarkdown = () => {
           <p>순서가 있는 목록과 순서가 없는 목록을 만들 수 있습니다.</p>
           <div className="example-section">
             <div className="markdown-input">
-              - 순서 없는 목록 1<br />
-              - 순서 없는 목록 2<br />
+              - 순서 없는 목록 1<br />- 순서 없는 목록 2<br />
               &nbsp;&nbsp;- 하위 목록
               <br />
               <br />
@@ -186,8 +185,7 @@ export const HelpMarkdown = () => {
             <div className="markdown-input">
               | 제목1 | 제목2 | 제목3 |<br />
               |-------|-------|-------|
-              <br />
-              | 내용1 | 내용2 | 내용3 |<br />| 내용4 | 내용5 | 내용6 |
+              <br />| 내용1 | 내용2 | 내용3 |<br />| 내용4 | 내용5 | 내용6 |
             </div>
             <div className="markdown-output">
               <table>

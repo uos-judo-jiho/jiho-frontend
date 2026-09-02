@@ -105,7 +105,8 @@ export const useLabelHighlight = ({
 
   // 기술x 버튼 = 기술아님(NONE) 저장. 이동은 호출자(위로 스와이프 애니메이션)가 담당.
   const saveNone = useCallback(
-    (): Promise<unknown> => saveLabel({ techniqueResult: "NONE", score: "NONE" }, false),
+    (): Promise<unknown> =>
+      saveLabel({ techniqueResult: "NONE", score: "NONE" }, false),
     [saveLabel],
   );
 

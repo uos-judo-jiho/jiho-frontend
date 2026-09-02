@@ -1,6 +1,4 @@
-import BaseSvgComponent, {
-  BaseSvgProps,
-} from "./base-svg";
+import BaseSvgComponent, { BaseSvgProps } from "./base-svg";
 
 export const CloseIcon: React.FC<BaseSvgProps> = (props) => {
   return (

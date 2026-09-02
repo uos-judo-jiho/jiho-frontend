@@ -80,9 +80,7 @@ const proxyApiRequest = async (request: Request, splat: string) => {
     const setCookies =
       typeof response.headers.getSetCookie === "function"
         ? response.headers.getSetCookie()
-        : [response.headers.get("set-cookie")].filter(
-            (v): v is string => !!v,
-          );
+        : [response.headers.get("set-cookie")].filter((v): v is string => !!v);
     for (const value of setCookies) {
       headers.append("Set-Cookie", value);
     }
@@ -103,7 +101,8 @@ const proxyApiRequest = async (request: Request, splat: string) => {
 export const Route = createFileRoute("/api/$")({
   server: {
     handlers: {
-      ANY: ({ request, params }) => proxyApiRequest(request, params._splat ?? ""),
+      ANY: ({ request, params }) =>
+        proxyApiRequest(request, params._splat ?? ""),
     },
   },
 });

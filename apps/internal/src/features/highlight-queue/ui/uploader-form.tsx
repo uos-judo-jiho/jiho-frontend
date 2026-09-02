@@ -28,7 +28,9 @@ export function UploaderForm() {
     },
     onError: (error: unknown) => {
       setTransferProgress(0);
-      toast.error(`처리 실패: ${sidecarErrorMessage(error, "알 수 없는 오류")}`);
+      toast.error(
+        `처리 실패: ${sidecarErrorMessage(error, "알 수 없는 오류")}`,
+      );
     },
   });
 
@@ -51,7 +53,8 @@ export function UploaderForm() {
         <div>
           <h2 className="font-semibold">로컬 영상 처리</h2>
           <p className="mt-1 text-sm text-slate-500">
-            여러 영상을 한 번에 추가하면 큐에 쌓아 하나씩 하이라이트를 추출합니다.
+            여러 영상을 한 번에 추가하면 큐에 쌓아 하나씩 하이라이트를
+            추출합니다.
           </p>
         </div>
       </div>

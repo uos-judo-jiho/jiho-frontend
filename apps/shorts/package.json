@@ -12,6 +12,8 @@
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit",
     "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",
+    "format": "oxfmt . -c ../../.oxfmtrc.json",
+    "format:check": "oxfmt . -c ../../.oxfmtrc.json --check",
     "lint:fix": "oxlint src -c ../../.oxlintrc.json --fix"
   },
   "dependencies": {

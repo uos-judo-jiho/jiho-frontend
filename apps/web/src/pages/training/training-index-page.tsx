@@ -25,7 +25,10 @@ export const TrainingIndexPage = () => {
           title="훈련일지"
           description="정규 운동과 교류전 등 훈련기록을 남깁니다."
           action={
-            <span data-numeric className="text-caption text-ink-subtle tabular-nums">
+            <span
+              data-numeric
+              className="text-caption text-ink-subtle tabular-nums"
+            >
               총 {sorted.length}건
             </span>
           }

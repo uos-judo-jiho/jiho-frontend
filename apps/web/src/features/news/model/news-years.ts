@@ -1,4 +1,7 @@
-import { FALLBACK_LATEST_NEWS_YEAR, NEWS_START_YEAR } from "@/shared/config/site";
+import {
+  FALLBACK_LATEST_NEWS_YEAR,
+  NEWS_START_YEAR,
+} from "@/shared/config/site";
 
 /**
  * 아카이브가 존재하는 연도 목록 (오름차순).
@@ -7,8 +10,9 @@ import { FALLBACK_LATEST_NEWS_YEAR, NEWS_START_YEAR } from "@/shared/config/site
 export const newsYearList = (
   latestYear: number = FALLBACK_LATEST_NEWS_YEAR,
 ): string[] =>
-  Array.from({ length: Math.max(latestYear - NEWS_START_YEAR + 1, 0) }, (_, i) =>
-    String(NEWS_START_YEAR + i),
+  Array.from(
+    { length: Math.max(latestYear - NEWS_START_YEAR + 1, 0) },
+    (_, i) => String(NEWS_START_YEAR + i),
   );
 
 export const isValidNewsYear = (

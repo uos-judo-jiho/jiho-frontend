@@ -6,9 +6,7 @@ export const NotFoundPage = () => (
   <PageShell width="prose">
     <div className="flex flex-col items-center gap-6 py-24 text-center">
       <p className="jd-eyebrow">404</p>
-      <h1 className="text-title text-ink-strong">
-        존재하지 않는 페이지입니다
-      </h1>
+      <h1 className="text-title text-ink-strong">존재하지 않는 페이지입니다</h1>
       <p className="text-lead text-ink-muted">
         주소가 바뀌었거나 삭제된 글일 수 있습니다.
       </p>

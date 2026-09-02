@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "type-check": "tsc --noEmit",
-    "lint": "oxlint src server -c ../../.oxlintrc.json --max-warnings=0"
+    "lint": "oxlint src server -c ../../.oxlintrc.json --max-warnings=0",
+    "format": "oxfmt . -c ../../.oxfmtrc.json",
+    "format:check": "oxfmt . -c ../../.oxfmtrc.json --check"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.66.11",

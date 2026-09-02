@@ -487,7 +487,8 @@ app.post("/upload", async (req, res) => {
     return;
   }
 
-  const wantOriginal = !!uploadOriginal && item.hasOriginal && !!item.inputVideo;
+  const wantOriginal =
+    !!uploadOriginal && item.hasOriginal && !!item.inputVideo;
 
   try {
     if (wantOriginal) {

@@ -2,12 +2,12 @@
   "name": "@apps/web",
   "version": "2.1.0",
   "private": true,
-  "type": "module",
   "homepage": "https://uosjudo.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/uos-judo-jiho"
   },
+  "type": "module",
   "scripts": {
     "clean": "rm -rf dist build .output .tanstack .nitro",
     "clean:dev": "npm run clean",
@@ -17,6 +17,8 @@
     "build:docker": "npm run clean && sh script/docker-build-local.sh",
     "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",
     "lint:fix": "oxlint src -c ../../.oxlintrc.json --fix",
+    "format": "oxfmt . -c ../../.oxfmtrc.json",
+    "format:check": "oxfmt . -c ../../.oxfmtrc.json --check",
     "orval": "pnpm --filter @packages/api gen",
     "preview": "vite preview",
     "start": "node .output/server/index.mjs",
@@ -66,7 +68,6 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "autoprefixer": "^10.4.20",
-    "prettier": "^3.7.4",
     "vite": "catalog:"
   },
   "browserslist": {

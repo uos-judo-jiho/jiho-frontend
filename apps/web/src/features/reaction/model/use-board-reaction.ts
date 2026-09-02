@@ -113,8 +113,7 @@ export const useBoardReaction = (
   };
 
   const add = v2Api.useAddBoardReaction(mutationOptions);
-  const remove =
-    v2Api.useRemoveBoardReaction(mutationOptions);
+  const remove = v2Api.useRemoveBoardReaction(mutationOptions);
 
   const toggle = useCallback(() => {
     if (add.isPending || remove.isPending) return;

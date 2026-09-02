@@ -44,7 +44,8 @@ export const detectPlatform = (): InstallPlatform => {
 
   if (isIOS) {
     // iOS는 WebKit(Safari 엔진)에서만 홈 화면 추가가 가능. 크롬/파폭 등은 Safari 안내.
-    const isSafari = /safari/i.test(ua) && !/crios|fxios|edgios|naver/i.test(ua);
+    const isSafari =
+      /safari/i.test(ua) && !/crios|fxios|edgios|naver/i.test(ua);
     return isSafari ? "ios-safari" : "ios-other";
   }
 

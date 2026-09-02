@@ -66,7 +66,9 @@ function lint(title) {
   } else if (!parsed.scopes.length) {
     errors.push("스코프 괄호가 비어 있습니다.");
   } else {
-    const unknown = parsed.scopes.filter((scope) => !resolveScope(scope, targets));
+    const unknown = parsed.scopes.filter(
+      (scope) => !resolveScope(scope, targets),
+    );
     if (unknown.length) {
       errors.push(
         `알 수 없는 스코프: ${unknown.map((s) => `\`${s}\``).join(", ")}`,
@@ -92,7 +94,9 @@ function lint(title) {
   }
 
   if (trimmed.length > MAX_LENGTH) {
-    errors.push(`제목이 너무 깁니다. (${trimmed.length}자 / 최대 ${MAX_LENGTH}자)`);
+    errors.push(
+      `제목이 너무 깁니다. (${trimmed.length}자 / 최대 ${MAX_LENGTH}자)`,
+    );
   }
 
   return errors;
