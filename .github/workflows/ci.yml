@@ -15,8 +15,15 @@ concurrency:
 
 jobs:
   # apps/web 도커 이미지에 영향을 주는 변경인지 판단한다.
-  # 경로 목록은 deploy-web.yml 의 `on.push.paths` 와 동일하게 유지한다.
-  # (= "배포가 트리거될 변경이면 PR에서 미리 도커 빌드를 검증한다")
+  # 기준: deploy-web.yml 의 `on.push.paths` (배포가 트리거될 변경이면 PR에서
+  # 미리 도커 빌드를 검증한다) + web 빌드 방식 자체를 바꾸는 루트 설정.
+  #
+  # pnpm-lock.yaml 은 일부러 넣지 않는다. 이 저장소의 락파일은 항상 사람이 낸
+  # PR 에서 다른 변경과 함께 바뀌고(dependabot 설정이 없다), 실제 이력에서
+  # 락파일이 "유일한" 트리거였던 5건은 전부 admin/shorts/internal 작업이었다 —
+  # apps/web 도 packages/api 도 건드리지 않았다. 다른 앱에 의존성을 추가했다는
+  # 이유로 가장 무거운 잡을 돌리게 된다.
+  # (dependabot 처럼 락파일만 바꾸는 자동 PR 을 켜게 되면 다시 넣어야 한다)
   changes:
     runs-on: ubuntu-latest
     outputs:
@@ -37,7 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           if git diff --name-only "origin/${BASE_REF}...HEAD" \
-            | grep -qE '^(apps/web/|packages/api/|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|package\.json$|\.github/workflows/(deploy-web|ci)\.yml$)'; then
+            | grep -qE '^(apps/web/|packages/api/|pnpm-workspace\.yaml$|package\.json$|\.github/workflows/(deploy-web|ci)\.yml$)'; then
             echo "web=true" >> "$GITHUB_OUTPUT"
             echo "::notice::apps/web 도커 빌드를 검증합니다."
           else
