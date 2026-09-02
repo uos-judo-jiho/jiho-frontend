@@ -9,19 +9,25 @@
  * 릴리즈 태그 형식: <app>@<version>   (예: web@1.13.4, admin@0.1.2)
  * 배포 태그 형식:   @uos-judo-jiho/<app>-<YYMMDD>-<HHMMSS>-<hash>  (tag-release.yml)
  *
+ * detect 는 packages/* 도 볼 수 있다 (`--dir packages`). 이때는 태그 이름만
+ * 뽑아 쓰고 릴리즈 노트는 만들지 않는다 — tag-packages.yml 이 그 용도다.
+ * 패키지 태그도 같은 형식을 쓴다 (예: api@0.2.0). apps/* 와 packages/* 는
+ * 커밋 스코프에서 이미 하나의 평평한 이름 공간이라 이름이 겹치지 않는다.
+ *
  * 사용법
- *   node scripts/release-note.mjs detect [--base <ref>] [--head <ref>]
+ *   node scripts/release-note.mjs detect [--dir apps|packages] [--base <ref>]
+ *                                        [--head <ref>] [--project <name>] [--all]
  *   node scripts/release-note.mjs notes --app web [--version 1.13.4] [--from <tag>] [--to <ref>]
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, readdirSync, appendFileSync } from "node:fs";
-import { join } from "node:path";
+import { appendFileSync } from "node:fs";
 
 import {
   COMMIT_TYPES,
   HEADER_RE,
   KNOWN_TYPES,
   REPO_ROOT,
+  listScopeTargets,
   splitPullRequest,
 } from "./lib/commit-convention.mjs";
 
@@ -91,22 +97,18 @@ function compareSemver(a, b) {
   return a.pre < b.pre ? -1 : 1;
 }
 
-/* ------------------------------------------------------------------ apps */
+/* -------------------------------------------------------------- projects */
 
-/** apps/ 아래 package.json 을 가진 디렉토리 목록. */
-function listApps() {
-  const appsDir = join(REPO_ROOT, "apps");
-  if (!existsSync(appsDir)) return [];
-  return readdirSync(appsDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .filter((name) => existsSync(join(appsDir, name, "package.json")))
-    .sort();
-}
+/**
+ * detect 가 훑는 워크스페이스 그룹.
+ * apps/* 는 릴리즈 노트까지 만들고, packages/* 는 태그만 만든다
+ * (.github/workflows/tag-packages.yml).
+ */
+const PROJECT_GROUPS = ["apps", "packages"];
 
-/** 특정 ref 시점의 apps/<app>/package.json. 없으면 null. */
-function readPackageAt(ref, app) {
-  const raw = git(["show", `${ref}:apps/${app}/package.json`], {
+/** 특정 ref 시점의 <group>/<project>/package.json. 없으면 null. */
+function readPackageAt(ref, group, project) {
+  const raw = git(["show", `${ref}:${group}/${project}/package.json`], {
     allowFail: true,
   });
   if (!raw) return null;
@@ -117,7 +119,7 @@ function readPackageAt(ref, app) {
   }
 }
 
-const releaseTagFor = (app, version) => `${app}@${version}`;
+const releaseTagFor = (project, version) => `${project}@${version}`;
 
 /**
  * 앱별 레거시 릴리즈 태그 prefix.
@@ -342,6 +344,13 @@ function renderDeployTags(deployTags, repo) {
 /* --------------------------------------------------------------- commands */
 
 function commandDetect(args) {
+  const group = optional(args.dir) ?? "apps";
+  if (!PROJECT_GROUPS.includes(group)) {
+    throw new Error(
+      `--dir 은 ${PROJECT_GROUPS.join(" | ")} 중 하나여야 합니다: ${group}`,
+    );
+  }
+
   const head = optional(args.head) ?? "HEAD";
   let base = optional(args.base);
 
@@ -354,26 +363,42 @@ function commandDetect(args) {
     base = git(["rev-parse", "--verify", `${head}^`], { allowFail: true });
   }
 
+  // --all 은 버전 비교 없이 현재 버전 그대로 뽑는다. (수동 백필용)
+  const all = args.all === true;
+  const only = optional(args.project);
+
+  const targets = listScopeTargets()[group].filter(
+    (project) => !only || project === only,
+  );
+  if (only && targets.length === 0) {
+    throw new Error(`${group}/${only} 를 찾을 수 없습니다.`);
+  }
+
   const releases = [];
-  for (const app of listApps()) {
-    const nextPackage = readPackageAt(head, app);
+  for (const project of targets) {
+    const nextPackage = readPackageAt(head, group, project);
     const nextVersion = parseSemver(nextPackage?.version);
     if (!nextVersion) continue;
 
-    const previousPackage = base ? readPackageAt(base, app) : null;
+    const previousPackage = base ? readPackageAt(base, group, project) : null;
     const previousVersion = parseSemver(previousPackage?.version);
 
-    // 신규 앱이거나 버전이 실제로 올라간 경우에만 릴리즈한다. (되돌림은 무시)
-    if (previousVersion && compareSemver(nextVersion, previousVersion) <= 0) {
+    // 신규 프로젝트거나 버전이 실제로 올라간 경우에만 릴리즈한다. (되돌림은 무시)
+    if (
+      !all &&
+      previousVersion &&
+      compareSemver(nextVersion, previousVersion) <= 0
+    ) {
       continue;
     }
 
     releases.push({
-      app,
+      project,
+      dir: group,
       name: nextPackage.name,
       version: nextVersion.raw,
       previousVersion: previousVersion?.raw ?? null,
-      tag: releaseTagFor(app, nextVersion.raw),
+      tag: releaseTagFor(project, nextVersion.raw),
     });
   }
 
@@ -392,7 +417,8 @@ function commandNotes(args) {
   if (!app) throw new Error("--app <name> 이 필요합니다.");
 
   const to = optional(args.to) ?? "HEAD";
-  const version = optional(args.version) ?? readPackageAt(to, app)?.version;
+  const version =
+    optional(args.version) ?? readPackageAt(to, "apps", app)?.version;
   if (!parseSemver(version)) {
     throw new Error(`apps/${app} 의 버전을 확인할 수 없습니다: ${version}`);
   }
@@ -484,7 +510,7 @@ try {
     process.stderr.write(
       [
         "사용법:",
-        "  node scripts/release-note.mjs detect [--base <ref>] [--head <ref>]",
+        "  node scripts/release-note.mjs detect [--dir apps|packages] [--base <ref>] [--head <ref>] [--project <name>] [--all]",
         "  node scripts/release-note.mjs notes --app <app> [--version <v>] [--from <tag>] [--to <ref>] [--limit <n>]",
         "",
       ].join("\n"),

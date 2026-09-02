@@ -188,8 +188,11 @@ Release notes are published per app, automatically:
 
 - **Deploy tags** (`@uos-judo-jiho/<app>-<YYMMDD>-<HHMMSS>-<sha6>`) — `tag-release.yml` creates one after each successful deploy, for rollback.
 - **Release tags** (`<app>@<version>`, e.g. `web@1.14.0`) — `release-note.yml` fires when a push to `main` bumps `version` in `apps/*/package.json`. It diffs the app's previous release tag against the merged commit, groups the squash commits by Conventional Commits type, and publishes a GitHub Release. `web` falls back to the legacy `v<version>` tags when no `web@*` tag exists yet.
-- Generator: `scripts/release-note.mjs` (`detect` / `notes` subcommands, no dependencies). Preview locally with `pnpm release-note -- notes --app web`.
+- **Package tags** (`<pkg>@<version>`, e.g. `api@0.2.0`) — `tag-packages.yml` fires when a push to `main` bumps `version` in `packages/*/package.json`. It creates the annotated tag and nothing else: packages aren't published anywhere yet, so there is no release note to attach. `workflow_dispatch` tags at the current version instead (all packages, or one via the `package` input) for backfilling.
+- Generator: `scripts/release-note.mjs` (`detect` / `notes` subcommands, no dependencies). `detect` takes `--dir apps|packages` (default `apps`); `notes` is apps-only. Preview locally with `pnpm release-note -- notes --app web`.
 - Notes split into "app changes" (`apps/<app>/**`) and "shared/infra changes" (`packages/**`, root config); commits touching only other apps are excluded.
+- App and package names share one flat namespace (same as commit scopes), so `<name>@<version>` never collides.
+- Publishing `packages/*` to a registry is **not implemented** — the design notes, the reasons git-tag dependencies don't work, and the `GITHUB_TOKEN` trigger pitfall are in `docs/packages-publishing.md`.
 
 ## Important Notes
 
