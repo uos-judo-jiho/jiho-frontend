@@ -22,10 +22,12 @@
  *   node scripts/release-note.mjs detect [--dir apps|packages] [--base <ref>]
  *                                        [--head <ref>] [--project <name>] [--all]
  *   node scripts/release-note.mjs snapshot [--dir apps|packages] [--base <ref>] [--head <ref>]
+ *     (snapshot 만 pnpm 을 호출한다 — 변경 프로젝트 판정을 pnpm 필터에 맡긴다)
  *   node scripts/release-note.mjs notes --app web [--version 1.13.4] [--from <tag>] [--to <ref>]
  */
 import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
+import { relative } from "node:path";
 
 import {
   COMMIT_TYPES,
@@ -33,7 +35,6 @@ import {
   KNOWN_TYPES,
   REPO_ROOT,
   listScopeTargets,
-  packagesUsedBy,
   splitPullRequest,
 } from "./lib/commit-convention.mjs";
 
@@ -278,7 +279,7 @@ const isRootPath = (file) =>
  * apps/<app>/** 를 건드리지 않았더라도 여기가 바뀌었으면 릴리즈 노트에 포함한다.
  *
  * 릴리즈 노트는 "이 릴리즈에 뭐가 들어갔나"를 사람이 읽는 목록이라 넓게 잡는다.
- * 스냅샷 태그는 실제 의존 관계까지 본다 — projectTouched 참고.
+ * 스냅샷 태그는 pnpm 의 워크스페이스 의존 그래프를 쓴다 — affectedProjects 참고.
  */
 const isSharedForApp = (file) => file.startsWith("packages/") || isRootPath(file);
 
@@ -420,36 +421,68 @@ function resolveBase(rawBase, head) {
   return git(["rev-parse", "--verify", `${head}^`], { allowFail: true });
 }
 
-/** base..head 에서 바뀐 파일. base 가 없으면 head 의 전체 파일. */
-function changedFiles(base, head) {
-  const args = base
-    ? ["diff", "--name-only", `${base}..${head}`]
-    : ["ls-tree", "-r", "--name-only", head];
-  const raw = git(args, { allowFail: true });
-  return raw ? raw.split("\n").filter(Boolean) : [];
+/**
+ * base 이후 바뀐 워크스페이스 프로젝트 + 그것에 의존하는 프로젝트.
+ *
+ * 판정을 직접 하지 않고 pnpm 에 맡긴다. ci.yml 이 "변경된 프로젝트만 빌드"할 때
+ * 쓰는 것과 같은 필터(`...[<since>]`)라 기준이 한 곳으로 모이고, 워크스페이스
+ * 의존 그래프를 전이까지 정확히 따라간다. 루트 파일(pnpm-lock.yaml, .github/,
+ * scripts/, tsconfig.base.json …)만 바뀌면 아무 프로젝트도 잡히지 않는다.
+ *
+ * node_modules 가 없어도 동작한다 (워크스페이스 매니페스트만 읽는다).
+ */
+function affectedProjects(base) {
+  const raw = execFileSync(
+    "pnpm",
+    ["--filter", `...[${base}]`, "ls", "--recursive", "--depth", "-1", "--json"],
+    {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+      stdio: ["ignore", "pipe", "ignore"],
+    },
+  );
+
+  let listed;
+  try {
+    listed = JSON.parse(raw);
+  } catch {
+    return [];
+  }
+
+  return listed
+    .map((item) => relative(REPO_ROOT, item.path).split("/"))
+    // 워크스페이스 루트 프로젝트(경로가 빈 문자열)와 그룹 밖은 버린다.
+    .filter(([group, project]) => PROJECT_GROUPS.includes(group) && project)
+    .map(([group, project]) => ({ group, project }))
+    .sort((a, b) => a.group.localeCompare(b.group) || a.project.localeCompare(b.project));
+}
+
+/** base 를 못 잡았을 때(루트 커밋 등)는 전부 대상으로 본다. */
+function allProjects() {
+  const targets = listScopeTargets();
+  return PROJECT_GROUPS.flatMap((group) =>
+    targets[group].map((project) => ({ group, project })),
+  );
 }
 
 /**
- * 이 변경 파일 목록이 해당 프로젝트를 건드렸는가. (스냅샷 태그 대상 판정)
- *
- * 릴리즈 노트의 classify 보다 좁게 본다. 스냅샷 태그는 "이 커밋에서 이
- * 프로젝트의 산출물이 바뀌었다"는 표시라, 실제로 영향이 가는 것만 잡는다.
- *   - 자기 디렉토리          apps/web/** , packages/api/**
- *   - 루트 공용 설정         pnpm-lock.yaml, tsconfig.base.json, ...
- *   - 앱이 의존하는 패키지   apps/shorts 는 packages/auth 변경에 반응하지만
- *                            apps/internal 은 워크스페이스 의존이 없어 반응하지 않는다
+ * pnpm 의 변경 감지는 작업 트리를 기준으로 하므로(두 커밋 사이가 아니다),
+ * --head 가 실제로 체크아웃돼 있지 않으면 조용히 틀린 답이 나온다. 미리 막는다.
  */
-function projectTouched(group, project, files) {
-  const ownPathRe = new RegExp(`^${group}/${project}/`);
-  if (files.some((file) => ownPathRe.test(file))) return true;
-  if (files.some((file) => isRootPath(file))) return true;
-  if (group !== "apps") return false;
-
-  const used = new Set(packagesUsedBy(project));
-  return files.some((file) => {
-    const matched = /^packages\/([^/]+)\//.exec(file);
-    return matched !== null && used.has(matched[1]);
-  });
+function assertCheckedOut(head) {
+  const current = git(["rev-parse", "HEAD"]);
+  const wanted = git(["rev-parse", `${head}^{commit}`], { allowFail: true });
+  if (wanted && wanted !== current) {
+    throw new Error(
+      [
+        "snapshot 은 --head 커밋이 체크아웃된 상태여야 합니다.",
+        "(pnpm 의 변경 감지가 작업 트리를 기준으로 하기 때문)",
+        `  현재 HEAD : ${current.slice(0, 7)}`,
+        `  --head    : ${wanted.slice(0, 7)}`,
+      ].join("\n"),
+    );
+  }
 }
 
 function parseGroups(args) {
@@ -481,28 +514,28 @@ function emitReleases(releases) {
  */
 function commandSnapshot(args) {
   const head = optional(args.head) ?? "HEAD";
+  assertCheckedOut(head);
+
   const base = resolveBase(args.base, head);
   const stamp = commitStamp(head);
-  const files = changedFiles(base, head);
-  const targets = listScopeTargets();
+  const groups = parseGroups(args);
+  const affected = base ? affectedProjects(base) : allProjects();
 
   const snapshots = [];
-  for (const group of parseGroups(args)) {
-    for (const project of targets[group]) {
-      if (!projectTouched(group, project, files)) continue;
+  for (const { group, project } of affected) {
+    if (!groups.includes(group)) continue;
 
-      const manifest = readPackageAt(head, group, project);
-      const version = parseSemver(manifest?.version);
-      if (!version) continue;
+    const manifest = readPackageAt(head, group, project);
+    const version = parseSemver(manifest?.version);
+    if (!version) continue;
 
-      snapshots.push({
-        project,
-        dir: group,
-        name: manifest.name,
-        version: version.raw,
-        tag: snapshotTagFor(project, version.raw, stamp),
-      });
-    }
+    snapshots.push({
+      project,
+      dir: group,
+      name: manifest.name,
+      version: version.raw,
+      tag: snapshotTagFor(project, version.raw, stamp),
+    });
   }
 
   emitReleases(snapshots);

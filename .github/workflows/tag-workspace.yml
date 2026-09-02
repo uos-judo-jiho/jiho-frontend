@@ -46,6 +46,11 @@ jobs:
           # 기존 태그와 대조하고 base..head 를 diff 해야 하므로 전체 히스토리가 필요하다.
           fetch-depth: 0
 
+      # snapshot 이 변경 프로젝트 판정을 pnpm 필터에 맡긴다.
+      # (매니페스트만 읽으므로 pnpm install 은 필요 없다)
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
       - name: Set up Node.js
         uses: actions/setup-node@v7
         with:
