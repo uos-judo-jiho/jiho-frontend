@@ -41,6 +41,8 @@
     "lint:admin": "oxlint apps/admin/src --max-warnings=0",
     "lint:internal": "oxlint apps/internal/src apps/internal/server --max-warnings=0",
     "lint:shorts": "oxlint apps/shorts/src --max-warnings=0",
+    "format:admin": "pnpm -C apps/admin format",
+    "format:check:admin": "pnpm -C apps/admin format:check",
     "type-check": "pnpm type-check:web && pnpm type-check:admin",
     "type-check:web": "pnpm -C apps/web type-check",
     "type-check:admin": "pnpm -C apps/admin type-check",
