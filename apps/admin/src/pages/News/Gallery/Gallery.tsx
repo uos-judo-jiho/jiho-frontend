@@ -20,14 +20,11 @@ const Gallery = () => {
 
 const Inner = () => {
   const { year } = useParams({ strict: false });
-  const { data: images } = v2Api.useGetNewsGalleryByYearSuspense(
-    Number(year),
-    {
-      query: {
-        select: (response) => response.data.images,
-      },
+  const { data: images } = v2Api.useGetNewsGalleryByYearSuspense(Number(year), {
+    query: {
+      select: (response) => response.data.images,
     },
-  );
+  });
   return (
     <Col gap={20}>
       <Link

@@ -19,7 +19,7 @@ const bufferToString = (buffer: ArrayBuffer): string => {
   const chunkSize = 0x8000;
   for (let i = 0; i < view.length; i += chunkSize) {
     result += String.fromCharCode(
-      ...view.subarray(i, Math.min(i + chunkSize, view.length))
+      ...view.subarray(i, Math.min(i + chunkSize, view.length)),
     );
   }
   return result;
@@ -38,7 +38,7 @@ const tryParseJson = <T>(value: unknown): T => {
 };
 
 export const parseAxiosResponse = async <T>(
-  response: AxiosResponse<unknown>
+  response: AxiosResponse<unknown>,
 ): Promise<T> => {
   const { data } = response;
 

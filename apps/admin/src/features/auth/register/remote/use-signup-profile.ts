@@ -1,8 +1,6 @@
 import { v2Admin } from "@packages/api";
 
-type SignupProfileParams = Parameters<
-  typeof v2Admin.useUpdateSignupProfile
->;
+type SignupProfileParams = Parameters<typeof v2Admin.useUpdateSignupProfile>;
 
 /**
  * 가입 직후 추가 정보 저장 mutation.

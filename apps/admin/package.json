@@ -14,6 +14,8 @@
     "type-check": "tsc -p tsconfig.app.json --noEmit",
     "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",
     "lint:fix": "oxlint src -c ../../.oxlintrc.json --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" vite.config.ts",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" vite.config.ts",
     "test": "vitest",
     "test:ui": "vitest --ui"
   },

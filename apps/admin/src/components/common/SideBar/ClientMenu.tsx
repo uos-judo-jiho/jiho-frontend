@@ -36,7 +36,7 @@ const ClientMenu = ({ selected, setSelected }: MenuProps) => {
 
   const handleClickLink = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
+    href: string,
   ) => {
     if (open && location.pathname === href) {
       e.preventDefault();

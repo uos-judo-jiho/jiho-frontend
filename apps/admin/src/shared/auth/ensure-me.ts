@@ -11,23 +11,29 @@ const meQueryOptions = () =>
     query: { retry: false },
   });
 
-const isUnauthorized = (error: unknown) => isAxiosError(error) && error.response?.status === 401;
+const isUnauthorized = (error: unknown) =>
+  isAxiosError(error) && error.response?.status === 401;
 
 /**
  * orval 설정이 `shouldExportHttpClient: false` 라 refresh 요청 함수가 직접
  * 노출되지 않는다. mutation options 안에 들어 있는 mutationFn 을 꺼내 쓴다.
  */
 const refreshToken = async (queryClient: QueryClient) => {
-  const { mutationFn, mutationKey } = v2Admin.getAdminRefreshTokenMutationOptions({
-    axios: { withCredentials: true },
-  });
+  const { mutationFn, mutationKey } =
+    v2Admin.getAdminRefreshTokenMutationOptions({
+      axios: { withCredentials: true },
+    });
 
   if (!mutationFn) {
     throw new Error("refresh mutationFn 을 찾을 수 없습니다.");
   }
 
   // 훅 밖에서 직접 호출하므로 mutation 컨텍스트를 직접 만들어 넘긴다.
-  await mutationFn(undefined, { client: queryClient, meta: undefined, mutationKey });
+  await mutationFn(undefined, {
+    client: queryClient,
+    meta: undefined,
+    mutationKey,
+  });
 };
 
 /**
@@ -38,7 +44,9 @@ const refreshToken = async (queryClient: QueryClient) => {
  * 결과는 queryClient 에 그대로 남아 화면의 useGetMyProfile* 훅이
  * 같은 캐시를 재사용한다.
  */
-export const ensureMe = async (queryClient: QueryClient): Promise<Me | null> => {
+export const ensureMe = async (
+  queryClient: QueryClient,
+): Promise<Me | null> => {
   try {
     const response = await queryClient.ensureQueryData(meQueryOptions());
     return response.data;

@@ -44,7 +44,7 @@ export const getArticlePermission = ({
   // 새 글이거나, 글의 작성자에 본인 이름이 들어 있으면 본인 글로 본다.
   const isAuthor =
     articleAuthor === undefined ||
-    myName != null && articleAuthor.includes(myName);
+    (myName != null && articleAuthor.includes(myName));
 
   const roleCanEditType =
     type === "notice"

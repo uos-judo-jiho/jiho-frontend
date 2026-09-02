@@ -15,7 +15,7 @@ type ArrowProps = {
 
 const StyledBackArrow = (
   props: ArrowProps &
-    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">
+    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">,
 ) => {
   const {
     current,
@@ -43,7 +43,7 @@ const StyledBackArrow = (
         $isBackGround &&
           "rounded-full p-1 bg-muted shadow-[0_0_0.2rem_hsl(var(--black))]",
         "max-sm:hidden",
-        $isMobileVisible && "max-sm:flex"
+        $isMobileVisible && "max-sm:flex",
       )}
       style={{
         width: size || "24px",
@@ -62,7 +62,7 @@ const StyledBackArrow = (
 
 const StyledForwardArrow = (
   props: ArrowProps &
-    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">
+    Omit<React.SVGProps<SVGSVGElement>, keyof ArrowProps | "ref">,
 ) => {
   const {
     current,
@@ -89,7 +89,7 @@ const StyledForwardArrow = (
         isVisible ? displayClass : "!hidden",
         $isBackGround && "rounded-full p-1 bg-muted",
         "max-sm:hidden",
-        $isMobileVisible && "max-sm:flex"
+        $isMobileVisible && "max-sm:flex",
       )}
       style={{
         width: size || "24px",

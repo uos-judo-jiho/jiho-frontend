@@ -25,9 +25,8 @@ type TrainingLogFormProps = {
  * 검색해 고를 수 있다.
  */
 function TrainingLogForm({ data }: TrainingLogFormProps) {
-  const article: ArticleInfoType | undefined = data
-    ? { ...data, imgSrcs: data.images ?? [] }
-    : undefined;
+  // 읽기 응답이 곧 폼이 쓰는 모양이라 옮겨 담을 것이 없다 (api#40)
+  const article: ArticleInfoType | undefined = data;
 
   const form = useArticleForm({ type: "training", data: article });
 

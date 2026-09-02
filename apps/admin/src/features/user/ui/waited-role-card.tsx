@@ -91,33 +91,31 @@ const ApprovalItem = ({
     ]);
   };
 
-  const approvMutation =
-    v2Admin.useApproveRoleUpgradeRequest({
-      axios: { withCredentials: true },
-      mutation: {
-        onSuccess: async () => {
-          toast.success("회원이 승인되었습니다.");
-          await invalidateQueries();
-        },
-        onError: () => {
-          toast.error("회원 승인에 실패했습니다.");
-        },
+  const approvMutation = v2Admin.useApproveRoleUpgradeRequest({
+    axios: { withCredentials: true },
+    mutation: {
+      onSuccess: async () => {
+        toast.success("회원이 승인되었습니다.");
+        await invalidateQueries();
       },
-    });
+      onError: () => {
+        toast.error("회원 승인에 실패했습니다.");
+      },
+    },
+  });
 
-  const rejectMutation =
-    v2Admin.useRejectRoleUpgradeRequest({
-      axios: { withCredentials: true },
-      mutation: {
-        onSuccess: async () => {
-          toast.success("회원이 거절되었습니다.");
-          await invalidateQueries();
-        },
-        onError: () => {
-          toast.error("회원 거절에 실패했습니다.");
-        },
+  const rejectMutation = v2Admin.useRejectRoleUpgradeRequest({
+    axios: { withCredentials: true },
+    mutation: {
+      onSuccess: async () => {
+        toast.success("회원이 거절되었습니다.");
+        await invalidateQueries();
       },
-    });
+      onError: () => {
+        toast.error("회원 거절에 실패했습니다.");
+      },
+    },
+  });
 
   const roleText = getUserRole(request.requestedRole);
 
@@ -182,7 +180,8 @@ const UpgradeProfile = ({
       : phone;
 
   const items: { label: string; value: string }[] = [];
-  if (additionalInfo.name) items.push({ label: "이름", value: additionalInfo.name });
+  if (additionalInfo.name)
+    items.push({ label: "이름", value: additionalInfo.name });
   if (additionalInfo.major)
     items.push({ label: "학과", value: additionalInfo.major });
   if (additionalInfo.generation != null)
@@ -190,7 +189,10 @@ const UpgradeProfile = ({
   if (additionalInfo.studentId)
     items.push({ label: "학번", value: additionalInfo.studentId });
   if (additionalInfo.phoneNumber)
-    items.push({ label: "연락처", value: formatPhone(additionalInfo.phoneNumber) });
+    items.push({
+      label: "연락처",
+      value: formatPhone(additionalInfo.phoneNumber),
+    });
 
   if (items.length === 0) return null;
 

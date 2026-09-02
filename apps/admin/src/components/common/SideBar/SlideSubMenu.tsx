@@ -22,7 +22,7 @@ const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
         "w-full overflow-hidden text-base",
         selected === "selected" && "block animate-slide-down",
         selected === "animate" && "animate-slide-up",
-        selected === "closed" && "h-0 hidden"
+        selected === "closed" && "h-0 hidden",
       )}
       style={
         {
@@ -35,7 +35,7 @@ const SlideSubMenu = ({ selected, itemsInfo, menuId }: SlideSubMenuProps) => {
           key={itemInfo.title}
           className={cn(
             "mx-1 leading-[200%] hover:text-gray-500",
-            location.pathname === itemInfo.href && "underline font-bold"
+            location.pathname === itemInfo.href && "underline font-bold",
           )}
         >
           <Link

@@ -5,7 +5,9 @@ import { Button } from "./button";
 describe("Button", () => {
   it("should render correctly", () => {
     render(<Button>Click me</Button>);
-    expect(screen.getByRole("button", { name: /click me/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /click me/i }),
+    ).toBeInTheDocument();
   });
 
   it("should handle click events", () => {
@@ -21,7 +23,9 @@ describe("Button", () => {
   });
 
   it("should have correct classes for variants", () => {
-    const { rerender } = render(<Button variant="destructive">Destructive</Button>);
+    const { rerender } = render(
+      <Button variant="destructive">Destructive</Button>,
+    );
     expect(screen.getByRole("button")).toHaveClass("bg-destructive");
 
     rerender(<Button variant="outline">Outline</Button>);

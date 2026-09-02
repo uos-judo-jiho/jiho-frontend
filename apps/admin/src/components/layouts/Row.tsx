@@ -15,7 +15,7 @@ type RowProps = {
 const Row = React.forwardRef<HTMLDivElement, RowProps>(
   (
     { children, alignItems, justifyContent, gap, mobile, pc, className, style },
-    ref
+    ref,
   ) => {
     // Map CSS values to Tailwind classes
     const alignItemsMap: Record<string, string> = {
@@ -53,14 +53,14 @@ const Row = React.forwardRef<HTMLDivElement, RowProps>(
             : "justify-normal",
           mobile && "sm:hidden flex",
           pc && "max-sm:hidden sm:flex",
-          className
+          className,
         )}
         style={gap !== undefined ? { gap: `${gap}px`, ...style } : style}
       >
         {children}
       </div>
     );
-  }
+  },
 );
 
 Row.displayName = "Row";
