@@ -6,7 +6,7 @@ import { useMemo } from "react";
 import Line from "./Line";
 
 type ListContainerProps = {
-  datas: Partial<v2ApiModel.GetApiV2NewsYear200ArticlesItem>[];
+  datas: Partial<v2ApiModel.Board>[];
   targetUrl: string;
   additionalTitle?: boolean;
 };

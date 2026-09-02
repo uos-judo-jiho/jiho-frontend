@@ -1,6 +1,8 @@
-import { GetApiV2AdminUsers200UsersItemRole } from "node_modules/@packages/api/src/_generated/v2/admin/model";
+import { v2AdminModel } from "@packages/api/model";
 
-export const getUserRole = (role: GetApiV2AdminUsers200UsersItemRole) => {
+export const getUserRole = (
+  role: v2AdminModel.ListAdminUsers200UsersItemRole,
+) => {
   switch (role) {
     case "root":
       return "관리자";

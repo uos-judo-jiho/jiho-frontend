@@ -5,7 +5,7 @@ import { PageHeader } from "@/shared/ui/page-header";
 import { PageShell } from "@/widgets/page-shell";
 
 export const NoticeIndexPage = () => {
-  const { data: notices = [] } = v2Api.useGetApiV2NoticesSuspense(undefined, {
+  const { data: notices = [] } = v2Api.useListNoticesSuspense(undefined, {
     query: { select: (response) => response.data.notices ?? [] },
   });
 

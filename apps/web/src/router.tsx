@@ -3,6 +3,8 @@ import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import axios from "axios";
 
+import { ErrorPage } from "@/pages/error-page";
+
 import { routeTree } from "./routeTree.gen";
 
 const API_HOSTS = ["http://localhost:4000", "https://api.uosjudo.com"];
@@ -67,6 +69,17 @@ export function getRouter() {
     defaultPreload: "intent",
     scrollRestoration: true,
     defaultStructuralSharing: true,
+    // 모든 페이지가 use*Suspense 로 데이터를 읽고, 헤더의 최신 지호지 쿼리는
+    // PageShell 을 통해 전 페이지에 걸려 있다. 경계가 없으면 API 가 한 번
+    // 실패하는 것만으로 SSR 이 500 을 내고 클라이언트는 백지가 된다.
+    // 라우터는 매치마다 이 컴포넌트로 경계를 세우므로, 실패한 라우트만 폴백으로
+    // 대체되고 나머지는 그대로 남는다.
+    defaultErrorComponent: ErrorPage,
+    // 폴백 컴포넌트가 아니라 여기서 로그를 남긴다 — 잡힐 때 한 번만 호출되므로
+    // 리렌더마다 중복으로 찍히지 않고, SSR 렌더 중에 터진 오류도 서버 로그에 남는다.
+    defaultOnCatch: (error) => {
+      console.error("[route error]", error);
+    },
   });
 
   setupRouterSsrQueryIntegration({

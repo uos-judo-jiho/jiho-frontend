@@ -41,7 +41,7 @@ export const useArticleForm = ({
   data,
   gallery = false,
 }: UseArticleFormOptions) => {
-  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: meData } = v2Admin.useGetMyProfileSuspense({
     axios: { withCredentials: true },
     query: {
       select: (response) => response.data,
@@ -78,10 +78,10 @@ export const useArticleForm = ({
 
   const queryKeyByType = {
     news: v2Api
-      .getGetApiV2NewsLatestQueryKey()
+      .getListLatestNewsQueryKey()
       .filter((key) => key !== "latest"),
-    training: v2Api.getGetApiV2TrainingsQueryKey(),
-    notice: v2Api.getGetApiV2NoticesQueryKey(),
+    training: v2Api.getListTrainingLogsQueryKey(),
+    notice: v2Api.getListNoticesQueryKey(),
   } as const;
 
   const invalidateList = () =>
@@ -89,7 +89,7 @@ export const useArticleForm = ({
 
   const listHref = `/${type}/${gallery ? "gallery" : ""}`;
 
-  const createBoardMutation = v2Admin.usePostApiV2AdminBoard({
+  const createBoardMutation = v2Admin.useCreateBoard({
     mutation: {
       onSuccess: async () => {
         await invalidateList();
@@ -104,7 +104,7 @@ export const useArticleForm = ({
     axios: { withCredentials: true },
   });
 
-  const updateBoardMutation = v2Admin.usePutApiV2AdminBoardBoardId({
+  const updateBoardMutation = v2Admin.useUpdateBoard({
     mutation: {
       onSuccess: async () => {
         await invalidateList();
@@ -119,7 +119,7 @@ export const useArticleForm = ({
     axios: { withCredentials: true },
   });
 
-  const deleteBoardMutation = v2Admin.useDeleteApiV2AdminBoardBoardId({
+  const deleteBoardMutation = v2Admin.useDeleteBoard({
     mutation: {
       onSuccess: async () => {
         await invalidateList();
@@ -134,7 +134,7 @@ export const useArticleForm = ({
     axios: { withCredentials: true },
   });
 
-  const uploadPicturesMutation = v2Admin.usePostApiV2AdminPicturesYear({
+  const uploadPicturesMutation = v2Admin.useUploadGalleryPictures({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: async (_response, { year }) => {

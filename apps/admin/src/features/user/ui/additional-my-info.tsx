@@ -3,7 +3,7 @@ import { v2Admin } from "@packages/api";
 import { match } from "ts-pattern";
 
 export const AdditionalMyInfo = () => {
-  const { data: additionalInfo } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: additionalInfo } = v2Admin.useGetMyProfileSuspense({
     axios: { withCredentials: true },
     query: {
       select: (data) => data.data.user.additionalInfo,

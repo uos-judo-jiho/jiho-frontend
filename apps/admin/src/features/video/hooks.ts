@@ -7,7 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
  *  목록/상세 조회와 라벨 저장은 정상 동작한다.)
  */
 export const useVideoJobs = () =>
-  v2Admin.useGetApiV2AdminVideos({
+  v2Admin.useListVideoJobs({
     axios: { withCredentials: true },
     query: {
       select: (res) => res.data.jobs,
@@ -16,7 +16,7 @@ export const useVideoJobs = () =>
   });
 
 export const useVideoJobDetail = (jobId: number) =>
-  v2Admin.useGetApiV2AdminVideosJobId(jobId, {
+  v2Admin.useGetVideoJob(jobId, {
     axios: { withCredentials: true },
     query: {
       enabled: Number.isFinite(jobId) && jobId > 0,
@@ -26,7 +26,7 @@ export const useVideoJobDetail = (jobId: number) =>
   });
 
 export const useVideoEvents = (jobId: number) =>
-  v2Admin.useGetApiV2AdminVideosJobIdEvents(jobId, {
+  v2Admin.useListVideoJobEvents(jobId, {
     axios: { withCredentials: true },
     query: {
       enabled: Number.isFinite(jobId) && jobId > 0,
@@ -37,7 +37,7 @@ export const useVideoEvents = (jobId: number) =>
 
 /** 영상/하이라이트 삭제는 root 권한에서만 허용된다(서버 게이팅과 일치). */
 export const useIsRoot = (): boolean => {
-  const { data } = v2Admin.useGetApiV2AdminMe({
+  const { data } = v2Admin.useGetMyProfile({
     axios: { withCredentials: true },
     query: { retry: false, select: (res) => res.data.user.role === "root" },
   });
@@ -47,12 +47,12 @@ export const useIsRoot = (): boolean => {
 export const useDeleteVideoJob = () => {
   const queryClient = useQueryClient();
 
-  return v2Admin.useDeleteApiV2AdminVideosJobId({
+  return v2Admin.useDeleteVideoJob({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: () =>
         queryClient.invalidateQueries({
-          queryKey: v2Admin.getGetApiV2AdminVideosQueryKey(),
+          queryKey: v2Admin.getListVideoJobsQueryKey(),
         }),
     },
   });
@@ -61,16 +61,16 @@ export const useDeleteVideoJob = () => {
 export const useDeleteHighlight = (jobId: number) => {
   const queryClient = useQueryClient();
 
-  return v2Admin.useDeleteApiV2AdminHighlightsHighlightId({
+  return v2Admin.useDeleteHighlight({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: () =>
         Promise.all([
           queryClient.invalidateQueries({
-            queryKey: v2Admin.getGetApiV2AdminVideosJobIdQueryKey(jobId),
+            queryKey: v2Admin.getGetVideoJobQueryKey(jobId),
           }),
           queryClient.invalidateQueries({
-            queryKey: v2Admin.getGetApiV2AdminVideosJobIdEventsQueryKey(jobId),
+            queryKey: v2Admin.getListVideoJobEventsQueryKey(jobId),
           }),
         ]),
     },
@@ -80,16 +80,16 @@ export const useDeleteHighlight = (jobId: number) => {
 export const useCreateHighlightLabel = (jobId: number) => {
   const queryClient = useQueryClient();
 
-  return v2Admin.usePostApiV2AdminHighlightsHighlightIdLabel({
+  return v2Admin.useCreateHighlightLabel({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: async () => {
         await Promise.all([
           queryClient.invalidateQueries({
-            queryKey: v2Admin.getGetApiV2AdminVideosJobIdEventsQueryKey(jobId),
+            queryKey: v2Admin.getListVideoJobEventsQueryKey(jobId),
           }),
           queryClient.invalidateQueries({
-            queryKey: v2Admin.getGetApiV2AdminVideosJobIdQueryKey(jobId),
+            queryKey: v2Admin.getGetVideoJobQueryKey(jobId),
           }),
         ]);
       },

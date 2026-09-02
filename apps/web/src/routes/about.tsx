@@ -9,7 +9,7 @@ export const Route = createFileRoute("/about")({
   loader: async ({ context }) => {
     try {
       await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2AwardsQueryOptions(),
+        v2Api.getListAwardsQueryOptions(),
       );
     } catch (error) {
       console.error("[SSR] Awards prefetch error:", error);

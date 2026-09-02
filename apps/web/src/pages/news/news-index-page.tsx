@@ -22,7 +22,7 @@ export const NewsIndexPage = () => {
 
   const results = useQueries({
     queries: years.map((year) =>
-      v2Api.getGetApiV2NewsYearQueryOptions(Number(year), {
+      v2Api.getListNewsByYearQueryOptions(Number(year), {
         limit: NEWS_PREVIEW_PER_YEAR,
       }),
     ),

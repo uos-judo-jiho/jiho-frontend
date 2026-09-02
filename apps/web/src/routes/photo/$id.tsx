@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, linkOptions, notFound } from "@tanstack/react-router";
+import { isAxiosError } from "axios";
 
 import { TrainingDetailPage } from "@/pages/training/training-detail-page";
+import { EmptyState } from "@/shared/ui/empty-state";
+import { MoreLink } from "@/shared/ui/more-link";
+import { PageShell } from "@/widgets/page-shell";
 
 import { createArticleData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
@@ -11,50 +15,62 @@ export const Route = createFileRoute("/photo/$id")({
     context,
     params,
   }): Promise<Omit<SeoHeadOptions, "title"> & { title?: string }> => {
+    // 상세 화면이 쓰는 바로 그 쿼리를 프리페치한다 — 인자가 같아야 컴포넌트가
+    // 다시 받지 않는다. 예전에는 훈련일지 전체 목록을 받아 그중 하나를 찾았다.
+    let info;
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2TrainingsQueryOptions(),
+        v2Api.getGetTrainingLogQueryOptions(Number(params.id)),
       );
-      const trainings = response.data.trainingLogs ?? [];
-      const info = trainings.find(
-        (item) => item.id.toString() === params.id.toString(),
-      );
-
-      if (!info) {
-        return {};
-      }
-
-      const description = [info.title, info.description.slice(0, 140)].join(
-        " | ",
-      );
-
-      const publishedDate = info.dateTime
-        ? new Date(info.dateTime).toISOString()
-        : undefined;
-
-      const structuredData = createArticleData({
-        headline: [info.title, info.author].join(" - ") || "",
-        description,
-        images: info.images.map((img) => img.originSrc),
-        datePublished: publishedDate,
-        dateModified: publishedDate,
-      });
-
-      return {
-        title: `훈련일지 - ${info.author}`,
-        description,
-        imgUrl: info.images.at(0)?.originSrc,
-        articleType: "article",
-        datePublished: publishedDate,
-        dateModified: publishedDate,
-        author: info.author,
-        structuredData,
-      };
+      info = response.data.training;
     } catch (error) {
+      // 없는 글은 오류가 아니라 404 다. 목록에서 찾지 못하던 자리를 대신한다.
+      if (isAxiosError(error) && error.response?.status === 404) {
+        throw notFound();
+      }
       console.error("[SSR] Training detail prefetch error:", error);
       return {};
     }
+
+    const description = [info.title, info.description.slice(0, 140)].join(
+      " | ",
+    );
+
+    const publishedDate = info.dateTime
+      ? new Date(info.dateTime).toISOString()
+      : undefined;
+
+    const structuredData = createArticleData({
+      headline: [info.title, info.author].join(" - ") || "",
+      description,
+      images: info.images.map((img) => img.originSrc),
+      datePublished: publishedDate,
+      dateModified: publishedDate,
+    });
+
+    return {
+      title: `훈련일지 - ${info.author}`,
+      description,
+      imgUrl: info.images.at(0)?.originSrc,
+      articleType: "article",
+      datePublished: publishedDate,
+      dateModified: publishedDate,
+      author: info.author,
+      structuredData,
+    };
   },
+  notFoundComponent: () => (
+    <PageShell>
+      <EmptyState
+        title="해당 훈련일지를 찾을 수 없습니다"
+        action={
+          <MoreLink link={linkOptions({ to: "/photo" })}>
+            훈련일지 목록으로
+          </MoreLink>
+        }
+      />
+    </PageShell>
+  ),
   head: ({ loaderData, params }) =>
     seoHead({
       title: loaderData?.title ?? "훈련일지",

@@ -15,7 +15,7 @@ import { PageShell } from "@/widgets/page-shell";
  * 위→아래 흐름으로 바뀌어 읽는 순서와 DOM 순서가 일치한다.
  */
 export const AlbumPage = () => {
-  const { data: albums = [] } = v2Api.useGetApiV2NewsImagesAllSuspense({
+  const { data: albums = [] } = v2Api.useListNewsGalleriesSuspense({
     query: { select: (response) => response.data },
   });
 

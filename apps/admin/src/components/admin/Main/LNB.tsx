@@ -71,7 +71,7 @@ export const LNB = () => {
   });
   const location = useLocation();
 
-  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: meData } = v2Admin.useGetMyProfileSuspense({
     axios: { withCredentials: true },
     query: {
       select: (data) => data.data,
@@ -168,14 +168,14 @@ export const LNB = () => {
 };
 
 const UserInfoButton = ({ isCollapsed }: { isCollapsed: boolean }) => {
-  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: meData } = v2Admin.useGetMyProfileSuspense({
     axios: { withCredentials: true },
     query: {
       select: (data) => data.data,
     },
   });
 
-  const logoutMutation = v2Admin.usePostApiV2AdminLogout({
+  const logoutMutation = v2Admin.useAdminLogout({
     axios: { withCredentials: true },
   });
 

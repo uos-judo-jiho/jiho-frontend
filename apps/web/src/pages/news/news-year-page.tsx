@@ -14,7 +14,7 @@ export const NewsYearPage = () => {
   const { id } = routeApi.useParams();
   const { latestNewsYear } = useLatestNews();
 
-  const { data: news } = v2Api.useGetApiV2NewsYearSuspense(Number(id), undefined, {
+  const { data: news } = v2Api.useListNewsByYearSuspense(Number(id), undefined, {
     query: { select: (response) => response.data },
   });
 

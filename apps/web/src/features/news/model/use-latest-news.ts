@@ -7,7 +7,7 @@ import { yearOf } from "@/shared/lib/format";
  * 헤더 메뉴·푸터·홈이 모두 이 연도를 기준으로 링크를 만든다.
  */
 export const useLatestNews = (limit = 5) => {
-  const { data: news } = v2Api.useGetApiV2NewsLatestSuspense(
+  const { data: news } = v2Api.useListLatestNewsSuspense(
     { limit },
     { query: { select: (response) => response.data.articles } },
   );

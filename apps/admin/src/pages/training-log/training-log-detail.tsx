@@ -9,7 +9,7 @@ export const TrainingLogDetail = () => {
 
   assert(id !== undefined, "훈련일지 ID가 없습니다.");
 
-  const { data: trainingLog } = v2Api.useGetApiV2TrainingIdSuspense(
+  const { data: trainingLog } = v2Api.useGetTrainingLogSuspense(
     Number(id),
     {
       query: {

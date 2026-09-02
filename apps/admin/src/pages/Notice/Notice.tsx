@@ -6,7 +6,7 @@ import { v2Api } from "@packages/api";
 import { Link } from "@tanstack/react-router";
 
 const Notice = () => {
-  const { data: notices = [], refetch } = v2Api.useGetApiV2Notices(undefined, {
+  const { data: notices = [], refetch } = v2Api.useListNotices(undefined, {
     query: {
       select: (response) => response.data.notices ?? [],
     },

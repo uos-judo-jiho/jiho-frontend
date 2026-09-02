@@ -52,7 +52,7 @@ const emptyForm = {
 
 type AwardFormState = typeof emptyForm;
 
-type AwardItem = v2ApiModel.GetApiV2Awards200AwardsItem;
+type AwardItem = v2ApiModel.Award;
 
 type SortableRowProps = {
   id: number;
@@ -109,7 +109,9 @@ export const Awards = () => {
     data: awards = [],
     isLoading,
     refetch,
-  } = v2Api.useGetApiV2Awards({
+  } = v2Api.useListAwards(undefined, {
+    // 첫 인자는 limit/offset 쿼리 파라미터 자리다. 관리 화면은 전체를 다루므로
+    // undefined 를 넘긴다.
     query: {
       select: (response) => response.data.awards ?? [],
     },
@@ -117,11 +119,11 @@ export const Awards = () => {
 
   const invalidateAwards = () => {
     queryClient.invalidateQueries({
-      queryKey: v2Api.getGetApiV2AwardsQueryKey(),
+      queryKey: v2Api.getListAwardsQueryKey(),
     });
   };
 
-  const createAwardMutation = v2Admin.usePostApiV2AdminAwards({
+  const createAwardMutation = v2Admin.useCreateAward({
     mutation: {
       onSuccess: () => {
         invalidateAwards();
@@ -138,7 +140,7 @@ export const Awards = () => {
     },
   });
 
-  const updateAwardMutation = v2Admin.usePutApiV2AdminAwardsAwardId({
+  const updateAwardMutation = v2Admin.useUpdateAward({
     mutation: {
       onSuccess: () => {
         invalidateAwards();
@@ -154,7 +156,7 @@ export const Awards = () => {
     },
   });
 
-  const deleteAwardMutation = v2Admin.useDeleteApiV2AdminAwardsAwardId({
+  const deleteAwardMutation = v2Admin.useDeleteAward({
     mutation: {
       onSuccess: invalidateAwards,
       onError: (error) => {

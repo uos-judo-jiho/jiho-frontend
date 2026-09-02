@@ -8,7 +8,7 @@ import { useParams } from "@tanstack/react-router";
 const NewsDetail = () => {
   const { year, id } = useParams({ strict: false });
 
-  const { data: response } = v2Api.useGetApiV2NewsYear(
+  const { data: response } = v2Api.useListNewsByYear(
     Number(year),
     undefined,
     {

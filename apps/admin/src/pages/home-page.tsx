@@ -17,7 +17,7 @@ export const HomePage = () => {
 };
 
 const Inner = () => {
-  const { data: userRole } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: userRole } = v2Admin.useGetMyProfileSuspense({
     query: { retry: false, select: (data) => data.data.user.role },
     axios: { withCredentials: true },
   });
@@ -36,7 +36,7 @@ const Inner = () => {
 };
 
 const UnauthorizedSection = () => {
-  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: meData } = v2Admin.useGetMyProfileSuspense({
     query: { retry: false, select: (data) => data.data },
     axios: { withCredentials: true },
   });
@@ -60,7 +60,7 @@ const UnauthorizedSection = () => {
 };
 
 const CommonSection = () => {
-  const { data: meData } = v2Admin.useGetApiV2AdminMeSuspense({
+  const { data: meData } = v2Admin.useGetMyProfileSuspense({
     query: { retry: false, select: (data) => data.data },
     axios: { withCredentials: true },
   });

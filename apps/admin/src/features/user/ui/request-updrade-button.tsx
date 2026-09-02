@@ -1,7 +1,7 @@
 import { CommonModal } from "@/components/common/Modals";
 import { Button } from "@/components/ui/button";
 import { v2Admin } from "@packages/api";
-import { PostApiV2AdminMeUpgradeRequestBodyRequestedRole } from "node_modules/@packages/api/src/_generated/v2/admin/model";
+import { v2AdminModel } from "@packages/api/model";
 import { useQueryClient } from "@tanstack/react-query";
 import { overlay } from "overlay-kit";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 export const RequestUpdradeButton = () => {
   const queryClient = useQueryClient();
 
-  const upgradeRequestMutation = v2Admin.usePostApiV2AdminMeUpgradeRequest({
+  const upgradeRequestMutation = v2Admin.useRequestRoleUpgrade({
     axios: { withCredentials: true },
   });
 
@@ -30,7 +30,7 @@ export const RequestUpdradeButton = () => {
                   toast.success("권한 업그레이드 요청이 제출되었습니다.");
                   // me 쿼리를 무효화해 '승인 대기 중' 문구가 즉시 보이도록 갱신
                   queryClient.invalidateQueries({
-                    queryKey: v2Admin.getGetApiV2AdminMeQueryKey(),
+                    queryKey: v2Admin.getGetMyProfileQueryKey(),
                   });
                   close();
                 },
@@ -69,15 +69,15 @@ const RequestUpgradeModal = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (role: PostApiV2AdminMeUpgradeRequestBodyRequestedRole) => void;
+  onConfirm: (role: v2AdminModel.RequestRoleUpgradeBodyRequestedRole) => void;
   isPending: boolean;
 }) => {
   const [selectedRole, setSelectedRole] = useState<
-    PostApiV2AdminMeUpgradeRequestBodyRequestedRole | ""
+    v2AdminModel.RequestRoleUpgradeBodyRequestedRole | ""
   >("");
 
   const roles: {
-    value: PostApiV2AdminMeUpgradeRequestBodyRequestedRole;
+    value: v2AdminModel.RequestRoleUpgradeBodyRequestedRole;
     label: string;
   }[] = [
     { value: "general", label: "회원" },

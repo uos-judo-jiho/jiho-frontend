@@ -10,7 +10,7 @@ const PREVIEW_COUNT = 8;
 
 /** 최근 훈련일지 미리보기. */
 export const HomeLatestTrainings = () => {
-  const { data: trainings = [] } = v2Api.useGetApiV2TrainingsSuspense(
+  const { data: trainings = [] } = v2Api.useListTrainingLogsSuspense(
     undefined,
     { query: { select: (response) => response.data.trainingLogs ?? [] } },
   );

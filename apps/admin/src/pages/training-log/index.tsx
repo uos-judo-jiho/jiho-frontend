@@ -13,7 +13,7 @@ export const TrainingLogPage = () => {
     refetch: refreshTraining,
     isLoading,
     isRefetching,
-  } = v2Api.useGetApiV2Trainings(undefined, {
+  } = v2Api.useListTrainingLogs(undefined, {
     query: {
       select: (response) => response.data.trainingLogs,
     },

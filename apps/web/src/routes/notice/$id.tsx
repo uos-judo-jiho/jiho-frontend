@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, linkOptions, notFound } from "@tanstack/react-router";
+import { isAxiosError } from "axios";
 
 import { NoticeDetailPage } from "@/pages/notice/notice-detail-page";
+import { EmptyState } from "@/shared/ui/empty-state";
+import { MoreLink } from "@/shared/ui/more-link";
+import { PageShell } from "@/widgets/page-shell";
 
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
 import { v2Api } from "@packages/api";
@@ -26,28 +30,42 @@ export const Route = createFileRoute("/notice/$id")({
     context,
     params,
   }): Promise<Omit<SeoHeadOptions, "title">> => {
+    // 상세 화면이 쓰는 바로 그 쿼리를 프리페치한다. 공지 응답만 봉투 없이
+    // 게시글 자체가 내려오므로 response.data 가 곧 글이다.
+    let data;
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetApiV2NoticesQueryOptions(),
+        v2Api.getGetNoticeQueryOptions(Number(params.id)),
       );
-      const notices = response.data.notices ?? [];
-      const data = notices.find(
-        (value) => value.id.toString() === params.id.toString(),
-      );
-
-      if (!data) {
-        return {};
-      }
-
-      return {
-        description: [data.title, data.description.slice(0, 140)].join(" | "),
-        imgUrl: extractImageUrl(data.images[0]),
-      };
+      data = response.data;
     } catch (error) {
+      // 없는 글은 오류가 아니라 404 다. 예전에는 목록에 없으면 화면에서
+      // /notice 로 되돌려보냈는데, 그러면 주소가 틀렸다는 사실이 드러나지 않았다.
+      if (isAxiosError(error) && error.response?.status === 404) {
+        throw notFound();
+      }
       console.error("[SSR] Notice detail prefetch error:", error);
       return {};
     }
+
+    return {
+      description: [data.title, data.description.slice(0, 140)].join(" | "),
+      imgUrl: extractImageUrl(data.images[0]),
+    };
   },
+  notFoundComponent: () => (
+    <PageShell width="prose">
+      <EmptyState
+        title="해당 공지사항을 찾을 수 없습니다"
+        description="삭제되었거나 주소가 바뀐 글일 수 있습니다."
+        action={
+          <MoreLink link={linkOptions({ to: "/notice" })}>
+            공지사항 목록으로
+          </MoreLink>
+        }
+      />
+    </PageShell>
+  ),
   head: ({ loaderData, params }) =>
     seoHead({
       title: "Notice",

@@ -5,7 +5,7 @@ import { useParams } from "@tanstack/react-router";
 
 export const NoticeDetail = () => {
   const { id } = useParams({ strict: false });
-  const { data } = v2Api.useGetApiV2Notices(undefined, {
+  const { data } = v2Api.useListNotices(undefined, {
     query: {
       select: (response) => response.data.notices.find((item) => item.id.toString() === id),
     },
