@@ -62,6 +62,20 @@ jiho-frontend/
 ### Data layer
 
 - `@packages/api` exports `v2Api` / `v2Admin` orval clients (axios + TanStack Query hooks, `AxiosResponse` cached as query data).
+- Public reads go through the consolidated board endpoints (api#41): `GET /v2/boards?type=`
+  for every list (news/training/notice), `GET /v2/boards/{boardId}` for every detail
+  (it carries `prev`/`next`), `GET /v2/news/archive` for the year sections, and
+  `GET /v2/galleries[/{year}]` for the album. The per-board endpoints (`/trainings`,
+  `/notices`, `/news/{year}`, …) are `deprecated` on the server — don't reach for them.
+- List items are the shortened `BoardSummary` (plain-text `excerpt`, one `thumbnail`,
+  `imageCount`) while details carry the markdown `description` and every image. That
+  split is mirrored by `ContentSummary` / `ContentItem` in `shared/lib/types/content.ts`.
+- Lists are paginated (`limit` max 100), so `features/content/model/board-list.ts` wraps
+  them in an infinite query — `useBoardList` for "더 보기" pages, `useLatestBoards` for the
+  home previews. Detail pages go through `boardDetailQueryOptions` / `useBoardDetail` so
+  the loader and the component agree on `neighborScope` (news uses `year`).
+- Board ids are shared across the three boards, so each detail route checks
+  `board.type` and throws `notFound()` for a mismatch.
 - Loaders and components share the same query options, so SSR-prefetched data hydrates without refetching (staleTime 24h, `refetchOnMount: false`).
 - **Important:** any query used by a component during SSR should be prefetched in that route's loader — a non-suspense `useQuery` that renders `null` on the server but has hydrated data on the client causes hydration mismatches (see the home route loader).
 
@@ -119,8 +133,8 @@ Fonts: Pretendard Variable (dynamic subset) is loaded via `<link>` in
 - API pattern: use `v2Api.get...QueryOptions` in loaders, `use...Suspense` hooks
   in components. A route's loader must prefetch **every** query its page renders,
   with identical arguments — a mismatched `limit` silently reintroduces an SSR
-  waterfall. `__root.tsx` prefetches latest-news because the header and footer
-  need it on every page.
+  waterfall. `__root.tsx` prefetches the 지호지 아카이브 because the header menu and
+  footer read the year list from it on every page — `/news` reuses that same query.
 - Internal navigation always uses `<Link>` (never `<a href>`, which bypasses the
   router and forces a full reload). Build links with `linkOptions()` so routes and
   params are checked at compile time.

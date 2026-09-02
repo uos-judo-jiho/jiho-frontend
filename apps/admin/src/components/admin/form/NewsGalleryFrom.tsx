@@ -1,7 +1,5 @@
-import { normalizeNewsResponse } from "@/shared/lib/api/news";
 import { v2Api } from "@packages/api";
 import { Newspaper } from "lucide-react";
-import { useMemo } from "react";
 import { FormContainer } from "./StyledComponent/FormContainer";
 import { ArticleFormLayout } from "./shared/article-form-layout";
 import { ImageField } from "./shared/fields";
@@ -10,6 +8,9 @@ import { useArticleForm } from "./shared/use-article-form";
 type NewsGalleryFromProps = {
   year: string;
 };
+
+/** 한 해 사진을 받는 최대 장수 (서버 상한) */
+const GALLERY_IMAGE_LIMIT = 200;
 
 /**
  * 연도별 갤러리 폼.
@@ -20,19 +21,12 @@ type NewsGalleryFromProps = {
 const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
   // 폼 기본값을 첫 렌더에 채워야 해서 suspense 로 받는다. 값이 늦게 도착하면
   // 이미 만들어진 폼에는 반영되지 않아 기존 사진이 통째로 비어 보인다.
-  const { data: response } = v2Api.useListNewsByYearSuspense(
+  // 갤러리는 별도 엔드포인트로 갈라졌고, 그 해 기사 목록을 함께 받던 것이
+  // 사진만 받는 것으로 줄었다 (api#41).
+  const { data: images } = v2Api.useGetGallerySuspense(
     Number(year),
-    undefined,
-    {
-      query: {
-        select: (result) => result.data,
-      },
-    },
-  );
-
-  const newsData = useMemo(
-    () => normalizeNewsResponse(response, year),
-    [response, year],
+    { limit: GALLERY_IMAGE_LIMIT },
+    { query: { select: (result) => result.data.items } },
   );
 
   const form = useArticleForm({
@@ -40,10 +34,7 @@ const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
     gallery: true,
     data: {
       id: `${year}-gallery`,
-      images: (newsData?.images ?? []).map((src) => ({
-        originSrc: src,
-        smallSrc: null,
-      })),
+      images,
       title: "",
       author: "",
       dateTime: year,

@@ -1,16 +1,19 @@
-import { v2Api } from "@packages/api";
 import { Link, linkOptions } from "@tanstack/react-router";
+
+import { useLatestBoards } from "@/features/content";
 
 import { formatDate } from "@/shared/lib/format";
 import { MoreLink } from "@/shared/ui/more-link";
 import { SectionHeading } from "@/shared/ui/section-heading";
 
-const PREVIEW_COUNT = 5;
+/** 홈에서 보여주는 공지 수. 라우트 loader 가 같은 값으로 프리페치한다. */
+export const HOME_NOTICE_LIMIT = 5;
 
 /** 공지사항 미리보기. */
 export const HomeNotices = () => {
-  const { data: notices = [] } = v2Api.useListNoticesSuspense(undefined, {
-    query: { select: (response) => response.data.notices ?? [] },
+  const notices = useLatestBoards({
+    type: "notice",
+    limit: HOME_NOTICE_LIMIT,
   });
 
   if (notices.length === 0) return null;
@@ -26,7 +29,7 @@ export const HomeNotices = () => {
       />
 
       <ul className="flex flex-col">
-        {notices.slice(0, PREVIEW_COUNT).map((notice) => (
+        {notices.map((notice) => (
           <li key={notice.id} className="border-b border-line">
             <Link
               {...linkOptions({

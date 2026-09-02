@@ -1,11 +1,11 @@
 import { Link, linkOptions } from "@tanstack/react-router";
 
-import type { ContentItem } from "@/shared/lib/types/content";
+import type { ContentSummary } from "@/shared/lib/types/content";
 import { formatDate } from "@/shared/lib/format";
 import { EmptyState } from "@/shared/ui/empty-state";
 
 type NoticeListProps = {
-  notices: ContentItem[];
+  notices: ContentSummary[];
 };
 
 /**

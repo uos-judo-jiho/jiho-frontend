@@ -1,21 +1,19 @@
-import { v2Api } from "@packages/api";
-import { useMemo } from "react";
-
+import { LoadMoreButton, useBoardList } from "@/features/content";
 import { TrainingGrid } from "@/features/training";
 import { PageHeader } from "@/shared/ui/page-header";
 import { PageShell } from "@/widgets/page-shell";
 
-/** 훈련일지 목록. */
+/**
+ * 훈련일지 목록.
+ *
+ * 예전에는 전체를 한 번에 받아 화면에서 날짜순으로 정렬했다. 이제 서버가
+ * 최신순으로 페이지 단위로 주므로(api#41) 정렬은 필요 없고, 뒷 페이지는
+ * "더 보기"로 이어 붙인다.
+ */
 export const TrainingIndexPage = () => {
-  const { data: trainings = [] } = v2Api.useListTrainingLogsSuspense(
-    undefined,
-    { query: { select: (response) => response.data.trainingLogs ?? [] } },
-  );
-
-  const sorted = useMemo(
-    () => [...trainings].sort((a, b) => b.dateTime.localeCompare(a.dateTime)),
-    [trainings],
-  );
+  const { items, total, hasMore, isLoadingMore, loadMore } = useBoardList({
+    type: "training",
+  });
 
   return (
     <PageShell>
@@ -29,11 +27,16 @@ export const TrainingIndexPage = () => {
               data-numeric
               className="text-caption text-ink-subtle tabular-nums"
             >
-              총 {sorted.length}건
+              총 {total}건
             </span>
           }
         />
-        <TrainingGrid trainings={sorted} />
+        <TrainingGrid trainings={items} />
+        {hasMore && (
+          <LoadMoreButton onClick={loadMore} loading={isLoadingMore}>
+            훈련일지 더 보기
+          </LoadMoreButton>
+        )}
       </div>
     </PageShell>
   );

@@ -1,5 +1,5 @@
 import fs from "fs";
-import { getSiteData, yearCandidates } from "./shared/siteData.js";
+import { getSiteData } from "./shared/siteData.js";
 
 const filePath = `${process.env.PWD}/public/sitemap.xml`;
 
@@ -8,13 +8,15 @@ const generateSitemap = async () => {
 
   const trainingLogs = trainings?.trainingLogs ?? [];
   const noticeList = notices?.notices ?? [];
-  const currentYear = new Date().getFullYear();
+
+  // 기사가 있는 연도만 싣는다 — 연도 목록도 API 응답에서 나온다
+  const newsYears = Object.keys(newsByYear).sort();
 
   const latestTrainingDate = trainingLogs.length
     ? new Date(trainingLogs[0].dateTime).toISOString()
     : null;
 
-  const latestNewsArticles = newsByYear?.[currentYear] ?? [];
+  const latestNewsArticles = newsByYear?.[newsYears.at(-1)] ?? [];
   const latestNewsDate = latestNewsArticles.length
     ? new Date(latestNewsArticles[0].dateTime).toISOString()
     : null;
@@ -38,7 +40,7 @@ const generateSitemap = async () => {
       lastmod: latestNewsDate,
       priority: "0.9",
     },
-    ...yearCandidates.map((year) => ({
+    ...newsYears.map((year) => ({
       loc: `https://uosjudo.com/news/${year}`,
       lastmod: new Date(`${year}-12-31`).toISOString(),
       priority: "0.8",

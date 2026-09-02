@@ -3,8 +3,12 @@ import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormCo
 import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { v2Api } from "@packages/api";
-import { startTransition, Suspense } from "react";
+import {
+  BOARD_PAGE_SIZE,
+  BoardPagination,
+  useBoardPage,
+} from "@/features/board";
+import { startTransition, useState } from "react";
 import { Link, useParams } from "@tanstack/react-router";
 
 type NewsYearContentProps = {
@@ -12,17 +16,14 @@ type NewsYearContentProps = {
 };
 
 const NewsYearContent = ({ year }: NewsYearContentProps) => {
-  const { data: newsData, refetch } = v2Api.useListNewsByYearSuspense(
-    Number(year),
-    undefined,
-    {
-      query: {
-        select: (response) => response.data,
-      },
-    },
-  );
+  const [page, setPage] = useState(0);
 
-  const articles = newsData?.articles || [];
+  // 연도별 지호지도 통합 목록의 `year` 필터로 받는다 (api#41)
+  const { data, refetch, isLoading } = useBoardPage({
+    type: "news",
+    year: Number(year),
+    page,
+  });
 
   return (
     <>
@@ -46,11 +47,23 @@ const NewsYearContent = ({ year }: NewsYearContentProps) => {
         </NewArticleButton>
       </Row>
 
-      <ListContainer
-        datas={articles}
-        targetUrl={`/news/${year}/`}
-        additionalTitle={true}
-      />
+      {isLoading ? (
+        <Loading loading />
+      ) : (
+        <>
+          <ListContainer
+            datas={data?.items ?? []}
+            targetUrl={`/news/${year}/`}
+            additionalTitle={true}
+            startIndex={page * BOARD_PAGE_SIZE}
+          />
+          <BoardPagination
+            page={page}
+            total={data?.total ?? 0}
+            onChange={setPage}
+          />
+        </>
+      )}
     </>
   );
 };
@@ -60,9 +73,7 @@ const NewsYear = () => {
 
   return (
     <FormContainer title={`지호지 관리 (${year}년)`}>
-      <Suspense fallback={<Loading loading />}>
-        <NewsYearContent year={year ?? ""} />
-      </Suspense>
+      <NewsYearContent year={year ?? ""} />
     </FormContainer>
   );
 };

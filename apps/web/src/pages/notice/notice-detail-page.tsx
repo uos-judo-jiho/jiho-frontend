@@ -1,8 +1,11 @@
-import { v2Api } from "@packages/api";
 import { Link, getRouteApi, linkOptions } from "@tanstack/react-router";
 
-import { ArticleNeighbours, ContentMeta } from "@/features/content";
-import { toNeighbour } from "@/features/content/model/neighbours";
+import {
+  ArticleNeighbours,
+  ContentMeta,
+  toNeighbour,
+  useBoardDetail,
+} from "@/features/content";
 import { LikeButton } from "@/features/reaction";
 import { Markdown } from "@/shared/ui/markdown";
 import { Tag } from "@/shared/ui/tag";
@@ -16,17 +19,14 @@ const linkTo = (id: number) =>
 /**
  * 공지 상세.
  *
- * 이전에는 공지 목록 전체를 받아 그 안에서 현재 글을 찾았다. 이제 서버가 단건
- * 응답에 prev/next 까지 함께 준다 (api#38). 공지 응답만 봉투 없이 게시글 자체가
- * 내려오므로 `response.data` 가 곧 글이다.
- * 없는 id 는 라우트 loader 가 notFound 로 걸러낸다.
+ * 이전에는 공지 목록 전체를 받아 그 안에서 현재 글을 찾았다. 이제 종류를 가리지
+ * 않는 단건 엔드포인트가 앞뒤 글까지 함께 준다 (api#41).
+ * 없는 id·다른 게시판의 id 는 라우트 loader 가 notFound 로 걸러낸다.
  */
 export const NoticeDetailPage = () => {
   const { id } = routeApi.useParams();
 
-  const { data: notice } = v2Api.useGetNoticeSuspense(Number(id), {
-    query: { select: (response) => response.data },
-  });
+  const notice = useBoardDetail(Number(id));
 
   return (
     <PageShell width="prose">

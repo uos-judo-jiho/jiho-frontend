@@ -1,8 +1,6 @@
-import { v2Api } from "@packages/api";
 import { Link, getRouteApi, linkOptions } from "@tanstack/react-router";
 
-import { ArticleDetail } from "@/features/content";
-import { toNeighbour } from "@/features/content/model/neighbours";
+import { ArticleDetail, toNeighbour, useBoardDetail } from "@/features/content";
 import { PageShell } from "@/widgets/page-shell";
 
 const routeApi = getRouteApi("/news/$id/$newsId");
@@ -10,19 +8,15 @@ const routeApi = getRouteApi("/news/$id/$newsId");
 /**
  * 지호지 상세.
  *
- * 이전에는 연도 전체 목록을 받아 그 안에서 현재 글과 앞뒤를 찾았다. 이제 서버가
- * 단건 응답에 prev/next 를 함께 준다 (api#38) — 그 해 기사를 전부 내려받던 것이
- * 1건으로 줄었다. 앞뒤 글은 서버도 같은 연도 안에서 찾으므로 동작은 그대로다.
- * 없는 id 는 라우트 loader 가 notFound 로 걸러낸다.
+ * 종류를 가리지 않는 단건 엔드포인트 하나로 모였고(api#41), 앞뒤 글도 같은
+ * 응답에 담겨 온다. 지호지는 연도별로 목록을 나눠 보므로 앞뒤 탐색 범위도
+ * 그 해 안으로 좁힌다(`neighborScope: "year"`).
+ * 없는 id·다른 게시판의 id 는 라우트 loader 가 notFound 로 걸러낸다.
  */
 export const NewsDetailPage = () => {
   const { id: year, newsId } = routeApi.useParams();
 
-  const { data: article } = v2Api.useGetNewsArticleSuspense(
-    Number(year),
-    Number(newsId),
-    { query: { select: (response) => response.data.article } },
-  );
+  const article = useBoardDetail(Number(newsId), "year");
 
   const linkTo = (id: number) =>
     linkOptions({
