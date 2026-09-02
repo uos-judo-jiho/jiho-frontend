@@ -78,6 +78,11 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # prettier 설정이 있는 apps/admin 만 검사한다. 나머지 앱은 아직 설정이
+      # 없어 대상이 아니며, 설정이 생기는 대로 여기에 더하면 된다.
+      - name: Format check (admin)
+        run: pnpm format:check:admin
+
       - name: Type check
         run: pnpm type-check
 
