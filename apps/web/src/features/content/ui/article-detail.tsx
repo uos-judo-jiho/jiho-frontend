@@ -86,6 +86,5 @@ export const ArticleDetail = ({
     </div>
 
     <ArticleNeighbours newer={newer} older={older} />
-
   </article>
 );

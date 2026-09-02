@@ -1,7 +1,0 @@
-# 빌드 산출물
-dist
-node_modules
-
-# TanStack Router 플러그인이 dev/build 마다 다시 만든다.
-# 포맷해 두어도 다음 실행에 되돌아가므로 대상에서 뺀다.
-src/routeTree.gen.ts

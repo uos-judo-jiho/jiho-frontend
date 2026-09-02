@@ -49,15 +49,20 @@ const STEPS: Step[] = [
   {
     emoji: "🥋",
     accentColor: "text-white",
-    emojiAnim: { animation: "ob-fade-scale 0.5s cubic-bezier(0.16,1,0.3,1) both" },
+    emojiAnim: {
+      animation: "ob-fade-scale 0.5s cubic-bezier(0.16,1,0.3,1) both",
+    },
     label: "시작하기 전에",
     title: "지호 쇼츠",
-    detail: "스와이프 제스처로 하이라이트 클립을 빠르게 분류할 수 있어요. 다음 단계에서 제스처를 알아볼게요.",
+    detail:
+      "스와이프 제스처로 하이라이트 클립을 빠르게 분류할 수 있어요. 다음 단계에서 제스처를 알아볼게요.",
   },
   {
     emoji: "👈",
     accentColor: "text-green-400",
-    emojiAnim: { animation: "ob-swipe-left 0.5s cubic-bezier(0.16,1,0.3,1) both" },
+    emojiAnim: {
+      animation: "ob-swipe-left 0.5s cubic-bezier(0.16,1,0.3,1) both",
+    },
     label: "왼쪽 스와이프",
     title: "기술성공",
     detail: "기술이 성공해 득점이 인정되는 장면일 때 왼쪽으로 스와이프하세요.",
@@ -65,7 +70,9 @@ const STEPS: Step[] = [
   {
     emoji: "👉",
     accentColor: "text-amber-400",
-    emojiAnim: { animation: "ob-swipe-right 0.5s cubic-bezier(0.16,1,0.3,1) both" },
+    emojiAnim: {
+      animation: "ob-swipe-right 0.5s cubic-bezier(0.16,1,0.3,1) both",
+    },
     label: "오른쪽 스와이프",
     title: "기술시도",
     detail: "득점 없이 기술 시도만 있는 장면일 때 오른쪽으로 스와이프하세요.",
@@ -76,7 +83,8 @@ const STEPS: Step[] = [
     emojiAnim: { animation: "ob-double-tap 0.85s ease-in-out both" },
     label: "두 번 탭",
     title: "좋아요",
-    detail: "인상적인 장면이 있다면 화면을 빠르게 두 번 탭해 좋아요를 남길 수 있어요.",
+    detail:
+      "인상적인 장면이 있다면 화면을 빠르게 두 번 탭해 좋아요를 남길 수 있어요.",
   },
   {
     emoji: "☝️",
@@ -137,7 +145,9 @@ export const OnboardingOverlay = ({ onDone }: Props) => {
           style={{ animation: "ob-slide-up 0.38s ease-out both" }}
           className="flex flex-col gap-1"
         >
-          <p className={`text-[10px] font-semibold uppercase tracking-widest ${current.accentColor}`}>
+          <p
+            className={`text-[10px] font-semibold uppercase tracking-widest ${current.accentColor}`}
+          >
             {step === 0 ? "시작하기 전에" : `${step} / ${STEPS.length - 1}`}
           </p>
           <p className="text-xl font-bold leading-tight text-white">
@@ -185,7 +195,9 @@ export const OnboardingOverlay = ({ onDone }: Props) => {
 
 export const useOnboarding = () => {
   const [done, setDone] = useState(
-    () => typeof window !== "undefined" && localStorage.getItem(STORAGE_KEY) === "1",
+    () =>
+      typeof window !== "undefined" &&
+      localStorage.getItem(STORAGE_KEY) === "1",
   );
 
   const complete = () => {

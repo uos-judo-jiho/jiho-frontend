@@ -62,9 +62,7 @@ export const AlbumPage = () => {
                   <li key={`${image.originSrc}-${index}`}>
                     <button
                       type="button"
-                      onClick={() =>
-                        setLightbox({ src: image.originSrc, alt })
-                      }
+                      onClick={() => setLightbox({ src: image.originSrc, alt })}
                       className="group block w-full overflow-hidden rounded-sm"
                     >
                       <Image

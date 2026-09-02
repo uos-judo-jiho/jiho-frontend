@@ -209,7 +209,7 @@ export const ShortsPage = () => {
   // Promise.all 로 함께 기다린 뒤 다음 클립으로 커밋한다(타이머 기반이라 안정적).
   const swipeUpNextWithSave = useCallback(
     (savePromise: Promise<unknown>) => {
-      savePromise.catch(() => { }); // 미처리 거부 방지(아래 Promise.all에서 재처리)
+      savePromise.catch(() => {}); // 미처리 거부 방지(아래 Promise.all에서 재처리)
       if (!canNext) return;
       const height = feedRef.current?.clientHeight ?? window.innerHeight;
       animate(feedY, -height, FEED_SNAP);
@@ -275,151 +275,163 @@ export const ShortsPage = () => {
 
   return (
     <>
-    <div
-      className={`shorts-root${orientationMode === "landscape" ? " shorts-root--landscape" : ""
+      <div
+        className={`shorts-root${
+          orientationMode === "landscape" ? " shorts-root--landscape" : ""
         }`}
-    >
-      {needsOnboarding && <OnboardingOverlay onDone={complete} />}
+      >
+        {needsOnboarding && <OnboardingOverlay onDone={complete} />}
 
-      {/* 세로 피드 — 드래그 중 위/아래 이웃 클립이 손가락을 따라 미리 보인다.
+        {/* 세로 피드 — 드래그 중 위/아래 이웃 클립이 손가락을 따라 미리 보인다.
           위치(y)는 framer-motion MotionValue로 구동(드래그=set, 스냅=animate). */}
-      <motion.div ref={feedRef} className="absolute inset-0" style={{ y: feedY }}>
-        {/* 지속(keyed) 영상 슬롯 — 이전/현재/다음. 스왑 시 요소가 재사용돼
+        <motion.div
+          ref={feedRef}
+          className="absolute inset-0"
+          style={{ y: feedY }}
+        >
+          {/* 지속(keyed) 영상 슬롯 — 이전/현재/다음. 스왑 시 요소가 재사용돼
             리마운트/검은 프레임(깜빡임)이 없다. 현재만 소리·재생·힌트 대상. */}
-        {(
-          [
-            { highlight: prevHighlight, offset: -1 },
-            { highlight: activeHighlight, offset: 0 },
-            { highlight: nextHighlight, offset: 1 },
-          ] as const
-        ).map(({ highlight, offset }) =>
-          highlight ? (
-            // 바깥: 세로 위치(offset)만 담당 — 전환 없이 즉시(윈도우 이동 시 세로 슬라이드 방지).
-            <div
-              key={highlight.id}
-              className="absolute inset-0"
-              style={{ transform: `translateY(${offset * 100}%)` }}
-            >
-              {/* 안쪽: 현재 슬롯만 좌우 라벨 드래그로 이동/회전(스냅백은 전환). */}
+          {(
+            [
+              { highlight: prevHighlight, offset: -1 },
+              { highlight: activeHighlight, offset: 0 },
+              { highlight: nextHighlight, offset: 1 },
+            ] as const
+          ).map(({ highlight, offset }) =>
+            highlight ? (
+              // 바깥: 세로 위치(offset)만 담당 — 전환 없이 즉시(윈도우 이동 시 세로 슬라이드 방지).
               <div
-                className="h-full w-full"
-                style={
-                  offset === 0
-                    ? {
-                      transform: `translateX(${hDragX + idleHint.hintDragX}px) rotate(${(hDragX + idleHint.hintDragX) * 0.02}deg)`,
-                      transition:
-                        hDragX !== 0 || idleHint.hintDragX !== 0
-                          ? "none"
-                          : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
-                    }
-                    : undefined
-                }
+                key={highlight.id}
+                className="absolute inset-0"
+                style={{ transform: `translateY(${offset * 100}%)` }}
               >
-                <video
-                  ref={(el) => {
-                    if (el) videoRefs.current.set(highlight.id, el);
-                    else videoRefs.current.delete(highlight.id);
-                    if (offset === 0) currentVideoRef.current = el;
-                  }}
-                  src={highlight.clipUrl}
-                  autoPlay={offset === 0}
-                  loop
-                  playsInline
-                  preload="auto"
-                  muted={offset === 0 ? muted : true}
-                  onTimeUpdate={offset === 0 ? handleTimeUpdate : undefined}
-                  onLoadedMetadata={offset === 0 ? handleTimeUpdate : undefined}
-                  // 버퍼링 시작 → 스피너. 준비되면(canplay) 재생 재시도 + 스피너 해제.
-                  onWaiting={offset === 0 ? () => setBuffering(true) : undefined}
-                  onPlaying={offset === 0 ? () => setBuffering(false) : undefined}
-                  onCanPlay={
+                {/* 안쪽: 현재 슬롯만 좌우 라벨 드래그로 이동/회전(스냅백은 전환). */}
+                <div
+                  className="h-full w-full"
+                  style={
                     offset === 0
-                      ? (e) => {
-                        setBuffering(false);
-                        playWithFallback(e.currentTarget);
-                      }
+                      ? {
+                          transform: `translateX(${hDragX + idleHint.hintDragX}px) rotate(${(hDragX + idleHint.hintDragX) * 0.02}deg)`,
+                          transition:
+                            hDragX !== 0 || idleHint.hintDragX !== 0
+                              ? "none"
+                              : "transform 0.25s cubic-bezier(0.16,1,0.3,1)",
+                        }
                       : undefined
                   }
-                  className="h-full w-full bg-black object-contain"
-                />
+                >
+                  <video
+                    ref={(el) => {
+                      if (el) videoRefs.current.set(highlight.id, el);
+                      else videoRefs.current.delete(highlight.id);
+                      if (offset === 0) currentVideoRef.current = el;
+                    }}
+                    src={highlight.clipUrl}
+                    autoPlay={offset === 0}
+                    loop
+                    playsInline
+                    preload="auto"
+                    muted={offset === 0 ? muted : true}
+                    onTimeUpdate={offset === 0 ? handleTimeUpdate : undefined}
+                    onLoadedMetadata={
+                      offset === 0 ? handleTimeUpdate : undefined
+                    }
+                    // 버퍼링 시작 → 스피너. 준비되면(canplay) 재생 재시도 + 스피너 해제.
+                    onWaiting={
+                      offset === 0 ? () => setBuffering(true) : undefined
+                    }
+                    onPlaying={
+                      offset === 0 ? () => setBuffering(false) : undefined
+                    }
+                    onCanPlay={
+                      offset === 0
+                        ? (e) => {
+                            setBuffering(false);
+                            playWithFallback(e.currentTarget);
+                          }
+                        : undefined
+                    }
+                    className="h-full w-full bg-black object-contain"
+                  />
+                </div>
               </div>
-            </div>
-          ) : null,
+            ) : null,
+          )}
+
+          <div className="absolute inset-0">
+            {/* key 없이 유지 — 클립 변경 시 리마운트하지 않아 포탈 컨트롤이 깜빡이지 않는다. */}
+            <ShortsCard
+              highlight={activeHighlight}
+              title={activeHighlight.originalFilename.replace(/\.[^.]+$/, "")}
+              onLabeled={moveToNext}
+              onLabelSaved={markLabeled}
+              onSwipeUpNext={swipeUpNextWithSave}
+              onVerticalSwipe={handleVerticalSwipe}
+              onVerticalDragMove={handleVerticalDragMove}
+              onVerticalDragCancel={handleVerticalDragCancel}
+              controlsLayer={controlsLayer}
+              videoRef={currentVideoRef}
+              hintDragX={idleHint.hintDragX}
+              onHorizontalDragMove={setHDragX}
+              onInteract={handleInteract}
+              orientationMode={orientationMode}
+              toggleOrientation={toggleOrientation}
+              muted={muted}
+              onToggleMute={toggleMute}
+            />
+          </div>
+        </motion.div>
+
+        {/* 버퍼링 스피너 — 다운로드가 덜 된 클립으로 넘겼을 때 검은 화면 대신 표시 */}
+        {buffering && (
+          <div className="pointer-events-none fixed inset-0 z-20 flex items-center justify-center">
+            <Loader2 className="h-10 w-10 animate-spin text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
+          </div>
         )}
 
-        <div className="absolute inset-0">
-          {/* key 없이 유지 — 클립 변경 시 리마운트하지 않아 포탈 컨트롤이 깜빡이지 않는다. */}
-          <ShortsCard
-            highlight={activeHighlight}
-            title={activeHighlight.originalFilename.replace(/\.[^.]+$/, "")}
-            onLabeled={moveToNext}
-            onLabelSaved={markLabeled}
-            onSwipeUpNext={swipeUpNextWithSave}
-            onVerticalSwipe={handleVerticalSwipe}
-            onVerticalDragMove={handleVerticalDragMove}
-            onVerticalDragCancel={handleVerticalDragCancel}
-            controlsLayer={controlsLayer}
-            videoRef={currentVideoRef}
-            hintDragX={idleHint.hintDragX}
-            onHorizontalDragMove={setHDragX}
-            onInteract={handleInteract}
-            orientationMode={orientationMode}
-            toggleOrientation={toggleOrientation}
-            muted={muted}
-            onToggleMute={toggleMute}
-          />
-        </div>
-      </motion.div>
+        {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
+        <div ref={setControlsLayer} />
 
-      {/* 버퍼링 스피너 — 다운로드가 덜 된 클립으로 넘겼을 때 검은 화면 대신 표시 */}
-      {buffering && (
-        <div className="pointer-events-none fixed inset-0 z-20 flex items-center justify-center">
-          <Loader2 className="h-10 w-10 animate-spin text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]" />
-        </div>
-      )}
-
-      {/* 카드 컨트롤 고정 레이어 — 피드 밖(#root)이라 세로 스크롤에도 안 움직인다 */}
-      <div ref={setControlsLayer} />
-
-      {/* 유튜브식 하단 진행바 — 시간 텍스트 없이 얇게, 드래그로 시크 */}
-      <div
-        ref={scrubTrackRef}
-        className="fixed inset-x-0 bottom-[var(--safe-bottom)] z-30 cursor-pointer touch-none pt-3"
-        onPointerDown={(e) => {
-          scrubbing.current = true;
-          e.currentTarget.setPointerCapture(e.pointerId);
-          handleInteract();
-          seekToClientX(e.clientX);
-        }}
-        onPointerMove={(e) => {
-          if (scrubbing.current) seekToClientX(e.clientX);
-        }}
-        onPointerUp={() => {
-          scrubbing.current = false;
-        }}
-        onPointerCancel={() => {
-          scrubbing.current = false;
-        }}
-      >
-        <div className="h-[3px] w-full bg-white/25">
-          <div
-            className="h-full bg-indigo-400"
-            style={{
-              width: `${videoTime.duration > 0
-                ? (videoTime.current / videoTime.duration) * 100
-                : 0
+        {/* 유튜브식 하단 진행바 — 시간 텍스트 없이 얇게, 드래그로 시크 */}
+        <div
+          ref={scrubTrackRef}
+          className="fixed inset-x-0 bottom-[var(--safe-bottom)] z-30 cursor-pointer touch-none pt-3"
+          onPointerDown={(e) => {
+            scrubbing.current = true;
+            e.currentTarget.setPointerCapture(e.pointerId);
+            handleInteract();
+            seekToClientX(e.clientX);
+          }}
+          onPointerMove={(e) => {
+            if (scrubbing.current) seekToClientX(e.clientX);
+          }}
+          onPointerUp={() => {
+            scrubbing.current = false;
+          }}
+          onPointerCancel={() => {
+            scrubbing.current = false;
+          }}
+        >
+          <div className="h-[3px] w-full bg-white/25">
+            <div
+              className="h-full bg-indigo-400"
+              style={{
+                width: `${
+                  videoTime.duration > 0
+                    ? (videoTime.current / videoTime.duration) * 100
+                    : 0
                 }%`,
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
+
+        <VideoPreloader urls={preloadUrls} />
       </div>
 
-      <VideoPreloader urls={preloadUrls} />
-    </div>
-
-    {/* PWA 설치 유도 — 회전하는 shorts-root 밖(기기 뷰포트 기준)에 표시.
+      {/* PWA 설치 유도 — 회전하는 shorts-root 밖(기기 뷰포트 기준)에 표시.
         온보딩이 끝난 뒤에만 노출한다. */}
-    {!needsOnboarding && <InstallPrompt />}
+      {!needsOnboarding && <InstallPrompt />}
     </>
   );
 };

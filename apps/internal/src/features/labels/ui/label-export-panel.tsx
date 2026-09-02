@@ -41,7 +41,8 @@ export function LabelExportPanel() {
   } | null>(null);
 
   const exportMutation = useMutation({
-    mutationFn: () => fetchAllLabels((loaded, total) => setProgress({ loaded, total })),
+    mutationFn: () =>
+      fetchAllLabels((loaded, total) => setProgress({ loaded, total })),
     onMutate: () => setProgress(null),
     onSuccess: (items) => {
       if (items.length === 0) {

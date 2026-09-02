@@ -281,7 +281,8 @@ const isRootPath = (file) =>
  * 릴리즈 노트는 "이 릴리즈에 뭐가 들어갔나"를 사람이 읽는 목록이라 넓게 잡는다.
  * 스냅샷 태그는 pnpm 의 워크스페이스 의존 그래프를 쓴다 — affectedProjects 참고.
  */
-const isSharedForApp = (file) => file.startsWith("packages/") || isRootPath(file);
+const isSharedForApp = (file) =>
+  file.startsWith("packages/") || isRootPath(file);
 
 /** 커밋을 해당 앱 기준으로 분류한다. "app" | "shared" | null(제외) */
 function classify(files, app) {
@@ -434,7 +435,15 @@ function resolveBase(rawBase, head) {
 function affectedProjects(base) {
   const raw = execFileSync(
     "pnpm",
-    ["--filter", `...[${base}]`, "ls", "--recursive", "--depth", "-1", "--json"],
+    [
+      "--filter",
+      `...[${base}]`,
+      "ls",
+      "--recursive",
+      "--depth",
+      "-1",
+      "--json",
+    ],
     {
       cwd: REPO_ROOT,
       encoding: "utf8",
@@ -450,12 +459,17 @@ function affectedProjects(base) {
     return [];
   }
 
-  return listed
-    .map((item) => relative(REPO_ROOT, item.path).split("/"))
-    // 워크스페이스 루트 프로젝트(경로가 빈 문자열)와 그룹 밖은 버린다.
-    .filter(([group, project]) => PROJECT_GROUPS.includes(group) && project)
-    .map(([group, project]) => ({ group, project }))
-    .sort((a, b) => a.group.localeCompare(b.group) || a.project.localeCompare(b.project));
+  return (
+    listed
+      .map((item) => relative(REPO_ROOT, item.path).split("/"))
+      // 워크스페이스 루트 프로젝트(경로가 빈 문자열)와 그룹 밖은 버린다.
+      .filter(([group, project]) => PROJECT_GROUPS.includes(group) && project)
+      .map(([group, project]) => ({ group, project }))
+      .sort(
+        (a, b) =>
+          a.group.localeCompare(b.group) || a.project.localeCompare(b.project),
+      )
+  );
 }
 
 /** base 를 못 잡았을 때(루트 커밋 등)는 전부 대상으로 본다. */

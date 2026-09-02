@@ -36,6 +36,7 @@ jiho-frontend/
 - `pnpm build:web` - Production build (`script/build.sh`: sitemap → clean → orval → packages → `vite build`)
 - `pnpm type-check:web` - `tsc -p apps/web/tsconfig.app.json --noEmit`
 - `pnpm lint:web` - oxlint
+- `pnpm format` / `pnpm format:check` - oxfmt over the whole repo (`.oxfmtrc.json`)
 - `pnpm -C apps/web start:prod` - Run the production server (`node .output/server/index.mjs`)
 
 ## apps/web Architecture (TanStack Start)
@@ -132,6 +133,27 @@ Fonts: Pretendard Variable (dynamic subset) is loaded via `<link>` in
 - TypeScript strict mode; `pnpm type-check:web` and `pnpm lint:web` must pass
   (both require `pnpm orval` first)
 
+## Formatting (oxfmt)
+
+The whole repo is formatted by **oxfmt**, the oxc formatter — there is no
+prettier here anymore (it survives only as an internal orval dependency, used to
+format the gitignored `_generated` output).
+
+- One config for everything: `.oxfmtrc.json` at the root. It keeps the settings
+  the old `apps/admin/.prettierrc.json` had (`printWidth: 80`, double quotes,
+  semicolons, trailing commas) — **note oxfmt's own default `printWidth` is 100**,
+  so dropping that key would reflow the entire repo.
+- oxfmt covers more than prettier did here: `.ts/.tsx/.js/.mjs`, `.css`, `.json`,
+  `.html`, `.md`. `sortPackageJson` is on, so `package.json` top-level keys are
+  kept in the conventional order (`exports` condition order is left alone).
+- Generated files are excluded via `ignorePatterns` — `routeTree.gen.ts` (the
+  Start plugin rewrites it on every dev/build) and `packages/api/src/_generated`.
+- `pnpm format:check` runs in CI right after `pnpm lint`. Each app also has its
+  own `format` / `format:check` that points at the root config, mirroring how the
+  `lint` scripts pass `-c ../../.oxlintrc.json`.
+- Editors: `.vscode/settings.json` uses the `oxc.oxc-vscode` extension as the
+  default formatter for every language, `.tsx` included.
+
 ## packages/* build (tsdown)
 
 Every workspace package is bundled by **tsdown** (rolldown) into `dist/` — ESM
@@ -154,10 +176,10 @@ development**:
 
 - `pnpm dev` / `pnpm test` / `pnpm type-check` need **no** package build — Vite's
   default `development|production` condition and `customConditions:
-  ["development"]` in `tsconfig.base.json` both land on `src`.
+["development"]` in `tsconfig.base.json` both land on `src`.
 - `vite build` sets `NODE_ENV=production`, so production bundles consume `dist`.
   Each app therefore runs `build:deps` (`pnpm --filter "<app>^..." run
-  --if-present build`) before `vite build`; `apps/web` does it inside
+--if-present build`) before `vite build`; `apps/web` does it inside
   `script/build.sh`.
 - Never deep-import a package's internals (the old
   `node_modules/@packages/api/src/...` paths). Go through the `exports` subpaths
@@ -189,7 +211,7 @@ Release notes are published per app, automatically:
 - **Deploy tags** (`@uos-judo-jiho/<app>-<YYMMDD>-<HHMMSS>-<sha6>`) — `tag-release.yml` creates one after each successful deploy, for rollback.
 - **Release tags** (`<app>@<version>`, e.g. `web@1.14.0`) — `release-note.yml` fires when a push to `main` bumps `version` in `apps/*/package.json`. It diffs the app's previous release tag against the merged commit, groups the squash commits by Conventional Commits type, and publishes a GitHub Release. `web` falls back to the legacy `v<version>` tags when no `web@*` tag exists yet.
 - **Package tags** (`<pkg>@<version>`, e.g. `api@0.2.0`) — `tag-workspace.yml` creates one when a push to `main` bumps `version` in `packages/*/package.json`. Tag only, no release note: packages aren't published anywhere yet. `workflow_dispatch` backfills at the current version (all packages, or one via the `package` input).
-- **Snapshot tags** (`<name>@<version>-<YYYYMMDD>-<HHmm>` KST, e.g. `web@2.1.0-20260902-0346`) — `tag-workspace.yml` creates one per *changed* project on **every** push to `main`, for `apps/*` and `packages/*` alike, whether or not the version moved. Releases need a version bump; snapshots don't. The stamp comes from the commit's date, not the run's, so re-running a workflow produces the same tag name and creates nothing new. Which projects count as changed is decided by pnpm, not by path rules: `snapshot` shells out to `pnpm --filter "...[<base>]"` — the same filter `ci.yml` uses to build changed projects — so the workspace dependency graph is followed transitively and root-only changes (`pnpm-lock.yaml`, `tsconfig.base.json`, `scripts/`, `.github/`, docs) tag nothing. It needs pnpm on PATH but no `pnpm install`. Because that filter compares against the working tree rather than a commit range, `snapshot` refuses to run unless `--head` is the checked-out commit. Snapshots are semver prereleases, so `web@2.1.0-…` sorts below `web@2.1.0`, and `previousReleaseTag()` filters them out so release notes still diff from the last real release.
+- **Snapshot tags** (`<name>@<version>-<YYYYMMDD>-<HHmm>` KST, e.g. `web@2.1.0-20260902-0346`) — `tag-workspace.yml` creates one per _changed_ project on **every** push to `main`, for `apps/*` and `packages/*` alike, whether or not the version moved. Releases need a version bump; snapshots don't. The stamp comes from the commit's date, not the run's, so re-running a workflow produces the same tag name and creates nothing new. Which projects count as changed is decided by pnpm, not by path rules: `snapshot` shells out to `pnpm --filter "...[<base>]"` — the same filter `ci.yml` uses to build changed projects — so the workspace dependency graph is followed transitively and root-only changes (`pnpm-lock.yaml`, `tsconfig.base.json`, `scripts/`, `.github/`, docs) tag nothing. It needs pnpm on PATH but no `pnpm install`. Because that filter compares against the working tree rather than a commit range, `snapshot` refuses to run unless `--head` is the checked-out commit. Snapshots are semver prereleases, so `web@2.1.0-…` sorts below `web@2.1.0`, and `previousReleaseTag()` filters them out so release notes still diff from the last real release.
 - Generator: `scripts/release-note.mjs` (`detect` / `snapshot` / `notes` subcommands, no dependencies). `detect` and `snapshot` take `--dir apps|packages`; `notes` is apps-only. Preview locally with `pnpm release-note -- notes --app web`.
 - Notes split into "app changes" (`apps/<app>/**`) and "shared/infra changes" (`packages/**`, root config); commits touching only other apps are excluded.
 - App and package names share one flat namespace (same as commit scopes), so `<name>@<version>` never collides.

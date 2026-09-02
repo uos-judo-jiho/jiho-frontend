@@ -11,8 +11,5 @@
     "**/.pnpm": true
   },
   "js/ts.tsdk.path": "node_modules/typescript/lib",
-  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true
 }

@@ -56,7 +56,10 @@ export const NewsIndexPage = () => {
                 title={`${year}년`}
                 action={
                   <MoreLink
-                    link={linkOptions({ to: "/news/$id", params: { id: year } })}
+                    link={linkOptions({
+                      to: "/news/$id",
+                      params: { id: year },
+                    })}
                   >
                     {year}년 전체 보기
                   </MoreLink>
@@ -68,7 +71,11 @@ export const NewsIndexPage = () => {
                       <ArticleCardSkeleton key={i} />
                     ))
                   : articles.map((article) => (
-                      <NewsCard key={article.id} article={article} year={year} />
+                      <NewsCard
+                        key={article.id}
+                        article={article}
+                        year={year}
+                      />
                     ))}
               </ContentGrid>
             </section>

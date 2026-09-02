@@ -14,8 +14,8 @@
     "type-check": "tsc -p tsconfig.app.json --noEmit",
     "lint": "oxlint src -c ../../.oxlintrc.json --max-warnings=0",
     "lint:fix": "oxlint src -c ../../.oxlintrc.json --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css}\" vite.config.ts",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" vite.config.ts",
+    "format": "oxfmt . -c ../../.oxfmtrc.json",
+    "format:check": "oxfmt . -c ../../.oxfmtrc.json --check",
     "test": "vitest",
     "test:ui": "vitest --ui"
   },
@@ -78,7 +78,6 @@
     "babel-plugin-import": "^1.13.6",
     "happy-dom": "^20.8.4",
     "orval": "^8.2.0",
-    "prettier": "^3.7.4",
     "tsx": "^4.20.6",
     "vite": "catalog:",
     "vitest": "^4.1.0"

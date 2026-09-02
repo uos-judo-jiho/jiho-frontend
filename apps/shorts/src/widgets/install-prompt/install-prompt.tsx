@@ -17,7 +17,7 @@ import {
   Plus,
   Share,
   SquarePlus,
-  X
+  X,
 } from "lucide-react";
 import { useState, type ComponentType, type ReactNode } from "react";
 import { toast } from "sonner";
@@ -223,7 +223,8 @@ export const InstallPrompt = () => {
                   onClick={copyLink}
                   className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-white/10 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/15"
                 >
-                  <Copy className="h-4 w-4" />링크 복사
+                  <Copy className="h-4 w-4" />
+                  링크 복사
                 </button>
               )}
             </div>

@@ -14,9 +14,13 @@ export const NewsYearPage = () => {
   const { id } = routeApi.useParams();
   const { latestNewsYear } = useLatestNews();
 
-  const { data: news } = v2Api.useListNewsByYearSuspense(Number(id), undefined, {
-    query: { select: (response) => response.data },
-  });
+  const { data: news } = v2Api.useListNewsByYearSuspense(
+    Number(id),
+    undefined,
+    {
+      query: { select: (response) => response.data },
+    },
+  );
 
   if (!isValidNewsYear(id, latestNewsYear)) {
     return <NotFoundPage />;

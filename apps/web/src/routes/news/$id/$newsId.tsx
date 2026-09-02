@@ -35,9 +35,10 @@ export const Route = createFileRoute("/news/$id/$newsId")({
       return {};
     }
 
-    const description = [article.title, article.description?.slice(0, 140)].join(
-      " | ",
-    );
+    const description = [
+      article.title,
+      article.description?.slice(0, 140),
+    ].join(" | ");
 
     const publishedDate = article.dateTime
       ? new Date(article.dateTime).toISOString()

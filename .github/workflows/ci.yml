@@ -85,10 +85,10 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      # prettier 설정이 있는 apps/admin 만 검사한다. 나머지 앱은 아직 설정이
-      # 없어 대상이 아니며, 설정이 생기는 대로 여기에 더하면 된다.
-      - name: Format check (admin)
-        run: pnpm format:check:admin
+      # oxfmt 설정(.oxfmtrc.json)은 루트 하나뿐이라 레포 전체를 한 번에 검사한다.
+      # 생성 파일(routeTree.gen.ts, _generated)은 설정의 ignorePatterns 에서 뺀다.
+      - name: Format check
+        run: pnpm format:check
 
       - name: Type check
         run: pnpm type-check

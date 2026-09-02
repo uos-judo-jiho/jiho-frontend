@@ -48,7 +48,9 @@ export const Overlay = ({
     <div
       className={cn(
         "fixed inset-0 z-50 flex",
-        placement === "center" ? "items-center justify-center" : "items-stretch",
+        placement === "center"
+          ? "items-center justify-center"
+          : "items-stretch",
         className,
       )}
     >

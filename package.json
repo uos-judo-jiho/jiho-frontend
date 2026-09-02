@@ -1,11 +1,11 @@
 {
   "name": "jiho-frontend",
   "private": true,
-  "type": "module",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
+  "type": "module",
   "scripts": {
     "clean": "pnpm clean:web && pnpm clean:admin && pnpm clean:packages",
     "clean:web": "pnpm -C apps/web clean",
@@ -41,8 +41,12 @@
     "lint:admin": "oxlint apps/admin/src --max-warnings=0",
     "lint:internal": "oxlint apps/internal/src apps/internal/server --max-warnings=0",
     "lint:shorts": "oxlint apps/shorts/src --max-warnings=0",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "format:web": "pnpm -C apps/web format",
     "format:admin": "pnpm -C apps/admin format",
-    "format:check:admin": "pnpm -C apps/admin format:check",
+    "format:internal": "pnpm -C apps/internal format",
+    "format:shorts": "pnpm -C apps/shorts format",
     "type-check": "pnpm type-check:web && pnpm type-check:admin",
     "type-check:web": "pnpm -C apps/web type-check",
     "type-check:admin": "pnpm -C apps/admin type-check",
@@ -53,6 +57,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
+    "oxfmt": "^0.65.0",
     "oxlint": "^1.80.0",
     "typescript": "catalog:"
   },

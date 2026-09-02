@@ -34,16 +34,24 @@ export const HomeHero = () => (
         유도부 지호
       </h1>
 
-      <p className="mt-6 max-w-prose text-lead text-on-inverse-muted">{SITE.nameEn}</p>
+      <p className="mt-6 max-w-prose text-lead text-on-inverse-muted">
+        {SITE.nameEn}
+      </p>
 
       <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-5 border-t border-inverse-line pt-6">
         <div>
-          <dt className="jd-eyebrow text-on-inverse-muted">{SITE.practice.label}</dt>
-          <dd className="mt-1.5 text-caption text-on-inverse">{SITE.practice.time}</dd>
+          <dt className="jd-eyebrow text-on-inverse-muted">
+            {SITE.practice.label}
+          </dt>
+          <dd className="mt-1.5 text-caption text-on-inverse">
+            {SITE.practice.time}
+          </dd>
         </div>
         <div>
           <dt className="jd-eyebrow text-on-inverse-muted">장소</dt>
-          <dd className="mt-1.5 text-caption text-on-inverse">{SITE.practice.place}</dd>
+          <dd className="mt-1.5 text-caption text-on-inverse">
+            {SITE.practice.place}
+          </dd>
         </div>
       </dl>
     </div>

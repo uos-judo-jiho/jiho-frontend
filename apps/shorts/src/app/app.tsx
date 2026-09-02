@@ -23,22 +23,26 @@ const App = () => {
   }, []);
 
   return (
-  <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
-      <Routes>
-        {/* 로그인/회원가입은 공유 패키지(@packages/auth) 페이지를 shorts 서브도메인에서 직접 서빙 */}
-        <Route path={AUTH_PATHS.login} element={<LoginPage />} />
-        <Route path={AUTH_PATHS.register} element={<Register />} />
-        <Route path="*" element={<ShortsPage />} />
-      </Routes>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          style: { background: "#1c1c1c", color: "#fff", border: "1px solid #333" },
-        }}
-      />
-    </QueryClientProvider>
-  </BrowserRouter>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <Routes>
+          {/* 로그인/회원가입은 공유 패키지(@packages/auth) 페이지를 shorts 서브도메인에서 직접 서빙 */}
+          <Route path={AUTH_PATHS.login} element={<LoginPage />} />
+          <Route path={AUTH_PATHS.register} element={<Register />} />
+          <Route path="*" element={<ShortsPage />} />
+        </Routes>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              background: "#1c1c1c",
+              color: "#fff",
+              border: "1px solid #333",
+            },
+          }}
+        />
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 

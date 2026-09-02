@@ -18,7 +18,9 @@
     font-size: var(--jd-text-body);
     line-height: var(--jd-leading-body);
     letter-spacing: var(--jd-tracking-body);
-    font-feature-settings: "ss01", "tnum" 0;
+    font-feature-settings:
+      "ss01",
+      "tnum" 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
