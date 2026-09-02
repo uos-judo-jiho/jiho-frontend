@@ -8,16 +8,12 @@ import { useParams } from "@tanstack/react-router";
 const NewsDetail = () => {
   const { year, id } = useParams({ strict: false });
 
-  const { data: response } = v2Api.useListNewsByYear(
-    Number(year),
-    undefined,
-    {
-      query: {
-        enabled: Boolean(year),
-        select: (result) => result.data,
-      },
+  const { data: response } = v2Api.useListNewsByYear(Number(year), undefined, {
+    query: {
+      enabled: Boolean(year),
+      select: (result) => result.data,
     },
-  );
+  });
 
   const newsData = useMemo(
     () => normalizeNewsResponse(response, year ?? ""),

@@ -3,7 +3,11 @@ import { useRef } from "react";
 import { describe, expect, it, vi } from "vitest";
 import useClickOutside from "./useClickOutside";
 
-const TestComponent = ({ onClick }: { onClick: (event: MouseEvent) => void }) => {
+const TestComponent = ({
+  onClick,
+}: {
+  onClick: (event: MouseEvent) => void;
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, onClick);
   return (

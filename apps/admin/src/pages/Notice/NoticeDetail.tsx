@@ -7,7 +7,8 @@ export const NoticeDetail = () => {
   const { id } = useParams({ strict: false });
   const { data } = v2Api.useListNotices(undefined, {
     query: {
-      select: (response) => response.data.notices.find((item) => item.id.toString() === id),
+      select: (response) =>
+        response.data.notices.find((item) => item.id.toString() === id),
     },
   });
 

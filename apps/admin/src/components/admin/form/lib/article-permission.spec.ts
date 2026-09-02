@@ -105,10 +105,12 @@ describe("getArticlePermission", () => {
     });
 
     it("회원은 공지사항을 쓸 수 없다", () => {
-      expect(getArticlePermission({ type: "notice", role: "general" })).toEqual({
-        canEdit: false,
-        canEditAuthor: false,
-      });
+      expect(getArticlePermission({ type: "notice", role: "general" })).toEqual(
+        {
+          canEdit: false,
+          canEditAuthor: false,
+        },
+      );
     });
   });
 

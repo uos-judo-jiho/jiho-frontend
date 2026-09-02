@@ -9,14 +9,11 @@ export const TrainingLogDetail = () => {
 
   assert(id !== undefined, "훈련일지 ID가 없습니다.");
 
-  const { data: trainingLog } = v2Api.useGetTrainingLogSuspense(
-    Number(id),
-    {
-      query: {
-        select: (response) => response.data.training,
-      },
+  const { data: trainingLog } = v2Api.useGetTrainingLogSuspense(Number(id), {
+    query: {
+      select: (response) => response.data.training,
     },
-  );
+  });
 
   return (
     <div className="flex flex-col gap-4">

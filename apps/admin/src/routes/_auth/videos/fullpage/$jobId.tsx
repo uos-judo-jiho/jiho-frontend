@@ -10,7 +10,8 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/_auth/videos/fullpage/$jobId")({
-  validateSearch: (search: Record<string, unknown>) => searchSchema.parse(search),
+  validateSearch: (search: Record<string, unknown>) =>
+    searchSchema.parse(search),
   beforeLoad: ({ context }) => requireRole(context.me, VideoLabelingRoles),
   staticData: { title: "하이라이트 전체화면" },
   component: VideoLabelingFullpage,

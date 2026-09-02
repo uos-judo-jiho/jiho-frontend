@@ -77,9 +77,7 @@ export const useArticleForm = ({
   const isAuthorFixed = !canEditAuthor;
 
   const queryKeyByType = {
-    news: v2Api
-      .getListLatestNewsQueryKey()
-      .filter((key) => key !== "latest"),
+    news: v2Api.getListLatestNewsQueryKey().filter((key) => key !== "latest"),
     training: v2Api.getListTrainingLogsQueryKey(),
     notice: v2Api.getListNoticesQueryKey(),
   } as const;

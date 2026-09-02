@@ -46,7 +46,7 @@ const ScrollSnap = ({ children, setIsDark }: ScrollSnapProps) => {
       {
         root: container,
         threshold: 0.2,
-      }
+      },
     );
 
     const childElements = Array.from(container.children);

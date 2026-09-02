@@ -43,9 +43,7 @@ export const LoginPage = ({ redirectTo }: LoginPageProps) => {
     mutation: {
       onSuccess: () => {
         toast.success("로그인에 성공했습니다.");
-        const destination = redirectTo
-          ? decodeURIComponent(redirectTo)
-          : "/";
+        const destination = redirectTo ? decodeURIComponent(redirectTo) : "/";
         if (destination.startsWith("http")) {
           window.location.href = destination;
         } else {

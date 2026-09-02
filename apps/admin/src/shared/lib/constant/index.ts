@@ -3,12 +3,11 @@ import LOGO_BLACK from "@/shared/lib/assets/images/logo/logo-removebg.webp";
 
 export const Constants = {
   // 클라이언트에서는 상대 경로 사용 (CORS 방지)
-  BASE_URL:
-    import.meta.env.DEV
-      ? "http://localhost:3000"
-      : typeof window !== "undefined"
-        ? window.location.origin
-        : "https://uosjudo.com",
+  BASE_URL: import.meta.env.DEV
+    ? "http://localhost:3000"
+    : typeof window !== "undefined"
+      ? window.location.origin
+      : "https://uosjudo.com",
 
   // 이미지
   LOGO_BLACK,

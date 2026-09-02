@@ -9,16 +9,13 @@ import { v2AdminModel } from "@packages/api/model";
 export type VideoJobStatus = v2AdminModel.ListVideoJobs200JobsItemStatus;
 export type VideoJobListItem = v2AdminModel.ListVideoJobs200JobsItem;
 export type VideoJobDetail = v2AdminModel.GetVideoJob200Job;
-export type VideoEvent =
-  v2AdminModel.ListVideoJobEvents200EventsItem;
-export type VideoHighlight =
-  v2AdminModel.GetVideoJob200JobHighlightsItem &
-    Pick<VideoEvent, "isLabeledByCurrentUser">;
+export type VideoEvent = v2AdminModel.ListVideoJobEvents200EventsItem;
+export type VideoHighlight = v2AdminModel.GetVideoJob200JobHighlightsItem &
+  Pick<VideoEvent, "isLabeledByCurrentUser">;
 export type CurrentUserLabel =
   v2AdminModel.GetVideoJob200JobHighlightsItemCurrentUserLabel;
 
-export type CreateVideoLabelBody =
-  v2AdminModel.CreateHighlightLabelBody;
+export type CreateVideoLabelBody = v2AdminModel.CreateHighlightLabelBody;
 export type TechniqueResult =
   v2AdminModel.CreateHighlightLabelBodyTechniqueResult;
 export type Score = NonNullable<CreateVideoLabelBody["score"]>;

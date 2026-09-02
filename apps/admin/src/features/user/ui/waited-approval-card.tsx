@@ -133,7 +133,8 @@ const ApprovalProfile = ({
   const items: { label: string; value: string }[] = [];
   if (admin.name) items.push({ label: "이름", value: admin.name });
   if (admin.major) items.push({ label: "학과", value: admin.major });
-  if (admin.year != null) items.push({ label: "기수", value: `${admin.year}기` });
+  if (admin.year != null)
+    items.push({ label: "기수", value: `${admin.year}기` });
   if (admin.studentId) items.push({ label: "학번", value: admin.studentId });
   if (admin.phoneNumber)
     items.push({ label: "연락처", value: admin.phoneNumber });
