@@ -2,7 +2,7 @@
 
 `packages/*` 를 **모노레포 밖에서 소비**할 수 있게 배포하려면 어떻게 해야 하는지
 조사한 결과를 정리한 문서다. **아직 구현하지 않았다.** 지금 구현된 것은 버전
-bump 를 감지해 태그를 만드는 것까지다 (`.github/workflows/tag-packages.yml`).
+bump 를 감지해 태그를 만드는 것까지다 (`.github/workflows/tag-workspace.yml`).
 
 이 문서는 "필요해지면 그때 이 문서를 보고 붙인다"를 전제로 쓴다.
 
@@ -15,6 +15,7 @@ bump 를 감지해 태그를 만드는 것까지다 (`.github/workflows/tag-pack
 | 패키지 빌드 | `tsdown` → `dist/` (ESM + `.d.ts`). `pnpm build:packages` |
 | 모노레포 내부 소비 | `workspace:*` — 이대로 유지한다 |
 | 버전 태그 | `<pkg>@<version>` (예: `api@0.2.0`) 자동 생성 ✅ |
+| 스냅샷 태그 | `<pkg>@<version>-<YYYYMMDD>-<HHmm>` 코드 변경 시마다 자동 생성 ✅ |
 | 레지스트리 배포 | **없음** |
 
 태그는 배포와 무관하게 "이 커밋이 그 버전"이라는 기록으로서 이미 쓸모가 있다.
@@ -88,18 +89,18 @@ registry 와 다르다). 소비자별로:
 GitHub 의 재귀 방지 정책이고, 예외는 `workflow_dispatch` / `repository_dispatch`
 둘뿐이다.
 
-`tag-packages.yml` 이 만드는 태그가 바로 그 경우다. 따라서 이런 설계는 **동작하지
-않는다**:
+`tag-workspace.yml` 이 만드는 태그(릴리즈·스냅샷 모두)가 바로 그 경우다. 따라서
+이런 설계는 **동작하지 않는다**:
 
 ```
-tag-packages.yml : 버전 감지 → 태그 푸시
+tag-workspace.yml : 버전 감지 → 태그 푸시
                                  ↓  트리거 안 됨
 publish.yml      : on push tags → 빌드 → publish   ← 안 돎
 ```
 
 대안 (권장순):
 
-1. **한 워크플로우로 합치기** — `tag-packages.yml` 안에서 태그 생성에 이어 publish
+1. **한 워크플로우로 합치기** — `tag-workspace.yml` 안에서 태그 생성에 이어 publish
    까지 한다. 토큰 문제 자체가 사라진다. `release-note.yml` 이 이미 detect →
    release 를 한 워크플로우 두 job 으로 처리하는 것과 같은 모양이다.
 2. **사람이 태그 푸시** — 사람 자격증명이라 정상적으로 트리거된다.
@@ -109,7 +110,7 @@ publish.yml      : on push tags → 빌드 → publish   ← 안 돎
 
 ## 구현할 때 체크리스트
 
-`tag-packages.yml` 에 publish job 을 잇는다고 할 때:
+`tag-workspace.yml` 에 publish job 을 잇는다고 할 때:
 
 - [ ] `permissions: { contents: write, packages: write }`
       (`packages: write` 만 추가하면 된다. `secrets.GITHUB_TOKEN` 은 **등록하는

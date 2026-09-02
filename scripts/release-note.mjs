@@ -6,17 +6,22 @@
  * 해당 앱의 "이전 릴리즈 태그 ~ 현재 커밋" 사이의 squash 머지 커밋으로
  * Conventional Commits 기반 릴리즈 노트를 만든다.
  *
- * 릴리즈 태그 형식: <app>@<version>   (예: web@1.13.4, admin@0.1.2)
- * 배포 태그 형식:   @uos-judo-jiho/<app>-<YYMMDD>-<HHMMSS>-<hash>  (tag-release.yml)
+ * 태그 세 종류를 구분한다.
+ *   릴리즈 태그   <name>@<version>                        예) web@1.13.4, api@0.2.0
+ *                 version 이 올라갈 때만. detect 가 찾는다.
+ *   스냅샷 태그   <name>@<version>-<YYYYMMDD>-<HHmm>      예) web@2.1.0-20260902-0346
+ *                 코드가 바뀌면 항상. snapshot 이 찾는다. (KST, 커밋 시각 기준)
+ *   배포 태그     @uos-judo-jiho/<app>-<YYMMDD>-<HHMMSS>-<hash>   (tag-release.yml)
  *
- * detect 는 packages/* 도 볼 수 있다 (`--dir packages`). 이때는 태그 이름만
- * 뽑아 쓰고 릴리즈 노트는 만들지 않는다 — tag-packages.yml 이 그 용도다.
- * 패키지 태그도 같은 형식을 쓴다 (예: api@0.2.0). apps/* 와 packages/* 는
- * 커밋 스코프에서 이미 하나의 평평한 이름 공간이라 이름이 겹치지 않는다.
+ * detect / snapshot 은 apps/* 와 packages/* 를 모두 볼 수 있다. 릴리즈 노트는
+ * apps 전용이고, packages 는 태그만 만든다 (tag-workspace.yml). 태그 형식은
+ * 양쪽이 같다 — apps/* 와 packages/* 는 커밋 스코프에서 이미 하나의 평평한
+ * 이름 공간이라 이름이 겹치지 않는다.
  *
  * 사용법
  *   node scripts/release-note.mjs detect [--dir apps|packages] [--base <ref>]
  *                                        [--head <ref>] [--project <name>] [--all]
+ *   node scripts/release-note.mjs snapshot [--dir apps|packages] [--base <ref>] [--head <ref>]
  *   node scripts/release-note.mjs notes --app web [--version 1.13.4] [--from <tag>] [--to <ref>]
  */
 import { execFileSync } from "node:child_process";
@@ -28,6 +33,7 @@ import {
   KNOWN_TYPES,
   REPO_ROOT,
   listScopeTargets,
+  packagesUsedBy,
   splitPullRequest,
 } from "./lib/commit-convention.mjs";
 
@@ -100,9 +106,9 @@ function compareSemver(a, b) {
 /* -------------------------------------------------------------- projects */
 
 /**
- * detect 가 훑는 워크스페이스 그룹.
+ * detect / snapshot 이 훑는 워크스페이스 그룹.
  * apps/* 는 릴리즈 노트까지 만들고, packages/* 는 태그만 만든다
- * (.github/workflows/tag-packages.yml).
+ * (.github/workflows/tag-workspace.yml).
  */
 const PROJECT_GROUPS = ["apps", "packages"];
 
@@ -120,6 +126,36 @@ function readPackageAt(ref, group, project) {
 }
 
 const releaseTagFor = (project, version) => `${project}@${version}`;
+
+/**
+ * 스냅샷 태그 — 버전이 안 올라간 코드 변경에도 "이 커밋이 이 프로젝트의 이
+ * 시점"을 남긴다. `<project>@<version>-<YYYYMMDD>-<HHmm>` (KST).
+ *
+ * semver 로도 말이 되는 형식이다: prerelease 취급이라 같은 버전의 정식 릴리즈
+ * 태그(`web@2.1.0`)보다 항상 앞선다.
+ */
+const snapshotTagFor = (project, version, stamp) =>
+  `${project}@${version}-${stamp}`;
+
+/** 스냅샷 태그를 릴리즈 태그와 구분하는 접미사. (`-20260902-0346`) */
+const SNAPSHOT_SUFFIX_RE = /-\d{8}-\d{4}$/;
+
+/**
+ * 커밋 시각(committer date)을 KST `YYYYMMDD-HHmm` 으로.
+ *
+ * 실행 시각이 아니라 커밋 시각을 쓰는 이유: 같은 커밋을 재실행해도 태그 이름이
+ * 같아야 멱등성이 성립한다.
+ */
+function commitStamp(ref) {
+  const iso = git(["show", "-s", "--format=%cI", ref]);
+  // KST 는 UTC+9 고정(서머타임 없음)이라 오프셋을 더한 뒤 UTC 로 읽으면 된다.
+  const kst = new Date(new Date(iso).getTime() + 9 * 60 * 60 * 1000);
+  const pad = (value) => String(value).padStart(2, "0");
+  return [
+    `${kst.getUTCFullYear()}${pad(kst.getUTCMonth() + 1)}${pad(kst.getUTCDate())}`,
+    `${pad(kst.getUTCHours())}${pad(kst.getUTCMinutes())}`,
+  ].join("-");
+}
 
 /**
  * 앱별 레거시 릴리즈 태그 prefix.
@@ -142,9 +178,12 @@ function pickPreviousTag(tags, toVersion, strip) {
 function previousReleaseTag(app, version) {
   const toVersion = version ? parseSemver(version) : null;
 
+  // 스냅샷 태그(`web@2.1.0-20260902-0346`)도 이 glob 에 걸리지만 릴리즈가
+  // 아니므로 제외한다. 릴리즈 노트는 직전 "릴리즈" 부터의 차이여야 한다.
   const tags = (git(["tag", "--list", `${app}@*`]) || "")
     .split("\n")
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((tag) => !SNAPSHOT_SUFFIX_RE.test(tag));
   const own = pickPreviousTag(tags, toVersion, (tag) =>
     tag.slice(app.length + 1),
   );
@@ -214,17 +253,40 @@ function filesOf(sha) {
 }
 
 /**
- * 앱 빌드에 함께 들어가는 공통 경로.
- * apps/<app>/** 를 건드리지 않았더라도 여기가 바뀌었으면 릴리즈에 포함한다.
+ * 루트 공용 설정 — 모든 워크스페이스 프로젝트(앱·패키지)에 영향을 준다.
+ *
+ * 정규식 대신 목록으로 두는 이유: 파일명은 정확히 일치해야 한다.
+ * (`package.json` 은 루트의 그것이지 `apps/web/package.json` 이 아니다)
  */
-const SHARED_PATH_RE =
-  /^(packages\/|scripts\/|\.github\/|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$|tsconfig\.base\.json$|mise\.toml$|\.oxlintrc\.json$|Dockerfile$|\.dockerignore$)/;
+const ROOT_DIRS = ["scripts/", ".github/"];
+const ROOT_FILES = [
+  "package.json",
+  "pnpm-lock.yaml",
+  "pnpm-workspace.yaml",
+  "tsconfig.base.json",
+  "mise.toml",
+  ".oxlintrc.json",
+  "Dockerfile",
+  ".dockerignore",
+];
+
+const isRootPath = (file) =>
+  ROOT_DIRS.some((dir) => file.startsWith(dir)) || ROOT_FILES.includes(file);
+
+/**
+ * 앱 빌드에 함께 들어가는 공통 경로 = 루트 설정 + 워크스페이스 패키지 전부.
+ * apps/<app>/** 를 건드리지 않았더라도 여기가 바뀌었으면 릴리즈 노트에 포함한다.
+ *
+ * 릴리즈 노트는 "이 릴리즈에 뭐가 들어갔나"를 사람이 읽는 목록이라 넓게 잡는다.
+ * 스냅샷 태그는 실제 의존 관계까지 본다 — projectTouched 참고.
+ */
+const isSharedForApp = (file) => file.startsWith("packages/") || isRootPath(file);
 
 /** 커밋을 해당 앱 기준으로 분류한다. "app" | "shared" | null(제외) */
 function classify(files, app) {
   const appPathRe = new RegExp(`^apps/${app}/`);
   if (files.some((file) => appPathRe.test(file))) return "app";
-  if (files.some((file) => SHARED_PATH_RE.test(file))) return "shared";
+  if (files.some((file) => isSharedForApp(file))) return "shared";
   return null;
 }
 
@@ -343,25 +405,115 @@ function renderDeployTags(deployTags, repo) {
 
 /* --------------------------------------------------------------- commands */
 
-function commandDetect(args) {
-  const group = optional(args.dir) ?? "apps";
-  if (!PROJECT_GROUPS.includes(group)) {
-    throw new Error(
-      `--dir 은 ${PROJECT_GROUPS.join(" | ")} 중 하나여야 합니다: ${group}`,
-    );
-  }
-
-  const head = optional(args.head) ?? "HEAD";
-  let base = optional(args.base);
-
-  // push 이벤트의 before 는 브랜치 최초 push 등에서 0000... 이 올 수 있다.
-  const baseExists =
+/**
+ * push 이벤트의 before 를 비교 기준으로 쓴다.
+ * 브랜치 최초 push 등에서 0000... 이 올 수 있으므로 그때는 head^ 로 떨어진다.
+ * (head 가 루트 커밋이면 null — 호출부가 "전부 변경" 으로 다룬다)
+ */
+function resolveBase(rawBase, head) {
+  const base = optional(rawBase);
+  const usable =
     base &&
     !/^0+$/.test(base) &&
     git(["rev-parse", "--verify", `${base}^{commit}`], { allowFail: true });
-  if (!baseExists) {
-    base = git(["rev-parse", "--verify", `${head}^`], { allowFail: true });
+  if (usable) return base;
+  return git(["rev-parse", "--verify", `${head}^`], { allowFail: true });
+}
+
+/** base..head 에서 바뀐 파일. base 가 없으면 head 의 전체 파일. */
+function changedFiles(base, head) {
+  const args = base
+    ? ["diff", "--name-only", `${base}..${head}`]
+    : ["ls-tree", "-r", "--name-only", head];
+  const raw = git(args, { allowFail: true });
+  return raw ? raw.split("\n").filter(Boolean) : [];
+}
+
+/**
+ * 이 변경 파일 목록이 해당 프로젝트를 건드렸는가. (스냅샷 태그 대상 판정)
+ *
+ * 릴리즈 노트의 classify 보다 좁게 본다. 스냅샷 태그는 "이 커밋에서 이
+ * 프로젝트의 산출물이 바뀌었다"는 표시라, 실제로 영향이 가는 것만 잡는다.
+ *   - 자기 디렉토리          apps/web/** , packages/api/**
+ *   - 루트 공용 설정         pnpm-lock.yaml, tsconfig.base.json, ...
+ *   - 앱이 의존하는 패키지   apps/shorts 는 packages/auth 변경에 반응하지만
+ *                            apps/internal 은 워크스페이스 의존이 없어 반응하지 않는다
+ */
+function projectTouched(group, project, files) {
+  const ownPathRe = new RegExp(`^${group}/${project}/`);
+  if (files.some((file) => ownPathRe.test(file))) return true;
+  if (files.some((file) => isRootPath(file))) return true;
+  if (group !== "apps") return false;
+
+  const used = new Set(packagesUsedBy(project));
+  return files.some((file) => {
+    const matched = /^packages\/([^/]+)\//.exec(file);
+    return matched !== null && used.has(matched[1]);
+  });
+}
+
+function parseGroups(args) {
+  const only = optional(args.dir);
+  if (!only) return PROJECT_GROUPS;
+  if (!PROJECT_GROUPS.includes(only)) {
+    throw new Error(
+      `--dir 은 ${PROJECT_GROUPS.join(" | ")} 중 하나여야 합니다: ${only}`,
+    );
   }
+  return [only];
+}
+
+/** GITHUB_OUTPUT 에 releases / has_releases 를 기록하고 stdout 으로도 흘린다. */
+function emitReleases(releases) {
+  const payload = JSON.stringify(releases);
+  if (process.env.GITHUB_OUTPUT) {
+    appendFileSync(
+      process.env.GITHUB_OUTPUT,
+      `releases=${payload}\nhas_releases=${releases.length > 0}\n`,
+    );
+  }
+  process.stdout.write(`${payload}\n`);
+}
+
+/**
+ * 버전 bump 와 무관하게, base..head 에서 바뀐 프로젝트마다 스냅샷 태그를 뽑는다.
+ * 릴리즈(= 버전이 올라갈 때만)와 달리 코드가 바뀌면 항상 나온다.
+ */
+function commandSnapshot(args) {
+  const head = optional(args.head) ?? "HEAD";
+  const base = resolveBase(args.base, head);
+  const stamp = commitStamp(head);
+  const files = changedFiles(base, head);
+  const targets = listScopeTargets();
+
+  const snapshots = [];
+  for (const group of parseGroups(args)) {
+    for (const project of targets[group]) {
+      if (!projectTouched(group, project, files)) continue;
+
+      const manifest = readPackageAt(head, group, project);
+      const version = parseSemver(manifest?.version);
+      if (!version) continue;
+
+      snapshots.push({
+        project,
+        dir: group,
+        name: manifest.name,
+        version: version.raw,
+        tag: snapshotTagFor(project, version.raw, stamp),
+      });
+    }
+  }
+
+  emitReleases(snapshots);
+}
+
+function commandDetect(args) {
+  // detect 는 그룹 하나만 본다. (기본 apps — 릴리즈 노트 대상)
+  const [group] = parseGroups({ dir: optional(args.dir) ?? "apps" });
+
+  const head = optional(args.head) ?? "HEAD";
+  const base = resolveBase(args.base, head);
 
   // --all 은 버전 비교 없이 현재 버전 그대로 뽑는다. (수동 백필용)
   const all = args.all === true;
@@ -402,14 +554,7 @@ function commandDetect(args) {
     });
   }
 
-  const payload = JSON.stringify(releases);
-  if (process.env.GITHUB_OUTPUT) {
-    appendFileSync(
-      process.env.GITHUB_OUTPUT,
-      `releases=${payload}\nhas_releases=${releases.length > 0}\n`,
-    );
-  }
-  process.stdout.write(`${payload}\n`);
+  emitReleases(releases);
 }
 
 function commandNotes(args) {
@@ -505,12 +650,14 @@ const command = args._[0];
 
 try {
   if (command === "detect") commandDetect(args);
+  else if (command === "snapshot") commandSnapshot(args);
   else if (command === "notes") commandNotes(args);
   else {
     process.stderr.write(
       [
         "사용법:",
         "  node scripts/release-note.mjs detect [--dir apps|packages] [--base <ref>] [--head <ref>] [--project <name>] [--all]",
+        "  node scripts/release-note.mjs snapshot [--dir apps|packages] [--base <ref>] [--head <ref>]",
         "  node scripts/release-note.mjs notes --app <app> [--version <v>] [--from <tag>] [--to <ref>] [--limit <n>]",
         "",
       ].join("\n"),
