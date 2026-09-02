@@ -31,7 +31,7 @@ export const ArticlePreview = ({ titles }: ArticlePreviewProps) => {
           dateTime: values.dateTime ?? "",
           description: values.description ?? "",
           tags: values.tags ?? [],
-          imgSrcs: [],
+          images: [],
         }}
         titles={titles}
       />

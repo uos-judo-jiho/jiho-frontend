@@ -18,8 +18,8 @@ export const ImageField = ({
   imageLimit = 10,
   disabled = false,
 }: ImageFieldProps) => {
-  const { field, fieldState } = useController<ArticleFormValues, "imgSrcs">({
-    name: "imgSrcs",
+  const { field, fieldState } = useController<ArticleFormValues, "images">({
+    name: "images",
   });
 
   return (

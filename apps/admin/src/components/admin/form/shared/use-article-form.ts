@@ -163,7 +163,8 @@ export const useArticleForm = ({
     dateTime: values.dateTime,
     description: values.description,
     tags: values.tags,
-    imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc),
+    // 쓰기도 읽기와 같은 모양의 images 를 받으므로 폼 값을 그대로 넘긴다 (api#40)
+    images: values.images,
   });
 
   // 검증을 통과했을 때만 확인 모달이 뜬다. 성공·실패 처리는 각 뮤테이션의
@@ -188,7 +189,9 @@ export const useArticleForm = ({
 
       uploadPicturesMutation.mutate({
         year,
-        data: { imgSrcs: values.imgSrcs.map(({ originSrc }) => originSrc) },
+        // 갤러리 업로드(uploadGalleryPictures)는 아직 imgSrcs(string[]) 만
+        // 받는다. 게시글 쓰기와 달리 여기서는 평탄화가 남아 있어야 한다.
+        data: { imgSrcs: values.images.map(({ originSrc }) => originSrc) },
       });
       return;
     }

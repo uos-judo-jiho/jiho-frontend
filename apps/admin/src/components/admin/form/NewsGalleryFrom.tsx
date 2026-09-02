@@ -40,7 +40,7 @@ const NewsGalleryFrom = ({ year }: NewsGalleryFromProps) => {
     gallery: true,
     data: {
       id: `${year}-gallery`,
-      imgSrcs: (newsData?.images ?? []).map((src) => ({
+      images: (newsData?.images ?? []).map((src) => ({
         originSrc: src,
         smallSrc: null,
       })),

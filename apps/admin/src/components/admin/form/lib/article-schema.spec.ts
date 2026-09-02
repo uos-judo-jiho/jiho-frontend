@@ -11,7 +11,7 @@ const VALID = {
   dateTime: "2026-01-05",
   tags: ["김영민", "이지호"],
   description: "오늘은 낙법을 했다.",
-  imgSrcs: [{ originSrc: "https://cdn/a.png", smallSrc: null }],
+  images: [{ originSrc: "https://cdn/a.png", smallSrc: null }],
 };
 
 const messagesOf = (result: { error?: { issues: { message: string }[] } }) =>
@@ -52,7 +52,7 @@ describe("articleFormSchema", () => {
     const result = articleFormSchema.safeParse({
       ...VALID,
       tags: [],
-      imgSrcs: [],
+      images: [],
     });
 
     expect(result.success).toBe(true);
@@ -64,7 +64,7 @@ describe("galleryFormSchema", () => {
     const result = galleryFormSchema.safeParse({
       ...EMPTY_ARTICLE_VALUES,
       dateTime: "2026",
-      imgSrcs: [{ originSrc: "https://cdn/a.png", smallSrc: null }],
+      images: [{ originSrc: "https://cdn/a.png", smallSrc: null }],
     });
 
     expect(result.success).toBe(true);

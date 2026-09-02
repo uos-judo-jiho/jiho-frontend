@@ -23,7 +23,7 @@ function ModalArticleContainer({ info, titles }: ModalArticleContainerProps) {
       <div className="flex-1 p-4 md:p-6 overflow-auto">
         <MobileRowColLayout>
           {/* Image Slider */}
-          <Slider datas={info.imgSrcs} />
+          <Slider datas={info.images} />
           {/* Description Section */}
           <ModalDescriptionSection article={info} titles={titles} />
         </MobileRowColLayout>

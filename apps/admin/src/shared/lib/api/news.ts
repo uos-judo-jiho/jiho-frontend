@@ -9,7 +9,7 @@ export const normalizeNewsResponse = (response: v2ApiModel.ListNewsByYearRespons
 
   const articles = (response.articles ?? []).map<ArticleInfoType>((article) => ({
     id: String(article.id),
-    imgSrcs: article.images ?? [],
+    images: article.images ?? [],
     title: article.title ?? "",
     author: article.author ?? "",
     dateTime: article.dateTime ?? "",

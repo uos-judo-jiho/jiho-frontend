@@ -17,7 +17,7 @@ export const articleFormSchema = z.object({
   dateTime: z.string().min(1, "날짜를 선택해주세요."),
   tags: z.array(z.string().trim().min(1, "빈 태그는 저장할 수 없어요.")),
   description: z.string().trim().min(1, "본문을 입력해주세요."),
-  imgSrcs: z.array(imageSchema),
+  images: z.array(imageSchema),
 });
 
 export type ArticleFormValues = z.infer<typeof articleFormSchema>;
@@ -39,5 +39,5 @@ export const EMPTY_ARTICLE_VALUES: ArticleFormValues = {
   tags: [],
   description: "",
   dateTime: "",
-  imgSrcs: [],
+  images: [],
 };
