@@ -1,11 +1,9 @@
-import { v2Api } from "@packages/api";
 import { Link, getRouteApi, linkOptions } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { logger } from "@99mini/logger-client";
 
-import { ArticleDetail } from "@/features/content";
-import { toNeighbour } from "@/features/content/model/neighbours";
+import { ArticleDetail, toNeighbour, useBoardDetail } from "@/features/content";
 import { formatDate } from "@/shared/lib/format";
 import { PageShell } from "@/widgets/page-shell";
 
@@ -18,13 +16,11 @@ const linkTo = (id: number) =>
 export const TrainingDetailPage = () => {
   const { id } = routeApi.useParams();
 
-  // 예전에는 훈련일지 전체 목록을 받아 그 안에서 현재 글을 찾고 앞뒤까지 계산했다.
-  // 이제 서버가 단건 응답에 prev/next 를 함께 준다 (api#38) — 아카이브를 통째로
-  // 내려받을 이유가 사라졌고, 목록이 페이지네이션돼도 앞뒤가 어긋나지 않는다.
-  // 없는 id 는 라우트 loader 가 notFound 로 걸러내므로 여기선 항상 존재한다.
-  const { data: training } = v2Api.useGetTrainingLogSuspense(Number(id), {
-    query: { select: (response) => response.data.training },
-  });
+  // 게시판 종류를 가리지 않는 단건 엔드포인트 하나로 모였다 (api#41).
+  // 앞뒤 글도 같은 응답에 담겨 오므로 아카이브를 통째로 내려받을 이유가 없고,
+  // 목록이 페이지네이션돼도 앞뒤가 어긋나지 않는다.
+  // 없는 id·다른 게시판의 id 는 라우트 loader 가 notFound 로 걸러낸다.
+  const training = useBoardDetail(Number(id));
 
   useEffect(() => {
     logger.info("훈련일지", {

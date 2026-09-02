@@ -1,10 +1,10 @@
-import type { ContentItem } from "@/shared/lib/types/content";
+import type { ContentSummary } from "@/shared/lib/types/content";
 import { cn } from "@/shared/lib/utils";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { TrainingCard } from "./training-card";
 
 type TrainingGridProps = {
-  trainings: ContentItem[];
+  trainings: ContentSummary[];
   className?: string;
 };
 

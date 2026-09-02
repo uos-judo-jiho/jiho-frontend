@@ -113,7 +113,8 @@ export const Awards = () => {
     // 첫 인자는 limit/offset 쿼리 파라미터 자리다. 관리 화면은 전체를 다루므로
     // undefined 를 넘긴다.
     query: {
-      select: (response) => response.data.awards ?? [],
+      // 다른 목록과 같은 봉투 키 — 옛 `awards` 키는 deprecated (api#41)
+      select: (response) => response.data.items,
     },
   });
 

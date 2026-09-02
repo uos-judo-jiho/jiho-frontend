@@ -2,10 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { HomePage } from "@/pages/home-page";
 
+import { latestBoardsQueryOptions } from "@/features/content";
+import { latestNewsQueryOptions } from "@/features/news";
 import { createOrganizationData } from "@/features/seo";
 import { seoHead } from "@/features/seo/head";
 import BGImageWebp from "@/shared/lib/assets/images/background-img-group.webp";
 import { SITE } from "@/shared/config/site";
+import { HOME_NOTICE_LIMIT, HOME_TRAINING_LIMIT } from "@/widgets/home";
 import { v2Api } from "@packages/api";
 
 const CANONICAL_DOMAIN =
@@ -18,14 +21,20 @@ export const Route = createFileRoute("/")({
       const [response] = await Promise.all([
         context.queryClient.ensureQueryData(v2Api.getListAwardsQueryOptions()),
         context.queryClient.ensureQueryData(
-          v2Api.getListTrainingLogsQueryOptions(),
+          latestBoardsQueryOptions({
+            type: "training",
+            limit: HOME_TRAINING_LIMIT,
+          }),
         ),
-        context.queryClient.ensureQueryData(v2Api.getListNoticesQueryOptions()),
         context.queryClient.ensureQueryData(
-          v2Api.getListLatestNewsQueryOptions({ limit: 5 }),
+          latestBoardsQueryOptions({
+            type: "notice",
+            limit: HOME_NOTICE_LIMIT,
+          }),
         ),
+        context.queryClient.ensureQueryData(latestNewsQueryOptions()),
       ]);
-      return { awards: response.data.awards ?? [] };
+      return { awards: response.data.items };
     } catch (error) {
       console.error("[SSR] Home prefetch error:", error);
       return { awards: [] };

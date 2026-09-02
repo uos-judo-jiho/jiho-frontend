@@ -2,27 +2,25 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { TrainingIndexPage } from "@/pages/training/training-index-page";
 
+import { boardListInfiniteQueryOptions } from "@/features/content";
 import { createImageGalleryData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
-import { v2Api } from "@packages/api";
 
 const FALLBACK_DESCRIPTION = "서울시립대학교 유도부 지호 - 훈련일지";
 
 export const Route = createFileRoute("/photo/")({
   loader: async ({ context }): Promise<Omit<SeoHeadOptions, "title">> => {
     try {
-      const response = await context.queryClient.ensureQueryData(
-        v2Api.getListTrainingLogsQueryOptions(),
+      // 목록은 서버가 최신순으로 페이지 단위로 준다 (api#41) — 첫 페이지만
+      // 프리페치하면 화면과 SEO 모두 필요한 만큼을 얻는다.
+      const list = await context.queryClient.ensureInfiniteQueryData(
+        boardListInfiniteQueryOptions({ type: "training" }),
       );
-      const trainings = [...(response.data.trainingLogs ?? [])].sort((a, b) =>
-        b.dateTime.localeCompare(a.dateTime),
-      );
+      const trainings = list.pages.flatMap((page) => page.data.items);
+      const latest = trainings.at(0);
 
-      const description = trainings.length
-        ? [
-            trainings.at(0)?.title,
-            trainings.at(0)?.description.slice(0, 140),
-          ].join(" | ")
+      const description = latest
+        ? [latest.title, latest.excerpt].filter(Boolean).join(" | ")
         : FALLBACK_DESCRIPTION;
 
       const structuredData =
@@ -32,7 +30,7 @@ export const Route = createFileRoute("/photo/")({
               description,
               url: "https://uosjudo.com/photo",
               images: trainings.slice(0, 20).map((training) => ({
-                url: training.images[0]?.originSrc || "",
+                url: training.thumbnail?.originSrc || "",
                 caption: training.title,
                 datePublished: training.dateTime
                   ? new Date(training.dateTime).toISOString()
@@ -43,7 +41,7 @@ export const Route = createFileRoute("/photo/")({
 
       return {
         description,
-        imgUrl: trainings.at(0)?.images.at(0)?.originSrc,
+        imgUrl: latest?.thumbnail?.originSrc,
         structuredData,
       };
     } catch (error) {

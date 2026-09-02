@@ -1,10 +1,10 @@
 import { linkOptions } from "@tanstack/react-router";
 
 import { ArticleCard } from "@/features/content";
-import type { ContentItem } from "@/shared/lib/types/content";
+import type { ContentSummary } from "@/shared/lib/types/content";
 
 type NewsCardProps = {
-  article: ContentItem;
+  article: ContentSummary;
   year: string | number;
   variant?: "default" | "featured";
   priority?: boolean;

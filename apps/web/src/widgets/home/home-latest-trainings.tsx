@@ -1,29 +1,21 @@
-import { v2Api } from "@packages/api";
 import { linkOptions } from "@tanstack/react-router";
-import { useMemo } from "react";
 
+import { useLatestBoards } from "@/features/content";
 import { TrainingCard } from "@/features/training";
 import { MoreLink } from "@/shared/ui/more-link";
 import { SectionHeading } from "@/shared/ui/section-heading";
 
-const PREVIEW_COUNT = 8;
+/** 홈에서 보여주는 최근 훈련일지 수. 라우트 loader 가 같은 값으로 프리페치한다. */
+export const HOME_TRAINING_LIMIT = 8;
 
-/** 최근 훈련일지 미리보기. */
+/** 최근 훈련일지 미리보기. 서버가 최신순으로 주므로 화면에서 다시 정렬하지 않는다. */
 export const HomeLatestTrainings = () => {
-  const { data: trainings = [] } = v2Api.useListTrainingLogsSuspense(
-    undefined,
-    { query: { select: (response) => response.data.trainingLogs ?? [] } },
-  );
+  const trainings = useLatestBoards({
+    type: "training",
+    limit: HOME_TRAINING_LIMIT,
+  });
 
-  const recent = useMemo(
-    () =>
-      [...trainings]
-        .sort((a, b) => b.dateTime.localeCompare(a.dateTime))
-        .slice(0, PREVIEW_COUNT),
-    [trainings],
-  );
-
-  if (recent.length === 0) return null;
+  if (trainings.length === 0) return null;
 
   return (
     <section className="flex flex-col gap-8">
@@ -36,7 +28,7 @@ export const HomeLatestTrainings = () => {
       />
 
       <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
-        {recent.map((training) => (
+        {trainings.map((training) => (
           <li key={training.id}>
             <TrainingCard training={training} />
           </li>

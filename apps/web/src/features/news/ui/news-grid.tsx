@@ -1,13 +1,13 @@
 import { linkOptions } from "@tanstack/react-router";
 
 import { ContentGrid } from "@/features/content";
-import type { ContentItem } from "@/shared/lib/types/content";
+import type { ContentSummary } from "@/shared/lib/types/content";
 import { EmptyState } from "@/shared/ui/empty-state";
 import { MoreLink } from "@/shared/ui/more-link";
 import { NewsCard } from "./news-card";
 
 type NewsGridProps = {
-  articles: ContentItem[];
+  articles: ContentSummary[];
   year: string | number;
   /** 첫 기사를 크게 보여줄지 여부 (연도별 목록에서 사용) */
   featureFirst?: boolean;

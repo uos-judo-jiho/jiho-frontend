@@ -1,6 +1,6 @@
 import TrainingLogForm from "@/components/admin/form/TrainingLogForm";
+import { useBoardDetail } from "@/features/board";
 import { ReactionStatus } from "@/features/reaction";
-import { v2Api } from "@packages/api";
 import { assert } from "es-toolkit";
 import { useParams } from "@tanstack/react-router";
 
@@ -9,11 +9,8 @@ export const TrainingLogDetail = () => {
 
   assert(id !== undefined, "훈련일지 ID가 없습니다.");
 
-  const { data: trainingLog } = v2Api.useGetTrainingLogSuspense(Number(id), {
-    query: {
-      select: (response) => response.data.training,
-    },
-  });
+  // 종류를 가리지 않는 단건 엔드포인트 하나로 모였다 (api#41)
+  const { data: trainingLog } = useBoardDetail(Number(id));
 
   return (
     <div className="flex flex-col gap-4">
