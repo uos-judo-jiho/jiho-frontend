@@ -21,7 +21,10 @@ const baseQueryOptions = {
   usePrefetch: true,
   useSuspenseQuery: true,
   useInvalidate: true,
-  shouldExportHttpClient: false,
+  // 요청 함수(listBoards 등)도 내보낸다. 커서/오프셋을 직접 넘기는 무한 쿼리는
+  // 생성된 훅으로 만들 수 없어서(생성된 infinite queryFn 은 pageParam 을 무시한다)
+  // 소비자가 요청 함수를 직접 감싸야 한다.
+  shouldExportHttpClient: true,
   shouldExportQueryKey: true,
   shouldSplitQueryKey: true,
 } as const;

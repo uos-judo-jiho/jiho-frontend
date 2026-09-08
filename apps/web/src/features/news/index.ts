@@ -1,8 +1,13 @@
 export {
   NEWS_PREVIEW_PER_YEAR,
-  isValidNewsYear,
-  newsYearList,
-} from "./model/news-years";
-export { useLatestNews } from "./model/use-latest-news";
+  newsArchiveQueryOptions,
+  useNewsArchive,
+  useNewsYears,
+} from "./model/news-archive";
+export {
+  LATEST_NEWS_LIMIT,
+  latestNewsQueryOptions,
+  useLatestNews,
+} from "./model/use-latest-news";
 export { NewsCard } from "./ui/news-card";
 export { NewsGrid } from "./ui/news-grid";

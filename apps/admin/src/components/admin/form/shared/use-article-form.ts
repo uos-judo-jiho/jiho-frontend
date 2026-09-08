@@ -1,8 +1,8 @@
 import { openConfirmDialog } from "@/components/common/Modals";
+import { useInvalidateBoards } from "@/features/board";
 import { ArticleInfoType } from "@/shared/lib/types/ArticleInfoType";
-import { v2Admin, v2Api } from "@packages/api";
+import { v2Admin } from "@packages/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -69,21 +69,12 @@ export const useArticleForm = ({
 
   const navigate = useNavigate();
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const invalidateList = useInvalidateBoards();
 
   const isNew = !data;
   const readOnly = !canEdit;
   // 임원 미만 등급은 게시판 종류와 무관하게 작성자가 본인으로 고정된다.
   const isAuthorFixed = !canEditAuthor;
-
-  const queryKeyByType = {
-    news: v2Api.getListLatestNewsQueryKey().filter((key) => key !== "latest"),
-    training: v2Api.getListTrainingLogsQueryKey(),
-    notice: v2Api.getListNoticesQueryKey(),
-  } as const;
-
-  const invalidateList = () =>
-    queryClient.invalidateQueries({ queryKey: queryKeyByType[type] });
 
   const listHref = `/${type}/${gallery ? "gallery" : ""}`;
 
@@ -136,7 +127,7 @@ export const useArticleForm = ({
     axios: { withCredentials: true },
     mutation: {
       onSuccess: async (_response, { year }) => {
-        await queryClient.invalidateQueries({ queryKey: queryKeyByType.news });
+        await invalidateList();
         toast.success("이미지가 성공적으로 업로드되었습니다.");
         navigate({ href: `/news/${year}/gallery` });
       },

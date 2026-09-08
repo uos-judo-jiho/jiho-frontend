@@ -1,12 +1,11 @@
-import { v2Api } from "@packages/api";
-
+import { LoadMoreButton, useBoardList } from "@/features/content";
 import { NoticeList } from "@/features/notice";
 import { PageHeader } from "@/shared/ui/page-header";
 import { PageShell } from "@/widgets/page-shell";
 
 export const NoticeIndexPage = () => {
-  const { data: notices = [] } = v2Api.useListNoticesSuspense(undefined, {
-    query: { select: (response) => response.data.notices ?? [] },
+  const { items, hasMore, isLoadingMore, loadMore } = useBoardList({
+    type: "notice",
   });
 
   return (
@@ -17,7 +16,12 @@ export const NoticeIndexPage = () => {
           title="공지사항"
           description="부 운영과 행사에 관한 안내입니다."
         />
-        <NoticeList notices={notices} />
+        <NoticeList notices={items} />
+        {hasMore && (
+          <LoadMoreButton onClick={loadMore} loading={isLoadingMore}>
+            공지사항 더 보기
+          </LoadMoreButton>
+        )}
       </div>
     </PageShell>
   );

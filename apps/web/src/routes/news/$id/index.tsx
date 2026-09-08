@@ -2,10 +2,10 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import { NewsYearPage } from "@/pages/news/news-year-page";
 
+import { boardListInfiniteQueryOptions } from "@/features/content";
+import { newsArchiveQueryOptions } from "@/features/news";
 import { createImageGalleryData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
-import { newsYearList } from "@/features/news";
-import { v2Api } from "@packages/api";
 
 export const Route = createFileRoute("/news/$id/")({
   loader: async ({
@@ -13,48 +13,59 @@ export const Route = createFileRoute("/news/$id/")({
     params,
   }): Promise<Omit<SeoHeadOptions, "title">> => {
     const { id } = params;
+    const year = Number(id);
 
-    if (!newsYearList().includes(id)) {
+    if (!/^\d{4}$/.test(id)) {
+      throw notFound();
+    }
+
+    // 어떤 연도가 실제로 있는지는 서버가 안다 — 프론트가 시작 연도를 상수로
+    // 들고 있을 이유가 없어졌다 (api#41).
+    const archive = await context.queryClient.ensureQueryData(
+      newsArchiveQueryOptions(),
+    );
+    if (!archive.data.years.some((entry) => entry.year === year)) {
       throw notFound();
     }
 
     const fallbackDescription = `${id}년 서울시립대학교 유도부 지호지`;
 
     try {
-      const response = await context.queryClient.ensureQueryData(
-        v2Api.getListNewsByYearQueryOptions(Number(id)),
+      const list = await context.queryClient.ensureInfiniteQueryData(
+        boardListInfiniteQueryOptions({ type: "news", year }),
       );
-      const news = response.data;
+      const articles = list.pages.flatMap((page) => page.data.items);
+      const firstArticle = articles.at(0);
 
-      const description = [
-        news.year,
-        news.articles.at(0)?.title,
-        news.articles.at(0)?.description.slice(0, 140),
-      ].join(" | ");
-
-      const allImages = news.articles.flatMap((article) =>
-        article.images.slice(0, 5).map((imgSrc, imgIdx) => ({
-          url: imgSrc.originSrc,
-          caption: `${article.title} - ${imgIdx + 1}`,
-          datePublished: article.dateTime
-            ? new Date(article.dateTime).toISOString()
-            : undefined,
-        })),
-      );
+      const description = [id, firstArticle?.title, firstArticle?.excerpt]
+        .filter(Boolean)
+        .join(" | ");
 
       const structuredData =
-        news.articles.length > 0
+        articles.length > 0
           ? createImageGalleryData({
               name: `${id}년 서울시립대학교 유도부 지호지`,
               description,
               url: `https://uosjudo.com/news/${id}`,
-              images: allImages,
+              images: articles.flatMap((article) =>
+                article.thumbnail
+                  ? [
+                      {
+                        url: article.thumbnail.originSrc,
+                        caption: article.title,
+                        datePublished: article.dateTime
+                          ? new Date(article.dateTime).toISOString()
+                          : undefined,
+                      },
+                    ]
+                  : [],
+              ),
             })
           : null;
 
       return {
         description,
-        imgUrl: news.articles.at(0)?.images.at(0)?.originSrc,
+        imgUrl: firstArticle?.thumbnail?.originSrc,
         structuredData,
       };
     } catch (error) {

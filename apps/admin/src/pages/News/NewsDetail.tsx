@@ -1,32 +1,18 @@
 import NewsForm from "@/components/admin/form/NewsForm";
+import { useBoardDetail } from "@/features/board";
 import { ReactionStatus } from "@/features/reaction";
-import { normalizeNewsResponse } from "@/shared/lib/api/news";
-import { v2Api } from "@packages/api";
-import { useMemo } from "react";
 import { useParams } from "@tanstack/react-router";
 
 const NewsDetail = () => {
-  const { year, id } = useParams({ strict: false });
+  const { id } = useParams({ strict: false });
 
-  const { data: response } = v2Api.useListNewsByYear(Number(year), undefined, {
-    query: {
-      enabled: Boolean(year),
-      select: (result) => result.data,
-    },
-  });
-
-  const newsData = useMemo(
-    () => normalizeNewsResponse(response, year ?? ""),
-    [response, year],
-  );
-
-  const article = newsData?.articles.find((item) => item.id.toString() === id);
-
-  if (!article) return null;
+  // 예전에는 그 해 기사를 전부 받아 그중 하나를 찾았다. 단건 조회가 생기면서
+  // 목록을 통째로 내려받을 이유가 없어졌다 (api#41).
+  const { data: article } = useBoardDetail(Number(id));
 
   return (
     <div className="flex flex-col gap-4">
-      <ReactionStatus boardId={Number(article.id)} />
+      <ReactionStatus boardId={article.id} />
       <NewsForm data={article} />
     </div>
   );

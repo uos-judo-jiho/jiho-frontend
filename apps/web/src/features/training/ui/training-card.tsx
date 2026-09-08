@@ -1,12 +1,12 @@
 import { Link, linkOptions } from "@tanstack/react-router";
 
-import type { ContentItem } from "@/shared/lib/types/content";
+import type { ContentSummary } from "@/shared/lib/types/content";
 import { formatDate } from "@/shared/lib/format";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image";
 
 type TrainingCardProps = {
-  training: ContentItem;
+  training: ContentSummary;
   priority?: boolean;
   className?: string;
 };
@@ -23,7 +23,7 @@ export const TrainingCard = ({
   priority = false,
   className,
 }: TrainingCardProps) => {
-  const cover = training.images[0];
+  const cover = training.thumbnail;
   const label = `훈련일지 ${formatDate(training.dateTime)}`;
 
   return (

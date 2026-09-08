@@ -31,12 +31,3 @@ export const SITE = {
     address: "서울특별시 동대문구 서울시립대로 163 (전농동)",
   },
 } as const;
-
-/** 지호지 아카이브가 시작되는 연도 */
-export const NEWS_START_YEAR = 2022;
-
-/**
- * 아직 게시물이 하나도 없을 때 기준으로 삼는 최신 연도.
- * 실제 값은 API 의 최신 기사 날짜에서 가져온다(useLatestNews).
- */
-export const FALLBACK_LATEST_NEWS_YEAR = 2026;

@@ -6,9 +6,10 @@ import { EmptyState } from "@/shared/ui/empty-state";
 import { MoreLink } from "@/shared/ui/more-link";
 import { PageShell } from "@/widgets/page-shell";
 
+import { boardDetailQueryOptions } from "@/features/content";
 import { createArticleData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
-import { v2Api } from "@packages/api";
+import { toPlainExcerpt } from "@/shared/lib/format";
 
 export const Route = createFileRoute("/photo/$id")({
   loader: async ({
@@ -20,9 +21,9 @@ export const Route = createFileRoute("/photo/$id")({
     let info;
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetTrainingLogQueryOptions(Number(params.id)),
+        boardDetailQueryOptions(Number(params.id)),
       );
-      info = response.data.training;
+      info = response.data;
     } catch (error) {
       // 없는 글은 오류가 아니라 404 다. 목록에서 찾지 못하던 자리를 대신한다.
       if (isAxiosError(error) && error.response?.status === 404) {
@@ -32,9 +33,14 @@ export const Route = createFileRoute("/photo/$id")({
       return {};
     }
 
-    const description = [info.title, info.description.slice(0, 140)].join(
-      " | ",
-    );
+    // 게시글 id 는 세 게시판이 함께 쓴다 — 훈련일지가 아닌 글은 여기서 열지 않는다.
+    if (info.type !== "training") {
+      throw notFound();
+    }
+
+    const description = [info.title, toPlainExcerpt(info.description, 140)]
+      .filter(Boolean)
+      .join(" | ");
 
     const publishedDate = info.dateTime
       ? new Date(info.dateTime).toISOString()

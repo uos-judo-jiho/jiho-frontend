@@ -6,6 +6,9 @@ import { v2Api } from "@packages/api";
 import { Suspense, useState } from "react";
 import { Link, useParams } from "@tanstack/react-router";
 
+/** 한 해 사진을 받는 최대 장수 (서버 상한) */
+const GALLERY_IMAGE_LIMIT = 200;
+
 const Gallery = () => {
   const { year } = useParams({ strict: false });
 
@@ -20,11 +23,12 @@ const Gallery = () => {
 
 const Inner = () => {
   const { year } = useParams({ strict: false });
-  const { data: images } = v2Api.useGetNewsGalleryByYearSuspense(Number(year), {
-    query: {
-      select: (response) => response.data.images,
-    },
-  });
+  // 갤러리는 별도 엔드포인트로 갈라졌다 (api#41)
+  const { data: images } = v2Api.useGetGallerySuspense(
+    Number(year),
+    { limit: GALLERY_IMAGE_LIMIT },
+    { query: { select: (response) => response.data.items } },
+  );
   return (
     <Col gap={20}>
       <Link

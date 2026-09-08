@@ -6,8 +6,9 @@ import { EmptyState } from "@/shared/ui/empty-state";
 import { MoreLink } from "@/shared/ui/more-link";
 import { PageShell } from "@/widgets/page-shell";
 
+import { boardDetailQueryOptions } from "@/features/content";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
-import { v2Api } from "@packages/api";
+import { toPlainExcerpt } from "@/shared/lib/format";
 
 /** 공지 이미지가 문자열 URL 또는 {originSrc} 객체 어느 쪽이어도 URL 을 뽑아낸다 */
 const extractImageUrl = (image: unknown): string | undefined => {
@@ -30,12 +31,11 @@ export const Route = createFileRoute("/notice/$id")({
     context,
     params,
   }): Promise<Omit<SeoHeadOptions, "title">> => {
-    // 상세 화면이 쓰는 바로 그 쿼리를 프리페치한다. 공지 응답만 봉투 없이
-    // 게시글 자체가 내려오므로 response.data 가 곧 글이다.
+    // 상세 화면이 쓰는 바로 그 쿼리를 프리페치한다.
     let data;
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetNoticeQueryOptions(Number(params.id)),
+        boardDetailQueryOptions(Number(params.id)),
       );
       data = response.data;
     } catch (error) {
@@ -48,8 +48,15 @@ export const Route = createFileRoute("/notice/$id")({
       return {};
     }
 
+    // 게시글 id 는 세 게시판이 함께 쓴다 — 공지가 아닌 글은 여기서 열지 않는다.
+    if (data.type !== "notice") {
+      throw notFound();
+    }
+
     return {
-      description: [data.title, data.description.slice(0, 140)].join(" | "),
+      description: [data.title, toPlainExcerpt(data.description, 140)]
+        .filter(Boolean)
+        .join(" | "),
       imgUrl: extractImageUrl(data.images[0]),
     };
   },

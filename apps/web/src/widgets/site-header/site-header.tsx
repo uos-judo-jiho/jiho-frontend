@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { useLatestNews } from "@/features/news";
+import { useNewsYears } from "@/features/news";
 import { cn } from "@/shared/lib/utils";
 import { MenuIcon } from "@/shared/ui/icons";
 import { Logo } from "@/shared/ui/logo";
@@ -25,9 +25,9 @@ type SiteHeaderProps = {
 export const SiteHeader = ({ variant = "solid" }: SiteHeaderProps) => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { latestNewsYear } = useLatestNews();
+  const newsYears = useNewsYears();
 
-  const items = buildNavItems(latestNewsYear);
+  const items = buildNavItems(newsYears);
 
   useEffect(() => {
     if (variant !== "overlay") return;

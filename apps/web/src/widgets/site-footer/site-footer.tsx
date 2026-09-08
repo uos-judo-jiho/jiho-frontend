@@ -2,7 +2,7 @@ import { Link, linkOptions, type LinkOptions } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 import { AuthLink } from "@/features/auth";
-import { useLatestNews } from "@/features/news";
+import { useNewsYears } from "@/features/news";
 import { SITE } from "@/shared/config/site";
 import { InstagramIcon } from "@/shared/ui/icons";
 import { Logo } from "@/shared/ui/logo";
@@ -13,7 +13,8 @@ import { Logo } from "@/shared/ui/logo";
  * 모바일용 Col) 들어가 있었다. 여기서는 한 벌만 그리고 CSS 로 배치만 바꾼다.
  */
 export const SiteFooter = () => {
-  const { latestNewsYear } = useLatestNews();
+  // 아카이브의 첫 연도가 곧 가장 최근에 발행된 연도다 (서버가 최신순으로 준다)
+  const [latestNewsYear] = useNewsYears();
 
   return (
     <footer className="border-t border-line bg-paper-sunken">
@@ -68,12 +69,18 @@ export const SiteFooter = () => {
           <FooterLink link={linkOptions({ to: "/" })}>홈</FooterLink>
           <FooterLink link={linkOptions({ to: "/photo" })}>훈련일지</FooterLink>
           <FooterLink
-            link={linkOptions({
-              to: "/news/$id",
-              params: { id: String(latestNewsYear) },
-            })}
+            link={
+              latestNewsYear === undefined
+                ? linkOptions({ to: "/news" })
+                : linkOptions({
+                    to: "/news/$id",
+                    params: { id: String(latestNewsYear) },
+                  })
+            }
           >
-            {latestNewsYear} 지호지
+            {latestNewsYear === undefined
+              ? "지호지"
+              : `${latestNewsYear} 지호지`}
           </FooterLink>
           <FooterLink link={linkOptions({ to: "/album" })}>앨범</FooterLink>
           <FooterLink link={linkOptions({ to: "/notice" })}>

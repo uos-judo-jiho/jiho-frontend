@@ -3,29 +3,27 @@ import { NewArticleButton } from "@/components/admin/form/StyledComponent/FormCo
 import Loading from "@/components/common/Skeletons/Loading";
 import ListContainer from "@/components/layouts/ListContainer";
 import Row from "@/components/layouts/Row";
-import { v2Api } from "@packages/api";
-import { useMemo } from "react";
+import {
+  BOARD_PAGE_SIZE,
+  BoardPagination,
+  useBoardPage,
+} from "@/features/board";
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 
 export const TrainingLogPage = () => {
+  const [page, setPage] = useState(0);
+
+  // 통합 목록 엔드포인트가 최신순으로 페이지 단위로 준다 (api#41) —
+  // 예전처럼 전부 받아 화면에서 정렬할 필요가 없다.
   const {
     data,
     refetch: refreshTraining,
     isLoading,
     isRefetching,
-  } = v2Api.useListTrainingLogs(undefined, {
-    query: {
-      select: (response) => response.data.trainingLogs,
-    },
-  });
+  } = useBoardPage({ type: "training", page });
 
   const isDataLoading = isLoading || isRefetching;
-
-  // 날짜순 정렬
-  const trainings = useMemo(() => {
-    if (!data) return [];
-    return [...data].sort((a, b) => b.dateTime.localeCompare(a.dateTime));
-  }, [data]);
 
   return (
     <FormContainer title="훈련일지 관리">
@@ -43,11 +41,19 @@ export const TrainingLogPage = () => {
       {isDataLoading ? (
         <Loading loading={isDataLoading} />
       ) : (
-        <ListContainer
-          datas={trainings ?? []}
-          targetUrl={"/training/"}
-          additionalTitle={true}
-        />
+        <>
+          <ListContainer
+            datas={data?.items ?? []}
+            targetUrl={"/training/"}
+            additionalTitle={true}
+            startIndex={page * BOARD_PAGE_SIZE}
+          />
+          <BoardPagination
+            page={page}
+            total={data?.total ?? 0}
+            onChange={setPage}
+          />
+        </>
       )}
     </FormContainer>
   );

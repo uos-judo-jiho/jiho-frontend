@@ -1,20 +1,13 @@
 import NoticeForm from "@/components/admin/form/NoticeForm";
+import { useBoardDetail } from "@/features/board";
 import { ReactionStatus } from "@/features/reaction";
-import { v2Api } from "@packages/api";
 import { useParams } from "@tanstack/react-router";
 
 export const NoticeDetail = () => {
   const { id } = useParams({ strict: false });
-  const { data } = v2Api.useListNotices(undefined, {
-    query: {
-      select: (response) =>
-        response.data.notices.find((item) => item.id.toString() === id),
-    },
-  });
 
-  if (!data) {
-    throw new Error("공지사항을 찾을 수 없습니다.");
-  }
+  // 목록에서 찾아 쓰던 것을 단건 조회로 바꿨다 (api#41)
+  const { data } = useBoardDetail(Number(id));
 
   return (
     <div className="flex flex-col gap-4">

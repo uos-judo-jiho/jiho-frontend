@@ -1,13 +1,13 @@
 import { Link, type LinkOptions } from "@tanstack/react-router";
 
-import type { ContentItem } from "@/shared/lib/types/content";
+import type { ContentSummary } from "@/shared/lib/types/content";
 import { cn } from "@/shared/lib/utils";
 import { Image } from "@/shared/ui/image";
 import { Tag } from "@/shared/ui/tag";
 import { ContentMeta } from "./content-meta";
 
 type ArticleCardProps = {
-  item: ContentItem;
+  item: ContentSummary;
   /** linkOptions() 로 만들어 라우트가 컴파일 타임에 검증된 링크 */
   link: LinkOptions;
   /** featured 는 목록 첫 항목을 크게 보여줄 때 쓴다 */
@@ -32,7 +32,7 @@ export const ArticleCard = ({
   priority = false,
   className,
 }: ArticleCardProps) => {
-  const cover = item.images[0];
+  const cover = item.thumbnail;
   const featured = variant === "featured";
 
   return (

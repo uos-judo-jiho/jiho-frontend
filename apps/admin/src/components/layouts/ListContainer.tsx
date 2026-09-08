@@ -6,15 +6,18 @@ import { useMemo } from "react";
 import Line from "./Line";
 
 type ListContainerProps = {
-  datas: Partial<v2ApiModel.Board>[];
+  datas: Partial<v2ApiModel.BoardSummary>[];
   targetUrl: string;
   additionalTitle?: boolean;
+  /** 페이지 목록에서 번호가 이어지도록 첫 행의 번호를 넘긴다 */
+  startIndex?: number;
 };
 
 function ListContainer({
   datas: data,
   targetUrl,
   additionalTitle = false,
+  startIndex = 0,
 }: ListContainerProps) {
   // 목록의 게시글 반응을 한 번에 받아 온다. 행마다 조회하면 N+1 이 된다.
   const boardIds = useMemo(
@@ -37,7 +40,9 @@ function ListContainer({
         {data.map((data, index) => (
           <div key={data?.id}>
             <li className="flex py-5 text-center">
-              <div className="flex-[10%] text-center">{index + 1}</div>
+              <div className="flex-[10%] text-center">
+                {startIndex + index + 1}
+              </div>
               <div className="flex-[70%]">
                 <Link to={targetUrl + data.id}>
                   <div className="bg-transparent text-start pr-3 hover:underline">

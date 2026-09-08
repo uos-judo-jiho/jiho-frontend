@@ -8,7 +8,7 @@ import {
 import { OverlayProvider } from "overlay-kit";
 
 import { NotFoundPage } from "@/pages/not-found-page";
-import { v2Api } from "@packages/api";
+import { newsArchiveQueryOptions } from "@/features/news";
 
 // side-effect import: Start 가 client 매니페스트 기준으로 <link> 를 주입하므로
 // SSR 번들이 자체 계산한 (client 와 어긋날 수 있는) asset URL 을 참조하지 않는다
@@ -23,15 +23,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   // 안 된다 (옛 HTML 이 캐시되면 배포 후 사라진 옛 해시 자산을 요청해 404).
   // no-cache = 캐시하되 매 사용 전 서버 재검증.
   headers: () => ({ "cache-control": "no-cache" }),
-  // 헤더(메뉴의 연도 목록)와 푸터가 모든 페이지에서 최신 지호지를 참조한다.
+  // 헤더(메뉴의 연도 목록)와 푸터가 모든 페이지에서 지호지 아카이브를 참조한다.
   // 여기서 한 번 채워 두지 않으면 페이지마다 SSR 중에 서스펜스 워터폴이 생긴다.
+  // /news 도 같은 쿼리를 그대로 쓰므로 아카이브 요청은 방문당 한 번뿐이다.
   loader: async ({ context }) => {
     try {
-      await context.queryClient.ensureQueryData(
-        v2Api.getListLatestNewsQueryOptions({ limit: 5 }),
-      );
+      await context.queryClient.ensureQueryData(newsArchiveQueryOptions());
     } catch (error) {
-      console.error("[SSR] Latest news prefetch error:", error);
+      console.error("[SSR] News archive prefetch error:", error);
     }
   },
   head: () => ({

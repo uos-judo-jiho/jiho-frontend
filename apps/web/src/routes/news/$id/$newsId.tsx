@@ -6,9 +6,10 @@ import { EmptyState } from "@/shared/ui/empty-state";
 import { MoreLink } from "@/shared/ui/more-link";
 import { PageShell } from "@/widgets/page-shell";
 
+import { boardDetailQueryOptions } from "@/features/content";
 import { createArticleData } from "@/features/seo";
 import { seoHead, type SeoHeadOptions } from "@/features/seo/head";
-import { v2Api } from "@packages/api";
+import { toPlainExcerpt } from "@/shared/lib/format";
 
 export const Route = createFileRoute("/news/$id/$newsId")({
   loader: async ({
@@ -18,14 +19,14 @@ export const Route = createFileRoute("/news/$id/$newsId")({
     const year = Number(params.id);
     const articleId = Number(params.newsId);
 
-    // 상세 화면이 쓰는 바로 그 쿼리 하나만 프리페치한다. 예전에는 연도 전체
-    // 목록도 함께 받았지만, 앞뒤 글이 단건 응답에 담겨 오면서 필요가 없어졌다.
+    // 상세 화면이 쓰는 바로 그 쿼리 하나만 프리페치한다. 앞뒤 글도 같은 응답에
+    // 담겨 오므로 연도 전체 목록을 함께 받을 이유가 없다.
     let article;
     try {
       const response = await context.queryClient.ensureQueryData(
-        v2Api.getGetNewsArticleQueryOptions(year, articleId),
+        boardDetailQueryOptions(articleId, "year"),
       );
-      article = response.data.article;
+      article = response.data;
     } catch (error) {
       // 없는 글은 오류가 아니라 404 다.
       if (isAxiosError(error) && error.response?.status === 404) {
@@ -35,9 +36,15 @@ export const Route = createFileRoute("/news/$id/$newsId")({
       return {};
     }
 
+    // 게시글 id 는 세 게시판이 함께 쓰므로, 지호지가 아닌 글이 /news 주소로
+    // 열리지 않도록 종류와 연도를 확인한다.
+    if (article.type !== "news" || !article.dateTime.startsWith(String(year))) {
+      throw notFound();
+    }
+
     const description = [
       article.title,
-      article.description?.slice(0, 140),
+      toPlainExcerpt(article.description, 140),
     ].join(" | ");
 
     const publishedDate = article.dateTime
