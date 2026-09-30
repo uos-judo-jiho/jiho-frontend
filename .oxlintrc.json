@@ -11,7 +11,10 @@
   },
   "rules": {
     "typescript/no-unused-vars": "error",
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
+    // React Compiler 전용 규칙. 컴파일러를 쓰지 않고, 걸리는 곳은 전부 "올해"를
+    // 읽는 new Date() 라 모듈 스코프로 올리면 SSR 서버에서 기동 시점 연도로 굳는다.
+    "react/purity": "off"
   },
   "ignorePatterns": [
     "**/build/**",
