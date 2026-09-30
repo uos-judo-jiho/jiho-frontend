@@ -68,5 +68,5 @@ catalog:
   "react-router-dom": "^6.30.6"
 
   # test
-  "vitest": "^4.1.11"
-  "@vitest/ui": "^4.1.11"
+  "vitest": "^5.0.2"
+  "@vitest/ui": "^5.0.2"
