@@ -24,7 +24,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import archiver from "archiver";
+import { ZipArchive } from "archiver";
 import express from "express";
 import multer from "multer";
 
@@ -126,9 +126,9 @@ const queue: QueueItem[] = [];
 const upload = multer({
   dest: path.join(os.tmpdir(), "jiho-internal-uploads"),
   // multer 2.x decodes filenames as latin1 unless told otherwise, which mangles
-  // Korean names. @types/multer still tracks v1, so the option needs a cast.
+  // Korean names.
   defParamCharset: "utf8",
-} as multer.Options);
+});
 const app = express();
 app.use(express.json());
 
@@ -448,7 +448,7 @@ app.get("/download/:id", (req, res) => {
       .parse(item.originalFilename)
       .name.replace(/[^a-zA-Z0-9_-]+/g, "_")
       .replace(/^_+|_+$/g, "") || "video";
-  const archive = archiver("zip", { zlib: { level: 9 } });
+  const archive = new ZipArchive({ zlib: { level: 9 } });
 
   res.attachment(`${baseName}_highlights.zip`);
   archive.on("error", (error) => {
