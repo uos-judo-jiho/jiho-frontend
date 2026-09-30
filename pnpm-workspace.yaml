@@ -65,7 +65,7 @@ catalog:
   "zod": "^4.6.5"
 
   # routing (shorts, packages/auth)
-  "react-router-dom": "^6.30.6"
+  "react-router-dom": "^7.18.4"
 
   # test
   "vitest": "^5.0.2"
