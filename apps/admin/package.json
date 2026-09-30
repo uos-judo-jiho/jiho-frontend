@@ -43,7 +43,6 @@
     "overlay-kit": "catalog:",
     "postcss": "catalog:",
     "react": "catalog:",
-    "react-day-picker": "^9.14.0",
     "react-dom": "catalog:",
     "react-hook-form": "catalog:",
     "react-markdown": "catalog:",
