@@ -41,9 +41,13 @@ export const ErrorPage = ({ error, reset }: ErrorComponentProps) => {
         일시적인 문제일 수 있습니다. 잠시 후 다시 시도해 주세요.
       </p>
       {/* 관리자만 보는 화면이라 원인을 그대로 보여준다 — 제보할 때 필요하다.
-          axios 응답이면 백엔드 message 를, 아니면 던져진 오류 자체를 쓴다. */}
+          axios 응답이면 백엔드 message 를, 아니면 던져진 오류 자체를 쓴다.
+          라우터가 error 를 unknown 으로 넘기므로 Error 가 아닌 throw 도 받는다. */}
       <p className="max-w-prose break-all text-xs text-muted-foreground/80">
-        {extractMessage(error, error.message)}
+        {extractMessage(
+          error,
+          error instanceof Error ? error.message : String(error),
+        )}
       </p>
 
       <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
