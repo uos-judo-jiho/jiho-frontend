@@ -5,7 +5,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
-const srcDir = path.resolve(__dirname, "src");
+const srcDir = path.resolve(import.meta.dirname, "src");
 
 export default defineConfig({
   base: "/",
