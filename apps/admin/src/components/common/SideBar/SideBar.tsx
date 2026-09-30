@@ -11,9 +11,9 @@ const SIDEBAR_ANIMATION_DURATION = 500;
 const SideBar = () => {
   const { open, setOpen } = useNavbar();
 
-  const outside = useRef<any>();
+  const outside = useRef<any>(null);
 
-  const timer: React.MutableRefObject<ReturnType<typeof setTimeout> | null> =
+  const timer: React.RefObject<ReturnType<typeof setTimeout> | null> =
     useRef(null);
 
   const toggleSide = () => {

@@ -2,11 +2,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
-// React 18 은 camelCase `fetchPriority` 를 모르는 속성으로 보고 경고를 낸다.
-// (React 19 부터 지원) 소문자 속성으로 직접 넘긴다.
-const fetchPriorityAttr = (priority: boolean) =>
-  ({ fetchpriority: priority ? "high" : "auto" }) as Record<string, string>;
-
 const ASPECT = {
   square: "aspect-square",
   portrait: "aspect-3/4",
@@ -93,7 +88,7 @@ export const Image = ({
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         decoding={priority ? "sync" : "async"}
-        {...fetchPriorityAttr(priority)}
+        fetchPriority={priority ? "high" : "auto"}
         onLoad={() => setLoaded(true)}
         // 캐시에서 즉시 그려지면 onLoad 를 놓칠 수 있어 에러 시에도 전환한다
         onError={() => setLoaded(true)}
