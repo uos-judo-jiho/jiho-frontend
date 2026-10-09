@@ -7,7 +7,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { configDefaults } from "vitest/config";
 
-const srcDir = path.resolve(__dirname, "src");
+const srcDir = path.resolve(import.meta.dirname, "src");
 
 export default defineConfig(({ mode }) => ({
   base: "/",
