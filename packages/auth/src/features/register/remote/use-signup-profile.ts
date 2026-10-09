@@ -10,7 +10,7 @@ export const useSignupProfileMutation = (
   pendingToken: string,
   options?: SignupProfileParams[0],
   queryClient?: SignupProfileParams[1],
-) =>
+): ReturnType<typeof v2Admin.useUpdateSignupProfile> =>
   v2Admin.useUpdateSignupProfile(
     {
       ...options,
