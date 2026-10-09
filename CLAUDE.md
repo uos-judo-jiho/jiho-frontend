@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Frontend monorepo for the University of Seoul (UOS) Judo club website "Jiho" (지호). The main public site (`apps/web`) serves news articles ("지호지"), training logs, photo galleries, and notices with SSR. A separate admin app (`apps/admin`) manages content.
 
-**Key Technologies:** React 18, TypeScript, Vite, TanStack Start (SSR framework), TanStack Router, TanStack Query v5, TailwindCSS v4, pnpm workspaces.
+**Key Technologies:** React 19, TypeScript, Vite, TanStack Start (SSR framework), TanStack Router, TanStack Query v5, TailwindCSS v4, pnpm workspaces.
 
 **Backend Integration:** Java/Node backend API at `https://api.uosjudo.com/api` (docs at `/api/docs`). API clients are generated with orval from the OpenAPI spec.
 
@@ -143,7 +143,6 @@ Fonts: Pretendard Variable (dynamic subset) is loaded via `<link>` in
   closed so its links leave the tab order.
 - Responsive differences are expressed in CSS, not by branching on
   `window.innerWidth` — JS branching causes hydration shift and ships both trees.
-- React 18 here: `fetchPriority` must be passed as lowercase `fetchpriority`.
 - TypeScript strict mode; `pnpm type-check:web` and `pnpm lint:web` must pass
   (both require `pnpm orval` first)
 

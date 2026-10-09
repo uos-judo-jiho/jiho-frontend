@@ -18,8 +18,7 @@ export const HomeHero = () => (
         src={heroJpg}
         alt=""
         // 히어로는 LCP 요소이므로 지연 로딩하지 않는다.
-        // React 18 은 camelCase fetchPriority 를 모르므로 소문자로 넘긴다.
-        {...({ fetchpriority: "high" } as Record<string, string>)}
+        fetchPriority="high"
         className="size-full object-cover"
       />
     </picture>

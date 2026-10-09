@@ -83,7 +83,7 @@ See `server/README.md` for detailed server documentation.
 
 ## FE
 
-- React 18
+- React 19
 - TypeScript
 - Recoil
 - TailwindCSS v4
