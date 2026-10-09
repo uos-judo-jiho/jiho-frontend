@@ -26,33 +26,33 @@ catalog:
   "tsx": "^4.23.15"
 
   # api client
-  "axios": "^1.3.4"
+  "axios": "^1.20.0"
   "orval": "^8.38.0"
   "@orval/core": "^8.38.0"
 
   # @tanstack
-  "@tanstack/react-query": "^5.66.11"
-  "@tanstack/react-query-devtools": "^5.91.3"
-  "@tanstack/react-router": "^1.170.32"
-  "@tanstack/react-router-ssr-query": "^1.167.1"
-  "@tanstack/react-start": "^1.168.49"
-  "@tanstack/router-plugin": "^1.168.35"
+  "@tanstack/react-query": "^5.104.0"
+  "@tanstack/react-query-devtools": "^5.104.0"
+  "@tanstack/react-router": "^1.170.40"
+  "@tanstack/react-router-ssr-query": "^1.167.3"
+  "@tanstack/react-start": "^1.168.59"
+  "@tanstack/router-plugin": "^1.168.41"
 
   # styling
-  "tailwindcss": "^4.3.2"
-  "@tailwindcss/vite": "^4.3.2"
-  "@tailwindcss/postcss": "^4.3.2"
-  "tailwind-merge": "^3.0.2"
+  "tailwindcss": "^4.3.3"
+  "@tailwindcss/vite": "^4.3.3"
+  "@tailwindcss/postcss": "^4.3.3"
+  "tailwind-merge": "^3.7.0"
   "tailwindcss-animate": "^1.0.7"
-  "postcss": "^8.5.1"
+  "postcss": "^8.5.28"
   "clsx": "^2.1.1"
   "class-variance-authority": "^0.7.1"
 
   # ui
-  "@radix-ui/react-slot": "^1.1.2"
+  "@radix-ui/react-slot": "^1.3.3"
   "lucide-react": "^0.477.0"
   "overlay-kit": "^1.9.0"
-  "sonner": "^2.0.7"
+  "sonner": "^2.0.8"
 
   # markdown
   "react-markdown": "^10.1.0"
@@ -60,12 +60,12 @@ catalog:
   "remark-gfm": "^4.0.1"
 
   # form
-  "react-hook-form": "^7.71.2"
-  "@hookform/resolvers": "^5.2.2"
-  "zod": "^4.3.6"
+  "react-hook-form": "^7.89.0"
+  "@hookform/resolvers": "^5.9.1"
+  "zod": "^4.6.5"
 
   # routing (shorts, packages/auth)
-  "react-router-dom": "^6.11.1"
+  "react-router-dom": "^6.30.6"
 
   # test
   "vitest": "^4.1.11"
