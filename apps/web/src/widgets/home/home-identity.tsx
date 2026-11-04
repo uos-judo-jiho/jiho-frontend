@@ -14,9 +14,14 @@ import { Logo } from "@/shared/ui/logo";
 type HomeIdentityProps = {
   /** 상위에서 이미 같은 라벨을 달았으면 false 로 끈다 (예: /about 의 PageHeader) */
   showEyebrow?: boolean;
+  /** 좁은 화면에서 수상 이력을 이만큼만 보여준다. 생략하면 전체를 보여준다 */
+  awardLimitOnMobile?: number;
 };
 
-export const HomeIdentity = ({ showEyebrow = true }: HomeIdentityProps) => {
+export const HomeIdentity = ({
+  showEyebrow = true,
+  awardLimitOnMobile,
+}: HomeIdentityProps) => {
   // 첫 인자는 limit/offset 쿼리 파라미터 자리다. 전체를 받으므로 undefined 를
   // 넘긴다 — 라우트 loader 의 getListAwardsQueryOptions() 와 쿼리 키가 같아야
   // SSR 프리페치가 그대로 하이드레이션된다 (키는 params 가 없으면 생략된다).
@@ -64,7 +69,7 @@ export const HomeIdentity = ({ showEyebrow = true }: HomeIdentityProps) => {
             {awards.length}건
           </span>
         </div>
-        <AwardList awards={awards} limitOnMobile={4} />
+        <AwardList awards={awards} limitOnMobile={awardLimitOnMobile} />
       </div>
     </section>
   );
