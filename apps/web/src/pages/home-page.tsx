@@ -28,7 +28,7 @@ export const HomePage = () => {
         <HomeHero />
 
         <Container className="flex flex-col gap-section py-section">
-          <HomeIdentity />
+          <HomeIdentity awardLimitOnMobile={4} />
           <HomeLatestNews />
           <HomeLatestTrainings />
           <HomeNotices />
