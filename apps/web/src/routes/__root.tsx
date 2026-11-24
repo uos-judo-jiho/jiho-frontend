@@ -10,6 +10,7 @@ import { OverlayProvider } from "overlay-kit";
 
 import { NotFoundPage } from "@/pages/not-found-page";
 import { newsArchiveQueryOptions } from "@/features/news";
+import { gaScript } from "@/features/seo/analytics";
 
 // side-effect import: Start 가 client 매니페스트 기준으로 <link> 를 주입하므로
 // SSR 번들이 자체 계산한 (client 와 어긋날 수 있는) asset URL 을 참조하지 않는다
@@ -137,20 +138,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       },
       { rel: "manifest", href: "/manifest.json" },
     ],
-    scripts: [
-      {
-        async: true,
-        src: "https://www.googletagmanager.com/gtag/js?id=G-TLK4ZTXFH0",
-      },
-      {
-        children: `window.dataLayer = window.dataLayer || [];
-function gtag() {
-  dataLayer.push(arguments);
-}
-gtag("js", new Date());
-gtag("config", "G-TLK4ZTXFH0");`,
-      },
-    ],
+    // 운영 도메인에서만 방문 통계를 모은다 (로컬 · IP 접속은 잡히지 않는다)
+    scripts: [{ children: gaScript }],
   }),
   notFoundComponent: NotFoundPage,
   component: RootComponent,
