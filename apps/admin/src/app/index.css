@@ -3,6 +3,7 @@
 /* 인터랙션(@packages/jds/interactions)의 구조 스타일 — components 레이어에 넣어
    className 으로 넘긴 Tailwind 유틸리티가 언제나 이기게 한다 */
 @import "@packages/jds/interactions/style.css" layer(components);
+@import "@packages/jds/style.css" layer(components);
 
 @tailwind base;
 @tailwind components;

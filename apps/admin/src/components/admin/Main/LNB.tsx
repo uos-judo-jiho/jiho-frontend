@@ -2,9 +2,10 @@ import { RouterUrl } from "@/app/routers/router-url";
 import { AdminCommandPalette } from "@/features/command-palette/admin-command-palette";
 import { cn } from "@/shared/lib/utils";
 import { v2Admin } from "@packages/api";
+import { Border } from "@packages/jds";
+import { Link, useLocation } from "@tanstack/react-router";
 import { ChevronLeft, LogOut, Menu } from "lucide-react";
 import { Suspense, useCallback, useState } from "react";
-import { Link, useLocation } from "@tanstack/react-router";
 import { match, P } from "ts-pattern";
 
 import { canSee, menuItems } from "./menu";
@@ -72,6 +73,7 @@ export const LNB = () => {
 
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto overflow-x-hidden">
         <AdminCommandPalette role={userRole} collapsed={isCollapsed} />
+        <Border className="my-2" />
         {menuItems
           .filter((item) => canSee(item, userRole))
           .map((item) => (
