@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthIndexRouteImport } from './routes/_auth/index'
+import { Route as AuthAdsRouteImport } from './routes/_auth/ads'
 import { Route as AuthAwardsRouteImport } from './routes/_auth/awards'
 import { Route as PublicLoginRouteImport } from './routes/_public/login'
 import { Route as PublicRegisterRouteImport } from './routes/_public/register'
@@ -49,6 +50,11 @@ const PublicRoute = PublicRouteImport.update({
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthAdsRoute = AuthAdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthAwardsRoute = AuthAwardsRouteImport.update({
@@ -182,6 +188,7 @@ const AuthNewsYearGalleryWriteRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
+  '/ads': typeof AuthAdsRoute
   '/awards': typeof AuthAwardsRoute
   '/login': typeof PublicLoginRoute
   '/register': typeof PublicRegisterRoute
@@ -210,6 +217,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof AuthIndexRoute
+  '/ads': typeof AuthAdsRoute
   '/awards': typeof AuthAwardsRoute
   '/login': typeof PublicLoginRoute
   '/register': typeof PublicRegisterRoute
@@ -240,6 +248,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/_auth/ads': typeof AuthAdsRoute
   '/_auth/awards': typeof AuthAwardsRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/register': typeof PublicRegisterRoute
@@ -271,6 +280,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ads'
     | '/awards'
     | '/login'
     | '/register'
@@ -299,6 +309,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ads'
     | '/awards'
     | '/login'
     | '/register'
@@ -328,6 +339,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_auth'
     | '/_public'
+    | '/_auth/ads'
     | '/_auth/awards'
     | '/_public/login'
     | '/_public/register'
@@ -382,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/ads': {
+      id: '/_auth/ads'
+      path: '/ads'
+      fullPath: '/ads'
+      preLoaderRoute: typeof AuthAdsRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/awards': {
@@ -563,6 +582,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthRouteChildren {
+  AuthAdsRoute: typeof AuthAdsRoute
   AuthAwardsRoute: typeof AuthAwardsRoute
   AuthIndexRoute: typeof AuthIndexRoute
   AuthMypageEditRoute: typeof AuthMypageEditRoute
@@ -590,6 +610,7 @@ interface AuthRouteChildren {
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthAdsRoute: AuthAdsRoute,
   AuthAwardsRoute: AuthAwardsRoute,
   AuthIndexRoute: AuthIndexRoute,
   AuthMypageEditRoute: AuthMypageEditRoute,

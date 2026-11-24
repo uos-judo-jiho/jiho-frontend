@@ -95,7 +95,8 @@ routes/     TanStack file routes — loader (prefetch + SEO) + head() + componen
 pages/      one composition per route; owns nothing but arrangement
 widgets/    cross-page composite blocks (site-header, site-nav, site-footer,
             page-shell, home/*)
-features/   domain slices — news, training, notice, award, content, seo, legal
+features/   domain slices — news, training, notice, award, content, seo,
+            legal, reaction, ads
             each: model/ (hooks, pure logic) + ui/ (domain components) + index.ts
 shared/     ui/ (design-system primitives + primitives/ = shadcn), lib/ (cn,
             format, types), hooks/, config/, assets/
@@ -105,6 +106,31 @@ app/        styles only (tokens, base, utilities, index.css)
 `features/content` holds what 지호지 기사 / 훈련일지 / 공지 have in common
 (`ContentItem`), so cards, meta lines, and the detail view are shared. Split a
 domain out of it only when its shape genuinely diverges.
+
+`features/ads` is the **only** place a 쿠팡 파트너스 affiliate slot may come from.
+Read `docs/affiliate-ads.md` before touching it — the 개인정보 처리방침 and 이용약관
+make promises the code has to keep:
+
+- Slots exist only in `model/slots.ts` (`AD_SLOTS`). No popups, interstitials,
+  sticky bars, and nothing on `/login`, `/terms`, `/privacy` or inside overlays.
+  One slot per page view. The only slot today sits in `ArticleDetail`, so it
+  covers 지호지 기사 and 훈련일지; 공지 상세 has its own layout and is left out on
+  purpose.
+- Products come from the server (`GET /v2/ads`), prefetched once per visit in
+  `__root.tsx`. `useAdProducts` must call `useListAds()` with **no** arguments so
+  its key matches that prefetch. Nothing here decides when ads start: the server
+  holds the floor (`AD_EARLIEST_START_AT` + `isLaunched` in the api repo) because
+  처리방침 제11항 promises 7 days' notice before the 시행일.
+- `AdLogPayload` carries **no** identifier for the visitor (no member id, no
+  cookie/localStorage id), matching the `ad_events` table, because 처리방침 제1항
+  says the log is never joined per user. Adding a field means re-reading that
+  clause first.
+- Products are hand-picked static links entered by a root admin, never 쿠팡's
+  dynamic-banner iframe: the iframe can't be click-measured, ignores the design
+  tokens, and would turn the slot into 맞춤형 광고, which 처리방침 제6항 says we
+  don't run. The link/image/price-text rules are enforced by the API's DTO.
+- Every slot renders `AdDisclosure` — 공정위 추천·보증 심사지침 requires the
+  disclosure adjacent to the ad, not in the footer.
 
 ### Design system
 
