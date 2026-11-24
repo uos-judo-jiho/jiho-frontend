@@ -40,7 +40,7 @@ export const AffiliateCard = ({
   return (
     <a
       ref={ref}
-      href={buildAdHref(product, placement)}
+      href={buildAdHref(product.linkUrl, placement)}
       target="_blank"
       rel="noopener noreferrer nofollow sponsored"
       onClick={logClick}

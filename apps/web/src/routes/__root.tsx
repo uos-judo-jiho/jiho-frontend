@@ -9,6 +9,7 @@ import {
 import { OverlayProvider } from "overlay-kit";
 
 import { NotFoundPage } from "@/pages/not-found-page";
+import { adsQueryOptions } from "@/features/ads";
 import { newsArchiveQueryOptions } from "@/features/news";
 
 // side-effect import: Start 가 client 매니페스트 기준으로 <link> 를 주입하므로
@@ -27,12 +28,22 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   // 헤더(메뉴의 연도 목록)와 푸터가 모든 페이지에서 지호지 아카이브를 참조한다.
   // 여기서 한 번 채워 두지 않으면 페이지마다 SSR 중에 서스펜스 워터폴이 생긴다.
   // /news 도 같은 쿼리를 그대로 쓰므로 아카이브 요청은 방문당 한 번뿐이다.
+  //
+  // 광고 목록도 같은 이유로 여기서 받는다 — 응답이 작고 이용자별로 다르지 않아
+  // 구좌가 몇 개든 방문당 한 번이면 된다. 둘 다 실패해도 페이지는 떠야 하므로
+  // 각각 따로 감싸고(하나의 실패가 다른 하나를 막지 않는다), 광고는 비어 있으면
+  // 구좌가 조용히 사라진다.
   loader: async ({ context }) => {
-    try {
-      await context.queryClient.ensureQueryData(newsArchiveQueryOptions());
-    } catch (error) {
-      console.error("[SSR] News archive prefetch error:", error);
-    }
+    await Promise.all([
+      context.queryClient
+        .ensureQueryData(newsArchiveQueryOptions())
+        .catch((error) => {
+          console.error("[SSR] News archive prefetch error:", error);
+        }),
+      context.queryClient.ensureQueryData(adsQueryOptions()).catch((error) => {
+        console.error("[SSR] Ads prefetch error:", error);
+      }),
+    ]);
   },
   head: () => ({
     meta: [

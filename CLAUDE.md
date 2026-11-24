@@ -116,15 +116,19 @@ make promises the code has to keep:
   One slot per page view. The only slot today sits in `ArticleDetail`, so it
   covers 지호지 기사 and 훈련일지; 공지 상세 has its own layout and is left out on
   purpose.
-- `AD_LAUNCH_AT` gates every slot, and 처리방침 제11항 promises 7 days' notice
-  before its 시행일 — moving it earlier than the posted notice breaks that.
+- Products come from the server (`GET /v2/ads`), prefetched once per visit in
+  `__root.tsx`. `useAdProducts` must call `useListAds()` with **no** arguments so
+  its key matches that prefetch. Nothing here decides when ads start: the server
+  holds the floor (`AD_EARLIEST_START_AT` + `isLaunched` in the api repo) because
+  처리방침 제11항 promises 7 days' notice before the 시행일.
 - `AdLogPayload` carries **no** identifier for the visitor (no member id, no
-  cookie/localStorage id), because 처리방침 제1항 says the log is never joined
-  per user. Adding a field means re-reading that clause first.
-- Products are hand-picked static links (`model/products.ts`), never 쿠팡's
+  cookie/localStorage id), matching the `ad_events` table, because 처리방침 제1항
+  says the log is never joined per user. Adding a field means re-reading that
+  clause first.
+- Products are hand-picked static links entered by a root admin, never 쿠팡's
   dynamic-banner iframe: the iframe can't be click-measured, ignores the design
   tokens, and would turn the slot into 맞춤형 광고, which 처리방침 제6항 says we
-  don't run.
+  don't run. The link/image/price-text rules are enforced by the API's DTO.
 - Every slot renders `AdDisclosure` — 공정위 추천·보증 심사지침 requires the
   disclosure adjacent to the ad, not in the footer.
 

@@ -1,5 +1,6 @@
-import { AD_SLOTS, resolveAdProducts } from "../model/slots";
+import { AD_SLOTS } from "../model/slots";
 import type { AdPlacement } from "../model/types";
+import { useAdProducts } from "../model/use-ad-products";
 import { AdDisclosure } from "./ad-disclosure";
 import { AffiliateCard } from "./affiliate-card";
 
@@ -15,22 +16,21 @@ type AdSlotProps = {
 /**
  * 광고 구좌 하나.
  *
- * 게재 시작(`AD_LAUNCH_AT`) 전이거나 등록된 상품이 없으면 **아무것도 그리지
- * 않는다**. 그래서 이 기능은 먼저 머지해도 화면에 나타나지 않는다.
+ * 게재할 상품이 없으면 **아무것도 그리지 않는다** — 서버가 게재 시작 전(공지한
+ * 시행일 이전)이거나 등록된 상품이 없으면 빈 목록을 주고, 광고 API 가 실패해도
+ * 마찬가지다. 그래서 이 기능은 상품을 등록하기 전에 배포해도 화면에 나타나지
+ * 않는다.
  *
- * ## 왜 서버에서도 그리는가
- *
- * 처음에는 클라이언트 전용 마운트를 생각했지만, 그러면 하이드레이션 시점에
- * 구좌가 불쑥 생겨 레이아웃이 밀린다(CLS). 노출 집계는 `IntersectionObserver`
- * 로 브라우저에서만 일어나므로 서버 렌더가 노출 수를 오염시키지도 않는다.
- * 남는 위험은 게재 시작 '그 순간' 서버와 브라우저의 시계가 경계를 서로 다르게
- * 넘는 단 한 번의 하이드레이션 불일치뿐이고, 그 대가로 CLS 를 0 으로 둔다.
+ * 상품은 `__root.tsx` 가 프리페치해 둔 쿼리에서 읽으므로 SSR HTML 에 이미
+ * 들어 있다. 하이드레이션 뒤에 구좌가 불쑥 생겨 레이아웃이 밀리는 일(CLS)이
+ * 없고, 노출 집계는 `IntersectionObserver` 로 브라우저에서만 일어나므로 서버
+ * 렌더가 노출 수를 오염시키지도 않는다.
  *
  * 크롤러에게는 `rel="sponsored nofollow"` 로 광고임을 알린다
  * (`AffiliateCard`).
  */
 export const AdSlot = ({ placement, boardId, className }: AdSlotProps) => {
-  const products = resolveAdProducts(placement);
+  const products = useAdProducts(placement);
 
   if (products.length === 0) return null;
 
