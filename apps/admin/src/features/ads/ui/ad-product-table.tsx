@@ -38,8 +38,8 @@ export const AdProductTable = ({ products, onEdit }: AdProductTableProps) => {
   const remove = useDeleteAdProduct();
 
   /**
-   * 링크가 죽었을 때 가장 먼저 해야 하는 동작. 삭제가 아니라 비활성이므로 그동안
-   * 쌓인 노출·클릭 기록이 남고, 다시 켜면 그대로 이어진다.
+   * 링크가 죽었을 때 가장 먼저 해야 하는 동작. 삭제가 아니라 비활성이므로
+   * 기록이 그대로 남고, 다시 켜면 이어진다.
    */
   const handleToggle = async (product: AdProduct) => {
     try {
@@ -59,8 +59,8 @@ export const AdProductTable = ({ products, onEdit }: AdProductTableProps) => {
     const confirmed = await openConfirmDialog({
       title: "광고 상품을 삭제할까요?",
       description:
-        `"${product.name}" 과 그동안 쌓인 노출·클릭 기록이 함께 지워집니다. ` +
-        "되돌릴 수 없습니다. 성과 기록을 남기고 노출만 멈추려면 '노출 중단'을 쓰세요.",
+        `"${product.name}" 과 개별 노출·클릭 기록이 함께 지워집니다. 되돌릴 수 없습니다. ` +
+        "날짜·구좌·상품별 합계 통계는 남지만, 다시 노출할 가능성이 있으면 삭제하지 말고 '노출 중단'을 쓰세요.",
       confirmText: "삭제",
       destructive: true,
     });
