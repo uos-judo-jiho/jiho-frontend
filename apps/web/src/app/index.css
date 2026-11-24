@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* 인터랙션(@packages/jds/interactions)의 구조 스타일 — components 레이어에 넣어
+   className 으로 넘긴 Tailwind 유틸리티가 언제나 이기게 한다 */
+@import "@packages/jds/interactions/style.css" layer(components);
+
 /* Pretendard Variable 은 __root.tsx 의 <link> 로 불러온다.
    여기서 @import 하면 "CSS 를 받고 → 그 안의 CSS 를 또 받고 → 폰트를 받는"
    직렬 요청이 되어 첫 렌더가 그만큼 늦어진다. */

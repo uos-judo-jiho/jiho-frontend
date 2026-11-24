@@ -2,7 +2,6 @@ export { ConfirmDialog, openConfirmDialog } from "./confirm-dialog";
 export { Container } from "./container";
 export { EmptyState } from "./empty-state";
 export { Image } from "./image";
-export { Lightbox } from "./lightbox";
 export { Logo } from "./logo";
 export { Markdown } from "./markdown";
 export { MediaCarousel } from "./media-carousel";

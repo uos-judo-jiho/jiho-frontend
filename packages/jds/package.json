@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "files": [
-    "dist"
+    "dist",
+    "vendor"
   ],
   "type": "module",
   "main": "./dist/index.js",
@@ -23,12 +24,25 @@
       "development": "./src/hook.ts",
       "types": "./dist/hook.d.ts",
       "default": "./dist/hook.js"
-    }
+    },
+    "./interactions": {
+      "types": "./vendor/awesome-interactions/index.d.ts",
+      "default": "./vendor/awesome-interactions/index.js"
+    },
+    "./interactions/motion": {
+      "types": "./vendor/awesome-interactions/motion.d.ts",
+      "default": "./vendor/awesome-interactions/motion.js"
+    },
+    "./interactions/style.css": "./vendor/awesome-interactions/style.css"
   },
   "scripts": {
     "build": "tsdown",
     "dev": "tsdown --watch",
     "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@vanilla-extract/dynamic": "catalog:",
+    "motion": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",
