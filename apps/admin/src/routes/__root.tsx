@@ -1,3 +1,4 @@
+import { MotionProvider } from "@packages/jds/interactions/motion";
 import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
@@ -40,5 +41,10 @@ const useDocumentTitle = () => {
 function RootLayout() {
   useDocumentTitle();
 
-  return <Outlet />;
+  // 인터랙션 애니메이션 기능은 첫 화면을 그린 뒤 따로 받는다 (LazyMotion)
+  return (
+    <MotionProvider>
+      <Outlet />
+    </MotionProvider>
+  );
 }

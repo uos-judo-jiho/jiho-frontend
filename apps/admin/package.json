@@ -26,6 +26,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "catalog:",
     "@packages/api": "workspace:*",
+    "@packages/jds": "workspace:*",
     "@radix-ui/react-dialog": "^1.1.23",
     "@radix-ui/react-slot": "catalog:",
     "@tailwindcss/vite": "catalog:",
