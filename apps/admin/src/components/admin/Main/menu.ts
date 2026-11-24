@@ -3,6 +3,7 @@ import {
   BookOpen,
   Film,
   Home,
+  Megaphone,
   Newspaper,
   Trophy,
   Users,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { RouterUrl } from "@/app/routers/router-url";
+import { RootOnly } from "@/shared/auth/roles";
 
 /**
  * 관리자 메뉴와 역할별 노출 규칙. 사이드바(LNB)와 커맨드 팔레트가 같이 쓴다 —
@@ -64,6 +66,12 @@ export const menuItems: MenuItem[] = [
     label: "영상 라벨링",
     path: RouterUrl.영상.목록,
     allowedRoles: VideoLabelingRoles,
+  },
+  {
+    icon: Megaphone,
+    label: "제휴 광고",
+    path: RouterUrl.제휴광고,
+    allowedRoles: RootOnly,
   },
 ];
 
