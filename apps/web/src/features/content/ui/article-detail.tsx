@@ -1,3 +1,4 @@
+import { AdSlot } from "@/features/ads";
 import { LikeButton } from "@/features/reaction";
 
 import type { ContentItem } from "@/shared/lib/types/content";
@@ -84,6 +85,14 @@ export const ArticleDetail = ({
     <div className="flex justify-center pt-2">
       <LikeButton boardId={Number(item.id)} />
     </div>
+
+    {/*
+      제휴 광고는 좋아요 **뒤**, 이전/다음 글 **앞**에 둔다. 좋아요보다 앞에
+      끼우면 참여 동작의 전환을 가로채고, 이전/다음 글보다 뒤로 내리면 글을 다
+      읽은 사람이 이미 다음 글로 떠난 뒤가 된다. 게재 시작 전이거나 등록된
+      상품이 없으면 AdSlot 이 아무것도 그리지 않는다.
+    */}
+    <AdSlot placement="article-end" boardId={Number(item.id)} />
 
     <ArticleNeighbours newer={newer} older={older} />
   </article>
