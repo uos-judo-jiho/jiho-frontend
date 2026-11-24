@@ -12,7 +12,8 @@ import { SITE } from "@/shared/config/site";
  */
 export const HomeHero = () => (
   <section className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-inverse">
-    <picture className="absolute inset-0 -z-10">
+    {/* 스크롤하면 사진이 본문보다 천천히 밀리며 어두워진다 (CSS 만, utilities.css) */}
+    <picture className="jd-hero-photo absolute inset-0 -z-10">
       <source srcSet={heroWebp} type="image/webp" />
       <img
         src={heroJpg}
@@ -23,6 +24,10 @@ export const HomeHero = () => (
       />
     </picture>
     <div aria-hidden className="jd-scrim-full absolute inset-0 -z-10" />
+    <div
+      aria-hidden
+      className="jd-hero-shade absolute inset-0 -z-10 bg-inverse opacity-0"
+    />
 
     <div className="mx-auto w-full max-w-page px-gutter pt-header pb-16 sm:pb-24">
       <p className="jd-eyebrow text-on-inverse-muted">{SITE.since}</p>

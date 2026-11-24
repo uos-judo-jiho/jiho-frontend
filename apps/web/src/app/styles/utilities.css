@@ -57,6 +57,32 @@
       );
   }
 
+  /* 히어로 — 스크롤에 맞춰 사진은 천천히 밀리고 막은 짙어진다.
+     JS 없이 transform · opacity 만 쓰고, 처음 위치는 지금과 같아 LCP 에 영향이 없다.
+     지원하지 않는 브라우저나 동작 줄이기에서는 그대로 멈춰 있다.
+     히어로가 overflow: hidden 이라 view() 는 히어로를 스크롤러로 잡으므로 scroll(root) 를 쓴다.
+     animation 축약형은 쓰지 않는다 — 빌드(Lightning CSS)가 timeline 까지 축약형에 합치는데
+     브라우저는 그 문법을 몰라 선언 전체를 버린다. */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .jd-hero-photo {
+        animation-name: jd-hero-drift;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 100svh;
+      }
+
+      .jd-hero-shade {
+        animation-name: jd-hero-shade;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: scroll(root block);
+        animation-range: 0 100svh;
+      }
+    }
+  }
+
   /* 카드 전체를 링크 히트영역으로 만드는 패턴 —
      <a> 로 감싸지 않아도 되므로 카드 안에 다른 링크를 둘 수 있다. */
   .jd-stretch-link::after {
@@ -165,5 +191,17 @@
     width: 0;
     height: 0;
     background: transparent;
+  }
+}
+
+@keyframes jd-hero-drift {
+  to {
+    transform: translateY(18%);
+  }
+}
+
+@keyframes jd-hero-shade {
+  to {
+    opacity: 0.6;
   }
 }
