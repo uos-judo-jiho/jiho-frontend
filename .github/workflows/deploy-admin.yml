@@ -7,6 +7,8 @@ on:
       - "apps/admin/**"
       - "packages/api/**"
       - "packages/auth/**"
+      # admin 이 쓰는 디자인 시스템 (인터랙션 복사본 포함)
+      - "packages/jds/**"
       - "package.json"
       - ".github/workflows/deploy-admin.yml"
   workflow_dispatch:

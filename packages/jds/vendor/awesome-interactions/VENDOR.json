@@ -1,8 +1,8 @@
 {
   "package": "@awesome/interactions",
   "source": "awesome-landing",
-  "commit": "af752485cf1719c8c7fa38d8bcfa62cc1bddb2bd",
+  "commit": "a9b22c62c5e77b6175259784966924f0b581e574",
   "dirty": false,
-  "builtAt": "2026-11-24T13:55:42.998Z",
+  "builtAt": "2026-11-24T14:03:07.610Z",
   "refresh": "in awesome-landing: pnpm vendor:interactions <this folder>"
 }
