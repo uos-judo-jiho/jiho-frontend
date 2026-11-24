@@ -33,6 +33,20 @@ describe("buildAdminCommands", () => {
     );
   });
 
+  it("제휴 광고는 root 만 찾는다", () => {
+    expect(ids("root")).toContain("/ads");
+
+    for (const role of [
+      "president",
+      "manager",
+      "staff",
+      "general",
+      "graduate",
+    ]) {
+      expect(ids(role)).not.toContain("/ads");
+    }
+  });
+
   it("일반 회원은 메뉴와 같은 범위만 — 공지 · 수상 · 회원 명령이 없다", () => {
     const list = ids("general");
     expect(list).toContain("/training/write");

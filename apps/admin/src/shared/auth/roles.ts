@@ -2,6 +2,8 @@ import { redirect } from "@tanstack/react-router";
 
 import type { Me } from "./ensure-me";
 
+/** 제휴 광고는 수수료 수익과 표시 의무가 걸린 데이터라 root 만 다룬다 */
+export const RootOnly = ["root"];
 /** 임원 이상: 관리자, 회장, 운영진 */
 export const ManagerAndAbove = ["root", "president", "manager"];
 export const StaffAndAbove = [...ManagerAndAbove, "staff"];
