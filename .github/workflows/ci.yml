@@ -44,7 +44,7 @@ jobs:
         run: |
           set -euo pipefail
           if git diff --name-only "origin/${BASE_REF}...HEAD" \
-            | grep -qE '^(apps/web/|packages/api/|pnpm-workspace\.yaml$|package\.json$|\.github/workflows/(deploy-web|ci)\.yml$)'; then
+            | grep -qE '^(apps/web/|packages/api/|packages/jds/|pnpm-workspace\.yaml$|package\.json$|\.github/workflows/(deploy-web|ci)\.yml$)'; then
             echo "web=true" >> "$GITHUB_OUTPUT"
             echo "::notice::apps/web 도커 빌드를 검증합니다."
           else

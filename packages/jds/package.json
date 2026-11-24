@@ -4,6 +4,7 @@
   "private": true,
   "files": [
     "dist",
+    "src/style.css",
     "vendor"
   ],
   "type": "module",
@@ -25,6 +26,7 @@
       "types": "./dist/hook.d.ts",
       "default": "./dist/hook.js"
     },
+    "./style.css": "./src/style.css",
     "./interactions": {
       "types": "./vendor/awesome-interactions/index.d.ts",
       "default": "./vendor/awesome-interactions/index.js"

@@ -58,6 +58,9 @@ catalog:
   "motion": "^14.14.0"
   "@vanilla-extract/dynamic": "^2.1.5"
 
+  # 한글 검색 (초성 · 입력 중인 글자)
+  "es-hangul": "^2.4.0"
+
   # markdown
   "react-markdown": "^10.1.0"
   "remark-breaks": "^4.0.0"

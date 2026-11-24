@@ -6,6 +6,8 @@
 
 - `pnpm -C packages/jds build` — tsdown 으로 `dist/` (ESM + `.d.ts`) 생성
 - import 는 `@packages/jds` / `@packages/jds/ui` / `@packages/jds/hook`
+- 기본 스타일은 `@packages/jds/style.css` — 앱의 Tailwind CSS 에서 `layer(components)` 로 가져와야
+  `className` 으로 넘긴 유틸리티가 이긴다
 
 ## 인터랙션 (`@packages/jds/interactions`)
 

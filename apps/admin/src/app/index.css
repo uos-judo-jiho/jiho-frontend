@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* 인터랙션(@packages/jds/interactions)의 구조 스타일 — components 레이어에 넣어
+   className 으로 넘긴 Tailwind 유틸리티가 언제나 이기게 한다 */
+@import "@packages/jds/interactions/style.css" layer(components);
+@import "@packages/jds/style.css" layer(components);
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -49,6 +54,9 @@
   --theme-bg: #f8f8f8;
   --theme-text: #121212;
   --theme-accent: #ffb746;
+  /* 브랜드(금색) 글자색 — accent(#ffb746)는 흰 바탕 글자로 대비가 모자라 한 단계 진하게.
+     흰 바탕 5.76:1, neutral-100 바탕 5.28:1 (WCAG AA 4.5:1). 검색 하이라이트 등 */
+  --theme-highlight: oklch(52% 0.13 55);
   --theme-black: #0f0c0c;
   --theme-grey: #808080;
   --theme-light-grey: #eeeeee;
@@ -166,6 +174,7 @@
   --color-theme-bg: var(--theme-bg);
   --color-theme-text: var(--theme-text);
   --color-theme-accent: var(--theme-accent);
+  --color-theme-highlight: var(--theme-highlight);
   --color-theme-black: var(--theme-black);
   --color-theme-grey: var(--theme-grey);
   --color-theme-light-grey: var(--theme-light-grey);

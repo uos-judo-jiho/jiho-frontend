@@ -18,3 +18,5 @@ export declare const highlight: string;
 export declare const label: string;
 export declare const hint: string;
 export declare const empty: string;
+/** 검색어가 맞은 부분 — 기본은 굵게만 (색은 markClassName 이나 --palette-mark 로, 우선순위 0) */
+export declare const mark: string;

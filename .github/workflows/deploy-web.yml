@@ -6,6 +6,8 @@ on:
     paths:
       - "apps/web/**"
       - "packages/api/**"
+      # web 이 쓰는 디자인 시스템 (인터랙션 복사본 포함)
+      - "packages/jds/**"
       - ".github/workflows/deploy-web.yml"
   workflow_dispatch:
 

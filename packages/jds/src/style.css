@@ -1,0 +1,37 @@
+/**
+ * 디자인 시스템 컴포넌트의 기본 스타일.
+ *
+ * 앱에서 `layer(components)` 로 가져온다 — 그래야 className 으로 넘긴 Tailwind
+ * 유틸리티가 언제나 이긴다.
+ */
+
+/* 색은 앱의 선 토큰을 따른다 — web 은 --jd-line, admin 은 --border, 둘 다 없으면
+   글자색. preflight 가 <hr> 에 주는 윗선은 지우고 배경색으로 그린다 */
+.jds-border {
+  flex-shrink: 0;
+  width: 100%;
+  height: var(--jds-border-size);
+  margin: 0;
+  border: 0;
+  background-color: var(--jd-line, var(--border, currentcolor));
+}
+
+/* flex 행 안에서 stretch 로 높이를 채운다 */
+.jds-border[aria-orientation="vertical"] {
+  align-self: stretch;
+  width: var(--jds-border-size);
+  height: auto;
+}
+
+/* 크기는 Tailwind 의 --spacing 단위를 곱한다 */
+.jds-spacing {
+  flex-shrink: 0;
+  height: calc(var(--spacing, 0.25rem) * var(--jds-spacing-size));
+}
+
+/* inline-block — flex 밖(글자 사이 등)에서도 줄바꿈 없이 가로로 벌어진다 */
+.jds-spacing[data-direction="horizontal"] {
+  display: inline-block;
+  width: calc(var(--spacing, 0.25rem) * var(--jds-spacing-size));
+  height: auto;
+}
