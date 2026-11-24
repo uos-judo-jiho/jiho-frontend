@@ -54,6 +54,10 @@ catalog:
   "overlay-kit": "^1.9.0"
   "sonner": "^2.0.8"
 
+  # interactions (packages/jds/vendor/awesome-interactions 가 쓰는 런타임)
+  "motion": "^14.14.0"
+  "@vanilla-extract/dynamic": "^2.1.5"
+
   # markdown
   "react-markdown": "^10.1.0"
   "remark-breaks": "^4.0.0"

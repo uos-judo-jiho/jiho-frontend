@@ -1,3 +1,4 @@
+import { MotionProvider } from "@packages/jds/interactions/motion";
 import type { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
@@ -163,9 +164,12 @@ gtag("config", "G-TLK4ZTXFH0");`,
  */
 function RootComponent() {
   return (
-    <OverlayProvider>
-      <Outlet />
-    </OverlayProvider>
+    // 인터랙션 애니메이션 기능은 첫 화면을 그린 뒤 따로 받는다 (LazyMotion)
+    <MotionProvider>
+      <OverlayProvider>
+        <Outlet />
+      </OverlayProvider>
+    </MotionProvider>
   );
 }
 

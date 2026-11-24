@@ -31,6 +31,7 @@
   "dependencies": {
     "@99mini/logger-client": "^0.1.2",
     "@packages/api": "workspace:*",
+    "@packages/jds": "workspace:*",
     "@radix-ui/react-slot": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@tanstack/react-query": "catalog:",

@@ -5,6 +5,7 @@ RUN corepack enable
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 COPY apps/web/package.json apps/web/package.json
 COPY packages/api/package.json packages/api/package.json
+COPY packages/jds/package.json packages/jds/package.json
 RUN pnpm install --frozen-lockfile
 
 # Build stage - 애플리케이션 빌드
@@ -28,6 +29,7 @@ ENV VITE_VOYAGE_APP=$VITE_VOYAGE_APP
 COPY --from=deps /repo/node_modules ./node_modules
 COPY --from=deps /repo/apps/web/node_modules ./apps/web/node_modules
 COPY --from=deps /repo/packages/api/node_modules ./packages/api/node_modules
+COPY --from=deps /repo/packages/jds/node_modules ./packages/jds/node_modules
 COPY . .
 
 # Build the application with environment variables

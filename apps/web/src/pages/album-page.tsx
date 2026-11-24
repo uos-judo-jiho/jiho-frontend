@@ -1,14 +1,12 @@
 import { v2Api } from "@packages/api";
 import type { v2ApiModel } from "@packages/api/model";
+import { MorphModal } from "@packages/jds/interactions";
 import { useState } from "react";
 
 import { Image } from "@/shared/ui/image";
-import { Lightbox } from "@/shared/ui/lightbox";
 import { PageHeader } from "@/shared/ui/page-header";
 import { SectionHeading } from "@/shared/ui/section-heading";
 import { PageShell } from "@/widgets/page-shell";
-
-type LightboxState = { src: string; alt: string } | null;
 
 /** 앨범이 한 번에 보여주는 연도 수 */
 export const ALBUM_YEAR_LIMIT = 20;
@@ -32,8 +30,6 @@ export const AlbumPage = () => {
     { query: { select: (response) => response.data } },
   );
 
-  const [lightbox, setLightbox] = useState<LightboxState>(null);
-
   const total = album.items.reduce((sum, year) => sum + year.imageCount, 0);
 
   return (
@@ -53,25 +49,18 @@ export const AlbumPage = () => {
         />
 
         {album.items.map((year) => (
-          <AlbumYear key={year.year} year={year} onOpen={setLightbox} />
+          <AlbumYear key={year.year} year={year} />
         ))}
       </div>
-
-      <Lightbox
-        src={lightbox?.src ?? null}
-        alt={lightbox?.alt}
-        onClose={() => setLightbox(null)}
-      />
     </PageShell>
   );
 };
 
 type AlbumYearProps = {
   year: v2ApiModel.GalleryYear;
-  onOpen: (lightbox: LightboxState) => void;
 };
 
-const AlbumYear = ({ year, onOpen }: AlbumYearProps) => {
+const AlbumYear = ({ year }: AlbumYearProps) => {
   const [expanded, setExpanded] = useState(false);
 
   // 펼치기 전에는 요청하지 않는다. 서버 렌더에서도 항상 접힌 상태이므로
@@ -108,20 +97,34 @@ const AlbumYear = ({ year, onOpen }: AlbumYearProps) => {
           const alt = `${year.year}년 지호 사진 ${index + 1}`;
           return (
             <li key={`${image.originSrc}-${index}`}>
-              <button
-                type="button"
-                onClick={() => onOpen({ src: image.originSrc, alt })}
-                className="group block w-full overflow-hidden rounded-sm"
+              {/* 누른 사진이 그 자리에서 화면 전체로 커진다 (layoutId 모핑).
+                  포털·스크롤 잠금·포커스 가두기·Esc 는 MorphModal 이 맡는다 */}
+              <MorphModal
+                label={alt}
+                closeLabel="닫기"
+                className="group overflow-hidden rounded-sm"
+                panelClassName="w-auto max-w-[min(92vw,1200px)] overflow-hidden rounded-sm"
+                backdropClassName="bg-inverse/85"
+                closeClassName="rounded-full bg-inverse/70 px-4 py-2 text-caption font-medium text-on-inverse hover:bg-inverse"
+                preview={
+                  <>
+                    <Image
+                      src={image.originSrc}
+                      lowResSrc={image.smallSrc}
+                      alt={alt}
+                      aspect="square"
+                      imageClassName="transition-transform duration-500 ease-brand group-hover:scale-[1.05]"
+                    />
+                    <span className="sr-only">크게 보기</span>
+                  </>
+                }
               >
-                <Image
+                <img
                   src={image.originSrc}
-                  lowResSrc={image.smallSrc}
                   alt={alt}
-                  aspect="square"
-                  imageClassName="transition-transform duration-500 ease-brand group-hover:scale-[1.05]"
+                  className="block max-h-[88svh] w-auto max-w-full object-contain"
                 />
-                <span className="sr-only">크게 보기</span>
-              </button>
+              </MorphModal>
             </li>
           );
         })}
