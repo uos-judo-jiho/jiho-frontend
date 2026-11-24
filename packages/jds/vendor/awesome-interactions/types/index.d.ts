@@ -1,6 +1,6 @@
 export { Accordion, type AccordionItem } from "./accordion/accordion.tsx";
 export { AnalogClock } from "./analog-clock/analog-clock.tsx";
-export { CommandPalette, type Command } from "./command-palette/command-palette.tsx";
+export { CommandPalette, defaultMatch, type Command, type CommandMatch, type CommandMatcher, } from "./command-palette/command-palette.tsx";
 export { CompareSlider } from "./compare-slider/compare-slider.tsx";
 export { CountUp } from "./count-up/count-up.tsx";
 export { CursorFollower } from "./cursor-follower/cursor-follower.tsx";

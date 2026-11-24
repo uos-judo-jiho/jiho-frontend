@@ -8,6 +8,7 @@ import { StaffAndAbove } from "@/components/admin/Main/menu";
 import { cn } from "@/shared/lib/utils";
 
 import { buildAdminCommands } from "./build-commands";
+import { hangulMatch } from "./hangul-match";
 
 const isMac =
   typeof navigator !== "undefined" &&
@@ -49,6 +50,9 @@ export const AdminCommandPalette = ({
       label="빠른 이동"
       placeholder="페이지, 글 작성, 회원 이름으로 찾기"
       emptyLabel="찾는 항목이 없습니다"
+      // 한글 검색: 입력 중인 글자("회ㅇ") · 초성("ㅎㅇ")으로도 찾고, 맞은 곳을 브랜드 색으로 표시한다
+      match={hangulMatch}
+      markClassName="text-theme-highlight"
       // 패키지 버튼에 사이드바 항목 모양을 입힌다 (패키지 CSS 는 레이어 안이라 유틸리티가 이긴다)
       className={cn(
         "[&>button]:w-full [&>button]:rounded-lg [&>button]:border-0 [&>button]:bg-transparent [&>button]:p-0",
