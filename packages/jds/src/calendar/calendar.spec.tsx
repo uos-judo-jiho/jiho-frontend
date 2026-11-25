@@ -11,10 +11,16 @@ const renderCalendar = (
   props: Partial<Parameters<typeof Calendar>[0]> = {},
 ) => {
   const onSelect = vi.fn();
-  render(
+  const view = render(
     <Calendar value="2026-11-25" onSelect={onSelect} now={NOW} {...props} />,
   );
-  return { onSelect };
+
+  const rerenderWith = (value: string) =>
+    view.rerender(
+      <Calendar value={value} onSelect={onSelect} now={NOW} {...props} />,
+    );
+
+  return { onSelect, rerenderWith };
 };
 
 const dayButton = (label: string) =>
@@ -56,6 +62,44 @@ describe("Calendar", () => {
         .closest('[role="gridcell"]')
         ?.getAttribute("aria-selected"),
     ).toBe("false");
+  });
+
+  describe("바깥에서 값이 바뀌면", () => {
+    it("활성 칸과 보이는 달이 그 값으로 따라간다 (폼 초기화·수정 진입)", () => {
+      const { rerenderWith } = renderCalendar();
+
+      rerenderWith("2027-03-08");
+
+      expect(screen.getByRole("grid", { name: "2027년 3월" })).toBeTruthy();
+
+      const tabbable = screen
+        .getAllByRole("button")
+        .filter((button) => button.getAttribute("tabindex") === "0");
+
+      expect(tabbable).toHaveLength(1);
+      expect(tabbable[0]?.getAttribute("aria-label")).toBe("2027년 3월 8일");
+    });
+
+    it("초점은 빼앗지 않는다 — 다른 입력을 쓰는 중일 수 있다", () => {
+      const { rerenderWith } = renderCalendar();
+
+      const outside = document.createElement("input");
+      document.body.append(outside);
+      outside.focus();
+
+      rerenderWith("2027-03-08");
+
+      expect(document.activeElement).toBe(outside);
+      outside.remove();
+    });
+
+    it("빈 값으로 지워지면 보던 달을 그대로 둔다", () => {
+      const { rerenderWith } = renderCalendar();
+
+      rerenderWith("");
+
+      expect(screen.getByRole("grid", { name: "2026년 11월" })).toBeTruthy();
+    });
   });
 
   it("날짜를 누르면 YYYY-MM-DD 로 알려준다", async () => {

@@ -70,15 +70,22 @@ export const Calendar = ({
   /** 방향키·달 이동으로 활성 칸이 바뀐 뒤에만 초점을 옮긴다 */
   const shouldFocusRef = useRef(autoFocus);
 
+  /** 바깥 값이 바뀐 것을 알아보기 위해 들고 있는 직전 값 */
+  const [syncedValue, setSyncedValue] = useState(value);
+
   // 바깥에서 값이 바뀌면(폼 초기화 등) 활성 칸도 따라간다. 초점은 건드리지 않는다 —
   // 입력 중에 달력이 초점을 빼앗으면 타이핑이 끊긴다.
   //
-  // 의존성에 `selected` 대신 `value` 를 두고 안에서 다시 파싱한다. `selected` 는
-  // 매 렌더마다 새 객체라 의존성으로 쓰면 값이 그대로여도 효과가 다시 돈다.
-  useEffect(() => {
+  // effect 가 아니라 **렌더 중에** 맞춘다. effect 로 하면 한 번 그린 뒤 setState 가
+  // 또 한 번의 렌더를 부르는데(화면에는 잠깐 옛 달이 비친다), 이렇게 두면 React 가
+  // 커밋하기 전에 다시 렌더해서 중간 상태가 화면에 나가지 않는다.
+  // (react.dev 의 "prop 이 바뀔 때 state 조정" 패턴)
+  if (value !== syncedValue) {
+    setSyncedValue(value);
+
     const next = parseDate(value);
     if (next) setActive(next);
-  }, [value]);
+  }
 
   useEffect(() => {
     if (!shouldFocusRef.current) return;
