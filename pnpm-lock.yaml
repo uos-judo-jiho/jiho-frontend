@@ -48,9 +48,6 @@ catalogs:
     '@types/react-dom':
       specifier: ^19.3.0
       version: 19.3.0
-    '@vanilla-extract/dynamic':
-      specifier: ^2.1.5
-      version: 2.1.5
     '@vitejs/plugin-react':
       specifier: ^6.1.1
       version: 6.1.1
@@ -623,9 +620,9 @@ importers:
 
   packages/jds:
     dependencies:
-      '@vanilla-extract/dynamic':
-        specifier: 'catalog:'
-        version: 2.1.5
+      '@99mini/interactions':
+        specifier: ^0.1.0
+        version: 0.1.0(motion@14.14.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       motion:
         specifier: 'catalog:'
         version: 14.14.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -659,6 +656,13 @@ importers:
         version: 5.0.2(@types/node@26.6.3)(@vitest/ui@5.0.2)(happy-dom@20.14.5)(jsdom@29.0.0)(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))
 
 packages:
+
+  '@99mini/interactions@0.1.0':
+    resolution: {integrity: sha512-/QIbTSSl5KCRWTa3NcDIcK66S2wUJ6iWPe4DHCZiD90tDB+CTWY1dzR0jkv9YvBYy5QsOfL1JwQc7vA3zt484A==}
+    peerDependencies:
+      motion: ^12.0.0 || ^13.0.0 || ^14.0.0
+      react: ^18.3.0 || ^19.0.0
+      react-dom: ^18.3.0 || ^19.0.0
 
   '@99mini/logger-client@0.1.2':
     resolution: {integrity: sha512-Leqt8LkWpwS/Iy6jj1Nc8dOkspBDiPnvdLVPkWhhnyVylHZM80mxbYpgEdNNJOXWY+BPexMLpmBZJXzIdpW9pg==}
@@ -7129,6 +7133,13 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
 snapshots:
+
+  '@99mini/interactions@0.1.0(motion@14.14.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)':
+    dependencies:
+      '@vanilla-extract/dynamic': 2.1.5
+      motion: 14.14.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      react: 19.3.0
+      react-dom: 19.3.0(react@19.3.0)
 
   '@99mini/logger-client@0.1.2(vite@8.3.1(@types/node@26.6.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.15)(yaml@2.9.0))':
     optionalDependencies:
