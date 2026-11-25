@@ -50,8 +50,9 @@
     "type-check": "pnpm type-check:web && pnpm type-check:admin",
     "type-check:web": "pnpm -C apps/web type-check",
     "type-check:admin": "pnpm -C apps/admin type-check",
-    "test": "pnpm test:admin",
+    "test": "pnpm test:admin && pnpm test:jds",
     "test:admin": "pnpm -C apps/admin test -- --run",
+    "test:jds": "pnpm -C packages/jds test -- --run",
     "release-note": "node scripts/release-note.mjs",
     "lint:pr-title": "node scripts/lint-pr-title.mjs"
   },

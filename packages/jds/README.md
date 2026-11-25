@@ -1,13 +1,46 @@
 # Uos Jiho Judo Design System (JDS)
 
-아직 비어 있는 스캐폴딩이다. `src/ui.ts` / `src/hook.ts` 배럴과 tsdown 빌드
-설정만 잡혀 있고, 실제 컴포넌트·훅은 apps/web 의 `shared/ui` 와 apps/admin 의
-`components/ui` 에서 옮겨오면서 채운다.
+apps/web 의 `shared/ui` 와 apps/admin 의 `components/ui` 를 여기로 옮겨 모으는
+중이다. 지금 들어온 것은 `Border` · `Spacing` · `Calendar` · `DatePicker`.
 
 - `pnpm -C packages/jds build` — tsdown 으로 `dist/` (ESM + `.d.ts`) 생성
+- `pnpm -C packages/jds test` — vitest (날짜 계산은 순수 함수, 달력은 happy-dom)
 - import 는 `@packages/jds` / `@packages/jds/ui` / `@packages/jds/hook`
 - 기본 스타일은 `@packages/jds/style.css` — 앱의 Tailwind CSS 에서 `layer(components)` 로 가져와야
   `className` 으로 넘긴 유틸리티가 이긴다
+
+## 색은 앱 토큰을 따른다
+
+jds 안에는 색을 박아 두지 않는다. 각 컴포넌트가 `var(--jd-line, var(--border, #e5e5e5))`
+처럼 **web 의 `--jd-*` → admin 의 shadcn 변수 → 기본값** 순으로 떨어지게 써서,
+같은 컴포넌트를 두 앱에 넣어도 그 앱의 팔레트를 입는다.
+
+## 달력 (`Calendar` · `DatePicker`)
+
+native `type="date"` 는 브라우저마다 모양과 달력 UI 가 전혀 다르고 운영 화면의
+다른 입력과 선·높이가 맞지 않아서 대체한다. **값의 모양은 native 와 같게** 두어
+(`YYYY-MM-DD`, `withTime` 이면 `YYYY-MM-DDTHH:mm`) 바꿔 끼우는 비용을 없앴다 —
+zod 스키마나 서버로 보내는 값은 그대로다.
+
+```tsx
+import { DatePicker } from "@packages/jds/ui";
+
+<DatePicker value={value} onChange={setValue} min="2026-12-01" />
+<DatePicker withTime value={value} onChange={setValue} />
+```
+
+- 달력만 따로 쓰려면 `Calendar` — 팝오버 없이 그리드만 그린다.
+- 키보드: 방향키로 이동, `Home`/`End` 주의 양 끝, `PageUp`/`PageDown` 달
+  (`Shift` 와 함께 누르면 해), `Enter`/`Space` 선택, `Esc` 닫기.
+- **방향키로는 선택이 바뀌지 않는다** — 활성 칸만 움직이고 `Enter` 를 눌러야
+  값이 바뀐다. 키보드로 달을 훑어보다 실수로 값이 바뀌는 일을 막는다.
+- WAI-ARIA grid 패턴이라 활성 칸 하나만 탭 순서에 있다. 달력 전체가 탭 한 번으로
+  들어오고 한 번으로 나간다.
+- 한 판은 언제나 6주(42칸)다. 달마다 칸 수가 바뀌면 팝오버 높이가 들썩이고
+  키보드 이동 중에 초점이 화면 밖으로 튄다.
+- 날짜 계산은 `src/calendar/date.ts` 의 순수 함수들이 맡는다. `Date` 를 UTC 로
+  파싱하지 않도록 연·월·일을 숫자로 들고 다닌다 — `new Date("2026-11-25")` 는
+  UTC 자정이라 KST 에서 하루 전으로 보이는, 가장 흔한 날짜 버그를 피한다.
 
 ## 인터랙션 (`@packages/jds/interactions`)
 
