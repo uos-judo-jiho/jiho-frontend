@@ -412,9 +412,10 @@
   }
 
   /* Markdown Editor Styles */
-  .markdown-editor-styles .w-md-editor-text {
-    height: 100%;
-  }
+  /* .w-md-editor-text 에 height 를 주지 않는다. 라이브러리는 이 래퍼를
+     min-height:100% 로 두어 내용에 따라 자라게 하고, 입력 textarea 가
+     height:100% 로 그 위를 덮는다. 여기서 height 를 고정하면 래퍼가 에디터
+     높이에 갇혀 글이 길어질 때 아래쪽을 눌러도 캐럿이 잡히지 않는다 */
   .markdown-editor-styles .w-md-editor-text-pre .token.title {
     color: #0969da;
   }

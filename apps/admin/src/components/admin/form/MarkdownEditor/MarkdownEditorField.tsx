@@ -4,7 +4,6 @@ import { InputContainer, StyledLabel } from "../StyledComponent/FormContainer";
 type MarkdownEditorFieldProps = {
   value: string;
   onChange: (value: string) => void;
-  onImageUpload: (file: File) => Promise<string>;
   type: "news" | "training" | "notice";
   disabled?: boolean;
 };
@@ -12,7 +11,6 @@ type MarkdownEditorFieldProps = {
 function MarkdownEditorField({
   value,
   onChange,
-  onImageUpload,
   type,
   disabled = false,
 }: MarkdownEditorFieldProps) {
@@ -67,7 +65,6 @@ function MarkdownEditorField({
         value={value}
         onChange={onChange}
         disabled={disabled}
-        onImageUpload={onImageUpload}
         placeholder={getPlaceholder()}
       />
     </InputContainer>
