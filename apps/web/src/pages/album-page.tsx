@@ -1,6 +1,6 @@
 import { v2Api } from "@packages/api";
 import type { v2ApiModel } from "@packages/api/model";
-import { MorphModal } from "@packages/jds/interactions";
+import { PhotoViewer, type PhotoViewerItem } from "@packages/jds/interactions";
 import { useState } from "react";
 
 import { Image } from "@/shared/ui/image";
@@ -56,6 +56,27 @@ export const AlbumPage = () => {
   );
 };
 
+const VIEWER_LABELS = {
+  close: "닫기",
+  previous: "이전 사진",
+  next: "다음 사진",
+  position: (position: number, total: number) =>
+    `${total}장 중 ${position}번째`,
+};
+
+/**
+ * 미리보기 뒤에 나머지를 이어 붙인다. 미리보기와 전체 목록은 서버가 주는 순서가 서로 달라서,
+ * 통째로 바꾸면 넘겨 보던 중에 사진 차례가 뒤섞인다.
+ */
+const mergeImages = (
+  preview: v2ApiModel.GalleryYear["images"],
+  all: v2ApiModel.GalleryYear["images"] | undefined,
+) => {
+  if (!all) return preview;
+  const shown = new Set(preview.map((image) => image.originSrc));
+  return [...preview, ...all.filter((image) => !shown.has(image.originSrc))];
+};
+
 type AlbumYearProps = {
   year: v2ApiModel.GalleryYear;
 };
@@ -76,10 +97,31 @@ const AlbumYear = ({ year }: AlbumYearProps) => {
     },
   );
 
-  const images = allImages ?? year.images;
+  const images = mergeImages(year.images, allImages);
   const rest = year.imageCount - images.length;
   // 펼친 뒤에도 남는 장수(한 해 200장 초과)는 더 받을 방법이 없으므로 버튼을 접는다
   const canExpand = !expanded && rest > 0;
+
+  const photos = images.map((image, index): PhotoViewerItem => {
+    const alt = `${year.year}년 지호 사진 ${index + 1}`;
+    return {
+      id: image.originSrc,
+      label: alt,
+      thumbnail: (
+        <>
+          <Image
+            src={image.originSrc}
+            lowResSrc={image.smallSrc}
+            alt={alt}
+            aspect="square"
+            imageClassName="transition-transform duration-500 ease-brand group-hover:scale-[1.05]"
+          />
+          <span className="sr-only">크게 보기</span>
+        </>
+      ),
+      content: <img src={image.originSrc} alt={alt} />,
+    };
+  });
 
   return (
     <section className="flex flex-col gap-6">
@@ -92,43 +134,19 @@ const AlbumYear = ({ year }: AlbumYearProps) => {
         }
       />
 
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4">
-        {images.map((image, index) => {
-          const alt = `${year.year}년 지호 사진 ${index + 1}`;
-          return (
-            <li key={`${image.originSrc}-${index}`}>
-              {/* 누른 사진이 그 자리에서 화면 전체로 커진다 (layoutId 모핑).
-                  포털·스크롤 잠금·포커스 가두기·Esc 는 MorphModal 이 맡는다 */}
-              <MorphModal
-                label={alt}
-                closeLabel="닫기"
-                className="group overflow-hidden rounded-sm"
-                panelClassName="w-auto max-w-[min(92vw,1200px)] overflow-hidden rounded-sm"
-                backdropClassName="bg-inverse/85"
-                closeClassName="rounded-full bg-inverse/70 px-4 py-2 text-caption font-medium text-on-inverse hover:bg-inverse"
-                preview={
-                  <>
-                    <Image
-                      src={image.originSrc}
-                      lowResSrc={image.smallSrc}
-                      alt={alt}
-                      aspect="square"
-                      imageClassName="transition-transform duration-500 ease-brand group-hover:scale-[1.05]"
-                    />
-                    <span className="sr-only">크게 보기</span>
-                  </>
-                }
-              >
-                <img
-                  src={image.originSrc}
-                  alt={alt}
-                  className="block max-h-[88svh] w-auto max-w-full object-contain"
-                />
-              </MorphModal>
-            </li>
-          );
-        })}
-      </ul>
+      {/* 누른 사진이 그 자리에서 커지고, 닫지 않고 앞뒤로 넘긴다 (←/→ · 버튼 · 밀기).
+          접힌 해는 마지막 미리보기에 닿으면 나머지를 받아 이어서 넘긴다 */}
+      <PhotoViewer
+        items={photos}
+        total={Math.min(year.imageCount, YEAR_IMAGE_LIMIT)}
+        onReachEnd={() => setExpanded(true)}
+        labels={VIEWER_LABELS}
+        className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4"
+        triggerClassName="group overflow-hidden rounded-sm"
+        backdropClassName="bg-inverse/90"
+        controlClassName="border border-inverse-line bg-inverse/70 text-on-inverse hover:bg-inverse"
+        counterClassName="bg-inverse/70 text-caption text-on-inverse"
+      />
 
       {canExpand && (
         <div className="flex justify-center">

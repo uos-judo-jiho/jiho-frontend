@@ -8,6 +8,7 @@ export { MagneticButton } from "./magnetic-button/magnetic-button.tsx";
 export { LineDraw } from "./line-draw/line-draw.tsx";
 export { Marquee } from "./marquee/marquee.tsx";
 export { MorphModal } from "./morph-modal/morph-modal.tsx";
+export { PhotoViewer, type PhotoViewerItem, type PhotoViewerLabels, } from "./photo-viewer/photo-viewer.tsx";
 export { ReorderList, type ReorderMessages } from "./reorder-list/reorder-list.tsx";
 export { Parallax } from "./parallax/parallax.tsx";
 export { NumberTicker } from "./number-ticker/number-ticker.tsx";
