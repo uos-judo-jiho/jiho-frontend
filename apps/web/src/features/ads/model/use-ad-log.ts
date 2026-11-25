@@ -1,5 +1,6 @@
 import { v2Api } from "@packages/api";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
+import { useImpressionRef } from "react-simplikit";
 
 import type { AdLogEvent, AdLogPayload, AdLogTarget } from "./types";
 
@@ -85,53 +86,34 @@ const sendAdLog = (event: AdLogEvent, target: AdLogTarget) => {
  * 광고 노출 집계.
  *
  * 돌려주는 ref 를 광고 카드에 붙이면, 카드가 절반 이상 1초 넘게 보인 시점에
- * 노출 한 건을 보낸다. 한 번 보낸 뒤에는 관측을 끊으므로 같은 화면에서
- * 스크롤을 오르내려도 중복으로 세지 않는다.
+ * 노출 한 건을 보낸다.
+ *
+ * 관측은 `react-simplikit` 의 `useImpressionRef` 에 맡긴다 — 직접 쓰면
+ * IntersectionObserver 생성·정리, "1초를 채우기 전에 화면을 벗어나면 타이머
+ * 취소", SSR 에서 observer 를 만들지 않기를 모두 들고 있어야 하는데 그게 이
+ * 훅의 일이다.
+ *
+ * **한 번만 보내는 것은 우리 몫이다.** `onImpressionStart` 는 화면에 다시
+ * 들어오면 또 불리므로, 스크롤을 오르내릴 때 같은 노출이 여러 번 세어지지
+ * 않게 ref 로 한 번 보냈는지 기억한다.
  */
 export const useAdImpression = ({
   placement,
   productId,
   boardId,
 }: AdLogTarget) => {
-  const ref = useRef<HTMLAnchorElement>(null);
   const sent = useRef(false);
 
-  useEffect(() => {
-    const element = ref.current;
+  return useImpressionRef<HTMLAnchorElement>({
+    areaThreshold: IMPRESSION_RATIO,
+    timeThreshold: IMPRESSION_DWELL_MS,
+    onImpressionStart: () => {
+      if (sent.current) return;
 
-    if (!element || sent.current) return;
-
-    let timer: ReturnType<typeof setTimeout> | undefined;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            // 이미 기다리고 있으면 타이머를 다시 걸지 않는다
-            timer ??= setTimeout(() => {
-              sent.current = true;
-              observer.disconnect();
-              sendAdLog("ad_impression", { placement, productId, boardId });
-            }, IMPRESSION_DWELL_MS);
-          } else if (timer !== undefined) {
-            // 1초를 채우기 전에 화면에서 벗어났다 — 노출로 세지 않는다
-            clearTimeout(timer);
-            timer = undefined;
-          }
-        }
-      },
-      { threshold: IMPRESSION_RATIO },
-    );
-
-    observer.observe(element);
-
-    return () => {
-      if (timer !== undefined) clearTimeout(timer);
-      observer.disconnect();
-    };
-  }, [placement, productId, boardId]);
-
-  return ref;
+      sent.current = true;
+      sendAdLog("ad_impression", { placement, productId, boardId });
+    },
+  });
 };
 
 /** 광고 클릭 집계. 링크의 기본 동작(새 탭 열기)은 막지 않는다. */
