@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -78,6 +78,32 @@ describe("ParticipantSelect", () => {
 
     expect(onChange).toHaveBeenCalledWith(["신입생"]);
   });
+
+  // Safari 는 확정하는 Enter 를 조합이 끝난 뒤 keyCode 229 로 보낸다
+  it.each([
+    ["조합 중", { isComposing: true }],
+    ["Safari 의 확정", { keyCode: 229 }],
+  ])(
+    "한글 %s Enter 로는 추가되지 않고, 그다음 Enter 로 추가된다",
+    async (_, composing) => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+
+      render(<ParticipantSelect value={[]} onChange={onChange} />);
+
+      const combobox = screen.getByRole("combobox");
+      await user.type(combobox, "신입새");
+      // false = 기본 동작(폼 제출)이 막혔다
+      expect(fireEvent.keyDown(combobox, { key: "Enter", ...composing })).toBe(
+        false,
+      );
+      expect(onChange).not.toHaveBeenCalled();
+
+      await user.clear(combobox);
+      await user.type(combobox, "신입생{Enter}");
+      expect(onChange).toHaveBeenCalledExactlyOnceWith(["신입생"]);
+    },
+  );
 
   it("이미 추가된 부원은 다시 고를 수 없다", async () => {
     const user = userEvent.setup();
