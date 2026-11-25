@@ -35,3 +35,212 @@
   width: calc(var(--spacing, 0.25rem) * var(--jds-spacing-size));
   height: auto;
 }
+
+/* ---------------------------------------------------------------- 달력 */
+
+/* 색은 앱의 토큰을 먼저 보고(web `--jd-*`, admin shadcn `--*`) 없으면 기본값으로
+   떨어진다 — 두 앱 어디에 넣어도 그 앱의 팔레트를 따른다 */
+.jds-calendar {
+  --jds-calendar-line: var(--jd-line, var(--border, #e5e5e5));
+  --jds-calendar-muted: var(--jd-ink-subtle, var(--muted-foreground, #737373));
+  --jds-calendar-accent: var(--jd-accent-strong, var(--primary, #171717));
+  --jds-calendar-on-accent: var(
+    --jd-on-accent,
+    var(--primary-foreground, #fafafa)
+  );
+  --jds-calendar-hover: var(--jd-surface-subtle, var(--accent, #f5f5f5));
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  inline-size: 17.5rem;
+}
+
+.jds-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+.jds-calendar-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.jds-calendar-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  border: 1px solid var(--jds-calendar-line);
+  border-radius: 0.375rem;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.jds-calendar-nav:hover:not(:disabled) {
+  background-color: var(--jds-calendar-hover);
+}
+
+.jds-calendar-nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.jds-calendar-week {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.125rem;
+  text-align: center;
+}
+
+/* 요일 머리글 */
+.jds-calendar-week [role="columnheader"] {
+  padding-block: 0.25rem;
+  color: var(--jds-calendar-muted);
+  font-size: 0.75rem;
+}
+
+.jds-calendar-day {
+  inline-size: 100%;
+  aspect-ratio: 1;
+  border: 0;
+  border-radius: 0.375rem;
+  background: none;
+  color: inherit;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.jds-calendar-day:hover:not(:disabled) {
+  background-color: var(--jds-calendar-hover);
+}
+
+/* 앞뒤 달의 날짜 — 자리는 지키되 눈에 덜 걸리게 */
+.jds-calendar-day[data-outside] {
+  color: var(--jds-calendar-muted);
+  opacity: 0.55;
+}
+
+/* 오늘은 밑줄로 — 선택 색과 겹치지 않아 "오늘이면서 선택됨"도 같이 보인다 */
+.jds-calendar-day[data-today] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.jds-calendar-day[data-selected] {
+  background-color: var(--jds-calendar-accent);
+  color: var(--jds-calendar-on-accent);
+  font-weight: 600;
+}
+
+.jds-calendar-day:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ------------------------------------------------------------ 날짜 입력 */
+
+.jds-datepicker {
+  position: relative;
+}
+
+.jds-datepicker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  inline-size: 100%;
+  min-block-size: 2.25rem;
+  padding-inline: 0.75rem;
+  padding-block: 0.25rem;
+  border: 1px solid var(--jd-line, var(--input, #e5e5e5));
+  border-radius: 0.375rem;
+  background: none;
+  color: inherit;
+  font-size: 0.875rem;
+  text-align: start;
+  cursor: pointer;
+}
+
+.jds-datepicker-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.jds-datepicker-trigger[aria-invalid="true"] {
+  border-color: var(--jd-danger, var(--destructive, #dc2626));
+}
+
+/* 값이 없을 때는 placeholder 처럼 흐리게 */
+.jds-datepicker-trigger [data-placeholder] {
+  color: var(--jd-ink-subtle, var(--muted-foreground, #737373));
+}
+
+.jds-datepicker-icon {
+  flex-shrink: 0;
+  opacity: 0.6;
+  font-size: 0.875rem;
+}
+
+.jds-datepicker-popover {
+  position: absolute;
+  z-index: 50;
+  inset-block-start: calc(100% + 0.25rem);
+  inset-inline-start: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid var(--jd-line, var(--border, #e5e5e5));
+  border-radius: 0.5rem;
+  background-color: var(--jd-surface, var(--popover, #fff));
+  color: var(--jd-ink, var(--popover-foreground, inherit));
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+.jds-datepicker-time {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-block-start: 0.5rem;
+  border-block-start: 1px solid
+    var(--jds-calendar-line, var(--jd-line, var(--border, #e5e5e5)));
+}
+
+.jds-datepicker-time label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--jd-ink-subtle, var(--muted-foreground, #737373));
+}
+
+.jds-datepicker-time input {
+  padding-inline: 0.5rem;
+  padding-block: 0.25rem;
+  border: 1px solid var(--jd-line, var(--input, #e5e5e5));
+  border-radius: 0.375rem;
+  background: none;
+  color: var(--jd-ink, inherit);
+  font-size: 0.8125rem;
+}
+
+.jds-datepicker-done {
+  padding-inline: 0.625rem;
+  padding-block: 0.3125rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background-color: var(--jd-accent-strong, var(--primary, #171717));
+  color: var(--jd-on-accent, var(--primary-foreground, #fafafa));
+  font-size: 0.75rem;
+  cursor: pointer;
+}

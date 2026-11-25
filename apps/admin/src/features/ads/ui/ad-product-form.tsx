@@ -1,4 +1,5 @@
 import type { v2AdminModel } from "@packages/api/model";
+import { DatePicker } from "@packages/jds/ui";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -20,6 +21,12 @@ const CATEGORY_LABELS: Record<AdProduct["category"], string> = {
   recovery: "회복 용품",
   nutrition: "보충제·음료",
 };
+
+/**
+ * 서버가 거부하는 가장 이른 게재 시작일 (api 의 `AD_EARLIEST_START_AT`).
+ * 공지한 개정 시행일이라 이보다 이르게 시작하면 공지 없이 광고가 나간다.
+ */
+const AD_LAUNCH_DATE = "2026-12-01";
 
 /** 서버의 `AD_PLACEMENTS` 와 같은 값. */
 const PLACEMENT_LABELS: Record<AdProduct["placement"], string> = {
@@ -206,18 +213,22 @@ export const AdProductForm = ({ product, onDone }: AdProductFormProps) => {
           label="게재 시작 (선택)"
           hint="공지한 시행일(2026-12-01)보다 이르게는 지정할 수 없습니다. 비워도 그 날짜 전에는 노출되지 않습니다."
         >
-          <Input
-            type="datetime-local"
+          {/* min 으로 달력에서 그 이전 날짜를 아예 못 고르게 한다 — 서버도 같은
+              하한으로 거부하지만, 거부당하고 나서 알게 되는 것보다 낫다 */}
+          <DatePicker
+            withTime
+            min={AD_LAUNCH_DATE}
             value={form.startsAt}
-            onChange={(event) => set("startsAt", event.target.value)}
+            onChange={(value) => set("startsAt", value)}
           />
         </Field>
 
         <Field label="게재 종료 (선택)" hint="비우면 무기한입니다.">
-          <Input
-            type="datetime-local"
+          <DatePicker
+            withTime
+            min={form.startsAt.slice(0, 10) || AD_LAUNCH_DATE}
             value={form.endsAt}
-            onChange={(event) => set("endsAt", event.target.value)}
+            onChange={(value) => set("endsAt", value)}
           />
         </Field>
       </div>
