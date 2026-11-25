@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import useClickOutside from "@/shared/hooks/useClickOutside";
 import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
 import { cn } from "@/shared/lib/utils";
+import { isComposing } from "@/shared/lib/utils/is-composing";
 import { Loader2, Plus, Search, X } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import {
@@ -98,6 +99,12 @@ export const ParticipantSelect = ({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isComposing(event)) {
+      // 조합 중이어도 폼 제출은 막는다
+      if (event.key === "Enter") event.preventDefault();
+      return;
+    }
+
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
 

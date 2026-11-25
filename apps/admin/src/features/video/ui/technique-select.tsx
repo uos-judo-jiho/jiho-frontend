@@ -9,6 +9,7 @@ import {
 import { Check, ChevronDown, Search } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
+import { isComposing } from "@/shared/lib/utils/is-composing";
 import { TECHNIQUE_GROUPS } from "../techniques";
 
 interface Props {
@@ -79,6 +80,12 @@ export const TechniqueSelect = ({ value, onChange, invalid }: Props) => {
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (isComposing(event)) {
+      // 조합 중이어도 폼 제출은 막는다
+      if (event.key === "Enter") event.preventDefault();
+      return;
+    }
+
     if (event.key === "ArrowDown") {
       event.preventDefault();
       setIsOpen(true);

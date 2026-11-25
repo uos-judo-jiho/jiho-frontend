@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { isComposing } from "@/shared/lib/utils/is-composing";
 import { useState } from "react";
 import { useController } from "react-hook-form";
 import type { ArticleFormValues } from "../../lib/article-schema";
@@ -64,8 +65,9 @@ export const TagField = ({
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
+              // 조합 중이어도 폼 제출은 막는다
               event.preventDefault();
-              addTags();
+              if (!isComposing(event)) addTags();
             }
           }}
         />
