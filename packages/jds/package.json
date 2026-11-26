@@ -5,7 +5,7 @@
   "files": [
     "dist",
     "src/style.css",
-    "vendor"
+    "src/interactions.css"
   ],
   "type": "module",
   "main": "./dist/index.js",
@@ -28,14 +28,16 @@
     },
     "./style.css": "./src/style.css",
     "./interactions": {
-      "types": "./vendor/awesome-interactions/index.d.ts",
-      "default": "./vendor/awesome-interactions/index.js"
+      "development": "./src/interactions.ts",
+      "types": "./dist/interactions.d.ts",
+      "default": "./dist/interactions.js"
     },
     "./interactions/motion": {
-      "types": "./vendor/awesome-interactions/motion.d.ts",
-      "default": "./vendor/awesome-interactions/motion.js"
+      "development": "./src/interactions-motion.ts",
+      "types": "./dist/interactions-motion.d.ts",
+      "default": "./dist/interactions-motion.js"
     },
-    "./interactions/style.css": "./vendor/awesome-interactions/style.css"
+    "./interactions/style.css": "./src/interactions.css"
   },
   "scripts": {
     "build": "tsdown",
@@ -44,7 +46,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@vanilla-extract/dynamic": "catalog:",
+    "@99mini/interactions": "^0.1.0",
     "motion": "catalog:"
   },
   "devDependencies": {

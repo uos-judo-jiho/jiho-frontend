@@ -58,9 +58,8 @@ catalog:
   "overlay-kit": "^1.9.0"
   "sonner": "^2.0.8"
 
-  # interactions (packages/jds/vendor/awesome-interactions 가 쓰는 런타임)
+  # @99mini/interactions 가 쓰는 애니메이션 엔진
   "motion": "^14.14.0"
-  "@vanilla-extract/dynamic": "^2.1.5"
 
   # 한글 검색 (초성 · 입력 중인 글자)
   "es-hangul": "^2.4.0"
