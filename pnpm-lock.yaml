@@ -99,6 +99,9 @@ catalogs:
     react-router-dom:
       specifier: ^7.18.4
       version: 7.18.4
+    react-simplikit:
+      specifier: ^0.4.1
+      version: 0.4.1
     remark-breaks:
       specifier: ^4.0.0
       version: 4.0.0
@@ -506,6 +509,9 @@ importers:
       react-markdown:
         specifier: 'catalog:'
         version: 10.1.0(@types/react@19.3.0)(react@19.3.0)(supports-color@10.2.2)
+      react-simplikit:
+        specifier: 'catalog:'
+        version: 0.4.1(react@19.3.0)
       remark-breaks:
         specifier: 'catalog:'
         version: 4.0.0
@@ -5766,6 +5772,11 @@ packages:
     peerDependenciesMeta:
       react-dom:
         optional: true
+
+  react-simplikit@0.4.1:
+    resolution: {integrity: sha512-1SIL1WNC01GI7ppuNYAHepFhwx55mzYjJPHePNEWvgrKJs/oNEV/YkMfW8XxM+Hn8dgeUulIs1Kc32HFI3kaKw==}
+    peerDependencies:
+      react: '*'
 
   react-style-singleton@2.2.3:
     resolution: {integrity: sha512-b6jSvxvVnyptAiLjbkWLE/lOnR4lfTtDAl+eUC7RZy+QQWc6wRzIV2CE6xBuMmDxc2qIihtDCZD5NPOFl7fRBQ==}
@@ -12468,6 +12479,10 @@ snapshots:
       set-cookie-parser: 2.7.2
     optionalDependencies:
       react-dom: 19.3.0(react@19.3.0)
+
+  react-simplikit@0.4.1(react@19.3.0):
+    dependencies:
+      react: 19.3.0
 
   react-style-singleton@2.2.3(@types/react@19.3.0)(react@19.3.0):
     dependencies:

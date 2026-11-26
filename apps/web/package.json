@@ -47,6 +47,7 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-markdown": "catalog:",
+    "react-simplikit": "catalog:",
     "remark-breaks": "catalog:",
     "remark-gfm": "catalog:",
     "tailwind-merge": "catalog:",
