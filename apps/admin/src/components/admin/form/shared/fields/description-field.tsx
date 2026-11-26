@@ -1,4 +1,3 @@
-import { toBase64 } from "@/shared/lib/utils/Utils";
 import { useController } from "react-hook-form";
 import MarkdownEditorField from "../../MarkdownEditor/MarkdownEditorField";
 import type { ArticleFormValues } from "../../lib/article-schema";
@@ -13,8 +12,9 @@ type DescriptionFieldProps = {
 /**
  * 본문(마크다운) 필드.
  *
- * onImageUpload 는 레거시 경로다. 드래그 앤 드롭은 MarkdownEditor 안에서 S3 로
- * 직접 올라가고, 여기로 들어오는 파일은 base64 로만 인라인된다.
+ * 이미지는 MarkdownEditor 안에서 드래그 앤 드롭으로 S3 에 올라간다. 예전에는
+ * base64 로 인라인하는 onImageUpload 를 함께 넘겼는데 에디터가 그 prop 을 쓰지
+ * 않아 한 번도 불리지 않는 길이었다 — 지웠다.
  */
 export const DescriptionField = ({
   type,
@@ -24,21 +24,11 @@ export const DescriptionField = ({
     { name: "description" },
   );
 
-  const uploadInlineImage = async (file: File) => {
-    try {
-      return await toBase64(file);
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      throw new Error("이미지 업로드에 실패했습니다.");
-    }
-  };
-
   return (
     <>
       <MarkdownEditorField
         value={field.value}
         onChange={field.onChange}
-        onImageUpload={uploadInlineImage}
         type={type}
         disabled={disabled}
       />

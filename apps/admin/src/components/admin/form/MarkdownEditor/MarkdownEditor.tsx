@@ -1,149 +1,140 @@
 import { HelpMarkdown } from "@/components/admin/form/Help/HelpMarkdown";
+import { Button } from "@/components/ui/button";
 import { useFileUpload } from "@/shared/hooks/useFileUpload";
 import { cn } from "@/shared/lib/utils";
 import "@uiw/react-markdown-preview/markdown.css";
 import MDEditor from "@uiw/react-md-editor";
 import "@uiw/react-md-editor/markdown-editor.css";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-interface MarkdownEditorProps {
+type MarkdownEditorProps = {
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
   placeholder?: string;
-  onImageUpload?: (file: File) => Promise<string>;
-}
+};
 
 type EditorMode = "edit" | "preview" | "live";
 
-const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
+const MODES: { value: EditorMode; label: string }[] = [
+  { value: "edit", label: "편집" },
+  { value: "live", label: "실시간 프리뷰" },
+  { value: "preview", label: "프리뷰" },
+];
+
+/**
+ * 에디터 기본 높이(px).
+ *
+ * 800 이었는데 1080p 노트북에서는 그것만으로 화면을 거의 다 먹어서, 아래의
+ * 저장 버튼까지 가려면 폼을 한참 스크롤해야 했다. 560 으로 줄이고 대신
+ * 드래그바를 켜서 긴 글을 쓸 때는 쓰는 사람이 직접 늘리게 한다 — 어떤 숫자를
+ * 골라도 화면 크기마다 맞지 않으므로 손잡이를 주는 쪽이 낫다.
+ */
+const DEFAULT_HEIGHT = 560;
+
+export const MarkdownEditor = ({
   value,
   onChange,
   disabled = false,
-  placeholder = "마크다운으로 내용을 작성하세요...\n\n# 제목\n\n**굵은 글씨**와 *기울임꼴*을 사용할 수 있습니다.\n\n- 리스트 항목 1\n- 리스트 항목 2\n\n```javascript\n// 코드 블록도 지원됩니다\nconsole.log('Hello, World!');\n```\n\n> 인용구도 사용 가능해요.\n\n[링크](https://example.com)와 이미지도 추가할 수 있습니다.",
-}) => {
+  placeholder,
+}: MarkdownEditorProps) => {
   const [mode, setMode] = useState<EditorMode>("live");
-  const [internalValue, setInternalValue] = useState(value);
   const [isDragOver, setIsDragOver] = useState(false);
   const { uploadFile, uploadsArray } = useFileUpload();
   const uploadingPlaceholdersRef = useRef<Map<string, string>>(new Map());
 
-  // value prop이 변경될 때 내부 상태 동기화
+  /**
+   * 업로드가 끝나면 끼워 둔 플레이스홀더를 실제 이미지(또는 지움)로 바꾼다.
+   *
+   * 예전에는 본문을 `internalValue` state 로 한 벌 더 들고 `value` 가 바뀔 때마다
+   * effect 로 맞췄다. prop 을 state 로 복사하는 그 구조가 "입력하는 동안 값이
+   * 되돌아가는" 종류의 버그를 부르므로 걷어냈다 — 본문의 유일한 출처는 `value` 다.
+   *
+   * 그래서 `value` 를 의존성에 둔다. 타이핑마다 효과가 돌지만, 처리할 업로드가
+   * 없으면 빈 배열을 한 번 훑고 끝난다. 끝난 업로드는 map 에서 지우므로 같은
+   * 치환이 두 번 일어나지 않는다.
+   */
   useEffect(() => {
-    // oxlint-disable-next-line react/set-state-in-effect
-    setInternalValue(value);
-  }, [value]);
+    for (const upload of uploadsArray) {
+      const placeholder = uploadingPlaceholdersRef.current.get(upload.uploadId);
+      if (!placeholder) continue;
 
-  // 업로드 완료된 이미지들을 마크다운에 반영
-  useEffect(() => {
-    uploadsArray.forEach((upload) => {
       if (upload.status === "completed" && upload.url) {
-        const placeholder = uploadingPlaceholdersRef.current.get(
-          upload.uploadId,
-        );
-        if (placeholder) {
-          // 업로드 중 플레이스홀더를 실제 이미지로 교체
-          const imageMarkdown = `![Image](${upload.url})`;
-          const updatedValue = internalValue.replace(
-            placeholder,
-            imageMarkdown,
-          );
-
-          setInternalValue(updatedValue);
-          onChange(updatedValue);
-
-          // 플레이스홀더 제거
-          uploadingPlaceholdersRef.current.delete(upload.uploadId);
-        }
-      } else if (upload.status === "error") {
-        const placeholder = uploadingPlaceholdersRef.current.get(
-          upload.uploadId,
-        );
-        if (placeholder) {
-          // 에러 시 플레이스홀더를 에러 메시지로 교체
-          const errorMessage = `![Upload failed: ${
-            upload.error || "Unknown error"
-          }]()`;
-          const updatedValue = internalValue.replace(placeholder, errorMessage);
-
-          setInternalValue(updatedValue);
-          onChange(updatedValue);
-
-          // 플레이스홀더 제거
-          uploadingPlaceholdersRef.current.delete(upload.uploadId);
-        }
+        uploadingPlaceholdersRef.current.delete(upload.uploadId);
+        onChange(value.replace(placeholder, `![Image](${upload.url})`));
+        continue;
       }
-    });
-  }, [uploadsArray, internalValue, onChange]);
 
-  const handleChange = (val?: string) => {
-    const newValue = val || "";
-    setInternalValue(newValue);
-    onChange(newValue);
-  };
+      if (upload.status === "error") {
+        uploadingPlaceholdersRef.current.delete(upload.uploadId);
+        toast.error(
+          `이미지 업로드에 실패했습니다: ${upload.error ?? "알 수 없는 오류"}`,
+        );
+        // 실패한 플레이스홀더는 본문에서 지운다 — 깨진 이미지 문법을 남기면
+        // 글쓴이가 직접 찾아 지워야 한다
+        onChange(value.replace(placeholder, ""));
+      }
+    }
+  }, [uploadsArray, value, onChange]);
 
-  // 이미지 드래그 앤 드롭 핸들러
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDrop = async (event: React.DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
     setIsDragOver(false);
 
-    const files = Array.from(e.dataTransfer.files);
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
+    const imageFiles = Array.from(event.dataTransfer.files).filter((file) =>
+      file.type.startsWith("image/"),
+    );
 
     if (imageFiles.length === 0) {
       toast.warning("이미지 파일만 업로드할 수 있습니다.");
       return;
     }
 
-    try {
-      // 각 이미지 파일에 대해 업로드 처리
-      for (const file of imageFiles) {
-        // 즉시 업로드 중 플레이스홀더 삽입
-        const uploadingPlaceholder = `![Uploading ${file.name}...]()\n`;
-        const newValue = internalValue + uploadingPlaceholder;
-        setInternalValue(newValue);
-        onChange(newValue);
+    // 여러 장을 올릴 때 사이사이 await 가 들어가므로 prop 으로 온 value 는 곧
+    // 낡는다. 이 핸들러가 본문을 이어 붙이는 주체이니 여기서 직접 들고 간다
+    let text = value;
 
-        // S3에 파일 업로드 시작 (비동기)
+    for (const file of imageFiles) {
+      // 업로드를 기다리는 동안 자리를 잡아 둔다. 파일 이름을 넣어 여러 장을
+      // 동시에 올려도 서로 다른 문자열이 되게 한다
+      const uploadingPlaceholder = `![${file.name} 올리는 중…]()\n`;
+
+      text += uploadingPlaceholder;
+      onChange(text);
+
+      try {
         const uploadId = await uploadFile(file, "markdown-images");
-
-        // 플레이스홀더와 uploadId 매핑 저장
         uploadingPlaceholdersRef.current.set(uploadId, uploadingPlaceholder);
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        toast.error("이미지 업로드에 실패했습니다.");
+        text = text.replace(uploadingPlaceholder, "");
+        onChange(text);
       }
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      toast.error("이미지 업로드에 실패했습니다.");
     }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDragEnter = (event: React.DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const hasImageFile = Array.from(event.dataTransfer.items).some((item) =>
+      item.type.startsWith("image/"),
+    );
+
+    if (hasImageFile) setIsDragOver(true);
   };
 
-  const handleDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleDragLeave = (event: React.DragEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-    // 이미지 파일이 포함되어 있는지 확인
-    const items = Array.from(e.dataTransfer.items);
-    const hasImageFile = items.some((item) => item.type.startsWith("image/"));
-
-    if (hasImageFile) {
-      setIsDragOver(true);
-    }
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // 에디터 영역을 완전히 벗어났을 때만 상태 변경
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
+    // 에디터 영역을 완전히 벗어났을 때만 끈다 — 안쪽 요소를 지날 때마다
+    // dragleave 가 오므로 좌표로 확인한다
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const { clientX: x, clientY: y } = event;
 
     if (x < rect.left || x > rect.right || y < rect.top || y > rect.bottom) {
       setIsDragOver(false);
@@ -152,92 +143,82 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
 
   if (disabled) {
     return (
-      <div className="w-full mb-4 markdown-editor-styles">
-        <MDEditor.Markdown source={internalValue} />
-        <div className="text-right mt-2 text-gray-600 text-sm">
-          {internalValue.length}자
-        </div>
+      <div className="markdown-editor-styles w-full">
+        <MDEditor.Markdown source={value} />
+        <CharacterCount value={value} />
       </div>
     );
   }
 
   return (
-    <div className="w-full mb-4 markdown-editor-container markdown-editor-styles">
-      <div className="flex justify-between items-center gap-2 mb-4">
-        <div className="flex gap-2">
-          <button
-            className={cn(
-              "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
-              mode === "edit"
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-white text-gray-800 hover:bg-gray-100",
-            )}
-            onClick={() => setMode("edit")}
-            type="button"
-          >
-            편집
-          </button>
-          <button
-            className={cn(
-              "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
-              mode === "live"
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-white text-gray-800 hover:bg-gray-100",
-            )}
-            onClick={() => setMode("live")}
-            type="button"
-          >
-            실시간 프리뷰
-          </button>
-          <button
-            className={cn(
-              "px-4 py-2 border border-gray-300 rounded cursor-pointer transition-all text-sm",
-              mode === "preview"
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-white text-gray-800 hover:bg-gray-100",
-            )}
-            onClick={() => setMode("preview")}
-            type="button"
-          >
-            프리뷰
-          </button>
+    <div className="markdown-editor-container markdown-editor-styles w-full">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        {/*
+          예전에는 bg-blue-600 · border-gray-300 을 직접 써서 admin 의 다른
+          버튼들과 색·높이가 달랐다. shadcn Button 으로 바꿔 팔레트를 따른다
+        */}
+        <div className="flex gap-1">
+          {MODES.map(({ value: modeValue, label }) => (
+            <Button
+              key={modeValue}
+              type="button"
+              size="sm"
+              variant={mode === modeValue ? "default" : "outline"}
+              aria-pressed={mode === modeValue}
+              onClick={() => setMode(modeValue)}
+            >
+              {label}
+            </Button>
+          ))}
         </div>
         <HelpMarkdown />
       </div>
 
       <div
         className={cn(
-          "transition-all duration-200 ease-in-out border-2 border-dashed rounded-lg relative",
+          "relative rounded-lg border-2 border-dashed transition-colors duration-200",
           isDragOver
-            ? "border-blue-600 bg-blue-50 before:content-['📁_이미지를_여기에_드롭하세요'] before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-blue-600/90 before:text-white before:px-6 before:py-3 before:rounded-lg before:font-medium before:z-10 before:pointer-events-none"
+            ? "border-primary bg-primary/5 before:pointer-events-none before:absolute before:top-1/2 before:left-1/2 before:z-10 before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-lg before:bg-primary/90 before:px-6 before:py-3 before:font-medium before:text-primary-foreground before:content-['📁_이미지를_여기에_드롭하세요']"
             : "border-transparent",
         )}
         onDrop={handleDrop}
-        onDragOver={handleDragOver}
+        onDragOver={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+        }}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
       >
         <MDEditor
-          value={internalValue}
-          onChange={handleChange}
+          value={value}
+          onChange={(next) => onChange(next ?? "")}
           preview={mode}
-          hideToolbar={false}
-          visibleDragbar={false}
+          height={DEFAULT_HEIGHT}
+          // 긴 글에서는 쓰는 사람이 직접 높이를 늘릴 수 있어야 한다
+          visibleDragbar
+          minHeight={320}
+          maxHeight={1200}
           overflow
-          height={800}
-          textareaProps={{
-            placeholder,
-            style: { height: 800 },
-          }}
+          // textareaProps 에 height 를 넣지 않는다. 라이브러리는 입력
+          // textarea 를 `position:absolute; height:100%` 로 두어 내용에 따라
+          // 자라는 하이라이트 층(.w-md-editor-text-pre, pointer-events:none)에
+          // 맞춘다. 여기서 px 를 박으면 그 높이를 넘는 아래쪽 클릭이 textarea 를
+          // 비켜 가 캐럿이 잡히지 않는다 — 긴 글에서 "아래를 눌러도 커서가 안
+          // 간다" 던 원인이다
+          textareaProps={{ placeholder }}
           data-color-mode="light"
         />
       </div>
 
-      <div className="text-right mt-2 text-gray-600 text-sm">
-        {internalValue.length}자
-      </div>
+      <CharacterCount value={value} />
     </div>
   );
 };
+
+const CharacterCount = ({ value }: { value: string }) => (
+  <p className="mt-2 text-right text-sm text-muted-foreground tabular-nums">
+    {value.length.toLocaleString()}자
+  </p>
+);
 
 export default MarkdownEditor;
