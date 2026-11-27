@@ -5,8 +5,8 @@ import { useNewsYears } from "@/features/news";
 import { cn } from "@/shared/lib/utils";
 import { MenuIcon } from "@/shared/ui/icons";
 import { Logo } from "@/shared/ui/logo";
-import { buildNavItems } from "@/widgets/site-nav/nav-items";
 import { NavDrawer } from "@/widgets/site-nav/nav-drawer";
+import { getNavItems } from "@/widgets/site-nav/nav-items";
 
 type SiteHeaderProps = {
   /**
@@ -27,7 +27,7 @@ export const SiteHeader = ({ variant = "solid" }: SiteHeaderProps) => {
   const [scrolled, setScrolled] = useState(false);
   const newsYears = useNewsYears();
 
-  const items = buildNavItems(newsYears);
+  const items = getNavItems(newsYears);
 
   useEffect(() => {
     if (variant !== "overlay") return;

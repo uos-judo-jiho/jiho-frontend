@@ -15,6 +15,7 @@ import { Route as AlbumRouteImport } from './routes/album'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as WazaRouteImport } from './routes/waza'
 import { Route as InternalSplatRouteImport } from './routes/[_]internal/$'
 import { Route as ApiSplatRouteImport } from './routes/api/$'
 import { Route as NewsIndexRouteImport } from './routes/news/index'
@@ -53,6 +54,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WazaRoute = WazaRouteImport.update({
+  id: '/waza',
+  path: '/waza',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InternalSplatRoute = InternalSplatRouteImport.update({
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/waza': typeof WazaRoute
   '/_internal/$': typeof InternalSplatRoute
   '/api/$': typeof ApiSplatRoute
   '/notice/$id': typeof NoticeIdRoute
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/waza': typeof WazaRoute
   '/_internal/$': typeof InternalSplatRoute
   '/api/$': typeof ApiSplatRoute
   '/notice/$id': typeof NoticeIdRoute
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/waza': typeof WazaRoute
   '/_internal/$': typeof InternalSplatRoute
   '/api/$': typeof ApiSplatRoute
   '/notice/$id': typeof NoticeIdRoute
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/terms'
+    | '/waza'
     | '/_internal/$'
     | '/api/$'
     | '/notice/$id'
@@ -179,6 +189,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/terms'
+    | '/waza'
     | '/_internal/$'
     | '/api/$'
     | '/notice/$id'
@@ -196,6 +207,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/terms'
+    | '/waza'
     | '/_internal/$'
     | '/api/$'
     | '/notice/$id'
@@ -214,6 +226,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  WazaRoute: typeof WazaRoute
   InternalSplatRoute: typeof InternalSplatRoute
   ApiSplatRoute: typeof ApiSplatRoute
   NoticeIdRoute: typeof NoticeIdRoute
@@ -267,6 +280,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/waza': {
+      id: '/waza'
+      path: '/waza'
+      fullPath: '/waza'
+      preLoaderRoute: typeof WazaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_internal/$': {
@@ -342,6 +362,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  WazaRoute: WazaRoute,
   InternalSplatRoute: InternalSplatRoute,
   ApiSplatRoute: ApiSplatRoute,
   NoticeIdRoute: NoticeIdRoute,
