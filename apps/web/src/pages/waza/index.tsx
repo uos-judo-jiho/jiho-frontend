@@ -5,7 +5,7 @@ import { JudoMotion, TECHNIQUES } from "judo-motion/react";
 export const WazaPage = () => {
   return (
     <PageShell>
-      <div className="flex flex-col gap-14">
+      <div className="flex flex-col">
         <PageHeader
           title="유도 기술"
           description="유도의 기본 기술들을 소개합니다."
@@ -31,7 +31,8 @@ export const WazaPage = () => {
             ))}
           </div>
         </section>
-        <footer className="flex text-sm text-muted-foreground">
+        <hr className="border-line-strong mt-8 mb-4" />
+        <footer className="text-sm text-muted-foreground">
           기술에 대한 설명은 틀릴 수 있습니다. 제보는 이메일 (
           <a
             href="mailto:uosjudojiho@gmail.com"
