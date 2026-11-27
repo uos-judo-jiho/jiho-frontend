@@ -491,6 +491,9 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
+      judo-motion:
+        specifier: https://github.com/uos-judo-jiho/judo-motion/releases/download/v0.1.0/judo-motion-0.1.0.tgz
+        version: https://github.com/uos-judo-jiho/judo-motion/releases/download/v0.1.0/judo-motion-0.1.0.tgz(react@19.3.0)
       overlay-kit:
         specifier: 'catalog:'
         version: 1.9.0(react@19.3.0)
@@ -4912,6 +4915,15 @@ packages:
   jsonpointer@5.0.1:
     resolution: {integrity: sha512-p/nXbhSEcu3pZRdkW1OfJhpsVtW1gd4Wa1fnQc9YLiTfAjn0312eMKimbdIQzuZl9aa9xUGaRlP9T/CJE/ditQ==}
     engines: {node: '>=0.10.0'}
+
+  judo-motion@https://github.com/uos-judo-jiho/judo-motion/releases/download/v0.1.0/judo-motion-0.1.0.tgz:
+    resolution: {integrity: sha512-KNpLQdeHaGXLSccd6QkQ33UKZR5oWJe/wJw0Pu5baM+1FmHMIOK0ghbInVcXfYxrs+GvOSm04Qf+Aa8S32bywQ==, tarball: https://github.com/uos-judo-jiho/judo-motion/releases/download/v0.1.0/judo-motion-0.1.0.tgz}
+    version: 0.1.0
+    peerDependencies:
+      react: '>=19'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
@@ -11352,6 +11364,10 @@ snapshots:
       graceful-fs: 4.2.11
 
   jsonpointer@5.0.1: {}
+
+  judo-motion@https://github.com/uos-judo-jiho/judo-motion/releases/download/v0.1.0/judo-motion-0.1.0.tgz(react@19.3.0):
+    optionalDependencies:
+      react: 19.3.0
 
   kleur@4.1.5: {}
 

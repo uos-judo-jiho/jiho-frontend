@@ -86,6 +86,7 @@ export const SiteFooter = () => {
           <FooterLink link={linkOptions({ to: "/notice" })}>
             공지사항
           </FooterLink>
+          <FooterLink link={linkOptions({ to: "/waza" })}>기술</FooterLink>
         </nav>
 
         <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-micro text-ink-faint">

@@ -11,7 +11,7 @@ export type NavItem = {
  * 사이트 내비게이션의 단일 정의.
  * 데스크톱 헤더와 모바일 드로어가 같은 배열을 읽으므로 메뉴가 어긋날 일이 없다.
  */
-export const buildNavItems = (newsYears: number[]): NavItem[] => [
+export const getNavItems = (newsYears: number[]): NavItem[] => [
   {
     title: "지호지",
     link: linkOptions({ to: "/news" }),
@@ -24,4 +24,5 @@ export const buildNavItems = (newsYears: number[]): NavItem[] => [
   { title: "앨범", link: linkOptions({ to: "/album" }) },
   { title: "공지사항", link: linkOptions({ to: "/notice" }) },
   { title: "소개", link: linkOptions({ to: "/about" }) },
+  { title: "기술", link: linkOptions({ to: "/waza" }) },
 ];
