@@ -1,6 +1,6 @@
 {
   "name": "@apps/web",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "homepage": "https://uosjudo.com",
   "repository": {
@@ -38,11 +38,11 @@
     "@tanstack/react-router": "catalog:",
     "@tanstack/react-router-ssr-query": "catalog:",
     "@tanstack/react-start": "catalog:",
+    "@uos-judo-jiho/judo-motion": "^0.1.1",
     "@vitejs/plugin-react": "catalog:",
     "axios": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
-    "judo-motion": "https://github.com/uos-judo-jiho/judo-motion/releases/download/v0.1.0/judo-motion-0.1.0.tgz",
     "overlay-kit": "catalog:",
     "postcss": "catalog:",
     "react": "catalog:",
